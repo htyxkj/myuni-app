@@ -1,17 +1,17 @@
-#在uni-app typescript中如何使用vuex
-##第一步(安装vuex，vuex-module-decorators)
+# 在uni-app typescript中如何使用vuex
+## 第一步(安装vuex，vuex-module-decorators)
 ```
 npm install --save vuex
 npm install --save vuex-module-decorators
 ```
-##第二步(在src目录下创建store目录)
+## 第二步(在src目录下创建store目录)
 ```
 store目录结构
 store
 	index.ts//用于对外申明vuex模块
 	module//用于存放分块的模型
 ```
-##第三步(编辑index.ts)
+## 第三步(编辑index.ts)
 ```
 import Vue from 'vue' //导入vue包
 import Vuex from 'vuex'//导入vuex包
@@ -28,7 +28,7 @@ export interface IRootState {
 //先声明空存储，然后动态注册所有模块。
 export default new Vuex.Store<IRootState>({})
 ```
-##第四步：在store/module目录下(编辑或者定义login.ts)
+## 第四步：在store/module目录下(编辑或者定义login.ts)
 ```
 import {VuexModule,Module,Mutation,Action,getModule} from 'vuex-module-decorators'
 import store from '../../store'
@@ -91,14 +91,14 @@ class Login extends VuexModule implements ILogin {
 export const LoginModule = getModule(Login)//导出模块
 
 ```
-##第五步：在main.ts中申明
+## 第五步：在main.ts中申明
 ```
 import store from './store'
 new App({
 	store
 }).$mount()
 ```
-##第六步：在组件中使用（如login.vue）
+## 第六步：在组件中使用（如login.vue）
 ```
 import {Vue,Provide,Component} from 'vue-property-decorator';
 import { LoginModule} from '@/store/module/login';//导入vuex模块，自动注入
