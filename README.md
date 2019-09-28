@@ -1,4 +1,9 @@
 # uniapp
+##  如何使用命令创建一个TypeScript类型的uniapp
+```
+vue create -p dcloudio/uni-preset-vue 你的项目
+然后选择Typescript模板
+```
 
 ## Project setup
 ```
