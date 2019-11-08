@@ -1,8 +1,8 @@
-import {Dept} from './Dept'
+import Dept from './Dept'
 /***
  * 用户实体类
  */
-export class User{
+export default class User{
 
     userCode:string
     userName:string

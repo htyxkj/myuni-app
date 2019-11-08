@@ -22,9 +22,9 @@
 		@Prop()	bgColor?:string
 		@Prop()	isBack?:boolean|string
 		@Prop()	bgImage?:string
-		@Provide() StatusBar:number =  this.StatusBar
-		@Provide() CustomBar:number =  this.CustomBar
-		@Provide() name:string = 'cu-custom'
+		StatusBar:number =  this.StatusBar
+		CustomBar:number =  this.CustomBar
+		name:string = 'cu-custom'
 		get	style() {
 			let StatusBar= this.StatusBar;
 			let CustomBar= this.CustomBar;

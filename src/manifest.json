@@ -1,5 +1,5 @@
 {
-    "name" : "uniapp",
+    "name" : "我的UniApp",
     "appid" : "__UNI__5F5650D",
     "description" : "",
     "versionName" : "1.0.0",
@@ -67,5 +67,10 @@
     },
     "mp-qq" : {
         "usingComponents" : true
+    },
+    "h5" : {
+        "devServer" : {
+            "https" : false
+        }
     }
 }

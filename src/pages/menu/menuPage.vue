@@ -1,55 +1,6 @@
 <template>
 	<view class="my-menu">
-<!-- 		<view class="cu-bar bg-white solid-bottom">
-			<view class="action">
-				<text class="cuIcon-titles text-orange "></text>销售管理
-			</view> -->
-<!-- 			<view class="action">
-				<button class="cu-btn bg-gradual-blue shadow" data-target="gridModal">设置</button>
-			</view> -->
-		<!-- </view> -->
-		<!-- <view class="cu-list grid col-4 no-border">
-			<view class="cu-item" v-for="(item,index) in cuIconList" :key="index" v-if="index<5*2">
-				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
-					<view class="cu-tag badge" v-if="item.badge!=0">
-						<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
-					</view>
-				</view>
-				<text>{{item.name}}</text>
-			</view>
-		</view> -->
-		<!-- <view class="cu-bar bg-white solid-bottom margin-top">
-			<view class="action">
-				<text class="cuIcon-titles text-red "></text>采购管理
-			</view>
-		</view>
-		<view class="cu-list grid col-5 no-border">
-			<view class="cu-item" v-for="(item,index) in cuIconList" :key="index" v-if="index<4*2">
-				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
-					<view class="cu-tag badge" v-if="item.badge!=0">
-						<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
-					</view>
-				</view>
-				<text>{{item.name}}</text>
-			</view>
-		</view> -->
-		
-		<!-- <view class="cu-bar bg-white solid-bottom margin-top">
-			<view class="action">
-				<text class="cuIcon-titles text-blue "></text>OA管理
-			</view>
-		</view>
-		<view class="cu-list grid col-4 no-border">
-			<view class="cu-item" v-for="(item,index) in cuIconList" :key="index" v-if="index<1*2">
-				<view :class="['cuIcon-' + item.cuIcon,'text-' + item.color]">
-					<view class="cu-tag badge" v-if="item.badge!=0">
-						<block v-if="item.badge!=1">{{item.badge>99?'99+':item.badge}}</block>
-					</view>
-				</view>
-				<text>{{item.name}}</text>
-			</view>
-		</view>	 -->
-		<mMenu v-for="(m,index) in groupMenus" :key="index" :m="m" ></mMenu>
+		<mMenu v-for="(m,index) in groupMenus" :key="index" :m="m" @openM="openMenu" ></mMenu>
 	</view>
 </template>
 
@@ -58,16 +9,21 @@
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
-	import {Menu} from '@/classes/Menu';
+	import {
+		BIPUtil
+	} from '@/classes/api/request';
+	let tools = BIPUtil.ServApi;
+	import Menu from '@/classes/Menu';
 	import mMenu from '@/components/mMenu.vue'
+	import URIParams from '@/classes/URIParams'
 	@Component({
 		components:{mMenu}
 	})
 	export default class MenuPage extends Vue{
-		@Provide() cuIconList:any = []
-		@Provide() groupMenus:Array<Menu> = new Array<Menu>()
+		cuIconList:any = []
+		groupMenus:Array<Menu> = new Array<Menu>()
+		uriParams: URIParams = new URIParams();
 		mounted(){
-			console.log(this.menus)
 			this.makeGroups();
 			this.cuIconList = [{
 					cuIcon: 'cardboardfill',
@@ -126,6 +82,48 @@
 			return LoginModule.menus
 		}
 		
+		async openMenu(param:any){
+			// console.log(param)
+			// console.log(param.command)
+			let cc = param.command;
+			let dd = cc.split("&");
+			let pbuid = ''
+			dd.forEach((aa:any)=>{
+				// console.log(aa)
+				let pbuids = aa.split('=')
+				if(pbuids[0] == 'pbuid'){
+					pbuid = pbuids[1]
+				}
+			})
+			let mid = param.menuId;
+			if(pbuid&&mid){
+				uni.showLoading();
+				await tools.getMenuParams(pbuid,mid).then((res:any)=>{
+					uni.hideLoading();
+					let data = res.data
+					// console.log(data);
+					if(data.id>=0){
+						this.uriParams = data.data.mparams
+						if(this.uriParams.beBill){
+							let item = encodeURIComponent(JSON.stringify(this.uriParams))
+							uni.navigateTo({
+							    url: '/pages/appinfo/appinfo?item='+item+'&color='+param.color+'&title='+param.menuName
+							});
+						}
+					}else{
+						uni.showToast({
+							title:'没有权限!'
+						})
+					}
+				}).catch((err:any)=>{
+						uni.hideLoading();
+						uni.showToast({
+							title:'没有权限!'
+						})
+				})
+			}
+		}
+		
 		makeGroups(){
 			let m0 = new Menu('','QT菜单')
 			for(let i=0;i<this.menus.length;i++){
@@ -139,7 +137,6 @@
 			if(m0.childMenu.length>0){
 				this.groupMenus.push(m0)
 			}
-			console.log(this.groupMenus)
 		}
 	}
 </script>

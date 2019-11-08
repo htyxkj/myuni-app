@@ -1,4 +1,4 @@
-export class Menu{
+export default class Menu{
     menuId:string;
     menuName:string;
     haveChild:boolean;

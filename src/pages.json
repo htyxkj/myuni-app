@@ -5,30 +5,64 @@
 			"style": {
 				"navigationBarTitleText": "uni-app"
 			}
-		}
-	    ,{
-            "path" : "pages/login/login",
-            "style" : {
+		}, {
+			"path": "pages/login/login",
+			"style": {
 				"navigationBarTitleText": "Login"
 			}
-        }
-        ,{
-            "path" : "pages/mine/mine",
-            "style" : {
+		}, {
+			"path": "pages/mine/mine",
+			"style": {
 				"navigationBarTitleText": "Mine"
 			}
-        }
-        ,{
-            "path" : "pages/menu/menuPage",
-            "style" : {
+		}, {
+			"path": "pages/menu/menuPage",
+			"style": {
 				"navigationBarTitleText": "Menu"
 			}
-        }
-        ,{
-            "path" : "pages/message/message",
-            "style" : {}
-        }
-    ],
+		}, {
+			"path": "pages/message/message",
+			"style": {}
+		}, {
+			"path": "pages/comm/comm",
+			"style": {
+				"disableScroll": true, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"app-plus": {
+					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+				}
+			}
+		}, {
+			"path": "pages/layout/layout",
+			"style": {}
+		}, {
+			"path": "pages/mspage/mspage",
+			"style": {}
+		}, {
+			"path": "pages/appinfo/appinfo",
+			"style": {
+				"disableScroll": false, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"app-plus": {
+					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+				}
+			}
+		}, {
+			"path": "pages/appreport/appreport",
+			"style": {
+				"disableScroll": true, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"app-plus": {
+					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+				}
+			}
+		}, {
+			"path": "pages/selecteditor/selecteditor",
+			"style": {
+				"disableScroll": true, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"app-plus": {
+					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+				}
+			}
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -37,13 +71,42 @@
 		"navigationStyle": "custom"
 	},
 	"usingComponts": true,
-		"condition": { //模式配置，仅开发期间生效
+	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
 		"list": [{
 				"name": "登录页面", //模式名称
 				"path": "pages/login/login", //启动页面
 				"query": "" //启动参数
+			}, {
+				"name": "通用页面",
+				"path": "pages/comm/comm"
+			},
+			{
+				"name": "Home",
+				"path": "pages/index/index"
+			},
+			{
+				"name": "Layout",
+				"path": "pages/layout/layout"
+			},
+			{
+				"name": "MSPage",
+				"path": "pages/mspage/mspage"
+			},
+			{
+				"name": "单据界面",
+				"path": "pages/appinfo/appinfo"
+			},
+			{
+				"name": "报表",
+				"path": "pages/appreport/appreport"
+			},
+			{
+				"name": "辅助",
+				"path": "pages/selecteditor/selecteditor",
+				"query": "editName=CDIC" //启动参数
 			}
+
 		]
 	}
 }

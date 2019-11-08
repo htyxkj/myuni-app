@@ -12,8 +12,8 @@
 	import {Vue,Prop,Component} from 'vue-property-decorator';
 	@Component({})
 	export default class mLoad extends Vue {
-		@Prop() msg:any;
-		@Prop() png:any;
+		@Prop({default:'',type:String}) msg?:string;
+		@Prop({default:'',type:String}) png?:string;
 	}
 </script>
 

@@ -1,7 +1,7 @@
 import {VuexModule,Module,Mutation,Action,getModule} from 'vuex-module-decorators'
 import store from '../../store'
-import {User} from '@/classes/User';
-import {Menu} from '@/classes/Menu';
+import User from '@/classes/User';
+import Menu from '@/classes/Menu';
 export interface ILogin {
 	loginState:boolean;
 	user:User;

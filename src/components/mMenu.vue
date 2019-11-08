@@ -6,8 +6,8 @@
 			</view>
 		</view>
 		<view class="cu-list grid col-4 no-border">
-			<view class="cu-item" v-for="(item,index) in m.childMenu" :key="index">
-				<view :class="['cuIcon-' + cuIconList[index%10].cuIcon,'text-' + cuIconList[index%10].color]">
+			<view class="cu-item" v-for="(item,index) in m.childMenu" :key="index" @tap.stop="openMenu(item,index)">
+				<view :class="['cuIcon-' + cuIconList[index%10].cuIcon,'text-' + cuIconList[index%10].color]" >
 					<view class="cu-tag badge" v-if="badge!=0">
 						<block v-if="badge!=1">{{badge>99?'99+':badge}}</block>
 					</view>
@@ -20,11 +20,11 @@
 
 <script lang="ts">
 	import {Vue,Provide,Prop,Component} from 'vue-property-decorator';
-	import {Menu} from '@/classes/Menu';
+	import Menu from '@/classes/Menu';
 	@Component({})
 	export default class mMenu extends Vue{
-		@Provide() badge:number = 0
-		@Provide() cuIconList:any = []//颜色 图标
+		badge:number = 0
+		cuIconList:any = []//颜色 图标
 		@Prop() m!:Menu
 	
 		mounted(){
@@ -60,6 +60,16 @@
 					color: 'mauve',
 				}]
 				console.log(this.cuIconList.length)
+		}
+	
+		openMenu(item:Menu,index:number){
+			// console.log(item)
+			let cr = this.cuIconList[index%10].color;
+			let vm:any = Object.assign(item);
+			vm.color = cr;
+			// this.$emit('openM',{cmd:item.command,menuName:item.menuName,color:cr})
+			this.$emit('openM',vm)
+			// uni.navigateTo({url:'/pages/comm/comm?'+item.command+'&menuName='+item.menuName+'&color='+cr})
 		}
 	}
 </script>

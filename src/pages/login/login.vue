@@ -2,7 +2,7 @@
 	<view>
 		<cu-custom bgColor="bg-gradual-pink" :isBack="false">
 			<block slot="backText">返回</block>
-			<block slot="content">登录页面</block>
+			<block slot="content"><view class="header-title">登录页面</view></block>
 		</cu-custom>
 		<!-- 主体表单 -->
 		<form>
@@ -35,17 +35,14 @@
 	import {
 		Tools
 	} from '../../classes/tools/Tools';
-	import {
-		User
-	} from '@/classes/User';
-	import {
-		Menu
-	} from '@/classes/Menu';
+	import User from '@/classes/User';
+	import Menu from '@/classes/Menu';
 	import comm from '@/static/js/comm.js';
 	let commURL: any = comm;
 	import {
-		login
+		BIPUtil
 	} from '@/classes/api/request';
+	let tools = BIPUtil.ServApi;
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
@@ -56,24 +53,27 @@
 		name: 'Login'
 	})
 	export default class extends Vue {
-		@Provide() canLogin: boolean = false
-		@Provide() loadModal: boolean = false
-		@Provide() vueId: string = Tools.guid()
-		@Provide() user: User = new User('admin', '', '11')
+		canLogin: boolean = false
+		loadModal: boolean = false
+		vueId: string = Tools.guid()
+		user: User = new User('admin', '', 'system')
 		onLoad() {
-			console.log('登录页面1112')
+			// console.log('登录页面1112')
 		}
+		/**
+		 * 登录系统
+		 */
 		loginSys() {
 			if (!this.user.userCode) {
-				
 				uni.showToast({
 					title: '请输入账号密码'
 				})
 				return;
 			} else {
 				this.canLogin = true;
-				this.loadModal = true
-				login(this.user).then((res: any) => {
+				this.loadModal = true;
+			
+				tools.login(this.user).then((res: any) => {
 					console.log(res)
 					let data = res.data
 					if (data.id != -1) {
@@ -89,23 +89,32 @@
 						LoginModule.setUser(this.user)
 						LoginModule.setState(true)
 						LoginModule.setMenus(ms);
-						uni.navigateTo({
+						// uni.navigateTo({
+						// 	'url': '/pages/index/index'
+						// })
+						//关闭当前页面，跳转到应用内的某个页面
+						uni.redirectTo({
 							'url': '/pages/index/index'
 						})
 					} else {
 						uni.showToast({
 							title: data.message
 						})
+						this.canLogin = false;
+						this.loadModal = false;
 					}
 				}).catch((err: any) => {
-					console.log(err)
+					console.log(JSON.stringify(err))
 					uni.showToast({
 						title: '链接服务失败'
 					})
-				}).finally(() => {
 					this.canLogin = false;
-					this.loadModal = false
-				})
+					this.loadModal = false;
+				});
+				// .finally(() => {
+				// 	this.canLogin = false;
+				// 	this.loadModal = false;
+				// })
 			}
 		}
 

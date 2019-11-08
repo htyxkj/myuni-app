@@ -29,7 +29,7 @@
 				<text class="cuIcon-titles text-progress "></text>关于我们
 			</view>
 		</view>
-		<button class="bg-blue margin-tb-sm lg" >退出登录</button>
+		<!-- <button class="bg-blue margin-tb-sm lg" >退出登录</button> -->
 		<!--修改密码-->
 		<!-- <mLoad :png="'/static/gs.png'" :msg="'处理中...'" v-if="canExec"></mLoad> -->
 		<view class="cu-modal" :class="mdPass?'show':''">
@@ -68,7 +68,7 @@
 </template>
 
 <script lang="ts">
-	import {Vue,Provide,Component} from 'vue-property-decorator';
+	import {Vue,Component} from 'vue-property-decorator';
 	// import mLoad from '../../components/mLoad.vue';
 	import {
 		LoginModule
@@ -77,14 +77,14 @@
 		components:{}
 	})
 	export default class Mine extends Vue{
-		@Provide() mdPass:boolean = false
-		@Provide() canExec:boolean = false
-		@Provide() oldPwd:string = ''
-		@Provide() pwd:string = ''
-		@Provide() pwd1:string = ''
-		@Provide() at0:boolean = false
-		@Provide() at1:boolean = false
-		@Provide() at2:boolean = false
+		mdPass:boolean = false
+		canExec:boolean = false
+		oldPwd:string = ''
+		pwd:string = ''
+		pwd1:string = ''
+		at0:boolean = false
+		at1:boolean = false
+		at2:boolean = false
 		get user(){
 			return LoginModule.user
 		}
@@ -96,7 +96,9 @@
 				confirmText: '退出',
 				success: res => {
 					if (res.confirm) {
-						uni.navigateTo({'url':'/pages/login/login'})
+						// uni.navigateTo({'url':'/pages/login/login'})
+						//关闭所有页面，打开到应用内的某个页面。
+						uni.reLaunch({'url':'/pages/login/login'})
 					}
 				}
 			})
@@ -173,6 +175,7 @@
 <style>
 	.mine-info .header{
 		text-align: center;
+		/* vertical-align:middle; */
 		/* background-color: #EBEEF5; */
 	}
 	.mine-info .header image{
@@ -182,6 +185,7 @@
 	}
 	.my-info{
 		margin-left: 100upx;
+		/* margin-bottom: 100upx; */
 		/* margin-right: 100upx; */
 	}
 	.cu-form-group{

@@ -1,0 +1,87 @@
+<template>
+	<view class="cu-form-group solid-bottom">
+		<template v-if="cell">
+			<view class="title">{{cell.labelString}}</view>
+		</template>
+		<template v-if="type == 'text'">
+			<input :placeholder="cell.labelString" :type="'text'" v-model="mode" @blur="dataChange"></input>
+			<template v-if="clearable">
+				<text :class="[mode?'cuIcon-close':'','text-red']" @tap.stop="clear()"></text>
+			</template>
+		</template>
+		<template v-else>
+			<input :placeholder="cell.labelString" type="text" :password="at0" v-model="mode"></input>
+			<text :class="[mode?(!at0?'cuIcon-attentionforbid':'cuIcon-attention'):'','text-grey']" @tap.stop="open()"></text>
+		</template>
+	</view>
+</template>
+
+<script lang="ts">
+	import {Vue, Component,Prop,Watch,Inject} from 'vue-property-decorator';
+	import Cell from '@/classes/pub/coob/Cell';
+	import CDataSet from '@/classes/pub/CDataSet';
+	import CRecord from '@/classes/pub/CRecord';
+	import CCliEnv from '@/classes/cenv/CCliEnv'
+	@Component({})
+	export default class bipInput extends Vue{
+		@Inject('env') env!:CCliEnv;
+		@Prop({default:'text',type:String}) type!:string
+		@Prop({default:false,type:Boolean}) clearable!:boolean
+		@Prop({type:Object}) cell!:Cell;
+		@Prop({type:String}) obj_id!:string;
+		cds:CDataSet = new CDataSet(null)
+		at0:boolean = true
+		mode:string = ''
+		open(){
+			this.at0 = !this.at0
+		}
+		clear(){
+			this.mode = ''
+		}
+		
+		mounted(){
+			this.cds = this.env.getDataSet(this.obj_id);
+			this.mode = this.record.data[this.cell.id]
+			// console.log(this.record)
+		}
+		
+		dataChange(e:any){
+			if(this.mode != this.record.data[this.cell.id])
+				this.cds.cellChange(this.mode,this.cell.id);
+		}
+		
+		get record():CRecord{
+			return this.cds.getRecord(this.cds.index)
+		}
+		
+		
+		
+		@Watch('record')
+		recordChange(){
+			console.log('recordchang')
+			let rr = this.record.data[this.cell.id];
+			if(rr !== this.mode){
+				this.mode = rr||''
+			}
+		}
+		
+		
+		
+	}
+</script>
+
+<style>
+	@charset "utf-8";
+	.cu-form-group{
+		text-align: left;
+		/* min-height: 90upx; */
+	}
+	.cu-form-group .title {
+		min-width: calc(4em + 15px);
+		/* font-size: 24upx !important; */
+		/* font-weight: 400; */
+	}
+	.cu-form-group input{
+		/* font-size: 24upx !important; */
+	}
+</style>

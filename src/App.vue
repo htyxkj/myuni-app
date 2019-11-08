@@ -45,4 +45,5 @@
 	@import "./lib/colorui/main.css";
 	@import "./lib/colorui/icon.css";
 	@import "./uni.scss";
+	@import './static/css/mycc/iconfont.css'
 </style>

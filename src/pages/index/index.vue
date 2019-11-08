@@ -2,38 +2,25 @@
 	<view class="content">
 		<cu-custom bgColor="bg-gradual-pink" :isBack="false">
 			<!-- <block slot="backText">返回</block> -->
-			<block slot="content">{{title}}</block>
+			<block slot="content"><view class="header-title">{{title}}</view></block>
 		</cu-custom>
 		<template v-if="loginState">
-			<home v-if="tabcur==0"></home>
+			<home v-if="tabcur==0" ></home>
 			<menuPage v-if="tabcur==1"></menuPage>
 			<message v-if="tabcur==2"></message>
 			<mine v-if="tabcur==3"></mine>
 		</template>
-
-		<view  class="cu-bar tabbar bg-white shadow foot">
-			<view class="action" :class="tabcur==0?tabcurColor:''" @tap="tabSelect" data-id="0">
-				<view :class="tabcur==0?'cuIcon-homefill':'cuIcon-home'" style="font-size: 50upx;"></view> 首页
-			</view>
-			<view class="action" :class="tabcur==1?tabcurColor:''" @tap="tabSelect" data-id="1">
-				<view :class="tabcur==1?'cuIcon-formfill':'cuIcon-form'" style="font-size: 50upx;"></view> 菜单
-			</view>
-			<view class="action" :class="tabcur==2?tabcurColor:''" @tap="tabSelect" data-id="2">
-				<view :class="tabcur==2?'cuIcon-messagefill':'cuIcon-message'" style="font-size: 50upx;"></view> 消息
-			</view>
-			<view class="action" :class="tabcur==3?tabcurColor:''" @tap="tabSelect" data-id="3">
-				<view :class="tabcur==3?'cuIcon-profilefill':'cuIcon-profile'" style="font-size: 50upx;"></view> 我
-			</view>
-		</view>
+		<mIndexBar :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 	</view>
 </template>
 
 <script lang="ts">
-    import {Vue,Provide,Component} from 'vue-property-decorator';
+    import {Vue,Component} from 'vue-property-decorator';
 	import home from './home.vue';
 	import menuPage from '../menu/menuPage.vue';
 	import message from '../message/message.vue';
 	import mine from '../mine/mine.vue';
+	import mIndexBar from '../../components/mIndexBar.vue'
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
@@ -41,21 +28,28 @@
 		Tools
 	} from '../../classes/tools/Tools';
 	@Component({
-		components:{home,mine,message,menuPage}
+		components:{home,mine,message,menuPage,mIndexBar}
 	})
 	export default class Index extends Vue{
-		@Provide() title:string = '首页'
-		@Provide() tabcur:number = 1
-		@Provide() tabcurColor:string = 'text-green'
-		@Provide() vueId: string = Tools.guid()
-		onLoad() {
+		title:string = '首页'
+		tabcur:number = 0
+		tabcurColor:string = 'text-green'
+		vueId: string = Tools.guid()
+		onLoad(options:any) {
 			if(!this.loginState){
 				uni.navigateTo({'url':'/pages/login/login'})
 			}
+			
+			if(options.tabcur){
+				this.tabcur = options.tabcur;
+			}
+			
+			this.title = this.makeTitle(this.tabcur)
 		}
 		
-		tabSelect(e:any){
-			this.tabcur = parseInt(e.currentTarget.dataset.id)
+		tabSelect(e:number){
+			this.tabcur = e;
+			// this.tabcur = parseInt(e.currentTarget.dataset.id)
 			this.title = this.makeTitle(this.tabcur)
 		}
 		
@@ -100,7 +94,10 @@
 	}
 </script>
 
-<style>
+<style scoped>
+	.content{
+		margin-bottom: 100upx;
+	}
 	.cu-bar.tabbar .action [class*="cuIcon-"] {
 		margin: 0 auto 8rpx !important;		
 	}
