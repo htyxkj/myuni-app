@@ -41,7 +41,9 @@
 		
 		mounted(){
 			this.cds = this.env.getDataSet(this.obj_id);
-			this.mode = this.record.data[this.cell.id]
+			this.mode = this.record.data[this.cell.id];
+			let mkey = this.obj_id+"_"+this.cell.id
+			uni.$on(mkey,this.cellDataChange)
 			// console.log(this.record)
 		}
 		
@@ -52,6 +54,11 @@
 		
 		get record():CRecord{
 			return this.cds.getRecord(this.cds.index)
+		}
+		
+		cellDataChange(){
+			console.log('监听值变化');
+			this.recordChange();
 		}
 		
 		

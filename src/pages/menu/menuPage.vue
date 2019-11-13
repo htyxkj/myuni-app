@@ -20,62 +20,10 @@
 		components:{mMenu}
 	})
 	export default class MenuPage extends Vue{
-		cuIconList:any = []
 		groupMenus:Array<Menu> = new Array<Menu>()
 		uriParams: URIParams = new URIParams();
 		mounted(){
 			this.makeGroups();
-			this.cuIconList = [{
-					cuIcon: 'cardboardfill',
-					color: 'red',
-					badge: 120,
-					name: '检测'
-				}, {
-					cuIcon: 'recordfill',
-					color: 'orange',
-					badge: 1,
-					name: '录像'
-				}, {
-					cuIcon: 'picfill',
-					color: 'yellow',
-					badge: 0,
-					name: '图像菜单哈哈'
-				}, {
-					cuIcon: 'noticefill',
-					color: 'olive',
-					badge: 22,
-					name: '通知'
-				}, {
-					cuIcon: 'upstagefill',
-					color: 'cyan',
-					badge: 0,
-					name: '排行榜'
-				}, {
-					cuIcon: 'clothesfill',
-					color: 'blue',
-					badge: 0,
-					name: '皮肤'
-				}, {
-					cuIcon: 'discoverfill',
-					color: 'purple',
-					badge: 0,
-					name: '发现'
-				}, {
-					cuIcon: 'questionfill',
-					color: 'mauve',
-					badge: 0,
-					name: '帮助'
-				}, {
-					cuIcon: 'commandfill',
-					color: 'purple',
-					badge: 0,
-					name: '问答'
-				}, {
-					cuIcon: 'brandfill',
-					color: 'mauve',
-					badge: 0,
-					name: '版权'
-				}]
 		}
 		
 		get menus(){
@@ -97,7 +45,7 @@
 			})
 			let mid = param.menuId;
 			if(pbuid&&mid){
-				uni.showLoading();
+				uni.showLoading({title:'页面跳转中...'});
 				await tools.getMenuParams(pbuid,mid).then((res:any)=>{
 					uni.hideLoading();
 					let data = res.data
@@ -106,8 +54,11 @@
 						this.uriParams = data.data.mparams
 						if(this.uriParams.beBill){
 							let item = encodeURIComponent(JSON.stringify(this.uriParams))
+							// uni.navigateTo({
+							//     url: '/pages/appinfo/appinfo?item='+item+'&color='+param.color+'&title='+param.menuName
+							// });
 							uni.navigateTo({
-							    url: '/pages/appinfo/appinfo?item='+item+'&color='+param.color+'&title='+param.menuName
+							    url: '/pages/appinfo/applist?item='+item+'&color='+param.color+'&title='+param.menuName
 							});
 						}
 					}else{

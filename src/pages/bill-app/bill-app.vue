@@ -64,7 +64,7 @@ import  Cells  from '@/classes/pub/coob/Cells';
 import CDataSet from '@/classes/pub/CDataSet';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
-import { BipLayout } from '@/classes/ui/BipLayout';
+import BipLayout from '@/classes/ui/BipLayout';
 import mescrollUni from '@/components/mescroll-uni/mescroll-uni.vue';
 import mockData from '@/static/js/pdlist.js'; // 模拟数据
 @Component({ components: { mLoad, tabsSticky, mescrollUni,PdList } })

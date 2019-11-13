@@ -9,9 +9,9 @@
 		</view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
-			<bip-menu-bar @tabSelect="execCmd"></bip-menu-bar>
+			<!-- <bip-menu-bar @tabSelect="execCmd"></bip-menu-bar> -->
+			<bip-bill-bar @tabSelect="execCmd" :attr="3"></bip-bill-bar>
 		</template>
-		
 	</view>
 </template>
 
@@ -23,10 +23,8 @@ import mLoad from '@/components/mLoad.vue';
 import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue'
 import uniCard from '@/components/uni-ui/uni-card/uni-card.vue'
 import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue'
-// import bipTabs from '@/components/bip-ui/bip-tabs/bipTabs.vue';
-// import MescrollUni from '@/components/mescroll-uni/mescroll-uni.vue';
-// import PdList from '@/components/others/pd-list.vue';
-// import mockData from '@/static/js/pdlist.js'; // 模拟数据
+import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue'
+
 
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
@@ -37,14 +35,14 @@ import CDataSet from '@/classes/pub/CDataSet';
 import CRecord from '@/classes/pub/CRecord';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
-import { BipLayout } from '@/classes/ui/BipLayout';
+import BipLayout from '@/classes/ui/BipLayout';
 import { Tools } from '../../classes/tools/Tools';
 import { icl } from '../../classes/tools/CommICL';
 
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
 @Component({
-	components: { mLoad,bipLay,bipMenuBar }
+	components: { mLoad,bipLay,bipMenuBar,bipBillBar }
 })
 export default class appInfo extends Vue {
 	vueId: string = Tools.guid();
@@ -70,9 +68,36 @@ export default class appInfo extends Vue {
 		console.log(cmd)
 		if(cmd == icl.B_CMD_ADD){
 			console.log('添加')
+			if(this.dsm.currRecord.c_state ==1 ){
+				return ;
+			}
+			if((this.dsm.currRecord.c_state&icl.R_EDITED)>0){
+				uni.showToast({title:'请先保存，然后在新建'})
+				return ;
+			}
 			let cr = DataUtil.createRecord(this.dsm,this.env);
 			this.dsm.addRecord(cr)
 			console.log(cr);
+		}
+		if(cmd == icl.B_CMD_SAVE){
+			let cr = this.dsm.currRecord;
+			tools.saveData(cr,this.uriParam.pcell,this.uriParam.pbuid).then((res:any)=>{
+				console.log(res);
+				let rtn = res.data;
+				if(rtn.id==0){
+					let vv = rtn.data;
+					
+					Object.keys(vv).forEach((key:string)=>{
+						console.log(vv[key],key)
+						this.dsm.cellChange(vv[key],key);
+						this.dsm.setState(icl.R_POSTED);
+						let methordKey =this.dsm.ccells.obj_id+"_"+key
+						uni.$emit(methordKey)
+					})
+				}
+			}).catch((e:any)=>{
+				console.log(e)
+			})
 		}
 	}
 
@@ -127,6 +152,9 @@ export default class appInfo extends Vue {
 		this.mbs.init(this.uriParam.pattr, this.dsm);
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
+		setTimeout(()=>{
+			this.execCmd(icl.B_CMD_ADD)
+		}, 100);
 	}
 }
 </script>

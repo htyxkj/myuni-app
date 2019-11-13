@@ -2,7 +2,7 @@
 	<view>
 		<view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
-				<text class="cuIcon-titles text-blue "></text>{{m.menuName}}
+				<text class="cuIcon-titles text-mauve"></text>{{m.menuName}}
 			</view>
 		</view>
 		<view class="cu-list grid col-4 no-border">
@@ -30,7 +30,7 @@
 		mounted(){
 			this.cuIconList = [{
 					cuIcon: 'cardboardfill',
-					color: 'red',
+					color: 'blue',
 				}, {
 					cuIcon: 'recordfill',
 					color: 'orange',

@@ -9,7 +9,7 @@
 	import { Tools } from '@/classes/tools/Tools';
 	import CCliEnv from '@/classes/cenv/CCliEnv';
 	import BipLayConf from '@/classes/ui/BipLayConf';
-	import { BipLayout } from '@/classes/ui/BipLayout';
+	import BipLayout from '@/classes/ui/BipLayout';
 	@Component({
 		components: {}
 	})

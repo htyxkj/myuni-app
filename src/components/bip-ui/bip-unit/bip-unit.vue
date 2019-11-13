@@ -13,8 +13,9 @@
 			</text>
 		</view>
 		<view class="unit-foot solids-bottom">
-			<text class="color-999">20190212</text>
-			<button class="fr btn" type="warn" @click="doDel">删除求购</button>
+			<!-- <text class="bg-blue" @tap="editRow">编辑</text> -->
+			<button type="primary" class="fl btn" @click="editRow">编辑行</button>
+			<button class="fr btn" type="warn" @click="delRow">删除行</button>
 		</view>
 	</view>
 </template>
@@ -41,12 +42,12 @@ export default class bipUnit extends Vue {
 		this.record = this.cds.getRecord(this.rowId);
 	}
 	
-	// @Watch('record')
-	// recordChange(){
-		
-	// }
+	delRow() {
+		this.$emit('delRow',this.rowId)
+	}
 	
-	doDel() {
+	editRow(){
+		this.$emit('editRow',this.rowId)
 	}
 }
 </script>

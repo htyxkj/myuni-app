@@ -3,7 +3,7 @@ import BipLayCells from './BipLayCells';
 import BipLayConf from './BipLayConf';
 import {baseUtils}from '@/classes/api/baseutils';
 // B:(@60HT111#40726[-remark];T:60HTA111#725;@60HT111#70725[jyfs-])
-export class BipLayout{
+export default class BipLayout{
     laystr:string	//布局字符串B:(@60HT111#40726[-remark];T:60HTA111#725;@60HT111#70725[jyfs-])，
     layType:string = 'B'//默认是B布局
     binit:boolean = false//是否初始化完成

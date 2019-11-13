@@ -155,6 +155,10 @@ export default class CDataSet {
 	
 	cellChange(mode:any,id:string){
 		this.currRecord.data[id] = mode
+		this.currRecord.c_state |= 2;
+	}
+	setState(state:number){
+		this.currRecord.c_state = state;
 	}
 	
 	size(){

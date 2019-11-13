@@ -3,6 +3,7 @@
 		<template v-if="cell">
 			<view class="title">{{ cell.labelString }}</view>
 		</template>
+		
 		<input :placeholder="cell.labelString" :type="'text'" v-model="mode" @tap.stop="open()" disabled="true"/>
 		<text :class="['cuIcon-right', 'text-grey']" @tap.stop="open()"></text>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
@@ -52,6 +53,7 @@ export default class bipSelect extends Vue {
 	selectBack(param:any){
 		console.log(param)
 		if(param){
+			// 如果可以编辑 更改值，并更新状态
 			this.mode = param[this.bipInsAid.cells.cels[0].id]
 			this.cds.cellChange(this.mode,this.cell.id);
 		}

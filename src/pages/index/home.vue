@@ -42,8 +42,16 @@
 		</view>
 		<view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
-				<text class="cuIcon-titles text-green "></text>其他图
+				<text class="cuIcon-titles text-green "></text>下拉列表
 			</view>
+		</view>
+		<view >
+			<view class="cu-form-group margin-top">
+				<view class="title">普通选择</view>
+				<view class="title" @tap="select">选择器</view>
+				<text :class="isShow?'cuIcon-triangleupfill':'cuIcon-triangledownfill'" style="font-size: 38upx;" @tap="select"></text>
+			</view>
+			<bip-select :arr="data2.days" :show="isShow" @cancel="cancel" @selectChange="selectChange" @select="selectOK"></bip-select>
 		</view>
 		
 		<view class="cu-bar bg-white solid-bottom margin-top">
@@ -51,6 +59,7 @@
 				<text class="cuIcon-titles text-red "></text>柱状图
 			</view>
 		</view>
+			<uni-fab :content="content"></uni-fab>
 		<view>
 
 		</view>
@@ -65,15 +74,6 @@
 			</view>
 		</view>
 		
-		<bip-picker
-			mode="dateTime" 
-			startYear="2010" 
-			endYear="2030"
-			@confirm="onConfirm" 
-			ref="mm" 
-		></bip-picker>
-		<!-- <my-picker ref="mm" ></my-picker> -->
-		<button type="primary" @tap="open">aa</button>
 		
 	</view>
 </template>
@@ -86,12 +86,14 @@
 	} from 'vue-property-decorator';
 	import uCharts from '@/lib/u-chars/u-charts.js';
 	import uniCard from "@/components/uni-ui/uni-card/uni-card.vue";
+	import uniFab from "@/components/uni-ui/uni-fab/uni-fab.vue";
 	import bipInput from '@/components/bip-ui/bip-input/bip-input.vue'
 	import bipPicker from '@/components/bip-ui/bip-date/bip-picker.vue'
 	import uniCalendar from '@/components/uni-ui/uni-calendar/uni-calendar.vue'
+	import bipSelect from '@/components/bip-ui/bip-select/bip-select.vue'
 	// import pickermView from '@/components/bip-picker-view/picker-m-view.vue'
 	@Component({
-		components: {uniCard,bipInput,uniCalendar,bipPicker}
+		components: {uniCard,bipInput,uniCalendar,bipPicker,uniFab,bipSelect}
 	})
 	export default class home extends Vue {
 		cWidth: number = 100
@@ -104,6 +106,7 @@
 		selectIndex:Array<number>=[0,1,10,11,2,5]
 		date:string='2019-11-01'
 		data2:any = {}
+		content:Array<any> = []
 		bindDateChange(e:any){
 			console.log(e)
 		}
@@ -112,10 +115,30 @@
 			console.log(this.selectIndex)
 			console.log(e)
 		}
+		isShow = false;
+		select(){
+			this.isShow = !this.isShow;
+		}
+		
+		selectChange(e:any){
+			console.log(e)
+		}
+		
+		selectOK(e:any){
+			console.log(e)
+		}
+		cancel(){
+			this.isShow =false;
+		}
+		
 		mounted() {
 			this.data2.years = [2018,2019,2020,2021,2022];
 			this.data2.months = [1,2,3,4,5,6,7,8,9,10,11,12];
 			this.data2.days = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]
+			for(let i=0;i<5;i++){
+				this.content.push({text:('tuuuuuuuuuuut'+i)})
+			}
+				
 			// console.log(uCharts)
 			let _self = this
 			//#ifdef MP-ALIPAY

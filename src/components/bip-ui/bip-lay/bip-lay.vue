@@ -17,7 +17,7 @@
 	import { Tools } from '@/classes/tools/Tools';
 	import CCliEnv from '@/classes/cenv/CCliEnv';
 	import BipLayConf from '@/classes/ui/BipLayConf';
-	import { BipLayout } from '@/classes/ui/BipLayout';
+	import BipLayout from '@/classes/ui/BipLayout';
 	import baseLay from './base-lay.vue'
 	@Component({
 		components: {baseLay}
@@ -38,7 +38,6 @@
 			uni.$on('appinfo',this.subMethod);
 		}
 		mounted(){
-			
 			this.comps = this.layout.compconfs
 			console.log(this.comps)
 			console.log(1111)

@@ -1,11 +1,5 @@
 <template>
 	<view class="cu-bar tabbar bg-white shadow foot" style="z-index: 99999;">
-		<!-- <view class="action" :class="tabcur==0?tabcurColor:''" @tap="tabSelect" data-id="0">
-			<button class="cu-btn bg-blue margin-tb-sm lg shadow">新建</button>
-		</view>
-		<view class="action" :class="tabcur==1?tabcurColor:''" @tap="tabSelect" data-id="1">
-			<button class="cu-btn bg-blue margin-tb-sm lg shadow">保存</button>
-		</view> -->
 		<view class="action" :class="tabcur == 'ADD' ? tabcurColor : ''" @tap="tabSelect" data-id="ADD">
 			<view class="cuIcon-add"></view>
 			新建
@@ -17,6 +11,10 @@
 		<view class="action" :class="tabcur == 'SAVE' ? 'text-blue' : ''" @tap="tabSelect" data-id="SAVE">
 			<view class="cuIcon-safe"></view>
 			保存
+		</view>
+		<view class="action" v-for="(item,index) in mbs.menuList" :key="index" :class="tabcur == item.cmd ? 'text-blue' : ''" @tap="tabSelect" :data-id="item.cmd">
+			<view class="cuIcon-safe"></view>
+			item.name
 		</view>
 	</view>
 </template>
