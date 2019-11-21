@@ -41,17 +41,17 @@
 					<form class="content">
 						<view class="cu-form-group">
 							<view class="title">旧密码</view>
-							<input placeholder="请输入旧密码" :type="at0?'text':'password'" v-model="oldPwd"></input>
+							<input placeholder="请输入旧密码" :type="at0?'text':'password'" v-model="oldPwd" />
 							<text :class="[at0?'cuIcon-attentionforbid':'cuIcon-attention','text-orange']" @tap.stop="open(0)"></text>
 						</view>
 						<view class="cu-form-group">
 							<view class="title">新密码</view>
-							<input placeholder="新密码" :type="at1?'text':'password'" v-model="pwd"></input>
+							<input placeholder="新密码" :type="at1?'text':'password'" v-model="pwd" />
 							<text :class="[at1?'cuIcon-attentionforbid':'cuIcon-attention','text-orange']" @tap.stop="open(1)"></text>
 						</view>
 						<view class="cu-form-group">
 							<view class="title">确认密码</view>
-							<input placeholder="再次确认密码" :type="at2?'text':'password'" v-model="pwd1"></input>
+							<input placeholder="再次确认密码" :type="at2?'text':'password'" v-model="pwd1" />
 							<text :class="[at2?'cuIcon-attentionforbid':'cuIcon-attention','text-orange']" @tap.stop="open(2)"></text>
 						</view>
 					</form>

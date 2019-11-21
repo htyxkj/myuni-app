@@ -20,17 +20,10 @@
 import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
 // import { UriPModule } from '@/store/module/uripm'; //导入vuex模块，自动注入
 import mLoad from '@/components/mLoad.vue';
-// import bipInput from '@/components/bip-ui/bip-input/bip-input.vue'
 import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue'
 import bipSearchCon from '@/components/bip-ui/bip-search/bip-search-con.vue'
-// import uniCard from '@/components/uni-ui/uni-card/uni-card.vue'
-// import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue'
-// import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue'
-// import bipTabs from '@/components/bip-ui/bip-tabs/bipTabs.vue';
 import MescrollUni from '@/components/mescroll-uni/mescroll-uni.vue';
 import bipListUnit from '@/components/bip-ui/bip-unit/bip-list-unit.vue';
-// import PdList from '@/components/others/pd-list.vue';
-// import mockData from '@/static/js/pdlist.js'; // 模拟数据
 import uniFab from "@/components/uni-ui/uni-fab/uni-fab.vue";
 
 import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue'
@@ -76,25 +69,37 @@ export default class appList extends Vue {
 	upOption: any = {}//上拉数据列表参数配置
 	downOption: any = {}//下拉数据列表参数配置
 	qe:QueryEntity = new QueryEntity('','');
-	init:boolean = false;
+	isjump:boolean = false;
 	created(){
 		this.initScoreUI();
-		this.init = true
 	}
 	get showCells(){
 		if(this.dsm.ccells){
 			let vr = this.dsm.ccells.cels.filter((item:any)=>{
-				// console.log(item)
 				return item.isShow == true;
 			});
-			// console.log(vr);
 			return vr;
 		}
 		return [];
 	}
 	
 	openList(rid:number){
-		console.log(rid);
+		if(!this.isjump){
+			this.isjump = true;
+			uni.showLoading({
+				title:'页面跳转中...'
+			})
+			let item = encodeURIComponent(JSON.stringify(this.uriParam))
+			let cr0 =  this.pdList[rid]
+			uni.navigateTo({
+			    url: '/pages/appinfo/appdetail?item='+item+'&color='+this.cr+'&title='+this.title+'&pitem='+encodeURIComponent(JSON.stringify(cr0)),
+				complete: () => {
+					uni.hideLoading();
+					this.isjump = false;
+				}
+			});
+		}
+		
 	}
 	
 	execCmd(cmd:string){
@@ -249,6 +254,7 @@ export default class appList extends Vue {
 		else{
 			this.qe.cont = ''
 		}
+		this.pdList = [];
 		this.downCallback(this.mescroll);
 	}
 	//滚动页面

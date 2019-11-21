@@ -1,28 +1,22 @@
 <template>
 	<view class="cu-form-group solid-bottom">
 		<template v-if="cell">
-			<view class="title">{{ cell.labelString || title }}</view>
+			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
 		</template>
-		<input :placeholder="cell.labelString || title " :type="'text'" v-model="mode" disabled="true"></input>
+		<input class="text-right" :placeholder="cell.labelString || title " :type="'text'" v-model="mode" disabled="true"></input>
 		<text class="cuIcon-calendar" @tap.stop="open()"></text>
-		<bip-picker
-			mode="dateTime" 
-			:defaultVal="selectIndex"
-			:current="true"
-			@confirm="onConfirm" 
-			ref="calendar" 
-		></bip-picker>
+		<bip-picker-date :mode="cell.type==91?'date':'datetime'"  @confirm="onConfirm" ref="calendar" ></bip-picker-date>
 	</view>
 </template>
 <script lang="ts">
 import { Vue, Prop, Component, Watch,Inject } from 'vue-property-decorator';
 import Cell from '@/classes/pub/coob/Cell';
-import bipPicker from './bip-picker.vue'
+import bipPickerDate from '../bip-picker/bip-picker-date.vue'
 import CRecord from '@/classes/pub/CRecord';
 import CCliEnv from '@/classes/cenv/CCliEnv'
 import CDataSet from '@/classes/pub/CDataSet';
 @Component({
-	components: { bipPicker }
+	components: {bipPickerDate }
 })
 export default class bipDate extends Vue {
 	@Inject('env') env!:CCliEnv;
@@ -58,7 +52,7 @@ export default class bipDate extends Vue {
 	
 	@Watch('record')
 	recordChange(){
-		console.log('recordchang')
+		// console.log('recordchang')
 		let rr = this.record.data[this.cell.id];
 		if(rr !== this.mode){
 			this.mode = rr||''

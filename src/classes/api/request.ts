@@ -48,8 +48,12 @@ export namespace BIPUtil {
 		 * @param qe 查询条件，有可能有
 		 */
 		getBipInsAidInfo(aid:string,id:number=200,qe?:QueryEntity){
-			if(qe)
+			if(qe){
 				qe.type =3 
+			}else{
+				qe = new QueryEntity("","")
+			}
+				
 			let param = tools.getBipInsAidParams(aid,id,qe?JSON.stringify(qe):'');
 			return this.getFromServer(param);
 		}

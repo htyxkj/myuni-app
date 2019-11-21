@@ -1,7 +1,7 @@
 export class BipMenuBtn{
     cmd:string
     name:string
-    icon:string = "iconfont icon-bip-"
+    icon:string = ""
     size:string
     bIconleft:boolean = true
     enable:boolean = true

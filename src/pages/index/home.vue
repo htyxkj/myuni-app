@@ -59,7 +59,12 @@
 				<text class="cuIcon-titles text-red "></text>柱状图
 			</view>
 		</view>
-			<uni-fab :content="content"></uni-fab>
+		<!-- 	<uni-fab :content="content"></uni-fab> -->
+		<view class="cu-form-group margin-top">
+			<view class="title">BIPpicker选择</view>
+			<view class="title" @tap="pkdate">选择器</view>
+		</view>
+		<bip-picker-date :mode="'datetime'" ref="bippkdate" @confirm="confirm"></bip-picker-date>
 		<view>
 
 		</view>
@@ -88,12 +93,12 @@
 	import uniCard from "@/components/uni-ui/uni-card/uni-card.vue";
 	import uniFab from "@/components/uni-ui/uni-fab/uni-fab.vue";
 	import bipInput from '@/components/bip-ui/bip-input/bip-input.vue'
-	import bipPicker from '@/components/bip-ui/bip-date/bip-picker.vue'
-	import uniCalendar from '@/components/uni-ui/uni-calendar/uni-calendar.vue'
+	// import uniCalendar from '@/components/uni-ui/uni-calendar/uni-calendar.vue'
 	import bipSelect from '@/components/bip-ui/bip-select/bip-select.vue'
+	import bipPickerDate from '@/components/bip-ui/bip-picker/bip-picker-date.vue'
 	// import pickermView from '@/components/bip-picker-view/picker-m-view.vue'
 	@Component({
-		components: {uniCard,bipInput,uniCalendar,bipPicker,uniFab,bipSelect}
+		components: {uniCard,bipInput,uniFab,bipSelect,bipPickerDate}
 	})
 	export default class home extends Vue {
 		cWidth: number = 100
@@ -120,8 +125,17 @@
 			this.isShow = !this.isShow;
 		}
 		
+		pkdate(){
+			let rr:any = this.$refs.bippkdate;
+			rr.show();
+		}
+		
 		selectChange(e:any){
 			console.log(e)
+		}
+		
+		confirm(v:any){
+			console.log(v)
 		}
 		
 		selectOK(e:any){

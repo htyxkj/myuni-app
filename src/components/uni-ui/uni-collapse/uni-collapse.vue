@@ -1,5 +1,5 @@
 <template>
-	<view class="uni-collapse"><slot /></view>
+	<view class="uni-collapse"><slot/></view>
 </template>
 <script lang="ts">
 import { Vue, Provide, Prop, Component } from 'vue-property-decorator';

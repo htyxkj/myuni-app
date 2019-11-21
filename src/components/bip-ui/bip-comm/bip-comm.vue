@@ -15,7 +15,15 @@
 			</template>
 		</template>
 		<template v-else>
-			<bip-input :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-input>
+			<template v-if="cell.type==3">
+				<bip-number :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-number>
+			</template>
+			<template v-else-if="cell.editType==1">
+				<bip-list :label="cell.labelString" :cell="cell" :obj_id="obj_id" ></bip-list>
+			</template>
+			<template v-else>
+				<bip-input :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-input>
+			</template>
 		</template>
 	</view>
 </template>
@@ -26,18 +34,20 @@ import { Tools } from '@/classes/tools/Tools';
 import BipLayCells from '@/classes/ui/BipLayCells';
 import Cell from '@/classes/pub/coob/Cell';
 import CCliEnv from '@/classes/cenv/CCliEnv'
-import { BIPUtil } from '@/classes/api/request';
-let tools = BIPUtil.ServApi;
+// import { BIPUtil } from '@/classes/api/request';
+// let tools = BIPUtil.ServApi;
 import {icl} from '@/classes/tools/CommICL';
 const ICL = icl; 
 import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
 import BipInsAidNew from '@/classes/BipInsAidNew';
 
 import bipInput from '../bip-input/bip-input.vue';
+import bipNumber from '../bip-input/bip-number.vue';
 import bipDate from '../bip-date/bip-date.vue';
 import bipSelect from '../bip-ass/bip-select.vue';
+import bipList from '../bip-list/bip-list.vue';
 @Component({
-	components: {bipInput,bipDate,bipSelect}
+	components: {bipInput,bipNumber,bipDate,bipSelect,bipList}
 })
 export default class bipComm extends Vue{
 	@Inject('env') env!:CCliEnv;
@@ -64,7 +74,7 @@ export default class bipComm extends Vue{
 			}else{
 				InsAidModule.fetchInsAid({ id: 200, aid: this.editName });
 			}
-		}		
+		}	
 	}
 
 	

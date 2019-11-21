@@ -57,8 +57,6 @@ import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
 import mLoad from '../../components/mLoad.vue';
-import tabsSticky from '@/components/others/tabs-sticky.vue';
-import PdList from '@/components/others/pd-list.vue';
 import URIParams from '@/classes/URIParams';
 import  Cells  from '@/classes/pub/coob/Cells';
 import CDataSet from '@/classes/pub/CDataSet';
@@ -66,8 +64,7 @@ import CCliEnv from '@/classes/cenv/CCliEnv';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
 import BipLayout from '@/classes/ui/BipLayout';
 import mescrollUni from '@/components/mescroll-uni/mescroll-uni.vue';
-import mockData from '@/static/js/pdlist.js'; // 模拟数据
-@Component({ components: { mLoad, tabsSticky, mescrollUni,PdList } })
+@Component({ components: { mLoad, mescrollUni } })
 export default class billApp extends Vue {
 	@Prop({ default: 'blue', type: String }) cr!: string;
 	@Prop({ default: 'billApp', type: String }) title!: string;

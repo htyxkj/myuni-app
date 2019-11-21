@@ -1,18 +1,9 @@
 <template>
-	<view class="cu-form-group solid-bottom">
+	<view class="cu-form-group solid-bottom text-green">
 		<template v-if="cell">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
 		</template>
-		<template v-if="type == 'text'">
-			<input :placeholder="cell.labelString" :type="'text'" v-model="mode" @blur="dataChange"></input>
-			<template v-if="clearable">
-				<text :class="[mode?'cuIcon-close':'','text-red']" @tap.stop="clear()"></text>
-			</template>
-		</template>
-		<template v-else>
-			<input :placeholder="cell.labelString" type="text" :password="at0" v-model="mode"></input>
-			<text :class="[mode?(!at0?'cuIcon-attentionforbid':'cuIcon-attention'):'','text-grey']" @tap.stop="open()"></text>
-		</template>
+		<input class="text-right" :placeholder="cell.labelString" :type="type" v-model="mode" @blur="dataChange"></input>
 	</view>
 </template>
 
@@ -25,7 +16,7 @@
 	@Component({})
 	export default class bipInput extends Vue{
 		@Inject('env') env!:CCliEnv;
-		@Prop({default:'text',type:String}) type!:string
+		@Prop({default:'digit',type:String}) type!:string
 		@Prop({default:false,type:Boolean}) clearable!:boolean
 		@Prop({type:Object}) cell!:Cell;
 		@Prop({type:String}) obj_id!:string;
@@ -42,14 +33,31 @@
 		mounted(){
 			this.cds = this.env.getDataSet(this.obj_id);
 			this.mode = this.record.data[this.cell.id];
+			this.mode = this.formatNumber(this.mode)
 			let mkey = this.obj_id+"_"+this.cell.id
 			uni.$on(mkey,this.cellDataChange)
 			// console.log(this.record)
 		}
 		
 		dataChange(e:any){
-			if(this.mode != this.record.data[this.cell.id])
+			if(this.mode != this.record.data[this.cell.id]){
+				this.mode = this.formatNumber(this.mode);
 				this.cds.cellChange(this.mode,this.cell.id);
+			}
+				
+		}
+		
+		formatNumber(mm:string){
+			let num = mm
+			if(this.cell.ccPoint){
+				let nr = parseFloat(mm);
+				if(isNaN(nr)){
+					return '';
+				}
+				num = nr.toFixed(this.cell.ccPoint)
+			}
+
+			return num
 		}
 		
 		get record():CRecord{
@@ -67,6 +75,7 @@
 		recordChange(){
 			// console.log('recordchang')
 			let rr = this.record.data[this.cell.id];
+			rr = this.formatNumber(rr)
 			if(rr !== this.mode){
 				this.mode = rr||''
 			}
@@ -80,7 +89,7 @@
 <style scoped>
 	@charset "utf-8";
 	.cu-form-group{
-		text-align: left;
+		text-align: right;
 		/* min-height: 90upx; */
 	}
 	.cu-form-group .title {

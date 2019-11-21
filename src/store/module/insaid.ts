@@ -1,6 +1,7 @@
 import {VuexModule,Module,Mutation,Action,getModule} from 'vuex-module-decorators'
 import store from '../../store'
 import BipInsAidNew from '@/classes/BipInsAidNew';
+import QueryEntity from '@/classes/search/QueryEntity';
 import {icl} from '@/classes/tools/CommICL';
 const ICL = icl; 
 import {BIPUtil} from '@/classes/api/request';
@@ -23,6 +24,13 @@ class InsAid extends VuexModule implements IInsAid {
 	private SET_AID_INFOS(vals:any){
 		this.aidInfos.set(vals.key,vals.value);
 		this.aidInfos = new Map(this.aidInfos)
+		uni.setStorageSync(vals.key,JSON.stringify(vals.value))
+		
+	}
+	@Mutation
+	private SET_AID_VALUES(vals:any){
+		this.aidValues.set(vals.key,vals.value);
+		this.aidValues = new Map(this.aidValues)
 		uni.setStorageSync(vals.key,JSON.stringify(vals.value))
 		
 	}
@@ -73,7 +81,36 @@ class InsAid extends VuexModule implements IInsAid {
 		});
 		return val;
 	}
-    //#endregion
+	
+	@Action
+	public fetchInsDataByCont(val:any){
+		let aid = val.id;
+		let key = val.key;
+		let cont = val.cont;
+		this.SET_IN_PROCESS({key:key,value:true});
+		let rr = uni.getStorageSync(key);
+		if(!rr){
+			let qe = new QueryEntity("","");
+			qe.cont = cont
+			return tools.getBipInsAidInfo(aid,210,qe).then((res:any)=>{
+				console.log(res)
+				let rtn = res.data;
+				if(rtn.id==0){
+					let d = rtn.data.data;
+					console.log(d);
+					let v0 = d.values[0];
+					this.SET_AID_VALUES({key:key,value:v0})
+				}
+			}).catch((e:any)=>{
+				this.SET_IN_PROCESS_CANCEL(key)
+			})
+		}else{
+			this.SET_AID_VALUES({key:key,value:JSON.parse(rr)})
+		}
+	}
+    
+	
+	//#endregion
 }
 
 

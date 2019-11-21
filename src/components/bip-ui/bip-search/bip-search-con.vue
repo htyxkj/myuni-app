@@ -7,27 +7,9 @@
 			</view>
 			<view class="search-form radius">
 				<text class="cuIcon-search"></text>
-				<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @blur="query" v-model="mode"></input>
+				<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @blur="query" v-model="mode" @focus="isShow = false"></input>
 			</view>
 		</view>
-		<!-- 
-		<view class="cu-modal" :class="isShow?'show':''" @tap="hideModal">
-			<view class="cu-dialog" @tap.stop="">
-				<scroll-view scroll-y class="bip-modal">
-					<radio-group class="block" @change="RadioChange">
-						<view class="cu-list menu text-left">
-							<view class="cu-item" v-for="(item,index) in cels" :key="index">
-								<label class="flex justify-between align-center flex-sub">
-									<view class="flex-sub">{{item.labelString}}</view>
-									<radio class="round text-sm" :class="cellid==item.id ?'checked':''" :checked="cellid==item.id?true:false"
-									 :value="item.id"></radio>
-								</label>
-							</view>
-						</view>
-					</radio-group>
-				</scroll-view>
-			</view>
-		</view> -->
 		<bip-select :arr="cels" :show="isShow" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="'labelString'" :isStr="false"></bip-select>
 	</view>
 </template>
@@ -41,9 +23,10 @@ export default class bipSearchCon extends Vue{
 	@Prop({type:Array,default:[]}) cels!:Array<any>;
 	cellid:string = '';
 	mode:string = '';
+	mode1:string = '';
 	isShow:boolean = false;
 	mounted(){
-		console.log(this.cels)
+		// console.log(this.cels)
 		if(this.cels&&this.cels.length>0){
 			this.cellid = this.cels[0].id;
 		}
@@ -70,6 +53,7 @@ export default class bipSearchCon extends Vue{
 	selectChange(e:any){
 		if(e !== undefined){
 			this.cellid = e.id;
+			this.mode = this.mode1 = ''
 		}
 		this.hideModal();
 	}
@@ -81,12 +65,7 @@ export default class bipSearchCon extends Vue{
 		this.hideModal();
 		console.log(e);
 	}
-	
-	RadioChange(e:any){
-		this.cellid = e.detail.value
-		this.hideModal();
-	}
-	
+		
 	get title(){
 		if(this.cels.length>0){
 			let index = this.cels.findIndex((item:any)=>{
@@ -101,8 +80,12 @@ export default class bipSearchCon extends Vue{
 		return '点我选择';
 	}
 	query(){
-		console.log('query')
-		this.$emit('query',this.cellid,this.mode);
+		// console.log('query')
+		if(this.mode != this.mode1){
+			this.$emit('query',this.cellid,this.mode);
+			this.mode1 = this.mode
+		}
+		
 	}
 }
 </script>

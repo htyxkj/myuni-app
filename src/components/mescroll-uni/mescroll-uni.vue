@@ -65,7 +65,7 @@
 import MeScroll from './mescroll-uni.js';
 // 引入全局配置
 import GlobalOption from './mescroll-uni-option.js';
-import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
+import { Vue, Prop, Component } from 'vue-property-decorator';
 @Component({})
 export default class mescrollUni extends Vue {
 	mescroll: any = null;

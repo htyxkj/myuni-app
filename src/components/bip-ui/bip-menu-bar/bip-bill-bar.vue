@@ -1,15 +1,24 @@
 <template>
 	<view class="cu-bar tabbar bg-white shadow foot" style="z-index: 99999;">
-<!-- 		<view class="action" :class="tabcur == 'ADD' ? tabcurColor : ''" @tap="tabSelect" data-id="ADD">
-			<view class="cuIcon-add"></view>
-			新建
-		</view>
-		<view class="action" :class="tabcur == 'SAVE' ? 'text-blue' : ''" @tap="tabSelect" data-id="SAVE">
-			<view class="cuIcon-safe"></view>
-			保存
-		</view> -->
-		<view v-if="(attr&1)>0" class="bg-gradual-green submit" @tap="tabSelect" data-id="ADD"><text class="bip-btn text-bold">添加</text></view>
-		<view v-if="(attr&2)>0" class="bg-gradual-blue submit" @tap="tabSelect" data-id="SAVE"><text class="bip-btn text-bold">保存</text></view>
+		<view v-if="(attr & 1) > 0" class="submit solids light bg-blue padding-sm" @tap="tabSelect" data-id="ADD"><text class="bip-btn text-bold">添加</text></view>
+		<view v-if="(attr & 2) > 0" class="submit solids light bg-cyan padding-sm" @tap="tabSelect" data-id="SAVE"><text class="bip-btn text-bold">保存</text></view>
+		<template v-if="attr > 1 && bottomData">
+			<view class="submit solids bip-btn padding-sm " @tap="open"><text class="cuIcon-settingsfill text-blue lg"></text>更多操作</view>
+			<uni-popup :show="showP" type="bottom" :custom="true" @change="change">
+				<!-- <bip-share :arrdata="bottomData" @close="close" @itemClick="itemClick"></bip-share> -->
+				<view class="cu-list grid col-4 border bg-white">
+					<template v-for="(item,index) in bottomData">
+						<template v-if="item.cmd !== 'ADD' && item.cmd !== 'SAVE'">
+							<view class="cu-item" :key="index" @tap.stop="tabSelect" :data-id="item.cmd" :class="[item.cmd=='DEL'?'text-red':'',item.cmd=='COPY'?'text-green':'',item.cmd=='SUBMIT'?'text-blue':'',item.cmd=='CHECK'?'text-purple':'']">
+								<view :class="['cuIcon-' + item.icon]"></view>
+								<text class="text-lg">{{ item.name }}</text>
+							</view>
+						</template>
+					</template>
+				</view>
+				<view class="cu-bar bg-yellow solid-bottom" @tap="close"><view class="action text-center text-white" :style="'font-size:14px;'">取消</view></view>
+			</uni-popup>
+		</template>
 	</view>
 </template>
 
@@ -17,26 +26,62 @@
 /**
  * 移动端下方按钮区域
  */
-import { Vue, Provide, Prop, Component, Inject } from 'vue-property-decorator';
+import { Vue, Provide, Prop, Component, Inject, Watch } from 'vue-property-decorator';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
-@Component({})
+import uniPopup from '@/components/uni-ui/uni-popup/uni-popup.vue';
+import bipShare from '@/components/bip-ui/bip-share/bip-share.vue';
+@Component({
+	components: { uniPopup, bipShare }
+})
 export default class bipBillBar extends Vue {
 	tabcur: string = '';
 	tabcurColor: string = 'text-green';
 	@Prop({ default: '', type: String }) tbI!: string;
 	@Prop({ default: 1, type: Number }) attr!: number;
+	@Inject('mbs') mbs!: BipMenuBar;
+	showP: boolean = false;
+	bottomData: Array<any> = [];
 	mounted() {
+		this.bottomData = [];
+		this.mbs.menuList.forEach((item: any) => {
+			this.bottomData.push(item);
+		});
 		this.tabcur = this.tbI;
 	}
 	tabSelect(e: any) {
 		this.tabcur = e.currentTarget.dataset.id;
 		this.$emit('tabSelect', this.tabcur);
+		this.close();
+	}
+
+	itemClick(index: number) {
+		console.log(index);
+	}
+
+	openMenu(item: any, index: number) {}
+
+	open() {
+		this.showP = true;
+	}
+	close() {
+		this.showP = false;
+	}
+	change(e: any) {
+		this.showP = e.show;
+	}
+
+	@Watch('mbs', { deep: true })
+	mbsChange() {
+		this.bottomData = [];
+		this.mbs.menuList.forEach((item: any) => {
+			this.bottomData.push(item);
+		});
 	}
 }
 </script>
 
 <style lang="scss">
-.bip-btn{
+.bip-btn {
 	font-size: 36upx;
 }
 </style>

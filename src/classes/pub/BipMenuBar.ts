@@ -5,7 +5,7 @@ import CData from './CData';
 let CommICL = icl
 export default class BipMenuBar{
     dsm:CDataSet = new CDataSet(null);
-    menuList:Array<BipMenuBtn>  = new Array<BipMenuBtn>()
+    menuList:Array<any> = []
     search:boolean = false
     initOK:boolean = false
     bcheck:boolean = false
@@ -16,14 +16,14 @@ export default class BipMenuBar{
         if(menuAttr>0){
             this.menuList.splice(0);
             if((menuAttr&CommICL.B_IADD)>0){
-                let btn = new BipMenuBtn(CommICL.B_CMD_ADD,"新建")
-                btn.setIconFontIcon('EDIT');
+                let btn = new BipMenuBtn(CommICL.B_CMD_ADD,"添加")
+                btn.setIconFontIcon('add');
                 this.menuList.push(btn)
                 this.bcheck = true
             }
             if((menuAttr&CommICL.B_ISAVE)>0){
                 let btn = new BipMenuBtn(CommICL.B_CMD_SAVE,"保存")
-                btn.setIconFontIcon('save');
+                btn.setIconFontIcon('safe');
                 this.menuList.push(btn)
             }
             if(!this.search){
@@ -38,16 +38,15 @@ export default class BipMenuBar{
             }
             if((menuAttr&CommICL.B_IWORKEA)>0){
                 let btn = new BipMenuBtn(CommICL.B_CMD_SUBMIT,"提交")
-                btn.setIconFontIcon('tijiao');
+                btn.setIconFontIcon('pullup');
                 this.menuList.push(btn)
                 btn = new BipMenuBtn(CommICL.B_CMD_CHECK,"审核")
-                btn.setIconFontIcon('sh');
+                btn.setIconFontIcon('appreciate');
                 this.menuList.push(btn)
             }
-            if((menuAttr&CommICL.B_IFIND)>0){
-                this.setNavButton(menuAttr)
-            }
-
+            // if((menuAttr&CommICL.B_IFIND)>0){
+            //     this.setNavButton(menuAttr)
+            // }
             
         }
     }
