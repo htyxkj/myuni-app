@@ -7,7 +7,7 @@
 			</view>
 			<view class="search-form radius">
 				<text class="cuIcon-search"></text>
-				<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @blur="query" v-model="mode" @focus="isShow = false"></input>
+				<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @blur="query" v-model="mode" @focus="isShow = false" />
 			</view>
 		</view>
 		<bip-select :arr="cels" :show="isShow" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="'labelString'" :isStr="false"></bip-select>

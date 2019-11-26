@@ -3,7 +3,7 @@
 		<template v-if="cell">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
 		</template>
-		<input class="text-right" :placeholder="cell.labelString" :type="type" v-model="mode" @blur="dataChange"></input>
+		<input class="text-right" :placeholder="cell.labelString" :type="type" v-model="mode" @blur="dataChange" />
 	</view>
 </template>
 

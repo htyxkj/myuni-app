@@ -8,16 +8,23 @@
 		</cu-custom>
 		<view>
 			<view class="cu-form-group solid-bottom">
-				<view class="mtitle text-blue">
-					<picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
+				<!-- <view class="mtitle text-blue"> -->
+					<!-- <picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
 						<view class="picker">
 							{{ array[index].name }}
 						</view>
-					</picker>
+					</picker> -->
+					
+					
+				<!-- </view> -->
+				<view class="action padding-right" @tap="isShow = true">
+					<text class='text-blue'>{{array[index].name}}</text>
+					<text class="cuIcon-triangledownfill"></text>
 				</view>
-				<input placeholder="查询什么呢" type="text" v-model="searchMode" @confirm="query"></input>
+				<input placeholder="查询什么呢" type="text" v-model="searchMode" @confirm="query" />
 				<text class="cuIcon-search" @tap="query"></text>
 			</view>
+			<bip-select :arr="array" :show="isShow" @cancel="cancel" :index="index" @selectChange="selectChange" @select="selectOK" :showKey="'name'" :isStr="false"></bip-select>
 			<view class="margin-top"></view>
 			<!-- <empty></empty> -->
 			<!-- <template v-if="array.length>0"> -->
@@ -49,9 +56,9 @@ import empty from '@/components/empty.vue';//空页面
 import mescrollUni from '@/components/mescroll-uni/mescroll-uni.vue';//下拉刷新页面
 import mLoad from '@/components/mLoad.vue';//加载页面
 import bipSelectorUnit from '@/components/bip-ui/bip-unit/bip-selector-unit.vue';
-
+import bipSelect from '@/components/bip-ui/bip-select/bip-select.vue'
 import { Vue, Provide, Component, Prop, Watch } from 'vue-property-decorator';
-@Component({components:{empty,mescrollUni,mLoad,bipSelectorUnit}})
+@Component({components:{empty,mescrollUni,mLoad,bipSelectorUnit,bipSelect}})
 export default class selecteditor extends Vue {
 	aidKey = '';//辅助Key值
 	editName='';
@@ -66,6 +73,7 @@ export default class selecteditor extends Vue {
 	qe:QueryEntity = new QueryEntity("","");//查询实体
 	searchMode = '';//查询条件值
 	//页面加载时，可以传递参数
+	isShow = false;
 	async onLoad(option: any) {
 		this.editName = option.editName;
 		this.methordName = option.methordname||''
@@ -115,8 +123,25 @@ export default class selecteditor extends Vue {
 	}
 	
 	//查询字段列表发生改变
+	selectChange(e: any) {
+		console.log(e)
+		this.index = e.id;
+		this.isShow = false;
+		// this.index = e.target.value;
+	}
+
 	bindPickerChange(e: any) {
 		this.index = e.target.value;
+	}
+
+	selectOK(e:any){
+		console.log(e)
+		this.index = e.id;
+		this.isShow = false;
+	}
+
+	cancel(){
+		this.isShow = false;
 	}
 	
 	// mescroll组件初始化的回调,可获取到mescroll对象

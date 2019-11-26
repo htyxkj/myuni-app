@@ -164,4 +164,28 @@ export default class CDataSet {
 	size(){
 		return this.cdata.data.length;
 	}
+
+	removeRecord(cr:CRecord){
+		let idx = this.cdata.data.findIndex((item:CRecord)=>{
+			return item.id == cr.id;
+		})
+		if(idx>-1){
+			this.cdata.data.splice(idx,1);
+			this.index -= 1;
+			this.currRecord = this.cdata.data[this.index]||new CRecord()
+		}
+	}
+
+	copy(){
+		let cdata = new CData(this.ccells.obj_id);
+		let datas = new Array<CRecord>();
+        this.cdata.data.forEach((cr:CRecord)=>{
+            let cr0 = new CRecord();
+            cr0.copy(cr);
+            cr0.c_state = 3;
+            datas.push(cr0);
+        });
+		cdata.data = datas;
+		return cdata;
+	}
 }

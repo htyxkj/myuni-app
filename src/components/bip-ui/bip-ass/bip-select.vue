@@ -3,10 +3,8 @@
 		<template v-if="cell">
 			<view class="title">{{ cell.labelString }}</view>
 		</template>
-		
-		<input :placeholder="cell.labelString" :type="'text'" v-model="mode" @tap.stop="open()" disabled="true"/>
-		<text :class="['cuIcon-right', 'text-grey']" @tap.stop="open()"></text>
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
+		<input :placeholder="cell.labelString" :type="'text'" v-model="mode" disabled="true" @tap.stop="open()"/>
+		<text :class="['cuIcon-searchlist', 'text-progress','text-bold']" @tap.stop="open()"></text>
 	</view>
 </template>
 
@@ -35,10 +33,10 @@ export default class bipSelect extends Vue {
 	methordName:string = '';
 	refKey = '';
 	refInsAid:BipInsAidNew = new BipInsAidNew("")
-	loading =false;
+	aidKey = ''
 	cds:CDataSet = new CDataSet(null)
 	
-	async mounted() {
+	created() {
 		this.cds = this.env.getDataSet(this.obj_id);
 		this.index = this.cds.index;
 		this.editName = this.bipInsAid.id;
@@ -50,21 +48,28 @@ export default class bipSelect extends Vue {
 			this.refKey = this.refKey.substring(2,_l);
 		}
 		if(this.refKey){
+			this.aidKey= ICL.AID_KEY+this.refKey;
 			if(this.editName == this.refKey){
 				this.refInsAid = this.refInsAid.clone(this.bipInsAid);
+			}else{
+				InsAidModule.fetchInsAid({ id: 200, aid: this.refKey });
 			}
 		}
 		this.getRefVal();
-		
 	}
 	open() {
 		this.methordName = this.editName+"_"+(this.index<0?0:this.index)+"_"+this.cell.id
 		uni.$off(this.methordName)
-		uni.$on(this.methordName,this.selectBack)
-		uni.navigateTo({url:'/pages/selecteditor/selecteditor?editName='+this.editName+"&methordname="+this.methordName});
+		uni.$on(this.methordName,this.selectBack);
+		uni.showLoading({
+			title:'跳转中...'
+		})
+		uni.navigateTo({url:'/pages/selecteditor/selecteditor?editName='+this.editName+"&methordname="+this.methordName,complete: () => {
+			uni.hideLoading();
+		}});
 	}
 	selectBack(param:any){
-		console.log(param)
+		// console.log(param)
 		if(param){
 			// 如果可以编辑 更改值，并更新状态
 			if(this.refKey == this.editName){
@@ -97,7 +102,7 @@ export default class bipSelect extends Vue {
 		return InsAidModule.aidValues;
 	}
 	
-	getRefVal(){
+	async getRefVal(){
 		if(this.modekey){
 			let key = ICL.AID_KEY+this.refKey+"_"+this.modekey
 			if(!this.inProcess.get(key)){
@@ -105,7 +110,14 @@ export default class bipSelect extends Vue {
 				if(!rtn){
 					let cont = this.refInsAid.cells.cels[0].id+"='"+this.modekey+"'"
 					let vvs = {id:this.refKey,key:key,cont:cont}
-					InsAidModule.fetchInsDataByCont(vvs);
+					await InsAidModule.fetchInsDataByCont(vvs);
+				}
+			}else{
+				let rtn = this.aidValues.get(key);
+				if(rtn){
+					this.refInsAid.values[0] = rtn;
+					this.refInsAid.makeShow();
+					this.makeSv();
 				}
 			}
 		}

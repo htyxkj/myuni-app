@@ -67,38 +67,97 @@ export default class appInfo extends Vue {
 	execCmd(cmd:any){
 		console.log(cmd)
 		if(cmd == icl.B_CMD_ADD){
-			console.log('添加')
-			if(this.dsm.currRecord.c_state ==1 ){
-				return ;
-			}
-			if((this.dsm.currRecord.c_state&icl.R_EDITED)>0){
-				uni.showToast({title:'请先保存，然后在新建'})
-				return ;
-			}
-			let cr = DataUtil.createRecord(this.dsm,this.env);
-			this.dsm.addRecord(cr)
-			console.log(cr);
+			this.addNewCRecord();
 		}
 		if(cmd == icl.B_CMD_SAVE){
-			let cr = this.dsm.currRecord;
-			tools.saveData(cr,this.uriParam.pcell,this.uriParam.pbuid).then((res:any)=>{
+			this.saveData();
+		}
+		if(cmd == icl.B_CMD_COPY){
+			this.copyCRecord()
+		}
+		if (cmd == icl.B_CMD_DEL) {
+			this.deleteRecord();
+		}
+
+	}
+
+	deleteRecord(){
+		let c0 = this.dsm.currRecord;
+		if((c0.c_state&1)>0){
+			return ;
+		}
+		//如果当前选中的可以删除
+		uni.showModal({
+			title: '删除提示',
+			content: '确定删除当前行数据吗?',
+			cancelText: '取消',
+			confirmText: '确定',
+			success: res => {
+				if (res.confirm) {
+					//删除当前行数据
+					console.log('delete curr row', this.dsm.currRecord);
+					this.dsm.currRecord.c_state = 4;
+					let cr = this.dsm.currRecord;
+					tools.saveData(cr,this.uriParam.pcell, this.uriParam.pbuid).then((res:any)=>{
+						let rtn = res.data;
+						if(rtn.id==0){
+							let idx = this.dsm.cdata.data.findIndex((item:any)=>{
+								return item == cr;
+							});
+							this.dsm.removeRecord(cr);
+							uni.showToast({title:'删除成功！'});
+							this.addNewCRecord();
+						}else{
+							uni.showToast({title:rtn.message});
+						}
+					})
+				}
+			}
+		});
+	}
+
+	addNewCRecord(){
+		let c0 = this.dsm.currRecord;
+		if((c0.c_state&1)>0||(c0.c_state&2)>0){
+			uni.showToast({title:'请保存当前数据，然后在添加'});
+			return ;
+		}
+		let cr = DataUtil.createRecord(this.dsm,this.env);
+		this.dsm.addRecord(cr);
+	}
+
+	copyCRecord(){
+		let c0 = this.dsm.currRecord;
+		if((c0.c_state&1)>0||(c0.c_state&2)>0){
+			uni.showToast({title:'请保存当前数据，然后在拷贝'});
+			return ;
+		}
+		let cr = DataUtil.copyRecord(this.dsm,this.env);
+		this.dsm.addRecord(cr);
+	}
+
+	saveData() {
+		let cr = this.dsm.currRecord;
+		tools
+			.saveData(cr, this.uriParam.pcell, this.uriParam.pbuid)
+			.then((res: any) => {
 				console.log(res);
 				let rtn = res.data;
-				if(rtn.id==0){
+				if (rtn.id == 0) {
 					let vv = rtn.data;
-					
 					Object.keys(vv).forEach((key:string)=>{
 						console.log(vv[key],key)
 						this.dsm.cellChange(vv[key],key);
-						this.dsm.setState(icl.R_POSTED);
 						let methordKey =this.dsm.ccells.obj_id+"_"+key
 						uni.$emit(methordKey)
 					})
+					this.dsm.setState(icl.R_POSTED);
+					uni.showToast({title:'保存成功！'});
 				}
-			}).catch((e:any)=>{
-				console.log(e)
 			})
-		}
+			.catch((e: any) => {
+				console.log(e);
+			});
 	}
 
 	async onLoad(option: any) {

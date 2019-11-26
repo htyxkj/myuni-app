@@ -19,5 +19,6 @@ export default class CData{
 	
 	size(){
 		return this.data.length;
-	}
+    }
+
 }

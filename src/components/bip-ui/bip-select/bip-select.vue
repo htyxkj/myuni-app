@@ -43,9 +43,15 @@ export default class bipSelect extends Vue{
 	@Prop({type:Boolean,default:true}) isStr!:boolean;
 	//是否显示下拉框
 	@Prop({type:Boolean,default:false}) show!:boolean;
+	//是否显示下拉框
+	@Prop({type:Number,default:-1}) index!:number;
 	//选中项，默认是-1
 	sindex = -1;
 	// style=''
+
+	mounted(){
+		this.sindex = this.index
+	}
 	selectChange(itm:number){
 		this.sindex = itm;
 		this.$emit('selectChange',this.arr[this.sindex]);
@@ -55,11 +61,7 @@ export default class bipSelect extends Vue{
 		//返回选择项给引用界面
 		this.$emit('select',this.arr[this.sindex]);
 	}
-	
-	mounted(){
 		
-	}
-	
 	cancel(){
 		this.$emit('cancel');
 	}

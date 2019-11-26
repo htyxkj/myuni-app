@@ -4,13 +4,13 @@
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
 		</template>
 		<template v-if="type == 'text'">
-			<input :placeholder="cell.labelString" :type="'text'" v-model="mode" @blur="dataChange"></input>
+			<input :placeholder="cell.labelString" :type="'text'" v-model="mode" @blur="dataChange" />
 			<template v-if="clearable">
 				<text :class="[mode?'cuIcon-close':'','text-red']" @tap.stop="clear()"></text>
 			</template>
 		</template>
 		<template v-else>
-			<input :placeholder="cell.labelString" type="text" :password="at0" v-model="mode"></input>
+			<input :placeholder="cell.labelString" type="text" :password="at0" v-model="mode" />
 			<text :class="[mode?(!at0?'cuIcon-attentionforbid':'cuIcon-attention'):'','text-grey']" @tap.stop="open()"></text>
 		</template>
 	</view>
@@ -88,7 +88,7 @@
 		/* font-size: 24upx !important; */
 		/* font-weight: 400; */
 	}
-	.cu-form-group input{
+	/* .cu-form-group input{ */
 		/* font-size: 24upx !important; */
-	}
+	/* } */
 </style>

@@ -97,7 +97,7 @@ class InsAid extends VuexModule implements IInsAid {
 				let rtn = res.data;
 				if(rtn.id==0){
 					let d = rtn.data.data;
-					console.log(d);
+					// console.log(d);
 					let v0 = d.values[0];
 					this.SET_AID_VALUES({key:key,value:v0})
 				}

@@ -6,9 +6,14 @@
 		</cu-custom>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
 			<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :down="downOption" :fixed="true" :top="260" :bottom="100" class="bg-white">
-				<view class="bg-white margin-bottom-sm padding" v-for="(item,index) in pdList" :key="index">
-					<bip-list-unit :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList"></bip-list-unit>
+				<view v-for="(item,index) in pdList" :key="index">
+					<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
 				</view>
+				<!-- <bip-list-unit2 v-for="(item,index) in pdList" :key="index" :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2> -->
+	<!-- 			<view class="bg-white margin-bottom-sm padding" v-for="(item,index) in pdList" :key="index">
+					<bip-list-unit :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList"></bip-list-unit> -->
+					
+				<!-- </view> -->
 			</mescroll-uni>	
 		<!-- <uni-fab @trigger="addOne"></uni-fab> -->
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
@@ -24,6 +29,7 @@ import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue'
 import bipSearchCon from '@/components/bip-ui/bip-search/bip-search-con.vue'
 import MescrollUni from '@/components/mescroll-uni/mescroll-uni.vue';
 import bipListUnit from '@/components/bip-ui/bip-unit/bip-list-unit.vue';
+import bipListUnit2 from '@/components/bip-ui/bip-unit/bip-list-unit2.vue';
 import uniFab from "@/components/uni-ui/uni-fab/uni-fab.vue";
 
 import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue'
@@ -44,7 +50,7 @@ import { icl } from '../../classes/tools/CommICL';
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
 @Component({
-	components: { mLoad,bipLay,MescrollUni,bipSearchCon,uniFab,bipListUnit,bipBillBar}
+	components: { mLoad,bipLay,MescrollUni,bipSearchCon,uniFab,bipListUnit,bipListUnit2,bipBillBar}
 })
 export default class appList extends Vue {
 	vueId: string = Tools.guid();
@@ -73,6 +79,13 @@ export default class appList extends Vue {
 	created(){
 		this.initScoreUI();
 	}
+
+	onShow(){
+		// console.log('onShow')
+		if(this.dsm.p_cell){
+			this.downCallback(this.mescroll);
+		}
+	}
 	get showCells(){
 		if(this.dsm.ccells){
 			let vr = this.dsm.ccells.cels.filter((item:any)=>{
@@ -87,7 +100,7 @@ export default class appList extends Vue {
 		if(!this.isjump){
 			this.isjump = true;
 			uni.showLoading({
-				title:'页面跳转中...'
+				title:'跳转中...'
 			})
 			let item = encodeURIComponent(JSON.stringify(this.uriParam))
 			let cr0 =  this.pdList[rid]
@@ -153,7 +166,7 @@ export default class appList extends Vue {
 		this.qe.pcell = this.dsm.ccells.obj_id;
 		this.qe.tcell = this.dsm.ccells.obj_id;
 		this.qe.oprid = 13;
-		console.log(this.qe)
+		// console.log(this.qe)
 		this.dsm_cont = new CDataSet(this.cells[0]);
 		for (let i = 1; i < this.cells.length; i++) {
 			this.ds_ext[i - 1] = new CDataSet(this.cells[i]);
@@ -182,7 +195,7 @@ export default class appList extends Vue {
 	}
 	
 	downCallback(mescroll: any) {
-		console.log('downcallback');
+		// console.log('downcallback');
 		if(mescroll&&mescroll.resetUpScroll)
 			mescroll.resetUpScroll();
 	}
@@ -195,9 +208,10 @@ export default class appList extends Vue {
 				mescroll.size,
 				(curPageData: any) => {
 					//联网成功的回调
-					console.log('mescroll.num=' + mescroll.num + ', mescroll.size=' + mescroll.size + ', curPageData.length=' + curPageData.length);
+					// console.log('mescroll.num=' + mescroll.num + ', mescroll.size=' + mescroll.size + ', curPageData.length=' + curPageData.length);
 					//设置列表数据
-					if (mescroll.num == 1) this.pdList = []; //如果是第一页需手动制空列表
+					if (mescroll.num == 1) 
+						this.pdList = []; //如果是第一页需手动制空列表
 					this.pdList = this.pdList.concat(curPageData); //追加新数据
 					// 数据渲染完毕再隐藏加载状态
 					this.$nextTick(() => {
@@ -208,6 +222,7 @@ export default class appList extends Vue {
 						// 设置nav到顶部的距离 (需根据自身的情况获取navTop的值, 这里放到列表数据渲染完毕之后)
 						// 也可以放到onReady里面,或者菜单顶部的数据(轮播等)加载完毕之后..
 					});
+					this.dsm.cdata.data = this.pdList;
 				},
 				() => {
 					//联网失败的回调,隐藏下拉刷新的状态
@@ -228,8 +243,9 @@ export default class appList extends Vue {
 	getListDataFromNet(pageNum: number, pageSize: number, successCallback: any, errorCallback: any) {
 		this.qe.page.currPage = pageNum
 		this.qe.page.pageSize = pageSize
+		this.loading = true;
 		tools.query(this.qe).then((res:any)=>{
-			console.log(res)
+			// console.log(res)
 			let listData:Array<any> = [];
 			let rtn = res.data;
 			if(rtn.id==0){
@@ -238,6 +254,18 @@ export default class appList extends Vue {
 				listData = vvr;
 			}
 			successCallback && successCallback(listData);
+			// if (this.qe.page.currPage == 1)
+			// 	this.pdList = []; //如果是第一页需手动制空列表
+			// this.pdList = this.pdList.concat(listData); //追加新数据
+			// this.$nextTick(() => {
+			// 	this.mescroll.endSuccess(listData.length);
+			// 	if(this.loading){
+			// 		this.loading = false;
+			// 	}
+			// 	// 设置nav到顶部的距离 (需根据自身的情况获取navTop的值, 这里放到列表数据渲染完毕之后)
+			// 	// 也可以放到onReady里面,或者菜单顶部的数据(轮播等)加载完毕之后..
+			// });
+			// this.dsm.cdata.data = this.pdList;
 		}).catch((e:any)=>{
 			console.log(e);
 			errorCallback && errorCallback();
@@ -267,7 +295,7 @@ export default class appList extends Vue {
 			isBounce: false, // 默认禁止橡皮筋的回弹效果, 必读事项: http://www.mescroll.com/qa.html?v=190725#q25
 			page: {
 				num: 0, // 当前页码,默认0,回调之前会加1,即callback(page)会从1开始
-				size: 15, // 每页数据的数量
+				size: 10, // 每页数据的数量
 				time: null // 加载第一页数据服务器返回的时间; 防止用户翻页时,后台新增了数据从而导致下一页数据重复;
 			},
 			noMoreSize: 3, // 如果列表已无数据,可设置列表的总数量要大于等于5条才显示无更多数据;避免列表数据过少(比如只有一条数据),显示无更多数据会不好看

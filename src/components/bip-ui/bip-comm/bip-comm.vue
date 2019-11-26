@@ -21,6 +21,9 @@
 			<template v-else-if="cell.editType==1">
 				<bip-list :label="cell.labelString" :cell="cell" :obj_id="obj_id" ></bip-list>
 			</template>
+			<template v-else-if="cell.refValue">
+				<bip-ref :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-ref>
+			</template>
 			<template v-else>
 				<bip-input :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-input>
 			</template>
@@ -45,9 +48,10 @@ import bipInput from '../bip-input/bip-input.vue';
 import bipNumber from '../bip-input/bip-number.vue';
 import bipDate from '../bip-date/bip-date.vue';
 import bipSelect from '../bip-ass/bip-select.vue';
+import bipRef from '../bip-ass/bip-ref.vue';
 import bipList from '../bip-list/bip-list.vue';
 @Component({
-	components: {bipInput,bipNumber,bipDate,bipSelect,bipList}
+	components: {bipInput,bipNumber,bipDate,bipSelect,bipRef,bipList}
 })
 export default class bipComm extends Vue{
 	@Inject('env') env!:CCliEnv;
@@ -59,7 +63,7 @@ export default class bipComm extends Vue{
 	editName='';
 	bassist:boolean = false;
 	mode:any = ''
-	mounted(){
+	created(){
 		if(this.cell.assist){
 			this.bassist = true;
 			this.editName = this.cell.editName;
@@ -91,8 +95,7 @@ export default class bipComm extends Vue{
 		if(this.bassist&&!this.bipInsAid.id){
 			let rr = this.aidmaps.get(this.aidKey);
 			if(rr){
-				this.bipInsAid = Object.assign({},rr);
-				console.log(this.bipInsAid,'commmmmm')
+				this.bipInsAid = this.bipInsAid.clone(rr);
 			}
 			
 		}

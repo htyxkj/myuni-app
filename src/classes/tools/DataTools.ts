@@ -8,6 +8,7 @@ import Dept from '@/classes/Dept';
 
 import { GlobalVariable } from './ICL'; //常量类
 import { DateUtils } from './DateUtils';
+import CData from '../pub/CData';
 let DateTool = DateUtils.DateTool;
 export namespace dataTool {
 	/**
@@ -38,6 +39,21 @@ export namespace dataTool {
 			this._cds = cds;
 			this._env = env;
 			return this.initModal(this._cds);
+		}
+
+		copyRecord(cds: CDataSet, env: CCliEnv){
+			let crd0 = cds.currRecord;
+			let crd = this.createRecord(cds,env);
+			cds.ccells.cels.forEach((cell:any)=>{
+				if(!cell.initValue){
+					crd.data[cell.id] = crd0.data[cell.id];
+				}
+			})
+			cds.ds_sub.forEach((cd:CDataSet)=>{
+				let dt:CData = cd.copy();
+				crd.subs.push(dt);
+			})
+			return crd;
 		}
 
 		//初始化M数据

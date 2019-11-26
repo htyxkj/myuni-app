@@ -85,7 +85,7 @@ export default class bipPickerDate extends Vue {
 
 	//确认选择
 	pickerConfirm(e: any) {
-		console.log('pickerConfirm', e);
+		// console.log('pickerConfirm', e);
 		switch (
 			this.mode
 			// case "date"
@@ -100,7 +100,7 @@ export default class bipPickerDate extends Vue {
 	}
 	// 绑定的值发生改变
 	bindChange(val: any) {
-		console.log('bindChange', val);
+		// console.log('bindChange', val);
 		let arr: Array<any> = val.detail.value;
 		if (this.mode === 'date' || this.mode == 'datetime') {
 			let year = this.data.years[arr[0]] || this.data.years[this.data.years.length - 1];
@@ -173,7 +173,7 @@ export default class bipPickerDate extends Vue {
 	initYMDData(){
 		let years = [];
 		let r0 = moment().year();
-		console.log(r0);
+		// console.log(r0);
 		years = this.makeYears(r0);
 		let mm = [];
 		for (let i = 1; i <= 12; i++) {

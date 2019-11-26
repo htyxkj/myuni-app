@@ -3,14 +3,14 @@
 		<template v-for="(item,index) in laycfg">
 			<template v-if="item.bcells&&item.comp">
 				<template v-if="!item.comp.btable">
-					<lay-cell :laycell="item.comp" ></lay-cell>
+					<lay-cell :laycell="item.comp" :key="index"></lay-cell>
 				</template>
 				<template v-else>
-					<lay-grid :laycell="item.comp" ></lay-grid>
+					<lay-grid :laycell="item.comp" :key="index" ></lay-grid>
 				</template>
 			</template>
 			<template v-else>
-				<view>其他布局</view>
+				<view :key="index">其他布局</view>
 			</template>
 		</template>
 		<!-- <lay-cell v-for="(item,index) in laycfg" :key="index" :laycell="item.comp" :env="env"></lay-cell> -->

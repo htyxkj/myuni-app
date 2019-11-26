@@ -11,16 +11,16 @@
 				<view class="cu-form-group uni-radio-input-disabled">
 					<view class="title" style="width: 60upx; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;"
 					>普通输入框</view>
-					<input placeholder="两字短标题" name="input"></input>
+					<input placeholder="两字短标题" name="input" />
 				</view>
 				
 				<view class="cu-form-group">
 					<view class="title" style="width:60upx;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">普通输入</view>
-					<input placeholder="统一标题的宽度" name="input"></input>
+					<input placeholder="统一标题的宽度" name="input" />
 				</view>
 				<view class="cu-form-group">
 					<view class="title" style="width:60upx;white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">普通输入框2</view>
-					<input name="input"></input>
+					<input name="input" />
 				</view>
 				
 				<view class="cu-form-group">

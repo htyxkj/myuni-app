@@ -37,7 +37,7 @@ export default class bipList extends Vue{
 	showv = '';//下拉选中的key值
 	selectItem:any = {}
 	cds:CDataSet = new CDataSet(null)
-	mounted(){
+	created(){
 		this.cds = this.env.getDataSet(this.obj_id);
 		this.index = this.cds.index;
 		this.mode1 = this.record.data[this.cell.id]
@@ -75,6 +75,8 @@ export default class bipList extends Vue{
 			if(_idx>-1){
 				let item = this.bipInsAid.values[_idx];
 				this.mode = item[this.showk]
+			}else{
+				this.mode = this.mode1;
 			}
 		}
 	}
@@ -143,6 +145,15 @@ export default class bipList extends Vue{
 				console.log(this.bipInsAid)
 			}
 			
+		}
+	}
+
+	@Watch('record')
+	recordChange(){
+		let rr = this.record.data[this.cell.id];
+		if(rr !== this.mode1){
+			this.mode1 = rr||''
+			this.makeShowValue()
 		}
 	}	
 }

@@ -17,4 +17,8 @@ export default class CRecord {
     guid():string {
         return (this.S4()+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+"-"+this.S4()+this.S4()+this.S4());
     }
+
+    copy(cr:any){
+        this.data = cr.data;
+    }
 } 

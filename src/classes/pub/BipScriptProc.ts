@@ -53,13 +53,13 @@ export default class BipScriptProc {
   }
 
   expItem(s0: string, bds: boolean) {
-    var x1 = s0 != null ? s0.length - 1 : -1;
+    let x1 = s0 != null ? s0.length - 1 : -1;
     if (x1 < 0) return null;
     if ("null" === s0) return null;
-    var b0 = s0 == "true";
+    let b0 = s0 == "true";
     if (b0 || "false" == s0) return new Boolean(b0);
-    var c0 = s0.charAt(0);
-    var bfh = c0 == "-";
+    let c0 = s0.charAt(0);
+    let bfh = c0 == "-";
     if (bfh || (c0 >= "0" && c0 <= "9")) {
       if (s0.indexOf(".") > 0) return new Number(s0).valueOf();
       c0 = x1 > 1 ? s0.charAt(1) : "0";

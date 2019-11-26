@@ -3,7 +3,7 @@
 		<template v-if="cell">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
 		</template>
-		<input class="text-right" :placeholder="cell.labelString || title " :type="'text'" v-model="mode" disabled="true"></input>
+		<input class="text-right" :placeholder="cell.labelString || title " :type="'text'" v-model="mode" disabled="true"/>
 		<text class="cuIcon-calendar" @tap.stop="open()"></text>
 		<bip-picker-date :mode="cell.type==91?'date':'datetime'"  @confirm="onConfirm" ref="calendar" ></bip-picker-date>
 	</view>
@@ -26,13 +26,13 @@ export default class bipDate extends Vue {
 	cds:CDataSet = new CDataSet(null)
 	selectIndex:Array<number>=[0,0,0,0,0,0]
 	mode:string = ''
-	mounted(){
+	created(){
 		this.cds = this.env.getDataSet(this.obj_id);
 		this.mode = this.record.data[this.cell.id]
 	}
 	
 	change(e:any){
-		console.log(e)
+		// console.log(e)
 	}
 	
 	open(){

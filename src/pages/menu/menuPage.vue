@@ -57,9 +57,12 @@
 							// uni.navigateTo({
 							//     url: '/pages/appinfo/appinfo?item='+item+'&color='+param.color+'&title='+param.menuName
 							// });
-							uni.navigateTo({
-							    url: '/pages/appinfo/applist?item='+item+'&color='+param.color+'&title='+param.menuName
-							});
+							let uri = '/pages/appinfo/applist?item='+item+'&color='+param.color+'&title='+param.menuName;
+							this.pageJump(uri)
+						}else{
+							let item = encodeURIComponent(JSON.stringify(this.uriParams))
+							let uri = '/pages/appreport/appreport?item='+item+'&color='+param.color+'&title='+param.menuName;
+							this.pageJump(uri);
 						}
 					}else{
 						uni.showToast({
@@ -88,6 +91,15 @@
 			if(m0.childMenu.length>0){
 				this.groupMenus.push(m0)
 			}
+		}
+		
+		pageJump(uri:string){
+			uni.showLoading({title:'跳转中...'})
+			uni.navigateTo({
+			    url: uri,complete:()=>{
+					uni.hideLoading();
+				}
+			});
 		}
 	}
 </script>

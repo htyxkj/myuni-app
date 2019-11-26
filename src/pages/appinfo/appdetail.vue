@@ -2,11 +2,11 @@
 	<view>
 		<cu-custom :bgColor="'bg-' + cr" :isBack="true">
 			<block slot="backText">返回</block>
-			<block slot="content"><view class="header-title">{{ title }}->详情</view></block>
-		</cu-custom>		
-		<view class="margin-lr-sm margin-tb-sm">
-			<bip-lay v-if="lay.binit" :layout="lay" :key="index"></bip-lay>
-		</view>
+			<block slot="content">
+				<view class="header-title">{{ title }}->详情</view>
+			</block>
+		</cu-custom>
+		<view class="margin-lr-sm margin-tb-sm"><bip-lay v-if="lay.binit" :layout="lay" :key="index"></bip-lay></view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
 			<!-- <bip-menu-bar @tabSelect="execCmd"></bip-menu-bar> -->
@@ -20,11 +20,10 @@ import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
 // import { UriPModule } from '@/store/module/uripm'; //导入vuex模块，自动注入
 import mLoad from '@/components/mLoad.vue';
 // import bipInput from '@/components/bip-ui/bip-input/bip-input.vue'
-import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue'
+import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue';
 // import uniCard from '@/components/uni-ui/uni-card/uni-card.vue'
-import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue'
-import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue'
-
+import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue';
+import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue';
 
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
@@ -39,17 +38,17 @@ import BipLayout from '@/classes/ui/BipLayout';
 import { Tools } from '../../classes/tools/Tools';
 import { icl } from '../../classes/tools/CommICL';
 
-import {dataTool} from '@/classes/tools/DataTools';
-const DataUtil = dataTool.utils
+import { dataTool } from '@/classes/tools/DataTools';
+const DataUtil = dataTool.utils;
 @Component({
-	components: { mLoad,bipLay,bipMenuBar,bipBillBar }
+	components: { mLoad, bipLay, bipMenuBar, bipBillBar }
 })
 export default class appDetail extends Vue {
 	vueId: string = Tools.guid();
 	cr: string = 'blue';
 	title: string = '详情页面';
-	
-	loading: boolean = false;
+
+	loading: boolean = true;
 	uriParam: URIParams = new URIParams();
 	@Provide('env') env: CCliEnv = new CCliEnv();
 	@Provide('mbs') mbs: BipMenuBar = new BipMenuBar();
@@ -62,56 +61,113 @@ export default class appDetail extends Vue {
 	//界面组成对象信息
 	cells: Array<Cells> = new Array<Cells>();
 	lay: BipLayout = new BipLayout('');
-
-
-	execCmd(cmd:any){
-		console.log(cmd)
-		if(cmd == icl.B_CMD_DEL){
-			//如果当前选中的可以删除
-			uni.showModal({
-				title: '删除提示',
-				content: '确定删除当前行数据吗?',
-				cancelText: '取消',
-				confirmText: '确定',
-				success: res => {
-					if (res.confirm) {
-						//删除当前行数据
-						console.log('delete curr row',this.dsm.currRecord);
-						
-					}
-				}
-			})
+	execCmd(cmd: any) {
+		console.log(cmd);
+		if (cmd == icl.B_CMD_DEL) {
+			this.deleteRecord();
 		}
-		// if(cmd == icl.B_CMD_SAVE){
-		// 	let cr = this.dsm.currRecord;
-		// 	tools.saveData(cr,this.uriParam.pcell,this.uriParam.pbuid).then((res:any)=>{
-		// 		console.log(res);
-		// 		let rtn = res.data;
-		// 		if(rtn.id==0){
-		// 			let vv = rtn.data;
-					
-		// 			Object.keys(vv).forEach((key:string)=>{
-		// 				console.log(vv[key],key)
-		// 				this.dsm.cellChange(vv[key],key);
-		// 				this.dsm.setState(icl.R_POSTED);
-		// 				let methordKey =this.dsm.ccells.obj_id+"_"+key
-		// 				uni.$emit(methordKey)
-		// 			})
-		// 		}
-		// 	}).catch((e:any)=>{
-		// 		console.log(e)
-		// 	})
-		// }
+		if (cmd == icl.B_CMD_SAVE) {
+			this.saveData();
+		}
+
+		if(cmd == icl.B_CMD_ADD){
+			this.addNewCRecord();
+		}
+
+		if(cmd == icl.B_CMD_COPY){
+			this.copyCRecord()
+		}
 	}
 
+	deleteRecord(){
+		let c0 = this.dsm.currRecord;
+		if((c0.c_state&1)>0){
+			return ;
+		}
+		//如果当前选中的可以删除
+		uni.showModal({
+			title: '删除提示',
+			content: '确定删除当前行数据吗?',
+			cancelText: '取消',
+			confirmText: '确定',
+			success: res => {
+				if (res.confirm) {
+					//删除当前行数据
+					console.log('delete curr row', this.dsm.currRecord);
+					this.dsm.currRecord.c_state = 4;
+					let cr = this.dsm.currRecord;
+					tools.saveData(cr,this.uriParam.pcell, this.uriParam.pbuid).then((res:any)=>{
+						let rtn = res.data;
+						if(rtn.id==0){
+							let idx = this.dsm.cdata.data.findIndex((item:any)=>{
+								return item == cr;
+							});
+							this.dsm.removeRecord(cr);
+							uni.showToast({title:'删除成功！'});
+						}else{
+							uni.showToast({title:rtn.message});
+						}
+					})
+				}
+			}
+		});
+	}
+
+	addNewCRecord(){
+		let c0 = this.dsm.currRecord;
+		if((c0.c_state&1)>0||(c0.c_state&2)>0){
+			uni.showToast({title:'请保存当前数据，然后在添加'});
+			return ;
+		}
+		let cr = DataUtil.createRecord(this.dsm,this.env);
+		this.dsm.addRecord(cr);
+	}
+
+	copyCRecord(){
+		let c0 = this.dsm.currRecord;
+		if((c0.c_state&1)>0||(c0.c_state&2)>0){
+			uni.showToast({title:'请保存当前数据，然后在拷贝'});
+			return ;
+		}
+		let cr = DataUtil.copyRecord(this.dsm,this.env);
+		this.dsm.addRecord(cr);
+	}
+
+	saveData() {
+		let cr = this.dsm.currRecord;
+		tools
+			.saveData(cr, this.uriParam.pcell, this.uriParam.pbuid)
+			.then((res: any) => {
+				console.log(res);
+				let rtn = res.data;
+				if (rtn.id == 0) {
+					let vv = rtn.data;
+					Object.keys(vv).forEach((key:string)=>{
+						console.log(vv[key],key)
+						this.dsm.cellChange(vv[key],key);
+						let methordKey =this.dsm.ccells.obj_id+"_"+key
+						uni.$emit(methordKey)
+					})
+					this.dsm.setState(icl.R_POSTED);
+					uni.showToast({title:'保存成功！'});
+				}
+			})
+			.catch((e: any) => {
+				console.log(e);
+			});
+	}
+	
+	mounted(){
+		this.loading = false;
+	}
 	async onLoad(option: any) {
 		if (option.item) {
 			this.cr = option.color ? option.color : 'blue';
 			this.title = option.title ? option.title : 'billPage';
 			this.uriParam = JSON.parse(decodeURIComponent(option.item));
 			let cr0 = JSON.parse(decodeURIComponent(option.pitem));
-			if(this.uriParam){
-				this.loading = true;
+			this.loading = true;
+			if (this.uriParam) {
 				await tools
 					.getCCellsParams(this.uriParam.pcell)
 					.then((res: any) => {
@@ -120,9 +176,11 @@ export default class appDetail extends Vue {
 						let rtn = res.data;
 						if (rtn.id == 0) {
 							this.initUIData(rtn.data.layCels);
-							this.dsm.addRecord(cr0)
-						}else{
-							uni.showToast({title:'没有获取到对象定义'+this.uriParam})
+							this.dsm.addRecord(cr0);
+						} else {
+							uni.showToast({
+								title: '没有获取到对象定义' + this.uriParam
+							});
 						}
 					})
 					.catch((err: any) => {
@@ -130,12 +188,8 @@ export default class appDetail extends Vue {
 						console.log(err);
 					});
 			}
-			
 		}
-		
 	}
-	
-	
 
 	async initUIData(layCels: any) {
 		this.cells = layCels;
@@ -144,28 +198,28 @@ export default class appDetail extends Vue {
 		for (let i = 1; i < this.cells.length; i++) {
 			this.ds_ext[i - 1] = new CDataSet(this.cells[i]);
 		}
-		let buid = this.uriParam.pflow
-		await tools.getBULinks(buid).then((res:any)=>{
+		let buid = this.uriParam.pflow;
+		await tools.getBULinks(buid).then((res: any) => {
 			let rtn1 = res.data;
-			if(rtn1.id==0){
+			if (rtn1.id == 0) {
 				let ope = rtn1.data.opt;
 				this.dsm.opera = ope;
 				this.dsm.initContrlIndex();
 			}
 		});
-		
+
 		this.mbs.init(this.uriParam.pattr, this.dsm);
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
-		setTimeout(()=>{
-			this.execCmd(icl.B_CMD_ADD)
-		}, 100);
+		// setTimeout(() => {
+		// 	this.execCmd(icl.B_CMD_ADD);
+		// }, 100);
 	}
 }
 </script>
 
 <style lang="scss">
-page{
+page {
 	margin-bottom: 120upx;
 }
 </style>
