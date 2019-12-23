@@ -1,5 +1,5 @@
 <template>
-	<view class="my-menu">
+	<view>
 		<mMenu v-for="(m,index) in groupMenus" :key="index" :m="m" @openM="openMenu" ></mMenu>
 	</view>
 </template>
@@ -52,16 +52,14 @@
 					// console.log(data);
 					if(data.id>=0){
 						this.uriParams = data.data.mparams
+						uni.setStorageSync(pbuid,JSON.stringify(this.uriParams))
 						if(this.uriParams.beBill){
 							let item = encodeURIComponent(JSON.stringify(this.uriParams))
-							// uni.navigateTo({
-							//     url: '/pages/appinfo/appinfo?item='+item+'&color='+param.color+'&title='+param.menuName
-							// });
-							let uri = '/pages/appinfo/applist?item='+item+'&color='+param.color+'&title='+param.menuName;
+							let uri = '/pages/appinfo/applist?color='+param.color+'&title='+param.menuName+"&pbuid="+pbuid;
 							this.pageJump(uri)
 						}else{
 							let item = encodeURIComponent(JSON.stringify(this.uriParams))
-							let uri = '/pages/appreport/appreport?item='+item+'&color='+param.color+'&title='+param.menuName;
+							let uri = '/pages/appreport/appreport?color='+param.color+'&title='+param.menuName+"&pbuid="+pbuid;
 							this.pageJump(uri);
 						}
 					}else{
@@ -105,9 +103,6 @@
 </script>
 
 <style>
-.my-menu{
-	margin-bottom: 100upx;
-}
 .cu-list.grid.no-border {
 	padding: 20upx 20upx !important;
 }

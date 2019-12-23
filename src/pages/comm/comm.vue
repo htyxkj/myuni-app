@@ -21,10 +21,9 @@
 	import mLoad from '../../components/mLoad.vue';
 	import empty from '../../components/empty.vue';
 	import mIndexBar from '../../components/mIndexBar.vue'
-	import billApp from '../bill-app/bill-app.vue'
 	import layout from '../layout/layout.vue'
 	import URIParams from '@/classes/URIParams'
-	@Component({components:{mLoad,mIndexBar,billApp,empty,layout}})
+	@Component({components:{mLoad,mIndexBar,empty,layout}})
 	export default class comm extends Vue {
 		@Provide() title = '通用页面'
 		@Provide() pbuid = ''

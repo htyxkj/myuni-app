@@ -47,7 +47,7 @@ export default class appDetail extends Vue {
 	vueId: string = Tools.guid();
 	cr: string = 'blue';
 	title: string = '详情页面';
-
+	pbuid:string = '';
 	loading: boolean = true;
 	uriParam: URIParams = new URIParams();
 	@Provide('env') env: CCliEnv = new CCliEnv();
@@ -161,10 +161,11 @@ export default class appDetail extends Vue {
 		this.loading = false;
 	}
 	async onLoad(option: any) {
-		if (option.item) {
+		if (option.pbuid) {
 			this.cr = option.color ? option.color : 'blue';
 			this.title = option.title ? option.title : 'billPage';
-			this.uriParam = JSON.parse(decodeURIComponent(option.item));
+			this.pbuid = option.pbuid;
+			this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
 			let cr0 = JSON.parse(decodeURIComponent(option.pitem));
 			this.loading = true;
 			if (this.uriParam) {

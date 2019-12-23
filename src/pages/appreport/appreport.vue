@@ -44,6 +44,7 @@ export default class appReport extends Vue {
 	vueId: string = Tools.guid();
 	cr: string = 'blue';
 	title: string = '报表页面';
+	pbuid:string = '';
 	
 	loading: boolean = true;
 	uriParam: URIParams = new URIParams();
@@ -105,7 +106,8 @@ export default class appReport extends Vue {
 		if (option.item) {
 			this.cr = option.color ? option.color : 'blue';
 			this.title = option.title ? option.title : 'billPage';
-			this.uriParam = JSON.parse(decodeURIComponent(option.item));
+			this.pbuid = option.pbuid;
+			this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
 			if(this.uriParam){
 				this.loading = true;
 				await tools

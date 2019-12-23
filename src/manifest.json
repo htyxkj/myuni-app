@@ -44,6 +44,10 @@
         },
         /* SDK配置 */
         "usingComponents" : true
+		// "compatible":{
+		// 	"runtimeVersion":"2.4.6",
+		// 	"complierVersion":"2.4.6"
+		// }
     },
     "quickapp" : {},
     /* 快应用特有相关 */

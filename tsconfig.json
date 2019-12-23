@@ -11,7 +11,7 @@
     "experimentalDecorators":true,
     "sourceMap": true,
     "baseUrl": ".",
-	"allowJs":true,//允许添加JS
+	  "allowJs":true,//允许添加JS
     "types": [
       "webpack-env",
       "@dcloudio/types/uni-app"

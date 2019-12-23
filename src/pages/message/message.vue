@@ -1,5 +1,5 @@
 <template>
-	<view class="my-msg">
+	<view>
 		<view class="cu-timeline">
 			<view class="cu-time">昨天</view>
 			<view class="cu-item cur cuIcon-noticefill">
@@ -47,7 +47,4 @@
 </script>
 
 <style>
-.my-msg{
-	margin-bottom: 100upx;
-}
 </style>

@@ -1,5 +1,5 @@
 <template>
-	<view class="content">
+	<view>
 		<cu-custom bgColor="bg-gradual-pink" :isBack="false">
 			<!-- <block slot="backText">返回</block> -->
 			<block slot="content"><view class="header-title">{{title}}</view></block>
@@ -94,9 +94,10 @@
 	}
 </script>
 
-<style scoped>
-	.content{
-		margin-bottom: 100upx;
+<style lang="scss">
+	page {
+		/* margin-bottom: 100upx; */
+		padding-bottom: 120upx;
 	}
 	.cu-bar.tabbar .action [class*="cuIcon-"] {
 		margin: 0 auto 8rpx !important;		

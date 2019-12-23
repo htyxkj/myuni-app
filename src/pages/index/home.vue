@@ -1,5 +1,5 @@
 <template>
-	<view class="my-home">
+	<view>
 		<view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
 				<text class="cuIcon-titles text-blue "></text>混合图
@@ -200,10 +200,7 @@
 	}
 </script>
 
-<style>
-	.my-home{
-		margin-bottom: 100upx;
-	}
+<style lang="scss">
 	.qiun-charts {
 		width: 750upx;
 		height: 500upx;

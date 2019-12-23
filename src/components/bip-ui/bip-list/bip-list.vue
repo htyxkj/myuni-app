@@ -18,6 +18,8 @@ import { Vue, Prop, Component,Inject,Watch } from 'vue-property-decorator';
 import bipSelect from '@/components/bip-ui/bip-select/bip-select.vue'
 import {icl} from '@/classes/tools/CommICL';
 const ICL = icl; 
+import { baseUtils } from '@/classes/api/baseutils';
+let bstools = baseUtils.tools;
 import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
 @Component({
 	components: {bipSelect}
@@ -63,6 +65,12 @@ export default class bipList extends Vue{
 						InsAidModule.fetchInsAid({ id: 300, aid: this.editName });
 				}
 				
+			}else{
+				// console.log(ref)
+				this.bipInsAid = bstools.makeBipInsAidByStr(ref,this.cell.id);
+				this.showk = this.bipInsAid.cells.cels[1].id||this.bipInsAid.cells.cels[0].id
+				this.showv = this.bipInsAid.cells.cels[0].id
+				this.makeShowValue()
 			}
 		}
 	}

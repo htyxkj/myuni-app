@@ -48,7 +48,7 @@ export default class appInfo extends Vue {
 	vueId: string = Tools.guid();
 	cr: string = 'blue';
 	title: string = '单据页面';
-	
+	pbuid:string = '';
 	loading: boolean = false;
 	uriParam: URIParams = new URIParams();
 	@Provide('env') env: CCliEnv = new CCliEnv();
@@ -161,10 +161,11 @@ export default class appInfo extends Vue {
 	}
 
 	async onLoad(option: any) {
-		if (option.item) {
+		if (option.pbuid) {
 			this.cr = option.color ? option.color : 'blue';
 			this.title = option.title ? option.title : 'billPage';
-			this.uriParam = JSON.parse(decodeURIComponent(option.item));
+			this.pbuid = option.pbuid;
+			this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
 			if(this.uriParam){
 				this.loading = true;
 				await tools

@@ -8,15 +8,6 @@
 		</cu-custom>
 		<view>
 			<view class="cu-form-group solid-bottom">
-				<!-- <view class="mtitle text-blue"> -->
-					<!-- <picker @change="bindPickerChange" :value="index" :range="array" range-key="name">
-						<view class="picker">
-							{{ array[index].name }}
-						</view>
-					</picker> -->
-					
-					
-				<!-- </view> -->
 				<view class="action padding-right" @tap="isShow = true">
 					<text class='text-blue'>{{array[index].name}}</text>
 					<text class="cuIcon-triangledownfill"></text>
@@ -74,6 +65,9 @@ export default class selecteditor extends Vue {
 	searchMode = '';//查询条件值
 	//页面加载时，可以传递参数
 	isShow = false;
+	created(){
+		this.initScoreUI()
+	}
 	async onLoad(option: any) {
 		this.editName = option.editName;
 		this.methordName = option.methordname||''
@@ -98,7 +92,6 @@ export default class selecteditor extends Vue {
 				this.array.push(ro);
 			})
 		}
-		this.initScoreUI()
 	}
 	//缓存数据
 	get aidmaps() {
@@ -245,18 +238,6 @@ export default class selecteditor extends Vue {
 	实际项目以您服务器接口返回的数据为准,无需本地处理分页.
 	* */
 	getListDataFromNet(pageNum: number, pageSize: number, successCallback: any, errorCallback: any) {
-		// setTimeout(()=>{
-		// 	try{
-		// 		let listData:Array<any> = [];
-		// 		for(let i=0;i<30;i++){
-		// 			listData.push({cbm:i,cmc:'mingc_'+i});
-		// 		}
-		// 		successCallback && successCallback(listData);
-		// 	}catch(e){
-		// 		errorCallback && errorCallback();
-		// 	}
-
-		// },1000);
 		this.qe.page.pageSize = pageSize;
 		this.qe.page.currPage = pageNum;
 		if(this.searchMode){
