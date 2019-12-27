@@ -38,9 +38,7 @@
 			uni.$on('appinfo',this.subMethod);
 		}
 		mounted(){
-			this.$nextTick(()=>{
-				this.comps = this.layout.compconfs
-			})
+			this.comps = this.layout.compconfs
 		}
 		
 		subMethod(env:CCliEnv){

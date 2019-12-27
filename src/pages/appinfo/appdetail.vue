@@ -6,7 +6,9 @@
 				<view class="header-title">{{ title }}->详情</view>
 			</block>
 		</cu-custom>
-		<view class="margin-lr-sm margin-tb-sm"><bip-lay v-if="lay.binit" :layout="lay" :key="index"></bip-lay></view>
+		<view class="margin-lr-sm margin-tb-sm">
+			<bip-lay v-if="lay.binit" :layout="lay" :key="index"></bip-lay>
+		</view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
 			<!-- <bip-menu-bar @tabSelect="execCmd"></bip-menu-bar> -->
@@ -173,46 +175,50 @@ export default class appDetail extends Vue {
 			let rr = res.data;
 			if(rr.id==0){
 				let infos = rr.data.data;
-				this.$nextTick(()=>{
-					let cds = this.env.getDataSet(objid);
-					infos.data.forEach((cr:any)=>{
-						cds.addRecord(cr);
-					})
+				let cds = this.env.getDataSet(objid);
+				infos.data.forEach((cr:any)=>{
+					cds.addRecord(cr);
 				})
 			}
 			this.loading = false;
-		})
+		});
+		console.log('findData');
+
 	}
 	
 	mounted(){
 		this.loading = false;
 	}
-	onLoad(option: any) {
+	async onLoad(option: any) {
 		if (option.pbuid) {
 			this.cr = option.color ? option.color : 'blue';
 			this.title = option.title ? option.title : 'billPage';
 			this.pbuid = option.pbuid;
 			this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
+			// console.log(this.uriParam,'999999')
+			// console.log(option.qcont)
 			if(option.qcont){
-				this.qcont = decodeURIComponent(option.qcont).trimEnd();
+				this.qcont = decodeURIComponent(option.qcont);
 			}
-			console.log(this.qcont)
+			// console.log(this.qcont)
 			this.loading = true;
 			if (this.uriParam) {
-				tools
+				await tools
 					.getCCellsParams(this.uriParam.pcell)
 					.then((res: any) => {
 						// console.log(res);
 						this.loading = false;
 						let rtn = res.data;
 						if (rtn.id == 0) {
-							this.initUIData(rtn.data.layCels);
 							this.qe.pcell = this.uriParam.pcell;
-							// this.qe.tcell = this.qe.pcell;
+							this.initUIData(rtn.data.layCels);
 							if(this.qcont){
 								this.qe.mcont = ''+this.qcont;
-								this.findData();
+								this.$nextTick(()=>{
+									this.findData();
+								})
 							}
+							
 						} else {
 							uni.showToast({
 								title: '没有获取到对象定义' + this.uriParam
@@ -247,9 +253,7 @@ export default class appDetail extends Vue {
 		this.mbs.init(this.uriParam.pattr, this.dsm);
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
-		// setTimeout(() => {
-		// 	this.execCmd(icl.B_CMD_ADD);
-		// }, 100);
+		console.log(this.uriParam.playout,this.qcont,'99999999')
 	}
 }
 </script>
