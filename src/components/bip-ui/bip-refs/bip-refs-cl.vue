@@ -34,12 +34,13 @@ export default class bipRefsCl extends Vue{
 	showValue:string = '';
 	cds:CDataSet = new CDataSet(null)
 	created(){
-		// console.log(this.bipInsAid)
-		this.cds = this.env.getDataSet(this.obj_id);
-		this.mode = this.record.data[this.cell.id];
-		let mkey = this.obj_id+"_"+this.cell.id
-		uni.$on(mkey,this.cellDataChange);
-		this.makeCLshow();
+		this.$nextTick(()=>{
+			this.cds = this.env.getDataSet(this.obj_id);
+			this.mode = this.record.data[this.cell.id];
+			let mkey = this.obj_id+"_"+this.cell.id
+			uni.$on(mkey,this.cellDataChange);
+			this.makeCLshow();
+		})
 	}
 	
 	get modes(){
@@ -57,11 +58,14 @@ export default class bipRefsCl extends Vue{
 	
 	@Watch('record')
 	recordChange(){
-		let rr = this.record.data[this.cell.id];
-		if(rr !== this.mode){
-			this.mode = rr||''
-			this.makeCLshow();
-		}
+		this.$nextTick(()=>{
+			let rr = this.record.data[this.cell.id];
+			if(rr !== this.mode){
+				this.mode = rr||''
+				this.makeCLshow();
+			}
+		})
+		
 	}
 	
 	makeCLshow(){

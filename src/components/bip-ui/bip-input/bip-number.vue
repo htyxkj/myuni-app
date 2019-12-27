@@ -31,19 +31,25 @@
 		}
 		
 		mounted(){
-			this.cds = this.env.getDataSet(this.obj_id);
-			this.mode = this.record.data[this.cell.id];
-			this.mode = this.formatNumber(this.mode)
-			let mkey = this.obj_id+"_"+this.cell.id
-			uni.$on(mkey,this.cellDataChange)
+			this.$nextTick(()=>{
+				this.cds = this.env.getDataSet(this.obj_id);
+				this.mode = this.record.data[this.cell.id];
+				this.mode = this.formatNumber(this.mode)
+				let mkey = this.obj_id+"_"+this.cell.id
+				uni.$on(mkey,this.cellDataChange)
+			})
+			
 			// console.log(this.record)
 		}
 		
 		dataChange(e:any){
-			if(this.mode != this.record.data[this.cell.id]){
-				this.mode = this.formatNumber(this.mode);
-				this.cds.cellChange(this.mode,this.cell.id);
-			}
+			this.$nextTick(()=>{
+				if(this.mode != this.record.data[this.cell.id]){
+					this.mode = this.formatNumber(this.mode);
+					this.cds.cellChange(this.mode,this.cell.id);
+				}
+			})
+			
 				
 		}
 		
@@ -56,7 +62,6 @@
 				}
 				num = nr.toFixed(this.cell.ccPoint)
 			}
-
 			return num
 		}
 		
@@ -74,11 +79,14 @@
 		@Watch('record')
 		recordChange(){
 			// console.log('recordchang')
-			let rr = this.record.data[this.cell.id];
-			rr = this.formatNumber(rr)
-			if(rr !== this.mode){
-				this.mode = rr||''
-			}
+			this.$nextTick(()=>{
+				let rr = this.record.data[this.cell.id];
+				rr = this.formatNumber(rr)
+				if(rr !== this.mode){
+					this.mode = rr||''
+				}
+			})
+			
 		}
 		
 		
@@ -97,7 +105,7 @@
 		/* font-size: 24upx !important; */
 		/* font-weight: 400; */
 	}
-	.cu-form-group input{
+	/* .cu-form-group input{ */
 		/* font-size: 24upx !important; */
-	}
+	/* } */
 </style>

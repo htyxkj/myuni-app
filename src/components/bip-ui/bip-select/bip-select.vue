@@ -66,31 +66,6 @@ export default class bipSelect extends Vue{
 		this.$emit('cancel');
 	}
 	
-	// @Watch('show')
-	// visChange(){
-	// 	if(this.show){
-	// 		let _this = this
-	// 		uni.getSystemInfo({
-	// 			success: (resu:any) => {
-	// 				const query = uni.createSelectorQuery();
-	// 				query.select('#bselector').boundingClientRect();
-	// 				query.selectViewport().scrollOffset();
-	// 				console.log(resu);
-	// 				query.exec(function(res:any){
-	// 					console.log(res);
-	// 					// debugger
-	// 					// res[0].top       // #the-id节点的上边界坐标
-	// 					// res[1].scrollTop // 显示区域的竖直滚动位置
-	// 					let height=resu.windowHeight-res[1].scrollTop ;
-	// 					_this.style="height:"+height+'upx';
-	// 					console.log(_this.style)
-	// 					// console.log('打印高度',res[0].height);
-	// 					// console.log('打印demo的元素的信息',res);
-	// 				})
-	// 			}
-	// 		})
-	// 	}
-	// }
 }
 </script>
 

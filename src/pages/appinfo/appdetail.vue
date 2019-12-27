@@ -37,7 +37,7 @@ import BipMenuBar from '@/classes/pub/BipMenuBar';
 import BipLayout from '@/classes/ui/BipLayout';
 import { Tools } from '../../classes/tools/Tools';
 import { icl } from '../../classes/tools/CommICL';
-
+import QueryEntity from '@/classes/search/QueryEntity';
 import { dataTool } from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils;
 @Component({
@@ -49,6 +49,7 @@ export default class appDetail extends Vue {
 	title: string = '详情页面';
 	pbuid:string = '';
 	loading: boolean = true;
+	qcont:string = '';
 	uriParam: URIParams = new URIParams();
 	@Provide('env') env: CCliEnv = new CCliEnv();
 	@Provide('mbs') mbs: BipMenuBar = new BipMenuBar();
@@ -61,6 +62,7 @@ export default class appDetail extends Vue {
 	//界面组成对象信息
 	cells: Array<Cells> = new Array<Cells>();
 	lay: BipLayout = new BipLayout('');
+	qe: QueryEntity = new QueryEntity('', '');
 	execCmd(cmd: any) {
 		console.log(cmd);
 		if (cmd == icl.B_CMD_DEL) {
@@ -156,20 +158,48 @@ export default class appDetail extends Vue {
 				console.log(e);
 			});
 	}
+
+	findData(objid:string = ''){
+		this.loading = true;
+		if(objid){
+			this.qe.tcell = objid
+			this.qe.oprid = this.qe.tcell === this.dsm.ccells.obj_id?13:16;
+
+		}else{
+			this.qe.tcell = this.dsm.ccells.obj_id;
+			this.qe.oprid = 13;
+		}
+		tools.query(this.qe).then((res:any)=>{
+			let rr = res.data;
+			if(rr.id==0){
+				let infos = rr.data.data;
+				this.$nextTick(()=>{
+					let cds = this.env.getDataSet(objid);
+					infos.data.forEach((cr:any)=>{
+						cds.addRecord(cr);
+					})
+				})
+			}
+			this.loading = false;
+		})
+	}
 	
 	mounted(){
 		this.loading = false;
 	}
-	async onLoad(option: any) {
+	onLoad(option: any) {
 		if (option.pbuid) {
 			this.cr = option.color ? option.color : 'blue';
 			this.title = option.title ? option.title : 'billPage';
 			this.pbuid = option.pbuid;
 			this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
-			let cr0 = JSON.parse(decodeURIComponent(option.pitem));
+			if(option.qcont){
+				this.qcont = decodeURIComponent(option.qcont).trimEnd();
+			}
+			console.log(this.qcont)
 			this.loading = true;
 			if (this.uriParam) {
-				await tools
+				tools
 					.getCCellsParams(this.uriParam.pcell)
 					.then((res: any) => {
 						// console.log(res);
@@ -177,7 +207,12 @@ export default class appDetail extends Vue {
 						let rtn = res.data;
 						if (rtn.id == 0) {
 							this.initUIData(rtn.data.layCels);
-							this.dsm.addRecord(cr0);
+							this.qe.pcell = this.uriParam.pcell;
+							// this.qe.tcell = this.qe.pcell;
+							if(this.qcont){
+								this.qe.mcont = ''+this.qcont;
+								this.findData();
+							}
 						} else {
 							uni.showToast({
 								title: '没有获取到对象定义' + this.uriParam

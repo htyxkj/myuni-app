@@ -40,16 +40,20 @@
 		}
 		
 		mounted(){
-			this.cds = this.env.getDataSet(this.obj_id);
-			this.mode = this.record.data[this.cell.id];
 			let mkey = this.obj_id+"_"+this.cell.id
 			uni.$on(mkey,this.cellDataChange)
-			// console.log(this.record)
+			this.$nextTick(()=>{
+				this.cds = this.env.getDataSet(this.obj_id);
+				this.mode = this.record.data[this.cell.id];
+			})
 		}
 		
 		dataChange(e:any){
-			if(this.mode != this.record.data[this.cell.id])
-				this.cds.cellChange(this.mode,this.cell.id);
+			this.$nextTick(()=>{
+				if(this.mode != this.record.data[this.cell.id])
+					this.cds.cellChange(this.mode,this.cell.id);
+			})
+			
 		}
 		
 		get record():CRecord{
@@ -58,22 +62,24 @@
 		
 		cellDataChange(){
 			console.log('监听值变化');
-			this.recordChange();
+			this.$nextTick(()=>{
+				this.recordChange();
+			})
+			
 		}
 		
 		
 		
 		@Watch('record')
 		recordChange(){
-			// console.log('recordchang')
-			let rr = this.record.data[this.cell.id];
-			if(rr !== this.mode){
-				this.mode = rr||''
-			}
+			this.$nextTick(()=>{
+				let rr = this.record.data[this.cell.id];
+				if(rr !== this.mode){
+					this.mode = rr||''
+				}
+			});
 		}
-		
-		
-		
+	
 	}
 </script>
 

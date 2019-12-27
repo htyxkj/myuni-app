@@ -72,14 +72,17 @@ export default class bipSelect extends Vue {
 		// console.log(param)
 		if(param){
 			// 如果可以编辑 更改值，并更新状态
-			if(this.refKey == this.editName){
-				this.refInsAid.values[0] = param;
-				let v0= param[this.bipInsAid.cells.cels[0].id];
-				this.refInsAid.realV = v0;
-				this.refInsAid.makeShow();
-			}
-			this.makeSv();
-			this.cds.cellChange(this.modekey,this.cell.id);
+			this.$nextTick(()=>{
+				if(this.refKey == this.editName){
+					this.refInsAid.values[0] = param;
+					let v0= param[this.bipInsAid.cells.cels[0].id];
+					this.refInsAid.realV = v0;
+					this.refInsAid.makeShow();
+				}
+				this.makeSv();
+				this.cds.cellChange(this.modekey,this.cell.id);
+			})
+			
 		}
 	}
 	
@@ -131,27 +134,32 @@ export default class bipSelect extends Vue {
 	@Watch('record')
 	recordChange(){
 		// console.log('recordchang')
-		let rr = this.record.data[this.cell.id];
-		if(rr !== this.modekey){
-			this.mode = rr||'';
-			this.modekey = this.mode;
-			this.getRefVal();
-		}
+		this.$nextTick(()=>{
+			let rr = this.record.data[this.cell.id];
+				if(rr !== this.modekey){
+					this.mode = rr||'';
+					this.modekey = this.mode;
+					this.getRefVal();
+				}
+		})
+		
 	}
 	
 	@Watch('aidValues',{deep:true})
 	aidValuesChange(){
-		console.log('aidValues change')
-		let key = ICL.AID_KEY+this.refKey+"_"+this.modekey;
-		let rr = this.aidValues.get(key);
-		if(rr){
-			let r0 = this.refInsAid.values[0];
-			if(rr != r0){
-				this.refInsAid.values[0] = rr;
-				this.refInsAid.makeShow();
-				this.makeSv();
+		// console.log('aidValues change')
+		this.$nextTick(()=>{
+			let key = ICL.AID_KEY+this.refKey+"_"+this.modekey;
+			let rr = this.aidValues.get(key);
+			if(rr){
+				let r0 = this.refInsAid.values[0];
+				if(rr != r0){
+					this.refInsAid.values[0] = rr;
+					this.refInsAid.makeShow();
+					this.makeSv();
+				}
 			}
-		}
+		})
 	}
 }
 </script>

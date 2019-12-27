@@ -143,6 +143,20 @@ export default class CDataSet {
 		this.cdata.data.push(cr);
 		this.currRecord = cr;
 		this.index = this.cdata.size()-1;
+		if(cr.subs){
+			cr.subs.forEach((cdata:CData)=>{
+				let id = cdata.obj_id;
+				let index = this.ds_sub.findIndex((dsub:CDataSet)=>{
+					return dsub.ccells.obj_id === id;
+				})
+				if(index>-1){
+					let cds_s = this.ds_sub[index];
+					cdata.data.forEach((c0:CRecord)=>{
+						cds_s.addRecord(c0)
+					})
+				}
+			})
+		}
 	}
 	
 	getRecord(index:number){
@@ -163,6 +177,10 @@ export default class CDataSet {
 	
 	size(){
 		return this.cdata.data.length;
+	}
+
+	pkCells(){
+		return this.ccells.cels.filter((cel:Cell)=>{return (cel.attr&1)>0})
 	}
 
 	removeRecord(cr:CRecord){

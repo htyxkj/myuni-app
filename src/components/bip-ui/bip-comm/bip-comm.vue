@@ -76,16 +76,18 @@ export default class bipComm extends Vue{
 			this.bassist = true;
 			this.editName = this.cell.editName;
 			this.aidKey= ICL.AID_KEY+this.editName;
-			if(this.inProcess.get(this.aidKey)){
-				let rnt = this.aidmaps.get(this.aidKey);
-				if(rnt){
-					this.bipInsAid = rnt;
+			this.$nextTick(()=>{
+				if(this.inProcess.get(this.aidKey)){
+					let rnt = this.aidmaps.get(this.aidKey);
+					if(rnt){
+						this.bipInsAid = rnt;
+					}else{
+						InsAidModule.fetchInsAid({ id: 200, aid: this.editName });
+					}
 				}else{
 					InsAidModule.fetchInsAid({ id: 200, aid: this.editName });
 				}
-			}else{
-				InsAidModule.fetchInsAid({ id: 200, aid: this.editName });
-			}
+			})			
 		}	
 	}
 
@@ -100,13 +102,16 @@ export default class bipComm extends Vue{
 	
 	@Watch('aidmaps')
 	aidMapChange(old:any,newVal:any) {
-		if(this.bassist&&!this.bipInsAid.id){
-			let rr = this.aidmaps.get(this.aidKey);
-			if(rr){
-				this.bipInsAid = this.bipInsAid.clone(rr);
+		this.$nextTick(()=>{
+			if(this.bassist&&!this.bipInsAid.id){
+				let rr = this.aidmaps.get(this.aidKey);
+				if(rr){
+					this.bipInsAid = this.bipInsAid.clone(rr);
+				}
+				
 			}
-			
-		}
+		})
+		
 	}	
 }
 </script>

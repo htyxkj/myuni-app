@@ -36,23 +36,25 @@ export default class bipRefsFz extends Vue{
 	cds:CDataSet = new CDataSet(null)
 	created(){
 		// console.log(this.bipInsAid)
-		this.cds = this.env.getDataSet(this.obj_id);
-		this.mode = this.record.data[this.cell.id];
-		let mkey = this.obj_id+"_"+this.cell.id
-		uni.$on(mkey,this.cellDataChange);
-		this.aidKey = ICL.AID_KEY+this.bipInsAid.id;
-		if(this.mode !=='' && this.mode !== undefined){
-			let key = this.aidKey+"_"+this.mode;
-			let rr = this.aidValues.get(key);
-			if(rr){
-				this.bipInsAid.values[0] = rr;
-				this.bipInsAid.makeShow();
-				this.showValue = this.bipInsAid.showV;
-			}else{
-				if(!this.inProcess.get(key))
-					this.makeRefshow();
+		this.$nextTick(()=>{
+			this.cds = this.env.getDataSet(this.obj_id);
+			this.mode = this.record.data[this.cell.id];
+			let mkey = this.obj_id+"_"+this.cell.id
+			uni.$on(mkey,this.cellDataChange);
+			this.aidKey = ICL.AID_KEY+this.bipInsAid.id;
+			if(this.mode !=='' && this.mode !== undefined){
+				let key = this.aidKey+"_"+this.mode;
+				let rr = this.aidValues.get(key);
+				if(rr){
+					this.bipInsAid.values[0] = rr;
+					this.bipInsAid.makeShow();
+					this.showValue = this.bipInsAid.showV;
+				}else{
+					if(!this.inProcess.get(key))
+						this.makeRefshow();
+				}
 			}
-		}
+		})
 	}
 	
 	get modes(){
@@ -74,7 +76,8 @@ export default class bipRefsFz extends Vue{
 	
 	@Watch('aidValues')
 	aidValuesChange(){
-		if(this.mode !==''){
+		this.$nextTick(()=>{
+			if(this.mode !==''){
 			let key = this.aidKey+"_"+this.mode;
 			let rr = this.aidValues.get(key);
 			// console.log(rr,'aidValues')
@@ -82,17 +85,21 @@ export default class bipRefsFz extends Vue{
 				this.bipInsAid.values[0] = rr;
 				this.bipInsAid.makeShow();
 				this.showValue = this.bipInsAid.showV;
-
+				}
 			}
-		}
+		})
+		
 	}
 	
 	@Watch('record')
 	recordChange(){
-		let rr = this.record.data[this.cell.id];
-		if(rr !== this.mode){
-			this.makeRefshow()
-		}
+		this.$nextTick(()=>{
+			let rr = this.record.data[this.cell.id];
+			if(rr !== this.mode){
+				this.makeRefshow()
+			}
+		})
+		
 	}
 
 	get inProcess(){

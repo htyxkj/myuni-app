@@ -42,47 +42,12 @@ export default class bipCommShow extends Vue{
 	@Prop({type:Number,default:0}) rowId!:number;
 	@Prop() record!:any;
 	id:string = Tools.guid()
-	bipInsAid:BipInsAidNew = new BipInsAidNew('')
-	aidKey = '';
-	editName='';
-	bassist:boolean = false;
-	mode:any = ''
-	created(){
-		// if(this.cell.assist){
-		// 	this.bassist = true;
-		// 	this.editName = this.cell.editName;
-		// 	this.aidKey= ICL.AID_KEY+this.editName;
-		// 	if(this.inProcess.get(this.aidKey)){
-		// 		let rnt = this.aidmaps.get(this.aidKey);
-		// 		if(rnt){
-		// 			this.bipInsAid = rnt;
-		// 		}else{
-		// 			InsAidModule.fetchInsAid({ id: 200, aid: this.editName });
-		// 		}
-		// 	}else{
-		// 		InsAidModule.fetchInsAid({ id: 200, aid: this.editName });
-		// 	}
-		// }	
-	}
-
-	
-	// get aidmaps(){
-	// 	return InsAidModule.aidInfos;
-	// }
-	
-	// get inProcess(){
-	// 	return InsAidModule.inProcess;
-	// }
-	
-	// @Watch('aidmaps')
-	// aidMapChange(old:any,newVal:any) {
-	// 	if(this.bassist&&!this.bipInsAid.id){
-	// 		let rr = this.aidmaps.get(this.aidKey);
-	// 		if(rr){
-	// 			this.bipInsAid = this.bipInsAid.clone(rr);
-	// 		}
-			
-	// 	}
+	// bipInsAid:BipInsAidNew = new BipInsAidNew('')
+	// aidKey = '';
+	// editName='';
+	// bassist:boolean = false;
+	// mode:any = ''
+	// created(){	
 	// }	
 }
 </script>

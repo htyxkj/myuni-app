@@ -100,15 +100,40 @@ export default class appList extends Vue {
 			});
 			// let item = encodeURIComponent(JSON.stringify(this.uriParam));
 			let cr0 = this.pdList[rid];
-			
+			let arr:Array<any> = this.dsm.pkCells();
+			let qcont = ''
+			if(arr.length>0){
+				qcont = this.makeQueryCont(cr0,arr);
+			}
 			uni.navigateTo({
-				url: '/pages/appinfo/appdetail?pbuid=' + this.pbuid + '&color=' + this.cr + '&title=' + this.title + '&pitem=' + encodeURIComponent(JSON.stringify(cr0)),
+				url: '/pages/appinfo/appdetail?pbuid=' + this.pbuid + '&color=' + this.cr + '&title=' + this.title +'&qcont='+encodeURIComponent(qcont),
 				complete: () => {
 					uni.hideLoading();
 					this.isjump = false;
 				}
 			});
 		}
+	}
+
+	makeQueryCont(cr0:any,cels:Array<any>){
+		let qs = '';
+		if(cels.length>0){
+			cels.forEach((item:any)=>{
+				let vr = cr0.data[item.id];
+				let type = item.type;
+				if(type==12){
+					if(vr){
+						qs+=item.id+"='"+vr+"' and";
+					}
+				}else{
+					if(vr !== undefined &&vr != null &&vr !==''){
+						qs+=item.id+"="+vr+" and";
+					}
+				}
+			})
+			qs = qs.substring(0,qs.length-3);
+		}
+		return qs;
 	}
 
 	execCmd(cmd: string) {
