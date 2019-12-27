@@ -1,5 +1,5 @@
 <template>
-	<view id="bselector" class="bip-selector" :class="show? 'show':''">
+	<view class="bip-selector" :class="show? 'show':''">
 		<template v-if="arr.length>0">
 			<view class="cu-bar bg-white solid">
 				<view class="action text-red" @tap="cancel">取消</view>

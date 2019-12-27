@@ -5,7 +5,7 @@
 			<block slot="content"><view class="header-title">{{ title }}</view></block>
 		</cu-custom>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
-			<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :down="downOption" :fixed="true" :top="260" :bottom="100" class="bg-white">
+			<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :down="downOption" :fixed="true" :top="260" :bottom="5" class="bg-white">
 				<view v-for="(item,index) in pdList" :key="index">
 					<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
 				</view>
@@ -93,9 +93,9 @@ export default class appReport extends Vue {
 		uni.showLoading({
 			title:'跳转中...'
 		})
-		let item = encodeURIComponent(JSON.stringify(this.uriParam))
+		// let item = encodeURIComponent(JSON.stringify(this.uriParam))
 		uni.navigateTo({
-		    url: '/pages/appinfo/appinfo?item='+item+'&color='+this.cr+'&title='+this.title,
+		    url: '/pages/appinfo/appinfo?pbuid='+this.pbuid+'&color='+this.cr+'&title='+this.title,
 			complete: () => {
 				uni.hideLoading();
 			}
@@ -103,7 +103,7 @@ export default class appReport extends Vue {
 	}
 	
 	async onLoad(option: any) {
-		if (option.item) {
+		if (option.pbuid) {
 			this.cr = option.color ? option.color : 'blue';
 			this.title = option.title ? option.title : 'billPage';
 			this.pbuid = option.pbuid;
@@ -303,7 +303,4 @@ export default class appReport extends Vue {
 </script>
 
 <style lang="scss">
-page{
-	margin-bottom: 120upx;
-}
 </style>

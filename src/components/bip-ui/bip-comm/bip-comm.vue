@@ -10,6 +10,12 @@
 			<template v-else-if="bipInsAid.bType === 'CDateEditor'">
 				<bip-date :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-date>
 			</template>
+			<template v-else-if="bipInsAid.bType === 'CUpDownEditor'">
+				<bip-file :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-file>
+			</template>
+			<template v-else-if="bipInsAid.bType === 'CTreePopEditor'">
+				<bip-tree-editor :label="cell.labelString" :cell="cell" :bipInsAid="bipInsAid" :obj_id="obj_id"></bip-tree-editor>
+			</template>
 			<template v-else>
 				<view>{{cell.labelString}}</view>
 			</template>
@@ -50,8 +56,10 @@ import bipDate from '../bip-date/bip-date.vue';
 import bipSelect from '../bip-ass/bip-select.vue';
 import bipRef from '../bip-ass/bip-ref.vue';
 import bipList from '../bip-list/bip-list.vue';
+import bipFile from '../bip-file/bip-file.vue';
+import bipTreeEditor from '../bip-tree/bip-tree-editor.vue';
 @Component({
-	components: {bipInput,bipNumber,bipDate,bipSelect,bipRef,bipList}
+	components: {bipInput,bipNumber,bipDate,bipSelect,bipRef,bipList,bipFile,bipTreeEditor}
 })
 export default class bipComm extends Vue{
 	@Inject('env') env!:CCliEnv;

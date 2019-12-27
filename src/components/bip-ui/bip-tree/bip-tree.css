@@ -1,0 +1,57 @@
+.uni-tree {
+}
+
+.uni-tree-item {
+	margin: 18upx 0;
+}
+
+.uni-tree-item-checkbox-icon {
+	width: 52upx;
+	height: 52upx;
+}
+
+.uni-tree-item-radio-icon {
+	width: 52upx;
+	height: 52upx;
+}
+
+.uni-tree-item-checkbox-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.uni-tree-item-radio-wrapper {
+	display: flex;
+	align-items: center;
+}
+
+.uni-tree-item-name-wrapper {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	margin-left: 8upx;
+}
+
+.uni-tree-item-expand-icon {
+	width: 26upx;
+	height: 26upx;
+	margin-right: 8upx;
+	opacity: 0.9;
+}
+
+.uni-tree-item-self {
+	display: flex;
+	align-items: center;
+}
+
+.uni-tree-item-checkbox {
+}
+
+.uni-tree-item-name {
+	flex: 1;
+	text-align: left;
+}
+
+.uni-tree-item-children {
+	margin-left: 36upx;
+}

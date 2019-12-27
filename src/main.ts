@@ -5,6 +5,8 @@ import store from './store'
 Vue.config.productionTip = false
 import cuCustom from './lib/colorui/components/cu-custom.vue'
 Vue.component('cu-custom',cuCustom)
+import bipTree from '@/components/bip-ui/bip-tree/bip-tree.vue';
+Vue.component('bip-tree',bipTree)
 import comm from '@/static/js/comm.js';
 let commURL:any = comm;
 // http.config.baseUrl = commURL.BaseUri
