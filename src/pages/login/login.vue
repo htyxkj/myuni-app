@@ -11,11 +11,11 @@
 			</view>
 			<view class="cu-form-group margin-top">
 				<view class="title">账 号</view>
-				<input placeholder="请输入账号/手机号" name="input" v-model="user.userCode"></input>
+				<input placeholder="请输入账号/手机号" name="input" v-model="user.userCode" />
 			</view>
 			<view class="cu-form-group">
 				<view class="title">密 码</view>
-				<input placeholder="请输入密码" type="password" v-model="user.password"></input>
+				<input placeholder="请输入密码" type="password" v-model="user.password" />
 			</view>
 			<view class="padding flex flex-direction">
 				<button form-type="submit" :disabled="canLogin" class="cu-btn bg-blue margin-tb-sm lg shadow" @tap="loginSys">登录系统</button>
@@ -93,9 +93,12 @@
 						// 	'url': '/pages/index/index'
 						// })
 						//关闭当前页面，跳转到应用内的某个页面
-						uni.redirectTo({
-							'url': '/pages/index/index'
-						})
+						setTimeout(()=>{
+							uni.redirectTo({
+								'url': '/pages/index/index'
+							})
+						},200);
+
 					} else {
 						uni.showToast({
 							title: data.message

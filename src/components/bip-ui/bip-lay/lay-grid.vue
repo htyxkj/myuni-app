@@ -8,7 +8,9 @@
 			<view class="action"><switch :class="isCard ? 'checked' : ''" :checked="isCard ? true : false" @change="IsCard"></switch></view>
 		</view>
 		<view class="bg-white box" v-if="isCard && laycell && cds">
-			<bip-unit  :laycell="laycell" v-for="(item,index) in cds.cdata.data" :key="index" :rowId="index" @delRow="delRow" @editRow="editRow"></bip-unit>
+			<view v-for="(item,index) in cds.cdata.data" :key="index">
+				<bip-bill-unit :record="item" :cels="cds.ccells.cels" :rowId="index" :obj_id="cds.ccells.obj_id" @editRow="editRow" @delRow="delRow"></bip-bill-unit>
+			</view>
 		</view>
 		<view class="bg-white solid padding text-center">
 			<view class="flex">
@@ -33,14 +35,14 @@ import BipLayCells from '@/classes/ui/BipLayCells';
 import Cell from '@/classes/pub/coob/Cell';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import CDataSet from '@/classes/pub/CDataSet';
-import bipInput from '../bip-input/bip-input.vue';
-import bipUnit from '../bip-unit/bip-unit.vue';
+// import bipInput from '../bip-input/bip-input.vue';
+import bipBillUnit from '../bip-unit/bip-bill-unit.vue';
 import { EnvModule } from '@/store/module/envmode'; //导入vuex模块，自动注入
 
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
 @Component({
-	components: { bipInput, bipUnit }
+	components: { bipBillUnit }
 })
 export default class layGrid extends Vue {
 	@Inject('env') env!: CCliEnv;
@@ -67,15 +69,18 @@ export default class layGrid extends Vue {
 		// this.cds.addRecord(cr)
 	}
 	
-	editRow(rid:number){
+	editRow(rid:number,obj_id:string){
 		console.log('editRow',rid)
+		this.cds.index = rid;
+		this.cds.currRecord = this.cds.getRecord(rid);
 		EnvModule.setEnvInf(this.env);
 		EnvModule.setLay(this.laycell);
-		uni.navigateTo({url:'/pages/editunit/editunit?id='+this.laycell.obj_id});
+		uni.navigateTo({url:'/pages/editunit/editunit?id='+obj_id+'&rid='+rid});
 	}
 	
-	delRow(rid:number){
+	delRow(rid:number,obj_id:string){
 		console.log('delRow',rid)
+		
 	}
 
 	IsCard(e: any) {

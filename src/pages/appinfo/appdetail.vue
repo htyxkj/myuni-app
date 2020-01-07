@@ -6,9 +6,11 @@
 				<view class="header-title">{{ title }}->详情</view>
 			</block>
 		</cu-custom>
-		<view class="margin-lr-sm margin-tb-sm">
-			<bip-lay v-if="lay.binit" :layout="lay" :key="index"></bip-lay>
-		</view>
+		<template v-if="initUIOK">
+			<view class="margin-lr-sm margin-tb-sm">
+				<bip-lay v-if="lay.binit" :layout="lay" :key="index"></bip-lay>
+			</view>
+		</template>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
 			<!-- <bip-menu-bar @tabSelect="execCmd"></bip-menu-bar> -->
@@ -18,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
+import { Vue, Provide, Prop, Component,Watch } from 'vue-property-decorator';
 // import { UriPModule } from '@/store/module/uripm'; //导入vuex模块，自动注入
 import mLoad from '@/components/mLoad.vue';
 // import bipInput from '@/components/bip-ui/bip-input/bip-input.vue'
@@ -65,6 +67,7 @@ export default class appDetail extends Vue {
 	cells: Array<Cells> = new Array<Cells>();
 	lay: BipLayout = new BipLayout('');
 	qe: QueryEntity = new QueryEntity('', '');
+	initUIOK:boolean = false;
 	execCmd(cmd: any) {
 		console.log(cmd);
 		if (cmd == icl.B_CMD_DEL) {
@@ -161,6 +164,7 @@ export default class appDetail extends Vue {
 			});
 	}
 
+	//加载数据
 	findData(objid:string = ''){
 		this.loading = true;
 		if(objid){
@@ -189,7 +193,8 @@ export default class appDetail extends Vue {
 	mounted(){
 		this.loading = false;
 	}
-	async onLoad(option: any) {
+	//页面加载
+	onLoad(option: any) {
 		if (option.pbuid) {
 			this.cr = option.color ? option.color : 'blue';
 			this.title = option.title ? option.title : 'billPage';
@@ -203,7 +208,7 @@ export default class appDetail extends Vue {
 			// console.log(this.qcont)
 			this.loading = true;
 			if (this.uriParam) {
-				await tools
+				tools
 					.getCCellsParams(this.uriParam.pcell)
 					.then((res: any) => {
 						// console.log(res);
@@ -211,14 +216,7 @@ export default class appDetail extends Vue {
 						let rtn = res.data;
 						if (rtn.id == 0) {
 							this.qe.pcell = this.uriParam.pcell;
-							this.initUIData(rtn.data.layCels);
-							if(this.qcont){
-								this.qe.mcont = ''+this.qcont;
-								this.$nextTick(()=>{
-									this.findData();
-								})
-							}
-							
+							this.initUIData(rtn.data.layCels);							
 						} else {
 							uni.showToast({
 								title: '没有获取到对象定义' + this.uriParam
@@ -233,7 +231,7 @@ export default class appDetail extends Vue {
 		}
 	}
 
-	async initUIData(layCels: any) {
+	initUIData(layCels: any) {
 		this.cells = layCels;
 		this.dsm = new CDataSet(this.cells[0]);
 		this.dsm_cont = new CDataSet(this.cells[0]);
@@ -241,7 +239,7 @@ export default class appDetail extends Vue {
 			this.ds_ext[i - 1] = new CDataSet(this.cells[i]);
 		}
 		let buid = this.uriParam.pflow;
-		await tools.getBULinks(buid).then((res: any) => {
+		tools.getBULinks(buid).then((res: any) => {
 			let rtn1 = res.data;
 			if (rtn1.id == 0) {
 				let ope = rtn1.data.opt;
@@ -253,7 +251,18 @@ export default class appDetail extends Vue {
 		this.mbs.init(this.uriParam.pattr, this.dsm);
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
+		this.initUIOK = true;
 		console.log(this.uriParam.playout,this.qcont,'99999999')
+	}
+	
+	@Watch('initUIOK')
+	initUIOKChange(){
+		if(this.initUIOK&&this.qcont){
+			this.qe.mcont = ''+this.qcont;
+			this.$nextTick(()=>{
+				this.findData();
+			})
+		}
 	}
 }
 </script>

@@ -36,15 +36,19 @@
 		tabcurColor:string = 'text-green'
 		vueId: string = Tools.guid()
 		onLoad(options:any) {
-			if(!this.loginState){
-				uni.navigateTo({'url':'/pages/login/login'})
-			}
-			
-			if(options.tabcur){
-				this.tabcur = options.tabcur;
-			}
-			
-			this.title = this.makeTitle(this.tabcur)
+			// setTimeout(()=>{
+				console.log('登录状态：',LoginModule.loginState)
+				if(!this.loginState){
+					uni.navigateTo({'url':'/pages/login/login'})
+				}
+				
+				if(options.tabcur){
+					this.tabcur = options.tabcur;
+				}
+				
+				this.title = this.makeTitle(this.tabcur)
+			// },200)
+
 		}
 		
 		tabSelect(e:number){
