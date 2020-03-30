@@ -50,10 +50,11 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : true,
-        "appid" : "wx10a2a88d233954d4",
+        "appid" : "wx93d1fc24537fa5ed",
         "setting" : {
             "urlCheck" : false,
-            "minified" : true
+            "minified" : true,
+            "postcss" : false
         }
     },
     "mp-alipay" : {
