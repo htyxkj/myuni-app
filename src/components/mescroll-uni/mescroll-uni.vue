@@ -50,7 +50,7 @@
 
 		<!-- 回到顶部按钮 (fixed元素,需写在scroll-view外面,防止滚动的时候抖动)-->
 		<image
-			v-if="mescroll.optUp.toTop.src"
+			v-if="showUpBtn && mescroll.optUp.toTop.src"
 			class="mescroll-totop"
 			:class="{ 'mescroll-fade-in': isShowToTop }"
 			:src="mescroll.optUp.toTop.src"
@@ -93,6 +93,7 @@ export default class mescrollUni extends Vue {
 	windowBottom: number = 0;
 	clientNum: number = 0;
 
+	@Prop({type: Boolean,default:true}) showUpBtn !:true;
 	@Prop({ type: Object }) down!: object; // 下拉刷新的参数配置
 	@Prop({ type: Object,default:{} }) up!: object; // 上拉加载的参数配置
 	@Prop({ type: [String, Number] }) top!: string | number; // 下拉布局往下偏移的数值, 已默认单位为upx.

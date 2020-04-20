@@ -1,13 +1,13 @@
 <template>
 	<view>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
-		<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :down="downOption" :fixed="false" :top="0" :bottom="0" class="bg-white">
+		<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :down="downOption" :showUpBtn="false" :fixed="false" :top="0" :bottom="0" class="bg-white myHeight">
 			<view v-for="(item, index) in pdList" :key="index">
 				<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
 			</view>
 		</mescroll-uni>
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
-		<bip-bill-bar @tabSelect="execCmd" :attr="1"></bip-bill-bar>
+		<!-- <mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad> -->
+		<!-- <bip-bill-bar @tabSelect="execCmd" :attr="1"></bip-bill-bar> -->
 	</view>
 </template>
 
@@ -333,5 +333,8 @@ export default class appList extends Vue {
 <style lang="scss">
 page {
 	margin-bottom: 120upx;
+}
+.myHeight{
+	height: 650upx;
 }
 </style>
