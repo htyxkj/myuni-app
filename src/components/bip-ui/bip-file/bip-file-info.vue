@@ -8,8 +8,8 @@
 				</view>
 			</view>
 			<view class="padding">
-				<view class="cu-form-group">
-					<view class="grid col-4 grid-square flex-sub">
+				<view class="cu-form-group ">
+					<view class="grid col-4 grid-square flex-sub margin-top">
 						<view class="solids" v-for="(item,index) in imgList" :key="index" @tap="ViewImage" :data-url="imgList[index]">
 						 <image :src="imgList[index]" mode="aspectFill"></image>
 							<view class="cu-tag bg-red" @tap.stop="DelImg" :data-index="index">
@@ -20,6 +20,13 @@
 							<text class='cuIcon-cameraadd'></text>
 						</view>
 					</view>
+				</view>
+			</view>
+			<view class="cu-bar bg-white justify-end">
+				<view class="action">
+					<button class="cu-btn line-green text-green" @tap="hideModal">取消</button>
+					<button class="cu-btn bg-green margin-left" @tap="hideModal">上传</button>
+			
 				</view>
 			</view>
 		</view>

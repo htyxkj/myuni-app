@@ -9,6 +9,7 @@
 			<menuPage v-if="tabcur==1"></menuPage>
 			<message v-if="tabcur==2"></message>
 			<mine v-if="tabcur==3"></mine>
+			<customize v-if="tabcur==-1" :menu="menubarr"></customize>
 		</template>
 		<mIndexBar :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 	</view>
@@ -20,6 +21,7 @@
 	import menuPage from '../menu/menuPage.vue';
 	import message from '../message/message.vue';
 	import mine from '../mine/mine.vue';
+	import customize from '../customize/customize.vue';
 	import mIndexBar from '../../components/mIndexBar.vue'
 	import {
 		LoginModule
@@ -28,13 +30,16 @@
 		Tools
 	} from '../../classes/tools/Tools';
 	@Component({
-		components:{home,mine,message,menuPage,mIndexBar}
+		components:{home,mine,message,menuPage,mIndexBar,customize}
 	})
 	export default class Index extends Vue{
 		title:string = '首页'
 		tabcur:number = 0
 		tabcurColor:string = 'text-green'
 		vueId: string = Tools.guid()
+		
+		menubarr:any=null
+				
 		onLoad(options:any) {
 			// setTimeout(()=>{
 				console.log('登录状态：',LoginModule.loginState)
@@ -51,10 +56,11 @@
 
 		}
 		
-		tabSelect(e:number){
-			this.tabcur = e;
+		tabSelect(e:any){
+			this.tabcur = e[0];
 			// this.tabcur = parseInt(e.currentTarget.dataset.id)
 			this.title = this.makeTitle(this.tabcur)
+			this.menubarr = e[1]
 		}
 		
 		/**

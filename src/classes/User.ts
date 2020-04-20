@@ -8,6 +8,7 @@ export default class User{
     userName:string
     password:string
     attr:number = 5
+	gwCode:string=""
 	deptInfo:Dept = new Dept()
     constructor(userId:string,userName:string,pwd:string){
         this.userCode = userId;

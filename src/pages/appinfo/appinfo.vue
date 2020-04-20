@@ -42,7 +42,7 @@ import { icl } from '../../classes/tools/CommICL';
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
 @Component({
-	components: { mLoad,bipLay,bipMenuBar,bipBillBar }
+	components: { mLoad,bipLay,bipMenuBar,bipBillBar,uniCard}
 })
 export default class appInfo extends Vue {
 	vueId: string = Tools.guid();

@@ -1,5 +1,5 @@
 {
-    "name" : "我的UniApp",
+    "name" : "BIP",
     "appid" : "__UNI__5F5650D",
     "description" : "",
     "versionName" : "1.0.0",
@@ -50,7 +50,7 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : true,
-        "appid" : "wx93d1fc24537fa5ed",
+        "appid" : "wxdc6368ecf8644a54",
         "setting" : {
             "urlCheck" : false,
             "minified" : true,

@@ -116,13 +116,24 @@ export namespace BIPUtil {
 		getFromServer(params: any) {
 			return http.post('/sysapi', params, { header: { 'content-type': 'application/x-www-form-urlencoded' } });
 		}
-
+		
+		uniAppUploadFile(file:any,params:any,success:any,fail:any){
+			 uni.uploadFile({
+			 	url: commURL.BaseUri+'/sysupd?updid=37&snkey='+uni.getStorageSync('snkey'),  
+			 	filePath: file,
+			 	name: 'file', 
+			 	formData: params,
+			 	success:success,
+				fail:fail
+			 });
+		}
 		/**
 		 *@description 获取User对象
 		 */
 		getUser() {
 			return tools.getUser();
 		}
+
 	}
 
 	export const ServApi = new ServerUtils();

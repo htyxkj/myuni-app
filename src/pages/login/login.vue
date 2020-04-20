@@ -1,24 +1,33 @@
 <template>
-	<view>
-		<cu-custom bgColor="bg-gradual-pink" :isBack="false">
+	<view class="body">
+		<!-- <cu-custom bgColor="bg-gradual-pink" :isBack="false">
 			<block slot="backText">返回</block>
 			<block slot="content"><view class="header-title">登录页面</view></block>
-		</cu-custom>
+		</cu-custom> -->
 		<!-- 主体表单 -->
 		<form>
-			<view class="header">
+			<view class="header margin-top">
 				<image src="../../static/gs.png" mode="aspectFit"></image>
 			</view>
-			<view class="cu-form-group margin-top">
+			<view class="cu-form-group margin-top input">
 				<view class="title">账 号</view>
 				<input placeholder="请输入账号/手机号" name="input" v-model="user.userCode" />
 			</view>
-			<view class="cu-form-group">
+			<view class="cu-form-group input">
 				<view class="title">密 码</view>
 				<input placeholder="请输入密码" type="password" v-model="user.password" />
 			</view>
+			<view class="padding">
+				<view class="grid text-center col-5">
+					<view></view>
+					<view></view>
+					<view></view>
+					<view></view>
+					<view class="registered" @tap="registered">注册</view>
+				</view>
+			</view>
 			<view class="padding flex flex-direction">
-				<button form-type="submit" :disabled="canLogin" class="cu-btn bg-blue margin-tb-sm lg shadow" @tap="loginSys">登录系统</button>
+				<button form-type="submit" :disabled="canLogin" class="cu-btn bg-blue margin-tb-sm lg shadow loginbtn" @tap="loginSys">登录</button>
 			</view>
 		</form>
 		<mLoad :png="'/static/gs.png'" :msg="'登录中...'" v-if="loadModal"></mLoad>
@@ -56,7 +65,7 @@
 		canLogin: boolean = false
 		loadModal: boolean = false
 		vueId: string = Tools.guid()
-		user: User = new User('admin', '', 'system')
+		user: User = new User('00006', '', '')
 		onLoad() {
 			// console.log('登录页面1112')
 		}
@@ -83,12 +92,14 @@
 						this.user.userName = _u.userName
 						this.user.attr = _u.attr
 						this.user.deptInfo = _u.deptInfo
+						this.user.gwCode = _u.gwCode
 						let ms:Array<Menu> = data.data.menulist;
 						console.log(ms)
 						// uni.setStorage({key:'user',data:this.user})
 						LoginModule.setUser(this.user)
 						LoginModule.setState(true)
 						LoginModule.setMenus(ms);
+						LoginModule.setSnKey(data.data.snkey)
 						// uni.navigateTo({
 						// 	'url': '/pages/index/index'
 						// })
@@ -109,7 +120,8 @@
 				}).catch((err: any) => {
 					console.log(JSON.stringify(err))
 					uni.showToast({
-						title: '链接服务失败'
+						title: '链接服务失败',
+						icon:"none"
 					})
 					this.canLogin = false;
 					this.loadModal = false;
@@ -120,7 +132,12 @@
 				// })
 			}
 		}
-
+		//注册页面
+		registered(){
+			uni.navigateTo({
+			    url:'/pages/alone/flexible/registered/registered',
+			});
+		}
 		notLogin() {
 			console.log('不能登录系统')
 		}
@@ -138,6 +155,7 @@
 
 	.cu-form-group .title {
 		min-width: calc(4em + 15px);
+		font-weight: 600;
 	}
 
 	.header {
@@ -146,9 +164,25 @@
 	}
 
 	.header image {
-		width: 161upx;
-		height: 161upx;
+		width: 550upx;
+		height: 480upx;
 		border-radius: 50%;
-
+	}
+	.registered{
+		color: #3A86ED;
+		font-weight: 600;
+	}
+	.body{
+		background-color: #FFFFFF;
+		height: 100%;
+		width: 100%;
+		position: absolute;
+	}
+	.input{
+		border-bottom: 1px solid #e5e5e5;
+		border-top:0rpx ;
+	}
+	.loginbtn{
+		border-radius: 50upx;
 	}
 </style>

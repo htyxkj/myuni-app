@@ -98,6 +98,7 @@
 					if (res.confirm) {
 						// uni.navigateTo({'url':'/pages/login/login'})
 						//关闭所有页面，打开到应用内的某个页面。
+						uni.clearStorage()
 						uni.reLaunch({'url':'/pages/login/login'})
 					}
 				}

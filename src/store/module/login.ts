@@ -5,7 +5,8 @@ import Menu from '@/classes/Menu';
 export interface ILogin {
 	loginState:boolean;
 	user:User;
-	menus:Array<Menu>
+	menus:Array<Menu>;
+	snkey:string
 }
 
 @Module({ dynamic: true , store:store,name:'login'})
@@ -15,12 +16,12 @@ class Login extends VuexModule implements ILogin {
 	
 	public user = new User('','','')
 	public menus =new Array<Menu>()
+	public snkey = "";
     //#endregion
     //#region 业务代码
 	@Mutation
 	private SET_USER(Value:User){
 		this.user = Value
-		console.log('hahaha',this.user)
 		uni.setStorage({key:'user',data:JSON.stringify(this.user)})
 	}
 	
@@ -33,6 +34,11 @@ class Login extends VuexModule implements ILogin {
 	private SET_MENUS(Value:Array<Menu>){
 		this.menus = Value
 		uni.setStorage({key:'menus',data:JSON.stringify(this.menus)})
+	}
+	@Mutation
+	private SET_SNKEY(value:any){
+		this.snkey = value;
+		uni.setStorage({key:'snkey',data:value})
 	}
     //#endregion
     //#region API
@@ -64,6 +70,12 @@ class Login extends VuexModule implements ILogin {
 	public setMenus(value:Array<Menu>){
 		return value;
 	}
+	
+	@Action({commit:'SET_SNKEY'})
+	public setSnKey(value:string){
+		return value;
+	}
+	
     //#endregion
 	
 	//#region

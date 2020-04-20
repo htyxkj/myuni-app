@@ -83,6 +83,14 @@
             "path" : "pages/editunit/editunit",
             "style" : {}
         }
+
+		/***********************************灵活用工平台START*************************************/
+        ,{
+            "path" : "pages/alone/flexible/registered/registered",//灵活用工平台
+            "style" : {}
+        }
+		/***********************************灵活用工平台END*************************************/
+		
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -126,6 +134,11 @@
 				"name": "辅助",
 				"path": "pages/selecteditor/selecteditor",
 				"query": "editName=CDIC" //启动参数
+			},
+			{
+				"name":"灵活用工注册页面",
+				"path":"pages/alone/flexible/registered/registered",
+				"query":""
 			}
 
 		]
