@@ -58,9 +58,8 @@
 		
 		tabSelect(e:any){
 			this.tabcur = e[0];
-			// this.tabcur = parseInt(e.currentTarget.dataset.id)
-			this.title = this.makeTitle(this.tabcur)
 			this.menubarr = e[1]
+			this.title = this.makeTitle(parseInt(this.menubarr.url))
 		}
 		
 		/**
@@ -105,10 +104,6 @@
 </script>
 
 <style lang="scss">
-	page {
-		/* margin-bottom: 100upx; */
-		padding-bottom: 120upx;
-	}
 	.cu-bar.tabbar .action [class*="cuIcon-"] {
 		margin: 0 auto 8rpx !important;		
 	}

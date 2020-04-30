@@ -219,7 +219,7 @@ export default class appInfo extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 page{
 	margin-bottom: 120upx;
 }

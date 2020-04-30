@@ -1,13 +1,23 @@
 <template>
 	<view class="mine-info">
 		<view class=" bg-white header">
-			<view class="flex align-center">
-				<image src="../../static/gs.png" mode="aspectFit"></image>
-				<view class="my-info">
-					<view style="font-size: 40upx; font-weight: bold;">{{user.deptInfo.cmcName}}</view>
-					<view style="font-size: 36upx; font-weight: 600;">{{user.userName}}</view>
-					<view>{{AttrTitle}}</view>
-					
+			<view>
+				<!-- <view class="cu-avatar xl round my-margin-top bg-white" style="background-image:url(../../static/gs.png);"></view> -->
+				<image class="cu-avatar xl round my-margin-top bg-white"  src="../../static/gs.png" mode="aspectFit"></image>
+			</view>
+			<view class="my-info my-margin-top">
+				<view style="font-weight: 600;">{{AttrTitle}}</view>
+				<view class="bg-white whiteCrd margin my-margin-top">
+					<view class="bg-white whiteCrd padding-top ">
+						<view class="grid margin-bottom text-center col-2">
+							<view>岗位</view>
+							<view>隶属部门</view>
+						</view>
+						<view class="grid padding-bottom text-center col-2 " style="color: #000000;font-weight: 600;">
+							<view>{{gwName}}</view>
+							<view>{{user.deptInfo.deptName}}</view>
+						</view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -21,7 +31,7 @@
 		</view>
 		<view class="cu-bar bg-white solid-bottom"  @tap="exitSys">
 			<view class="action">
-				<text class="cuIcon-titles text-blue "></text>登出系统
+				<text class="cuIcon-titles text-blue "></text>退出系统
 			</view>
 		</view>
 		<view class="cu-bar bg-white solid-bottom margin-top">
@@ -69,7 +79,11 @@
 
 <script lang="ts">
 	import {Vue,Component} from 'vue-property-decorator';
-	// import mLoad from '../../components/mLoad.vue';
+	import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
+	import {BIPUtil} from '@/classes/api/request';
+	let tools = BIPUtil.ServApi;
+	import {icl} from '@/classes/tools/CommICL';
+	const ICL = icl; 
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
@@ -85,6 +99,12 @@
 		at0:boolean = false
 		at1:boolean = false
 		at2:boolean = false
+		gwName:any = '';//岗位名称
+		editName:any ='MULGW';//岗位辅助
+
+		async mounted() {
+			this.getGWName(this.user.gwCode);
+		}
 		get user(){
 			return LoginModule.user
 		}
@@ -170,24 +190,64 @@
 			}
 			return tt;
 		}
+		
+		async getGWName(code:any){
+			console.log(code)
+			this.gwName = "";
+			let codeA = code.split(";");
+			for(var i=0;i<codeA.length;i++){
+				code = codeA[i]
+				let aidKey= ICL.AID_KEY+this.editName;
+				let key = aidKey+"_"+code;
+				if(!this.inProcess.get(key)){
+					let rtn = this.aidValues.get(key);
+					if(!rtn){
+						let cont = "gwcode = '"+code+"'";
+						let vvs = {id:this.editName,key:key,cont:cont}
+						await InsAidModule.fetchInsDataByCont(vvs);
+						let rtn:any = this.aidValues.get(key);
+						if(rtn){
+							this.gwName += rtn.gwname+";";
+						}
+					}
+				}else{
+					let rtn = this.aidValues.get(key);
+					if(rtn){
+						this.gwName += rtn.gwname+";";
+					}
+				}
+			}
+			if(this.gwName.length>1){
+				this.gwName = this.gwName.substring(0,this.gwName.length-1)
+			}
+		}
+		get aidmaps(){
+			return InsAidModule.aidInfos;
+		}
+		get aidValues(){
+			return InsAidModule.aidValues;
+		}
+		get inProcess(){
+			return InsAidModule.inProcess;
+		}
 	}
 </script>
 
 <style>
 	.mine-info .header{
 		text-align: center;
+		background-image: url('../../static/mine/bg.jpg');
 		/* vertical-align:middle; */
 		/* background-color: #EBEEF5; */
 	}
-	.mine-info .header image{
-		width:200upx;
-		height:200upx;
-		border-radius:50%;	
-	}
 	.my-info{
-		margin-left: 100upx;
-		/* margin-bottom: 100upx; */
-		/* margin-right: 100upx; */
+		color: white;
+	}
+	.my-margin-top{
+		margin-top:20upx;
+	}
+	.whiteCrd{
+    	border-radius: 5px 5px 0px 0px;
 	}
 	.cu-form-group{
 		text-align: left;

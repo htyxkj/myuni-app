@@ -109,6 +109,22 @@ export namespace baseUtils {
 			});
 		}
 		/**
+		 * @description 获取对象统计参数
+		 * @param qe 查询条件
+		 * @param groupfilds 分组字段
+		 * @param groupdatafilds 数据字段
+		 */
+		getBipStatisticsParams(qe:string,groupfilds:string,groupdatafilds:string){
+			return Object.assign({
+			apiId: GlobalVariable.APIID_FINDSTATDATA,
+			dbid: commURL.BaseDBID,
+			usercode:  JSON.parse(uni.getStorageSync('user') + '').userCode,
+			groupfilds:groupfilds,
+			groupdatafilds:groupdatafilds, 
+			qe: qe
+			});
+		}
+		/**
 		 * @description 获取访问后台获取对象定义的参数
 		 * @param cellId 对象定义标志 cellId(cellId1;cellId2)
 		 * @returns 返回是一个object{}
@@ -458,7 +474,7 @@ export namespace baseUtils {
 		 * @returns 返回菜单或者是空
 		 */
 		findMenu(menuId: string) {
-			let menu = window.sessionStorage.getItem('menulist');
+			let menu =  uni.getStorageSync("menus");
 			let m1 = null;
 			if (menu != null) {
 				let ml = JSON.parse(menu);

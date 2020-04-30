@@ -3,7 +3,7 @@
 		<view v-if="type ==0" :class="myclass">
 			<view class="cu-item" v-for="(item,index) in groupMenus" :key="index" @tap.stop="openMenu(item,index)">
 				<view>
-					<view class="cu-avatar lg radius" :style="'background-image:url('+BaseUri+item.menuIcon+')'"></view>
+					<view class="cu-avatar lg radius bg-white" :style="'background-image:url('+BaseUri+item.menuIcon+')'"></view>
 				</view>
 				<text>{{item.menuName}}</text>
 			</view>
@@ -34,7 +34,7 @@
 		components:{}
 	})
 	export default class Jiugongge extends Vue {
-		@Prop({default:null}) data?:any;
+		@Prop({default:null}) layoutdata?:any;
 		myclass:string ="cu-list grid no-border col-4 ";
 		groupMenus:any=[];
 		menuIDS:any=[];
@@ -48,7 +48,7 @@
 			if(cc != "/"){
 				this.BaseUri +="/"
 			}
-			let d1 = JSON.parse(this.data.content)
+			let d1 = JSON.parse(this.layoutdata.content)
 			if(d1["column-num"]){
 				this.type = 0;
 				this.myclass = "cu-list grid no-border col-"+d1["column-num"];

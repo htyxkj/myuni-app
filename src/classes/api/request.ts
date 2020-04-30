@@ -110,6 +110,8 @@ export namespace BIPUtil {
 			return this.getFromServer(param);
 		}
 
+
+
 		/**
 		 * @description 调用js http post 请求
 		 */

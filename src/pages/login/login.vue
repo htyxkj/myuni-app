@@ -65,7 +65,8 @@
 		canLogin: boolean = false
 		loadModal: boolean = false
 		vueId: string = Tools.guid()
-		user: User = new User('00006', '', '')
+		// user: User = new User('13051424475', '', '')
+		user: User = new User('', '', '')
 		onLoad() {
 			// console.log('登录页面1112')
 		}

@@ -1,13 +1,15 @@
 <template>
 	<view>
 		<scroll-view scroll-x class="bg-white nav" scroll-with-animation :scroll-left="scrollLeft">
-			<view class="cu-item" :class="index==TabCur?'text-green cur':''" v-for="(item,index) in tabs" :key="index" @tap="tabSelect" :data-id="index">
-				{{item.name}}
+			<view class="flex text-center">
+				<view class="cu-item flex-sub" :class="index==TabCur?'text-red cur':''" v-for="(item,index) in tabs" :key="index" @tap="tabSelect" :data-id="index">
+					{{item.name}}
+				</view>
 			</view>
 		</scroll-view>
 		<view v-if="tabs.length>0" style="">
-			<applist v-if="formType ==0 " :pbuid="pbuid"></applist>
-			<appreport v-if="formType ==1 " :pbuid="pbuid"></appreport>
+			<applist v-if="formType ==0 " :pbuid="pbuid" :myStyle="myStyle" :title="title"></applist>
+			<appreport v-if="formType ==1 " :pbuid="pbuid" :myStyle="myStyle" :title="title"></appreport>
 		</view>
 	</view>
 </template>
@@ -27,29 +29,32 @@
 		components:{applist,appreport}
 	})
 	export default class Tabs extends Vue {
-		@Prop({default:null}) data?:any;
+		@Prop({default:null}) layoutdata?:any;
 		uriParams: URIParams = new URIParams();
 		tabs:any =[];
 		TabCur:any =0;
 		scrollLeft:any =0;
 		pbuid:any =""//菜单参数
 		formType:any =-1;
+		myStyle:any = null;//样式
+		title:any = "";//菜单标题
 		async mounted() {
 			let menus = LoginModule.menus;
-			let d1 = JSON.parse(this.data.content)
+			let d1 = JSON.parse(this.layoutdata.content)
 			let list = d1.list;
 			for(var i=0;i<list.length;i++){
 				let l1 = list[i];
 				let menuID = l1.url;
-				let tab ={name:l1.name,index:i,menu:null};
+				let myStyle = l1.style;
+				let tab ={name:l1.name,index:i,menu:null,myStyle:myStyle};
 				let menu = this.makeMenuByID(menus,menuID)
-				console.log(menu)
 				tab.menu = menu;
 				this.tabs.push(tab)
-				
-				let item = this.tabs[this.TabCur].menu;
-				this.initMenu(item);
 			}
+			let item = this.tabs[this.TabCur].menu;
+			this.myStyle = this.tabs[this.TabCur].myStyle;
+			if(item)
+			this.initMenu(item);
 		}
 		//更具菜单号获取菜单
 		makeMenuByID(menus:any,menuID:any ):any{
@@ -72,6 +77,8 @@
 			this.TabCur = e.currentTarget.dataset.id;
 			this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60 
 			let item = this.tabs[this.TabCur].menu;
+			this.myStyle = this.tabs[this.TabCur].myStyle;
+			if(item)
 			this.initMenu(item);
 		}
 
@@ -87,6 +94,7 @@
 				}
 			})
 			let mid = item.menuId;
+			this.title = item.menuName;
 			if(pbuid&&mid){
 				await tools.getMenuParams(pbuid,mid).then((res:any)=>{
 					this.pbuid = pbuid

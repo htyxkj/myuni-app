@@ -267,7 +267,7 @@ export default class appDetail extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style scoped>
 page {
 	margin-bottom: 120upx;
 }

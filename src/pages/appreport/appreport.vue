@@ -142,6 +142,7 @@ export default class appReport extends Vue {
 		this.qe.pcell = this.dsm.ccells.obj_id;
 		this.qe.tcell = this.dsm_cont.ccells.obj_id;
 		this.qe.oprid = 14;
+        this.qe.type = 1
 		// console.log(this.qe)
 		
 		for (let i = 2; i < this.cells.length; i++) {

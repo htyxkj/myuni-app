@@ -1,9 +1,11 @@
 <template>
 	<view>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
-		<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :down="downOption" :showUpBtn="false" :fixed="false" :top="0" :bottom="0" class="bg-white myHeight">
+		<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :down="downOption" 
+		:showUpBtn="false" :fixed="false" :top="0" :bottom="0" class="bg-white myHeight">
 			<view v-for="(item,index) in pdList" :key="index">
-				<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+				<bip-list-unit2 v-if="myStyle == null" :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+				<bip-customize-list-unit-type1 v-else-if="myStyle.type == 1" :myStyle="myStyle" :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-customize-list-unit-type1>
 			</view>
 		</mescroll-uni>	
 		<!-- <mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad> -->
@@ -17,6 +19,8 @@ import mLoad from '@/components/mLoad.vue';
 import bipSearchCon from '@/components/bip-ui/bip-search/bip-search-con.vue'
 import MescrollUni from '@/components/mescroll-uni/mescroll-uni.vue';
 import bipListUnit2 from '@/components/bip-ui/bip-unit/bip-list-unit2.vue';
+
+import bipCustomizeListUnitType1 from '@/components/bip-customize-ui/bip-unit/bip-list-unit-type1.vue';
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
 
@@ -34,11 +38,14 @@ import { icl } from '@/classes/tools/CommICL';
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
 @Component({
-	components: { mLoad,MescrollUni,bipSearchCon,bipListUnit2}
+	components: { mLoad,MescrollUni,bipSearchCon,bipListUnit2,bipCustomizeListUnitType1}
 })
+//报表
 export default class appReport extends Vue {
 	vueId: string = Tools.guid();
 	@Prop({default:null}) pbuid?:any;
+	@Prop({default:null}) myStyle?:any;//样式
+	@Prop({default:null}) title?:any;
 	loading: boolean = true;
 	uriParam: URIParams = new URIParams();
 	@Provide('env') env: CCliEnv = new CCliEnv();
@@ -58,6 +65,7 @@ export default class appReport extends Vue {
 	downOption: any = {}//下拉数据列表参数配置
 	qe:QueryEntity = new QueryEntity('','');
 
+	isjump:boolean = false;
 	created(){
 		this.initScoreUI();
 	}
@@ -78,14 +86,31 @@ export default class appReport extends Vue {
 	}
 	
 	openList(rid:number){
-			
+		if (!this.isjump) {
+			this.isjump = true;
+			uni.showLoading({
+				title: '跳转中...'
+			});
+			let cr0 = this.pdList[rid];
+			let arr:Array<any> = this.dsm.pkCells();
+			let qcont = ''
+			if(arr.length>0){
+				qcont = this.makeQueryCont(cr0,arr);
+			}
+			uni.navigateTo({
+				url: '/pages/appinfo/appdetail?pbuid=' + this.pbuid + '&color=' + "blue" + '&title=' + this.title +'&qcont='+encodeURIComponent(qcont),
+				complete: () => {
+					uni.hideLoading();
+					this.isjump = false;
+				}
+			});
+		}
 	}
 
 	async mounted() {
 		await this.init();
 	}
 	async init(){
-		console.log("init")
 		this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
 		if(this.uriParam){
 			this.loading = true;
@@ -117,6 +142,7 @@ export default class appReport extends Vue {
 		this.qe.pcell = this.dsm.ccells.obj_id;
 		this.qe.tcell = this.dsm_cont.ccells.obj_id;
 		this.qe.oprid = 14;
+        this.qe.type = 1
 		// console.log(this.qe)
 		
 		for (let i = 2; i < this.cells.length; i++) {
@@ -223,7 +249,26 @@ export default class appReport extends Vue {
 		})
 		
 	}
-
+	makeQueryCont(cr0:any,cels:Array<any>){
+		let qs = '';
+		if(cels.length>0){
+			cels.forEach((item:any)=>{
+				let vr = cr0.data[item.id];
+				let type = item.type;
+				if(type==12){
+					if(vr){
+						qs+=item.id+"='"+vr+"' and";
+					}
+				}else{
+					if(vr !== undefined &&vr != null &&vr !==''){
+						qs+=item.id+"="+vr+" and";
+					}
+				}
+			})
+			qs = qs.substring(0,qs.length-3);
+		}
+		return qs;
+	}
 	queryCont(cellId:string,mo:any){
 		this.loading = true
 		let cont:any = {};
@@ -284,6 +329,6 @@ export default class appReport extends Vue {
 
 <style lang="scss">
 .myHeight{
-	height: 650upx;
+	height: 650upx !important;
 }
 </style>

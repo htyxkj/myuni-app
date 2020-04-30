@@ -48,7 +48,7 @@
 		components:{}
 	})
 	export default class Carousel extends Vue {
-		@Prop({default:null}) data?:any;
+		@Prop({default:null}) layoutdata?:any;
 		uriParams: URIParams = new URIParams();
 		BaseUri:any ="";//地址
 		cardCur:any =0;//卡片选择
@@ -63,7 +63,7 @@
 			if(cc != "/"){
 				this.BaseUri +="/"
 			}
-			let d1 = JSON.parse(this.data.content)
+			let d1 = JSON.parse(this.layoutdata.content)
 			let menus = LoginModule.menus;
 			this.type = d1.type;
 			this.initSwiperList(d1.list)
@@ -78,15 +78,13 @@
 				img = this.BaseUri+img
 				let menuid = l1.url;
 				let menu = this.makeMenuByID(menus,menuid)
-				if(menu){
-					let carousel ={
-						id: i,
-						type: 'image',
-						url: img,
-						menu:menu
-					}
-					this.swiperList.push(carousel)
+				let carousel ={
+					id: i,
+					type: 'image',
+					url: img,
+					menu:menu
 				}
+				this.swiperList.push(carousel)
 			}
 		}
 		
@@ -158,6 +156,8 @@
 		}
 		//打开菜单
 		async openMenu(item:Menu,index:any){
+			if(!item)
+				return;
 			let cr = this.cuIconList[index%10];
 			let param:any = Object.assign(item);
 			param.color = cr;

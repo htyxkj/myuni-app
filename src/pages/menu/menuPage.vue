@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view style="padding-bottom:120upx">
 		<mMenu v-for="(m,index) in groupMenus" :key="index" :m="m" @openM="openMenu" ></mMenu>
 	</view>
 </template>

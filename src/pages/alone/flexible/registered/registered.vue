@@ -350,6 +350,11 @@
 			dsm.currRecord.data.usrcode = usrcode;
 			dsm.currRecord.data.usrname = usrname;
 			dsm.currRecord.data.tel = tel;
+			if(this.regType == 1){//个人用户
+				dsm.currRecord.data.gwcode = 2
+			}else if(this.regType ==2){//企业用户
+				dsm.currRecord.data.gwcode = 1
+			}
 			let res:any = await tools.saveData(dsm.currRecord,this.userCell, "");
 			if(res.data.id ==0)
 				return true;

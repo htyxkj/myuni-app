@@ -47,7 +47,7 @@ class InsAid extends VuexModule implements IInsAid {
 	
     //#region API
 	@Action
-	public fetchInsAid(val:any){
+	public async fetchInsAid(val:any){
 		 let id = val.id;
 		let aid = val.aid;
 		let k1 = aid
@@ -68,7 +68,7 @@ class InsAid extends VuexModule implements IInsAid {
 			this.SET_AID_INFOS({key:k1,value:rtn});
 			return rtn;
 		}		
-		return tools.getBipInsAidInfo(aid, id).then((res:any)=>{
+		return await tools.getBipInsAidInfo(aid, id).then((res:any)=>{
 			if(res.data.id==0){
 				let vrr = res.data.data.data
 				this.SET_IN_PROCESS({key:k1,value:true});
@@ -83,7 +83,7 @@ class InsAid extends VuexModule implements IInsAid {
 	}
 	
 	@Action
-	public fetchInsDataByCont(val:any){
+	public async fetchInsDataByCont(val:any){
 		let aid = val.id;
 		let key = val.key;
 		let cont = val.cont;
@@ -92,7 +92,7 @@ class InsAid extends VuexModule implements IInsAid {
 		if(!rr){
 			let qe = new QueryEntity("","");
 			qe.cont = cont
-			return tools.getBipInsAidInfo(aid,210,qe).then((res:any)=>{
+			return await tools.getBipInsAidInfo(aid,210,qe).then((res:any)=>{
 				console.log(res)
 				let rtn = res.data;
 				if(rtn.id==0){

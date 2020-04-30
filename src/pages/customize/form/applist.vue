@@ -1,11 +1,14 @@
 <template>
 	<view>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
-		<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :down="downOption" :showUpBtn="false" :fixed="false" :top="0" :bottom="0" class="bg-white myHeight">
-			<view v-for="(item, index) in pdList" :key="index">
-				<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
-			</view>
-		</mescroll-uni>
+		
+			<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" 
+				:down="downOption" :showUpBtn="false" 
+				:fixed="false" :top="0" :bottom="0" class="bg-white myHeight" :myStyle="'height:650upx'">
+				<view v-for="(item, index) in pdList" :key="index">
+					<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+				</view>
+			</mescroll-uni>
 		<!-- <mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad> -->
 		<!-- <bip-bill-bar @tabSelect="execCmd" :attr="1"></bip-bill-bar> -->
 	</view>
@@ -330,11 +333,11 @@ export default class appList extends Vue {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 page {
 	margin-bottom: 120upx;
 }
 .myHeight{
-	height: 650upx;
+	height: 650upx !important;
 }
 </style>
