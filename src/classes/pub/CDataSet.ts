@@ -206,4 +206,70 @@ export default class CDataSet {
 		cdata.data = datas;
 		return cdata;
 	}
+	getRecordAtIndex(_i: number = -1) {
+		if (_i === -1) {
+			return this.currRecord;
+		}
+		return this.cdata.getDataAtIndex(_i);
+	}
+	checkNotNull():Array<any>{
+		console.log("检查非空！")
+        let rtn =[true,""]
+        let bok = true;
+        this.ccells.cels.forEach(item => {
+            if (item.unNull&&bok) {
+                let vl = null;
+                let hide:any = []; 
+                if(this.currRecord.data[item.id]!=null)
+                    vl = this.currRecord.data[item.id]+''; 
+                if (!vl && hide.indexOf(item.id) == -1) {
+					bok =  false;
+					rtn[0] = false
+					rtn[1] =  "【" + item.labelString + "】不能为空!"
+                    return rtn;
+                }
+            }
+        });
+        if(bok){
+            if (this.ds_sub.length>0) {
+                return this.checkChildNotNull(this);
+        }
+	  }
+	  return rtn;
+    }
+
+    checkChildNotNull(cds:CDataSet):Array<any>{
+		let rtn =[true,""]
+        let isok = true;
+        cds.ds_sub.forEach(cd0=>{
+            if(isok){
+                if(cd0.cdata.data.length===0 && !cd0.ccells.unNull){
+					rtn[0] = false
+					rtn[1] =  "【" + cd0.ccells.desc  + "】不能为空!"
+                    isok =  false;
+                    return rtn;
+                }else{
+                    for(let i=0;i<cd0.cdata.data.length;i++){
+                        let crd = cd0.getRecordAtIndex(i);
+                        cd0.ccells.cels.forEach(item=>{
+                            if(isok&&item.unNull){
+                                let vl = crd.data[item.id];+'';
+                                if (!vl) {
+									rtn[0] = false
+									rtn[1] =   "子表第"+(i+1)+"行"+item.id+"【" + item.labelString + "】不能为空!"
+									isok =  false;
+									return rtn;
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+            if(cd0.ds_sub.length>0){
+                rtn = this.checkChildNotNull(cd0);
+            }
+
+        })
+        return rtn;
+    }
 }

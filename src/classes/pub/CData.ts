@@ -20,5 +20,7 @@ export default class CData{
 	size(){
 		return this.data.length;
     }
-
+    getDataAtIndex(_i:number):CRecord{
+        return this.data[_i];
+    }
 }

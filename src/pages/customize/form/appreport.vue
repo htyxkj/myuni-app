@@ -2,7 +2,7 @@
 	<view>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
 		<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :down="downOption" 
-		:showUpBtn="false" :fixed="false" :top="0" :bottom="0" class="bg-white myHeight">
+		:showUpBtn="true" :fixed="false" :top="0" :bottom="0" class="bg-white myHeight">
 			<view v-for="(item,index) in pdList" :key="index">
 				<bip-list-unit2 v-if="myStyle == null" :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
 				<bip-customize-list-unit-type1 v-else-if="myStyle.type == 1" :myStyle="myStyle" :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-customize-list-unit-type1>
@@ -98,7 +98,7 @@ export default class appReport extends Vue {
 				qcont = this.makeQueryCont(cr0,arr);
 			}
 			uni.navigateTo({
-				url: '/pages/appinfo/appdetail?pbuid=' + this.pbuid + '&color=' + "blue" + '&title=' + this.title +'&qcont='+encodeURIComponent(qcont),
+				url: '/pages/appreport/appreportdetail?pbuid=' + this.pbuid + '&color=' + "blue" + '&title=' + this.title +'&qcont='+encodeURIComponent(qcont),
 				complete: () => {
 					uni.hideLoading();
 					this.isjump = false;
@@ -141,7 +141,7 @@ export default class appReport extends Vue {
 		
 		this.qe.pcell = this.dsm.ccells.obj_id;
 		this.qe.tcell = this.dsm_cont.ccells.obj_id;
-		this.qe.oprid = 14;
+		this.qe.oprid = 13;
         this.qe.type = 1
 		// console.log(this.qe)
 		

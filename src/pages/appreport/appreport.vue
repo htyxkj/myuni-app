@@ -5,11 +5,11 @@
 			<block slot="content"><view class="header-title">{{ title }}</view></block>
 		</cu-custom>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
-			<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :showUpBtn="true" :down="downOption" :fixed="true" :top="260" :bottom="5" class="bg-white">
-				<view v-for="(item,index) in pdList" :key="index">
-					<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
-				</view>
-			</mescroll-uni>	
+		<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :showUpBtn="true" :down="downOption" :fixed="true" :top="260" :bottom="5" class="bg-white">
+			<view v-for="(item,index) in pdList" :key="index">
+				<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+			</view>
+		</mescroll-uni>	
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 	</view>
 </template>
@@ -64,7 +64,7 @@ export default class appReport extends Vue {
 	upOption: any = {}//上拉数据列表参数配置
 	downOption: any = {}//下拉数据列表参数配置
 	qe:QueryEntity = new QueryEntity('','');
-
+	isjump:boolean = false;//
 	created(){
 		this.initScoreUI();
 	}
@@ -85,9 +85,46 @@ export default class appReport extends Vue {
 	}
 	
 	openList(rid:number){
-			
+		if (!this.isjump) {
+			this.isjump = true;
+			uni.showLoading({
+				title: '跳转中...'
+			});
+			let cr0 = this.pdList[rid];
+			let arr:Array<any> = this.dsm.pkCells();
+			let qcont = ''
+			if(arr.length>0){
+				qcont = this.makeQueryCont(cr0,arr);
+			}
+			uni.navigateTo({
+				url: '/pages/appreport/appreportdetail?pbuid=' + this.pbuid + '&color=' + "blue" + '&title=' + this.title +'&qcont='+encodeURIComponent(qcont),
+				complete: () => {
+					uni.hideLoading();
+					this.isjump = false;
+				}
+			});
+		}
 	}
-	
+	makeQueryCont(cr0:any,cels:Array<any>){
+		let qs = '';
+		if(cels.length>0){
+			cels.forEach((item:any)=>{
+				let vr = cr0.data[item.id];
+				let type = item.type;
+				if(type==12){
+					if(vr){
+						qs+=item.id+"='"+vr+"' and";
+					}
+				}else{
+					if(vr !== undefined &&vr != null &&vr !==''){
+						qs+=item.id+"="+vr+" and";
+					}
+				}
+			})
+			qs = qs.substring(0,qs.length-3);
+		}
+		return qs;
+	}
 	execCmd(cmd:string){
 		// console.log('addOne item'+cmd)
 		uni.showLoading({
@@ -141,7 +178,7 @@ export default class appReport extends Vue {
 		
 		this.qe.pcell = this.dsm.ccells.obj_id;
 		this.qe.tcell = this.dsm_cont.ccells.obj_id;
-		this.qe.oprid = 14;
+		this.qe.oprid = 13;
         this.qe.type = 1
 		// console.log(this.qe)
 		

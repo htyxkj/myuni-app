@@ -26,7 +26,6 @@
 		showValue:string = '';
 		aidKey:string = '';
 		created(){
-			// console.log(this.bipInsAid);
 			this.mode = this.record.data[this.cell.id]||''
 			this.showValue = this.mode;
 			this.aidKey = ICL.AID_KEY+this.bipInsAid.id;

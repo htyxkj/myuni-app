@@ -1,7 +1,7 @@
 <template>
 	<view class="cu-form-group solid-bottom">
 		<template v-if="cell">
-			<view class="title">{{ cell.labelString }}</view>
+			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
 		</template>
 		<input :placeholder="cell.labelString" :type="'text'" v-model="showMode" @tap.stop="open()" disabled="true"/>
 		<text :class="['cuIcon-triangledownfill', 'text-grey']" @tap.stop="open()"></text>
@@ -99,8 +99,8 @@ export default class bipList extends Vue{
 
 
 	open(){
-		console.log('open')
-		console.log(this.cell)
+		// console.log('open')
+		// console.log(this.cell)
 		this.isShow = true;
 	}
 
@@ -109,7 +109,7 @@ export default class bipList extends Vue{
 	}
 
 	selectChange(e:any){
-		console.log(e);
+		// console.log(e);
 		this.selectItem = e;
 		this.cancel();
 		this.$nextTick(()=>{
@@ -119,7 +119,7 @@ export default class bipList extends Vue{
 		})
 	}
 	selectOK(e:any){
-		console.log(e);
+		// console.log(e);
 		if(e){
 			this.selectItem = e;
 			this.$nextTick(()=>{
@@ -144,13 +144,13 @@ export default class bipList extends Vue{
 		if(!this.bipInsAid.id){
 			let rr = this.aidmaps.get(this.aidKey);
 			if(rr){
-				console.log(rr)
+				// console.log(rr)
 				this.bipInsAid = this.bipInsAid.clone(rr);
 				this.bipInsAid.id = this.editName;
 				this.showk = this.bipInsAid.cells.cels[1].id
 				this.showv = this.bipInsAid.cells.cels[0].id
 				this.makeShowValue()
-				console.log(this.bipInsAid)
+				// console.log(this.bipInsAid)
 			}
 			
 		}

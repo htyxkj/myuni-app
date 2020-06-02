@@ -5,7 +5,7 @@
 			<swiper class="screen-swiper square-dot"  :indicator-dots="true" :circular="true"
 			 :autoplay="true" interval="5000" duration="500">
 				<swiper-item v-for="(item,index) in swiperList" :key="index"  @tap.stop="openMenu(item.menu,index)">
-					<image :src="item.url" mode="aspectFill" v-if="item.type=='image'"></image>					
+					<image :src="item.url" mode="scaleToFill" v-if="item.type=='image'"></image>					
 				</swiper-item>
 			</swiper>
 		</template>
@@ -17,7 +17,7 @@
 			 indicator-active-color="#0081ff">
 				<swiper-item v-for="(item,index) in swiperList" :key="index" :class="cardCur==index?'cur':''"   @tap.stop="openMenu(item.menu,index)">
 					<view class="swiper-item">
-						<image :src="item.url" mode="aspectFill" v-if="item.type=='image'"></image>
+						<image :src="item.url" mode="scaleToFill" v-if="item.type=='image'"></image>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -27,7 +27,7 @@
 			<view class="tower-swiper" @touchmove="TowerMove" @touchstart="TowerStart" @touchend="TowerEnd"   >
 				<view class="tower-item" :class="item.zIndex==1?'none':''" v-for="(item,index) in swiperList" @tap.stop="openMenu(item.menu,index)" :key="index" :style="[{'--index': item.zIndex,'--left':item.mLeft}]" :data-direction="direction">
 					<view class="swiper-item">
-						<image :src="item.url" mode="aspectFill" v-if="item.type=='image'"></image>
+						<image :src="item.url" mode="scaleToFill" v-if="item.type=='image'"></image>
 					</view>
 				</view>
 			</view>
@@ -213,10 +213,15 @@
 		}
 	}
 </script> 
-<style scoped>
+<style lang="scss" scoped>
 	.tower-swiper .tower-item {
 		transform: scale(calc(0.5 + var(--index) / 10));
 		margin-left: calc(var(--left) * 100upx - 150upx);
 		z-index: var(--index);
+	}
+	.img{
+		div { 
+			background-size: contain !important; 
+		}
 	}
 </style>

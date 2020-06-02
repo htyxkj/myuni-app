@@ -124,6 +124,21 @@ export namespace baseUtils {
 			qe: qe
 			});
 		}
+
+		/**
+		 * @description dlg执行SQL
+		 * @param value 当前选中行
+		 * @param btn 当前点击按钮
+		 */
+		getDlgRunSqlParams(value: string,btn:string) {
+			return Object.assign({
+			apiId: GlobalVariable.APIID_DLGSQLRUN,
+			dbid: commURL.BaseDBID,
+			usercode:  JSON.parse(uni.getStorageSync('user') + '').userCode,
+			value: value,
+			btn:btn, 
+			});
+		}
 		/**
 		 * @description 获取访问后台获取对象定义的参数
 		 * @param cellId 对象定义标志 cellId(cellId1;cellId2)

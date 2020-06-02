@@ -28,6 +28,7 @@ export default class bipListUnit2 extends Vue {
 	@Prop({type:Array,default:[]}) cels!:Array<any>;
 	@Prop({type:Number,default:0}) rowId!:number;
 	@Prop() record!:any;
+	@Prop({type:Boolean,default:true}) showList!:boolean;
 	
 	openlist(){
 		this.$emit('openitem',this.rowId);
@@ -43,7 +44,11 @@ export default class bipListUnit2 extends Vue {
 	//过滤显示列表
 	get sList(){
 		return this.cels.filter((item:any)=>{
-			return item.isShow == true&&((item.attr&0x200)>0)&&((item.attr&1)==0);
+			if(this.showList){
+				return item.isShow == true&&((item.attr&0x200)>0)&&((item.attr&1)==0);
+			}else{
+				return item.isShow == true&& ((item.attr&1)==0);
+			}
 		})
 	}
 	get pkList(){

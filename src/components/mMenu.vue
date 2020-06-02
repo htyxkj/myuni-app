@@ -7,12 +7,20 @@
 		</view>
 		<view class="cu-list grid col-4 no-border">
 			<view class="cu-item" v-for="(item,index) in m.childMenu" :key="index" @tap.stop="openMenu(item,index)">
-				<view :class="['cuIcon-' + cuIconList[index%10].cuIcon,'text-' + cuIconList[index%10].color]" >
+				<!-- <view :class="['cuIcon-' + cuIconList[index%10].cuIcon,'text-' + cuIconList[index%10].color]" >
 					<view class="cu-tag badge" v-if="badge!=0">
 						<block v-if="badge!=1">{{badge>99?'99+':badge}}</block>
 					</view>
 				</view>
-				<text>{{item.menuName}}</text>
+				<text>{{item.menuName}}</text> -->
+				<view>
+					<view class='cu-avatar xs radius bg-white' :style="[{backgroundImage:'url('+BaseUri+item.menuIcon+')'}]">
+						<view class="cu-tag badge" v-if="badge!=0">
+							<block v-if="badge!=1">{{badge>99?'99+':badge}}</block>
+						</view>
+					</view>
+				</view>
+				<view><text>{{item.menuName}}</text></view>
 			</view>
 		</view>	
 	</view>
@@ -21,13 +29,25 @@
 <script lang="ts">
 	import {Vue,Provide,Prop,Component} from 'vue-property-decorator';
 	import Menu from '@/classes/Menu';
+	import comm from '@/static/js/comm.js';
+	let commURL: any = comm;
 	@Component({})
 	export default class mMenu extends Vue{
 		badge:number = 0
+		BaseUri:any ="";//地址
 		cuIconList:any = []//颜色 图标
 		@Prop() m!:Menu
-	
+
+		created(){
+			this.BaseUri = commURL.BaseUri;
+			let cc =this.BaseUri.charAt(this.BaseUri.length-1)
+			if(cc != "/"){
+				this.BaseUri +="/"
+			}
+		}
+
 		mounted(){
+
 			this.cuIconList = [{
 					cuIcon: 'cardboardfill',
 					color: 'blue',
@@ -59,7 +79,6 @@
 					cuIcon: 'brandfill',
 					color: 'mauve',
 				}]
-				console.log(this.cuIconList.length)
 		}
 	
 		openMenu(item:Menu,index:number){

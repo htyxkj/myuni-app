@@ -42,8 +42,8 @@
 			}, 300);
 		}
 		
-		execCmd(cmd:string){
-			console.log(cmd)
+		execCmd(btn: any) {
+			let cmd = btn.cmd;
 		}
 		get env1(){
 			return EnvModule.env;

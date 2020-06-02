@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="padding-bottom" v-for="(item,index) in layout" :key="index">
+		<view class="padding-bottom-xs" v-for="(item,index) in layout" :key="index">
 			<template v-if="item.comid == '001' || item.comid == '005'">
 				<Jiugongge :layoutdata="item"></Jiugongge>
 			</template>
@@ -48,14 +48,15 @@
 				gwCode = user.gwCode.split(";");
 			}
 			gwCode.push("-1")
-			// let la = uni.getStorageSync("coustomizeLayout");
-			// if(la){
-			// 	this.layout = JSON.parse(uni.getStorageSync("coustomizeLayout"))
-			// }
+			let key = "coustomizeLayout"+this.menu.id;
+			let la = uni.getStorageSync(key);
+			if(la){
+				this.layout = JSON.parse(uni.getStorageSync(key))
+			}
 			if(this.layout.length == 0){
 				for(var i=0;i<gwCode.length;i++){
 					await this.initLayout(gwCode[i],this.menu.id)	
-					// uni.setStorageSync("coustomizeLayout",JSON.stringify(this.layout))
+					uni.setStorageSync(key,JSON.stringify(this.layout))
 				}
 			}
 		}
@@ -85,9 +86,17 @@
 			if(user.gwCode){
 				gwCode = user.gwCode.split(";");
 			}
-			gwCode.push("")
-			for(var i=0;i<gwCode.length;i++){
-				await this.initLayout(gwCode[i],this.menu.id)
+			gwCode.push("-1")
+			let key = "coustomizeLayout"+this.menu.id;
+			let la = uni.getStorageSync(key);
+			if(la){
+				this.layout = JSON.parse(uni.getStorageSync(key))
+			}
+			if(this.layout.length == 0){
+				for(var i=0;i<gwCode.length;i++){
+					await this.initLayout(gwCode[i],this.menu.id)	
+					uni.setStorageSync(key,JSON.stringify(this.layout))
+				}
 			}
 		}
 	}

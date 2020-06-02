@@ -110,7 +110,15 @@ export namespace BIPUtil {
 			return this.getFromServer(param);
 		}
 
-
+		/**
+		 * 弹出框执行SQL语句 常量里面定义的 DLG.
+		 * @param value 当前选中行内容
+		 * @param btn BipMenuBtn 对象
+		 */
+		getDlgRunSql(value:string,btn:string){
+			let param = tools.getDlgRunSqlParams(value,btn);
+			return this.getFromServer(param)
+		}
 
 		/**
 		 * @description 调用js http post 请求

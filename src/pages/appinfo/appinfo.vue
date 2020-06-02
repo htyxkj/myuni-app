@@ -6,6 +6,7 @@
 		</cu-custom>		
 		<view class="margin-lr-sm margin-tb-sm">
 			<bip-lay v-if="lay.binit" :layout="lay" :key="index"></bip-lay>
+			<view class="padding-bottom-xl margin-bottom-xl"></view>
 		</view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
@@ -64,8 +65,8 @@ export default class appInfo extends Vue {
 	lay: BipLayout = new BipLayout('');
 
 
-	execCmd(cmd:any){
-		console.log(cmd)
+	execCmd(btn: any) {
+		let cmd = btn.cmd;
 		if(cmd == icl.B_CMD_ADD){
 			this.addNewCRecord();
 		}
@@ -137,6 +138,11 @@ export default class appInfo extends Vue {
 	}
 
 	saveData() {
+		let bk:any = this.dsm.checkNotNull();
+		if(!bk[0]){
+			uni.showToast({title:bk[1],icon:"none"});
+			return ;
+		}
 		let cr = this.dsm.currRecord;
 		tools
 			.saveData(cr, this.uriParam.pcell, this.uriParam.pbuid)
@@ -213,7 +219,7 @@ export default class appInfo extends Vue {
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
 		setTimeout(()=>{
-			this.execCmd(icl.B_CMD_ADD)
+			this.addNewCRecord();
 		}, 100);
 	}
 }

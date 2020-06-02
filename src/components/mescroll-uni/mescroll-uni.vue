@@ -1,5 +1,5 @@
 <template>
-	<view class="mescroll-uni-warp" style="height:880rpx">
+	<view class="mescroll-uni-warp">
 		<scroll-view
 			:id="viewId"
 			class="mescroll-uni"

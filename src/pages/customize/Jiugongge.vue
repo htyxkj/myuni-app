@@ -30,6 +30,8 @@
 	let tools = BIPUtil.ServApi;
 	import mMenu from '@/components/mMenu.vue'
 	import URIParams from '@/classes/URIParams'
+	import { baseUtils } from '@/classes/api/baseutils'; 
+	let paramTools = baseUtils.tools;
 	@Component({
 		components:{}
 	})
@@ -61,15 +63,12 @@
 		}
 		//初始化 菜单集合
 		makeMenus(menus:any){
-			for(let i=0;i<menus.length;i++){
-				let mt:Menu = menus[i]
-				if(mt.childMenu){
-					this.makeMenus(mt.childMenu)
-				}else{
-					let index = this.menuIDS.indexOf(mt.menuId)
-					if(index >= 0){
-						this.groupMenus[index] = mt;
-					}
+			this.groupMenus = [];
+			for(let i=0;i<this.menuIDS.length;i++){
+				let menuid = this.menuIDS[i];
+				let menu:any = paramTools.findMenu(menuid)
+				if(menu){
+					this.groupMenus.push(menu);
 				}
 			}
 		}

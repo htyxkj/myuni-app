@@ -9,6 +9,7 @@
 		<template v-if="initUIOK">
 			<view class="margin-lr-sm margin-tb-sm">
 				<bip-lay v-if="lay.binit" :layout="lay" :key="index"></bip-lay>
+				<view class="padding-bottom-xl margin-bottom-xl"></view>
 			</view>
 		</template>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
@@ -68,7 +69,8 @@ export default class appDetail extends Vue {
 	lay: BipLayout = new BipLayout('');
 	qe: QueryEntity = new QueryEntity('', '');
 	initUIOK:boolean = false;
-	execCmd(cmd: any) {
+	execCmd(btn: any) {
+		let cmd = btn.cmd;
 		console.log(cmd);
 		if (cmd == icl.B_CMD_DEL) {
 			this.deleteRecord();
@@ -141,6 +143,11 @@ export default class appDetail extends Vue {
 	}
 
 	saveData() {
+		let bk:any = this.dsm.checkNotNull();
+		if(!bk[0]){
+			uni.showToast({title:bk[1],icon:"none"});
+			return ;
+		}
 		let cr = this.dsm.currRecord;
 		tools
 			.saveData(cr, this.uriParam.pcell, this.uriParam.pbuid)

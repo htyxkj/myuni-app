@@ -44,6 +44,10 @@ export default class bipDate extends Vue {
 		console.log(e)
 		this.mode = e.result
 		this.selectIndex = e.defaultVal
+		this.$nextTick(()=>{
+			if(this.mode != this.record.data[this.cell.id])
+				this.cds.cellChange(this.mode,this.cell.id);
+		})
 	}
 	
 	get record():CRecord{
