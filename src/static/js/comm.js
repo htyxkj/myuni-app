@@ -7,6 +7,16 @@
 // export const BaseDBID = "01";
 
 //教育平台
-export const BaseUri =  "https://test.juminfuwu.cn/bip-share/";
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-share/";
+// export const BaseDBID = "01";
+
+//
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-dataquery/";
+// export const BaseDBID = "01";
+
+// 征信管理平台
+export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
 export const BaseDBID = "01";
+
+
 export default {BaseUri, BaseDBID}

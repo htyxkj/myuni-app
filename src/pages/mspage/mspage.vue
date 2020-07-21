@@ -13,7 +13,6 @@
 		@Provide() isShowSticky:boolean = true;
 		@Provide() tabIndex:number = 0;
 		@Provide() tabs:Array<any> = []
-		@Provide() customBar:number = this.CustomBar
 		onLoad(){
 			this.tabs = [{name:'name1'},{name:'name2'},{name:'name3'}]
 		}
