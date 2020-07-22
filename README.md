@@ -1,4 +1,4 @@
-# uniapp
+# bipuni
 ##  如何使用命令创建一个TypeScript类型的uniapp
 ```
 vue create -p dcloudio/uni-preset-vue 你的项目名称

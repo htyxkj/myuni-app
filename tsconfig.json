@@ -10,11 +10,13 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators":true,
     "sourceMap": true,
+    "skipLibCheck": true,
     "baseUrl": ".",
-	  "allowJs":true,//允许添加JS
     "types": [
       "webpack-env",
-      "@dcloudio/types/uni-app"
+      "@dcloudio/types",
+      "miniprogram-api-typings",
+      "mini-types"
     ],
     "paths": {
       "@/*": [

@@ -188,7 +188,7 @@
 	@Component({})
 	export default class layout extends Vue {
 		@Provide() TabCur:number = 0
-		@Provide() customBar:number = 2
+		@Provide() customBar:number = Vue.prototype.CustomBar
 		@Provide() tabNav:Array<any> = []
 		mounted(){
 			this.tabNav =  ['Flex布局', 'Grid布局', '辅助布局']

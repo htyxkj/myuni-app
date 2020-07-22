@@ -23,7 +23,7 @@
 					<view></view>
 					<view></view>
 					<view></view>
-					<view class="registered" @tap="registered">注册</view>
+					<!-- <view class="registered" @tap="registered">注册</view> --><!-- 灵活用工注册 -->
 				</view>
 			</view>
 			<view class="padding flex flex-direction">
