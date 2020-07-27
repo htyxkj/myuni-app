@@ -52,7 +52,7 @@
         "usingComponents" : true,
         "appid" : "wxc44ad3c8a989baba",
         "setting" : {
-            "urlCheck" : false,
+            "urlCheck" : true,
             "minified" : true,
             "es6" : true
         }

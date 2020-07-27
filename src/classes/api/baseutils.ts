@@ -18,7 +18,7 @@ export namespace baseUtils {
 		 * @returns 返回是一个object{apiId:'login',dbid:'xx'}
 		 */
 		getLoginParmasUri(): any {
-			return Object.assign({ apiId: GlobalVariable.API_ID_LOGIN, dbid: commURL.BaseDBID });
+			return Object.assign({ apiId: GlobalVariable.API_ID_LOGIN, dbid: commURL.BaseDBID,ioutsys:4 });
 		}
 		/**
 		 * @description 根据菜单号和菜单参数好获取菜单参数信息
