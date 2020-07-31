@@ -11,7 +11,7 @@
 				</view>
 			</view> 
 			<view class="flex logo">
-				<view class="cu-avatar sm round" :style="[{backgroundImage:'url('+initImgUrl(record.data[myStyle.ref.comimg])+')'}]"></view>
+				<view v-if="record.data[myStyle.ref.comimg]" class="cu-avatar sm round" :style="[{backgroundImage:'url('+initImgUrl(record.data[myStyle.ref.comimg])+')'}]"></view>
 				<view class="margin-xs sorg">
 					{{record.data[myStyle.ref.company]}}
 				</view>
