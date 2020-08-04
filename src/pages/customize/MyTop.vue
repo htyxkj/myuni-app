@@ -79,6 +79,8 @@
 			return tt;
 		}
 		async getGWName(code:any){
+			if(!code)
+				code="";
 			this.gwName = "";
 			let codeA = code.split(";");
 			for(var i=0;i<codeA.length;i++){
