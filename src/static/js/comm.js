@@ -17,6 +17,6 @@
 // 征信管理平台
 export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
 export const BaseDBID = "01";
+export const SMSURL = "https://www.bip-soft.com/ssms/";
 
-
-export default {BaseUri, BaseDBID}
+export default {BaseUri, BaseDBID,SMSURL}

@@ -23,7 +23,8 @@
 					<view></view>
 					<view></view>
 					<view></view>
-					<!-- <view class="registered" @tap="registered">注册</view> --><!-- 灵活用工注册 -->
+					<!-- <view class="registered" @tap="registered('flexible')">注册</view> --><!-- 灵活用工注册 -->
+					<view class="registered" @tap="registered('credit')">注册</view> <!-- 征信管理注册 -->
 				</view>
 			</view>
 			<view class="padding flex flex-direction">
@@ -76,7 +77,8 @@
 		loginSys() {
 			if (!this.user.userCode) {
 				uni.showToast({
-					title: '请输入账号密码'
+					title: '请输入账号密码',
+					icon:"none"
 				})
 				return;
 			} else {
@@ -134,10 +136,16 @@
 			}
 		}
 		//注册页面
-		registered(){
-			uni.navigateTo({
-			    url:'/pages/alone/flexible/registered/registered',
-			});
+		registered(vl:any){
+			if(vl == 'flexible'){
+				uni.navigateTo({
+					url:'/pages/alone/flexible/registered/registered',
+				});
+			}else if(vl =='credit'){
+				uni.navigateTo({
+					url:'/pages/alone/credit/registered/registered',
+				});
+			}
 		}
 		notLogin() {
 			console.log('不能登录系统')

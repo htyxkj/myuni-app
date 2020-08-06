@@ -21,6 +21,26 @@ export namespace baseUtils {
 			return Object.assign({ apiId: GlobalVariable.API_ID_LOGIN, dbid: commURL.BaseDBID,ioutsys:4 });
 		}
 		/**
+		 * @description 获取免密登录系统参数
+		 * @returns 返回是一个object{apiId:'xxx',dbid:'xx'}
+		 */
+		getLoginWithOutPwdParmasUri() {
+		  return Object.assign({
+			apiId: GlobalVariable.APIID_OUTLOGIN,
+			dbid: commURL.BaseDBID
+		  });
+		}
+		/**
+		 * @description 获取注册系统参数
+		 * @returns 返回是一个object{typeid:2,dbid:'xx'}
+		 */
+		getRegisteredParam(){
+		  return Object.assign({
+			typeid: 2,
+			dbid: commURL.BaseDBID
+		  });
+		}
+		/**
 		 * @description 根据菜单号和菜单参数好获取菜单参数信息
 		 * @param sbuid  菜单参数标志
 		 * @param menuId  菜单号

@@ -1,12 +1,14 @@
-import Request from '@/lib/http/request.js';
+
 import User from '../User';
+import { GlobalVariable } from '@/classes/tools/ICL';
 import { baseUtils } from './baseutils';
 import QueryEntity from '@/classes/search/QueryEntity';
-import comm from '@/static/js/comm.js';
-let commURL: any = comm;
 let Base64 = require('js-base64').Base64;
 let tools = baseUtils.tools;
+import Request from '@/lib/http/request.js';
 const http = new Request();
+import comm from '@/static/js/comm.js';
+let commURL: any = comm;
 http.config.baseUrl = commURL.BaseUri;
 
 export namespace BIPUtil {
@@ -21,7 +23,24 @@ export namespace BIPUtil {
 			param.pwd = Base64.encode(user.password);
 			return this.getFromServer(param);
 		}
-
+		/**
+		 * @description 登录方法 根据账户登录不需要密码
+		 * @param user 用户信息
+		 */
+		loginWithOutPwd(userCode:string){
+			let param = tools.getLoginWithOutPwdParmasUri();
+			param.usercode = userCode;
+			return this.getFromServer(param);
+		}
+		/**
+		 * 注册方法
+		 * @param param 注册信息
+		 */
+		registered(param:any){
+			let pm = tools.getRegisteredParam();
+			param = Object.assign(param,pm);
+			return this.getFromRegistered(param);
+		}
 		/**
 		 * @description 调用系统API接口，获取菜单参数信息
 		 * @param pbuid菜单参数标志
@@ -126,7 +145,10 @@ export namespace BIPUtil {
 		getFromServer(params: any) {
 			return http.post('/sysapi', params, { header: { 'content-type': 'application/x-www-form-urlencoded' } });
 		}
-		
+		getFromRegistered(param:any){
+			// let data = qs.stringify(param);
+			return  http.post(GlobalVariable.REGAPI, param, { header: { 'content-type': 'application/x-www-form-urlencoded' } });
+		}
 		uniAppUploadFile(file:any,params:any,success:any,fail:any){
 			 uni.uploadFile({
 			 	url: commURL.BaseUri+'/sysupd?updid=37&snkey='+uni.getStorageSync('snkey'),  

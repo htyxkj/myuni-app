@@ -99,6 +99,10 @@
         }
 		/***********************************灵活用工平台END*************************************/
 		
+        ,{
+            "path" : "pages/alone/credit/registered/registered",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
