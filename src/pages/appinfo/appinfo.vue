@@ -226,9 +226,6 @@ export default class appInfo extends Vue {
 </script>
 
 <style lang="scss" scoped>
-	/*每个页面公共css */
-	@import url("@/lib/colorui/main.css");
-	@import url("@/lib/colorui/icon.css");
 page{
 	margin-bottom: 120upx;
 }
