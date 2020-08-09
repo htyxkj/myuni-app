@@ -10,7 +10,7 @@
 				</template>
 			</template>
 			<template v-else>
-				<input :placeholder="cell.labelString" type="text" :password="at0" v-model="mode"  name="input" />
+				<input :placeholder="cell.labelString" type="password" :password="at0" v-model="mode"/>
 				<text :class="[mode?(!at0?'cuIcon-attentionforbid':'cuIcon-attention'):'','text-grey']" @tap.stop="open()"></text>
 			</template>
 		</template>

@@ -51,17 +51,35 @@
 					<form class="content">
 						<view class="cu-form-group">
 							<view class="title">旧密码</view>
-							<input placeholder="请输入旧密码" :type="at0?'text':'password'" v-model="oldPwd" />
+							<template v-if="at0">
+								<input placeholder="请输入旧密码" type="text" v-model="oldPwd" />
+							</template>
+							<template v-else>
+								<input placeholder="请输入旧密码" type="password" v-model="oldPwd" />
+							</template>
+							<!-- <input placeholder="请输入旧密码" :type="at0?'text':'password'" v-model="oldPwd" /> -->
 							<text :class="[at0?'cuIcon-attentionforbid':'cuIcon-attention','text-orange']" @tap.stop="open(0)"></text>
 						</view>
 						<view class="cu-form-group">
 							<view class="title">新密码</view>
-							<input placeholder="新密码" :type="at1?'text':'password'" v-model="pwd" />
+							<template v-if="at1">
+								<input placeholder="新密码" type="text" v-model="pwd" />
+							</template>
+							<template v-else>
+								<input placeholder="新密码" type="password" v-model="pwd" />
+							</template>
+							<!-- <input placeholder="新密码" :type="at1?'text':'password'" v-model="pwd" /> -->
 							<text :class="[at1?'cuIcon-attentionforbid':'cuIcon-attention','text-orange']" @tap.stop="open(1)"></text>
 						</view>
 						<view class="cu-form-group">
 							<view class="title">确认密码</view>
-							<input placeholder="再次确认密码" :type="at2?'text':'password'" v-model="pwd1" />
+							<template v-if="at2">
+								<input placeholder="再次确认密码" type="text" v-model="pwd1" />
+							</template>
+							<template v-else>
+								<input placeholder="再次确认密码" type="password" v-model="pwd1" />
+							</template>
+							<!-- <input placeholder="再次确认密码" :type="at2?'text':'password'" v-model="pwd1" /> -->
 							<text :class="[at2?'cuIcon-attentionforbid':'cuIcon-attention','text-orange']" @tap.stop="open(2)"></text>
 						</view>
 					</form>
