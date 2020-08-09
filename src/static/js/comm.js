@@ -15,8 +15,12 @@
 // export const BaseDBID = "01";
 
 // 征信管理平台
-export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
-export const BaseDBID = "01";
-export const SMSURL = "https://www.bip-soft.com/ssms/";
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
+// export const BaseDBID = "01";
 
+//搅拌站
+export const BaseUri =  "http://120.79.16.71:8081/bip-erp/";
+export const BaseDBID = "01";
+
+export const SMSURL = "https://www.bip-soft.com/ssms/";
 export default {BaseUri, BaseDBID,SMSURL}

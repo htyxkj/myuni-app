@@ -18,7 +18,7 @@ export namespace baseUtils {
 		 * @returns 返回是一个object{apiId:'login',dbid:'xx'}
 		 */
 		getLoginParmasUri(): any {
-			return Object.assign({ apiId: GlobalVariable.API_ID_LOGIN, dbid: commURL.BaseDBID,ioutsys:4 });
+			return Object.assign({ apiId: GlobalVariable.API_ID_LOGIN, dbid: commURL.BaseDBID,ioutsys:2 });
 		}
 		/**
 		 * @description 获取免密登录系统参数

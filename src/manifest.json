@@ -68,5 +68,15 @@
     },
     "mp-qq" : {
         "usingComponents" : true
+    },
+    "h5" : {
+        "devServer" : {
+            "https" : false
+        },
+        "router" : {
+            "base" : "/bip-erp/webMobileNew/"
+        },
+        "title" : "搅拌站ERP管理系统",
+        "domain" : "http://120.79.16.71:8081"
     }
 }

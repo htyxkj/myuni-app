@@ -115,7 +115,8 @@
 
 					} else {
 						uni.showToast({
-							title: data.message
+							title: data.message,
+							icon:"none"
 						})
 						this.canLogin = false;
 						this.loadModal = false;
