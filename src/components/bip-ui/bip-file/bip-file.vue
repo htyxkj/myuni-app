@@ -24,7 +24,7 @@ export default class bipFile extends Vue{
 	@Inject('env') env!:CCliEnv;
 	@Prop({ type: Object }) cell!: Cell;
 	@Prop({type:String}) obj_id!:string;
-	@Prop({type:Boolean,default:false}) label!:boolean;
+	@Prop({type:[Boolean,String],default:false}) label!:boolean|string;
 	@Prop({type:Number,default:-1}) rowId!:number;
 	// @Prop({ type: Object }) bipInsAid!:BipInsAidNew;
 	mode:string = '';

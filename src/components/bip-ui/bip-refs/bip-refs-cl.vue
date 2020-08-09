@@ -3,7 +3,7 @@
 		<template v-if="label">
 			<view class="title">{{ cell.labelString }}</view>
 		</template>
-		<input :type="'text'" v-model="modes" disabled="true"/>
+		<input type="text" v-model="modes" disabled="true"/>
 		<text class="text-progress text-bold cuIcon-tag"></text>
 	</view>
 </template>

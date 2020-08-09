@@ -1,19 +1,25 @@
 <template>
+<view>
 	<view class="cu-form-group solid-bottom">
 		<template v-if="cell">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
-		</template>
-		<template v-if="type == 'text'">
-			<input :placeholder="cell.labelString" :type="'text'" v-model="mode" @blur="dataChange" />
-			<template v-if="clearable">
-				<text :class="[mode?'cuIcon-close':'','text-red']" @tap.stop="clear()"></text>
+			<template v-if="type=='text'">
+				<input name="input" :placeholder="cell.labelString" type="text" v-model="mode" @blur="dataChange"  />
+				<template v-if="clearable">
+					<text :class="[mode?'cuIcon-close':'','text-red']" @tap.stop="clear()"></text>
+				</template>
+			</template>
+			<template v-else>
+				<input :placeholder="cell.labelString" type="text" :password="at0" v-model="mode"  name="input" />
+				<text :class="[mode?(!at0?'cuIcon-attentionforbid':'cuIcon-attention'):'','text-grey']" @tap.stop="open()"></text>
 			</template>
 		</template>
 		<template v-else>
-			<input :placeholder="cell.labelString" type="text" :password="at0" v-model="mode" />
-			<text :class="[mode?(!at0?'cuIcon-attentionforbid':'cuIcon-attention'):'','text-grey']" @tap.stop="open()"></text>
 		</template>
+		
 	</view>
+</view>
+	
 </template>
 
 <script lang="ts">

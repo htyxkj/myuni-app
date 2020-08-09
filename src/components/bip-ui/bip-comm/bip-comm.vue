@@ -14,7 +14,7 @@
 				<bip-date :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-date>
 			</template>
 			<template v-else-if="bipInsAid.bType === 'CUpDownEditor'">
-				<bip-file :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-file>
+				<bip-file :label="cell.labelString !='' " :cell="cell" :obj_id="obj_id"></bip-file>
 			</template>
 			<template v-else-if="bipInsAid.bType === 'CTreePopEditor'">
 				<bip-tree-editor :label="cell.labelString" :cell="cell" :bipInsAid="bipInsAid" :obj_id="obj_id"></bip-tree-editor>

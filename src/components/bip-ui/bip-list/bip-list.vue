@@ -2,10 +2,11 @@
 	<view class="cu-form-group solid-bottom">
 		<template v-if="cell">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
+			<input :placeholder="cell.labelString" type="text" v-model="showMode" @tap.stop="open()" disabled="true"/>
+			<text :class="['cuIcon-triangledownfill', 'text-grey']" @tap.stop="open()"></text>
+			<bip-select :arr="bipInsAid.values" :show="isShow" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="showk" :isStr="false"></bip-select>
 		</template>
-		<input :placeholder="cell.labelString" :type="'text'" v-model="showMode" @tap.stop="open()" disabled="true"/>
-		<text :class="['cuIcon-triangledownfill', 'text-grey']" @tap.stop="open()"></text>
-		<bip-select :arr="bipInsAid.values" :show="isShow" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="showk" :isStr="false"></bip-select>
+		
 	</view>
 </template>
 <script lang="ts">

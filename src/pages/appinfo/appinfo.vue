@@ -5,7 +5,7 @@
 			<block slot="content"><view class="header-title">{{ title }}</view></block>
 		</cu-custom>		
 		<view class="margin-lr-sm margin-tb-sm">
-			<bip-lay v-if="lay.binit" :layout="lay" :key="index"></bip-lay>
+			<bip-lay v-if="lay.binit" :layout="lay" :key="'-1'"></bip-lay>
 			<view class="padding-bottom-xl margin-bottom-xl"></view>
 		</view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
@@ -226,6 +226,9 @@ export default class appInfo extends Vue {
 </script>
 
 <style lang="scss" scoped>
+	/*每个页面公共css */
+	@import url("@/lib/colorui/main.css");
+	@import url("@/lib/colorui/icon.css");
 page{
 	margin-bottom: 120upx;
 }

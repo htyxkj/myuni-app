@@ -69,7 +69,7 @@ export default class bipSelect extends Vue{
 }
 </script>
 
-<style scoped>
+<style>
 	.bip-selector{
 	position: absolute;
 	/* top: 0; 
