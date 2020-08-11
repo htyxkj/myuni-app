@@ -1,6 +1,6 @@
 <template>
 	<view class="mine-info">
-		<view class=" bg-white header" style="backgroundImage:url('../../static/mine/bg.jpg')" >
+		<view class=" bg-white header" style="backgroundImage:url('../../static/my/bg.jpg')" >
 			<view>
 				<view class="cu-avatar xl round my-margin-top bg-white" style="background-image:url(../../static/gs.png);"></view>
 			</view>

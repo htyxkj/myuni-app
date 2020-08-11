@@ -57,7 +57,8 @@
 					this.$emit('tabSelect',[this.tabcur,m1])
 				}
 			}else{
-				this.$emit('tabSelect',[this.tabcur,null])
+				let m1 = {url:e.currentTarget.dataset.index}
+				this.$emit('tabSelect',[this.tabcur,m1])
 			}
 		}
 		//初始化底部菜单

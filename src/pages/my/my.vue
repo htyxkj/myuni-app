@@ -108,7 +108,7 @@
 	@Component({
 		components:{}
 	})
-	export default class Mine extends Vue{
+	export default class My extends Vue{
 		mdPass:boolean = false
 		canExec:boolean = false
 		oldPwd:string = ''
@@ -255,7 +255,7 @@
 <style>
 	.mine-info .header{
 		text-align: center;
-		background-image: url('../../static/mine/bg.jpg');
+		background-image: url('../../static/my/bg.jpg');
 		/* vertical-align:middle; */
 		/* background-color: #EBEEF5; */
 	}

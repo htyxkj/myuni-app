@@ -8,7 +8,7 @@
 			<home v-if="tabcur==0" ></home>
 			<menuPage v-if="tabcur==1"></menuPage>
 			<message v-if="tabcur==2"></message>
-			<mine v-if="tabcur==3"></mine>
+			<my v-if="tabcur==3"></my>
 			<customize v-if="tabcur==-1" :menu="menubarr"></customize>
 		</template>
 		<mIndexBar :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
@@ -20,7 +20,7 @@
 	import home from './home.vue';
 	import menuPage from '../menu/menuPage.vue';
 	import message from '../message/message.vue';
-	import mine from '../mine/mine.vue';
+	import my from '../my/my.vue';
 	import customize from '../customize/customize.vue';
 	import mIndexBar from '../../components/mIndexBar.vue'
 	import {
@@ -30,7 +30,7 @@
 		Tools
 	} from '../../classes/tools/Tools';
 	@Component({
-		components:{home,mine,message,menuPage,mIndexBar,customize}
+		components:{home,my,message,menuPage,mIndexBar,customize}
 	})
 	export default class Index extends Vue{
 		title:string = '首页'
