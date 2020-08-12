@@ -11,7 +11,7 @@
 			<my v-if="tabcur==3"></my>
 			<customize v-if="tabcur==-1" :menu="menubarr"></customize>
 		</template>
-		<mIndexBar :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
+		<mIndexBar v-if="loginState" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 	</view>
 </template>
 

@@ -494,7 +494,7 @@
 			let type = false;//是否是常量
 			let editName = cell.editName;
 			let ref = cell.refValue
-			if(ref.indexOf('{')>-1){
+			if(ref && ref.indexOf('{')>-1){
 				ref = ref.substring(ref.indexOf('{')+1,ref.indexOf('}'));
 				if(ref.startsWith('$')){
 					type = true;
@@ -508,8 +508,8 @@
 			}else{
 				return code;
 			}
-			if(!type){//辅助
-				let editName = cell.editName;
+			if(!type && cell.editName && cell.editName.length>0){//辅助
+				editName = cell.editName;
 				let aidKey= ICL.AID_KEY+editName;
 				let key = aidKey+"_"+code;
 				let rr = this.aidValues.get(key);

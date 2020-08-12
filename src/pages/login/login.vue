@@ -24,7 +24,7 @@
 					<view></view>
 					<view></view>
 					<!-- <view class="registered" @tap="registered('flexible')">注册</view> --><!-- 灵活用工注册 -->
-					<view class="registered" @tap="registered('credit')">注册</view> <!-- 征信管理注册 -->
+					<!-- <view class="registered" @tap="registered('credit')">注册</view>  --><!-- 征信管理注册 -->
 				</view>
 			</view>
 			<view class="padding flex flex-direction">

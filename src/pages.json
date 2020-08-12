@@ -108,6 +108,10 @@
             "path" : "pages/alone/mine/index/index",
             "style" : {}
         }
+        ,{
+            "path" : "pages/alone/mine/details/details",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
