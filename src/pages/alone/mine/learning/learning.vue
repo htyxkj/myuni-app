@@ -29,11 +29,12 @@
 		
 	})
 	export default class Learning extends Vue {
-		key:any = "XXYDTYPE";
+		key:any = "NVKEY_";
 		typeArr:Array<any> = [];
 		imgArr:Array<any> = [];
 		mounted(){
-			let data = uni.getStorageSync(this.key)
+			let _key = this.key+"LX20080001"
+			let data = uni.getStorageSync(_key)
 			if(!data){
 				this.initData()
 			}else{
@@ -45,14 +46,21 @@
 			}
 		}
 		async initData(){
+			let _key = this.key+"LX20080001"
 			let qe:QueryEntity = new QueryEntity('','');
 			qe.page.currPage = 1;
 			qe.page.pageSize = 100;
 			qe.cont = "";
-			let vv = await tools.getBipInsAidInfo('XXYDTYPE',210,qe);
+			let oneCont = [];
+			let qCont = new QueryCont('father','LX20080001',12);
+			qCont.setContrast(0);
+			oneCont.push(qCont);
+			qe.cont = "~["+JSON.stringify(oneCont)+"]"
+			let vv = await tools.getBipInsAidInfo('ARTICLETYPE',210,qe);
+			console.log(vv)
 			if(vv.data.id ==0){
 				this.typeArr = vv.data.data.data.values;
-				uni.setStorageSync(this.key, JSON.stringify(this.typeArr));
+				uni.setStorageSync(_key, JSON.stringify(this.typeArr));
 			}
 		}
 	}

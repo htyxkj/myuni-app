@@ -44,13 +44,12 @@
 			// setTimeout(()=>{
 				console.log('登录状态：',LoginModule.loginState)
 				if(!this.loginState){
-					uni.navigateTo({'url':'/pages/login/login'})
+					uni.reLaunch({'url':'/pages/login/login'})
+					return;
 				}
-				
 				if(options.tabcur){
 					this.tabcur = options.tabcur;
 				}
-				
 				this.title = this.makeTitle(this.tabcur)
 			// },200)
 
