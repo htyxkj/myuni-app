@@ -11,9 +11,9 @@
 				"navigationBarTitleText": "Login"
 			}
 		}, {
-			"path": "pages/mine/mine",
+			"path": "pages/my/my",
 			"style": {
-				"navigationBarTitleText": "Mine"
+				"navigationBarTitleText": "My"
 			}
 		}, {
 			"path": "pages/menu/menuPage",
@@ -101,6 +101,11 @@
 		
         ,{
             "path" : "pages/alone/credit/registered/registered",
+            "style" : {}
+        }
+		/***********************************张矿微平台START*************************************/
+        ,{
+            "path" : "pages/alone/mine/index/index",
             "style" : {}
         }
     ],

@@ -107,11 +107,19 @@
 						// 	'url': '/pages/index/index'
 						// })
 						//关闭当前页面，跳转到应用内的某个页面
-						setTimeout(()=>{
-							uni.redirectTo({
-								'url': '/pages/index/index'
-							})
-						},200);
+						if(!commURL.ItemType){
+							setTimeout(()=>{
+								uni.redirectTo({
+									'url': '/pages/index/index'
+								})
+							},200);
+						}else if(commURL.ItemType == 'mine'){
+							setTimeout(()=>{
+								uni.redirectTo({
+									'url': '/pages/alone/mine/index/index'
+								})
+							},200);
+						}
 
 					} else {
 						uni.showToast({

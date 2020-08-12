@@ -76,7 +76,7 @@
         "router" : {
             "base" : "/bip-erp/webMobileNew/"
         },
-        "title" : "搅拌站ERP管理系统",
+        "title" : "BIP",
         "domain" : "http://120.79.16.71:8081"
     }
 }
