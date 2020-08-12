@@ -193,6 +193,12 @@ export default class CDataSet {
 			this.currRecord = this.cdata.data[this.index]||new CRecord()
 		}
 	}
+	
+	removeIndex(_i:number){
+		this.cdata.data.splice(_i,1);
+		this.index -= 1;
+		this.currRecord = this.cdata.data[this.index]||new CRecord()
+	}
 
 	copy(){
 		let cdata = new CData(this.ccells.obj_id);

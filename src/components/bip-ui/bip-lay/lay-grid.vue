@@ -64,6 +64,9 @@ export default class layGrid extends Vue {
 		if(!this.isCard){
 			this.isCard = true;
 		}
+		if(this.env.dsm.i_state>-1){
+			console.log(this.env.dsm,this.env.dsm.currRecord)
+		}
 		let cr = DataUtil.createRecord(this.cds,this.env);
 		DataUtil.addRecord(cr,this.cds,this.env);
 		// this.cds.addRecord(cr)
@@ -80,7 +83,7 @@ export default class layGrid extends Vue {
 	
 	delRow(rid:number,obj_id:string){
 		console.log('delRow',rid)
-		
+		this.cds.removeIndex(rid);
 	}
 
 	IsCard(e: any) {

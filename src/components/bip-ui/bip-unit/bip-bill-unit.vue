@@ -73,40 +73,38 @@ export default class bipBillUnit extends Vue {
 		let celsRowList:Array<any> = [];
 		let k = this.sList.length,row = 0;
 		let w = 0;
-		let _idx = 0;
-		for(let i=0;i<=2&&row<k&&_idx<k;i++){
-			let cels:Array<any> = celsRowList[row]||[];
-			let cel = this.sList[_idx];
-			// console.log(cel,_idx)
+		for(let i=0;i<k;i++){
+			let cel = this.sList[i];//取其中一个cell 判断占用宽度
 			let kk =  cel.ccHorCell||3;
 			if(kk>=3){
-				cels.push(cel);
-				celsRowList[row] = cels
-				i=0;
-				row++;
-				_idx++;
-				w = 0;
-			}else{
-				let n = kk;
-				if(w+n<=3){
-					w += n;
-					cels.push(cel);
-					_idx++;
-					celsRowList[row] = cels
-					if(w == 3){
-						i=0;
-						w = 0;
-						row++;
-					}
-				}else{
+				if(w==0){
+					celsRowList[row] = [cel]
+				}
+				else{
+					let nr = row+1;
+					celsRowList[nr] = [cel]
 					row++;
-					i=0;
+				}
+			}else{
+				let cels:Array<any> = celsRowList[row]||[];
+				let fk = w+kk;
+				if(fk<3){
+					cels.push(cel);
+					celsRowList[row] = cels;
+					w = fk;
+				}else if(fk == 3){
+					cels.push(cel);
+					celsRowList[row] = cels;
+					row++;
 					w = 0;
+				}else{
+					let nr = row+1;
+					w = kk;
+					celsRowList[nr] = [cel]
+					row++;
 				}
 			}
-
 		}
-		// console.log(celsRowList)
 		return celsRowList;
 	}
 }
