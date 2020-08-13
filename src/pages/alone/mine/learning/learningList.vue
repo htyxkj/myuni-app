@@ -1,36 +1,10 @@
 <template>
 	<view>
-		<view class="cu-bar search my-top-bar">
-			<image class ="myimg" mode="aspectFill" src="../../../../static/mine/newsVideo/logo.png" ></image>
-			<view class="search-form round my-search-form">
-				<text class="cuIcon-search"></text>
-				<input @blur="InputBlur" v-model="tjInput" :adjust-position="false" type="text" confirm-type="search"></input>
-			</view>
-			<view class="action text-white" @tap="gotomypage">
-				<text>我的</text>
-			</view>
-		</view>
-
-		<view v-if="type == 0">
-			<scroll-view scroll-x class="mytypeTbs nav text-center">
-				<view class="cu-item" :class="index==newsTabCur?'selTbs':''" v-for="(item,index) in newsTypeArr" :key="index" @tap="newsTabSelect" :data-id="index" :data-sid="item.sid">
-					{{item.name}}
-				</view>
-			</scroll-view> 
-			<view class="cu-bar btn-group padding-left-xl padding-right-xl" v-if="newsChileTypeArr.length>0">
-				<button class="cu-btn bg-blue shadow-blur" :class="type_sid==item.sid?'selbtn':'noSelbtn'" v-for="(item,index) in newsChileTypeArr" :key="index" @tap="initData(item.sid)">
-					{{item.name}}
-				</button>
-			</view>
-		</view>
-		<view v-if="type == 1">
-			<scroll-view scroll-x class="mytypeTbs nav text-center">
-				<view class="cu-item" :class="index==videoTabCur?'selTbs':''" v-for="(item,index) in videoTypeArr" :key="index" @tap="videoTabSelect" :data-id="index" :data-sid="item.sid">
-					{{item.name}}
-				</view>
-			</scroll-view>
-		</view>
+		<cu-custom bgColor="bg-white" :isBack="true">
+			<block slot="content"><view class="header-title text-black">{{title}}</view></block>
+		</cu-custom>
 		<scroll-view scroll-y class="page" refresher-enabled @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered" @scrolltolower="getNextPage">
+			<view class="padding-top-sm"></view>
 			<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom">
 				<template v-if="item.img.length>0 || (item.img.length == 0 && item.video.length == 0 )">
 					<template v-if="item.img.length>=3">
@@ -96,21 +70,20 @@
 			<view class="text-sm padding text-center" v-if="noNextPage">
 				<text class="text-grey">-----我是有底线的-----</text>
 			</view>
-			<view style="height: 8vh;"></view>
 		</scroll-view>
 	</view>
 </template>
 
 <script lang="ts">
 	/**
-	 * 张矿微平台移动端新闻视频
+	 * 张矿微平台移动端学习园地
 	 */
 	import {BIPUtil} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import QueryCont from '@/classes/search/QueryCont';
 	import PageInfo from '@/classes/search/PageInfo';
-	import {Vue,Provide,Prop,Component,Watch} from 'vue-property-decorator';
+	import {Vue,Provide,Prop,Component} from 'vue-property-decorator';
 	import moment from 'moment'
 	import { GlobalVariable } from '@/classes/tools/ICL';
 	import comm from '@/static/js/comm.js';
@@ -119,81 +92,23 @@
 	@Component({
 		
 	})
-	export default class NewsVideo extends Vue {
-		@Prop({ default:0, type:Number }) type!:number;//类型 0：新闻；1：视频
-		newsTabCur:any = 0;
-		newsTypeArr:Array<any>=[];//新闻类别
-		newsChileTypeArr:Array<any>=[];//新闻子类别
-
-		videoTabCur:any = 0;
-		videoTypeArr:Array<any>=[];//视频类别
-		videoChileTypeArr:Array<any>=[];//视频子类别
-		key:any = "NVKEY_";
+	export default class Learning extends Vue {
 		type_sid:any ="";//当前选中类型
 		qe:QueryEntity = new QueryEntity('','');
 		page:PageInfo = new PageInfo();	
 		articleData:Array<any> = [];
-
 		refresher_triggered:boolean = false;//下拉刷新状态
 		noNextPage:boolean = false;//没有下一页了
-
 		payVideo:any = null;//当前正在播放的视频
-		tjInput:any = "";//条件
-		tjoldVl:any = "";//条件
-
 		uri:any ="";//
 		snkey:any = "";//
-		mounted(){
+		title:any = "";
+		onLoad(e:any) {
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
 			this.snkey = LoginModule.snkey
-			this.initType();
-		}
-		//新闻类别切换
-		async newsTabSelect(e:any){
-			this.newsTabCur = e.currentTarget.dataset.id;
-			let sid = e.currentTarget.dataset.sid;
-			let dd = await this.getTypeByFather(sid);
-			this.newsChileTypeArr = dd;
-			let _sid = null;
-			if(dd.length == 0){
-				_sid = sid;
-			}else{
-				_sid = dd[0].sid;
-			}
-			this.initData(_sid);
-		}
-		//视频类别切换
-		async videoTabSelect(e:any){
-			this.videoTabCur = e.currentTarget.dataset.id;
-			let sid = e.currentTarget.dataset.sid;
-			let dd = await this.getTypeByFather(sid);
-			this.videoChileTypeArr = dd;
-			let _sid = null;
-			if(dd.length == 0){
-				_sid = sid;
-			}else{
-				_sid = dd[0].sid;
-			}
-			this.initData(_sid);
-		}
-
-		//查询类别
-		async initType(){
-			if(this.type == 0){ //0：新闻
-				let type= await this.getTypeByFather('LX20080013');
-				this.newsTypeArr = type;
-				if(this.newsTypeArr.length>0){
-					let e = {currentTarget:{dataset:{sid:this.newsTypeArr[0].sid,id:0}}}
-					this.newsTabSelect(e)
-				}
-			}else if(this.type == 1){//1：视频
-				let type= await this.getTypeByFather('LX20080003');
-				this.videoTypeArr = type;
-				if(this.videoTypeArr.length>0){
-					let e = {currentTarget:{dataset:{sid:this.videoTypeArr[0].sid,id:0}}}
-					this.videoTabSelect(e)
-				}
-			}
+			this.type_sid = e.sid
+			this.title = e.name
+			this.initData(e.sid);
 		}
 		/**
 		 * 下拉刷新
@@ -211,23 +126,13 @@
 		 */
 		async initData(type:any){
 			this.noNextPage = false;
-			if(this.type_sid == type)
-				return;
 			if(type)
 				this.type_sid = type;
 			this.qe.page = new PageInfo();
 			let oneCont = []; 
 			let qCont = new QueryCont('type',this.type_sid,12);
 			qCont.setContrast(0);
-			qCont.setLink(1);
 			oneCont.push(qCont);
-			if(this.tjInput!=null && this.tjInput.length>0){
-				qCont = new QueryCont('title',this.tjInput,12);
-				qCont.setContrast(3);
-				qCont.setLink(1);
-				oneCont.push(qCont);
-			}
-
 			this.qe.cont = "~["+JSON.stringify(oneCont)+"]"
 			let vv:any = await tools.getBipInsAidInfo('ALLARTICLEL',210,this.qe);
 			this.articleData = [];
@@ -246,14 +151,7 @@
 			let oneCont = []; 
 			let qCont = new QueryCont('type',this.type_sid,12);
 			qCont.setContrast(0);
-			qCont.setLink(1);
 			oneCont.push(qCont);
-			if(this.tjInput!=null && this.tjInput.length>0){
-				qCont = new QueryCont('title',this.tjInput,12);
-				qCont.setContrast(3);
-				qCont.setLink(1);
-				oneCont.push(qCont);
-			}
 			this.qe.cont = "~["+JSON.stringify(oneCont)+"]"
 			let vv:any = await tools.getBipInsAidInfo('ALLARTICLEL',210,this.qe);
 			if(vv.data.id ==0){
@@ -311,21 +209,6 @@
 			})
 		}
 		/**
-		 * 打开我的页面
-		 */
-		gotomypage(){
-			let url = "/pages/alone/mine/my/my";
-			uni.navigateTo({
-				'url':url,
-			})
-		}
-		InputBlur(e:any) {
-			if(this.tjoldVl != this.tjInput){
-				this.initData(null);
-				this.tjoldVl = this.tjInput
-			}
-		}
-		/**
 		 * 视频播放
 		 */
 		videoPay(item:any){
@@ -338,39 +221,6 @@
 				this.payVideo = item;
 			}
 		}
-		/**
-		 * 根据父级分类编码 查询分类
-		 */
-		async getTypeByFather(father:any){
-			var _key:any = this.key+''+father;
-			let data = uni.getStorageSync(_key);
-			if(data){
-				let dd = JSON.parse(data);
-				return dd;
-			}else{
-				let qe:QueryEntity = new QueryEntity('','');
-				qe.page.currPage = 1;
-				qe.page.pageSize = 100; 
-				let oneCont = []; 
-				let qCont = new QueryCont('father',father,12);
-				qCont.setContrast(0);
-				oneCont.push(qCont);
-				qe.cont = "~["+JSON.stringify(oneCont)+"]"
-				let vv:any = await tools.getBipInsAidInfo('ARTICLETYPE',210,qe);
-				if(vv.data.id ==0){
-					let cc = vv.data.data.data.values;
-					uni.setStorageSync(_key, JSON.stringify(cc));
-					return cc;
-				}else{
-					console.log(vv)
-				}
-			}
-			return [];
-		}
-		@Watch("type")
-		typeChange(){
-			this.initType();
-		}
 	}
 </script>
 <style scoped>
@@ -378,52 +228,10 @@
 		background-color: #FFFFFF
 	}
 	.page {
-		height: 79vh;
-	}
-	.myBtn{
-		position: absolute;
-		right: 0px;
-		margin: auto;
-		height: 30px;
-		font-size: 16px;
-		line-height: 30px;
-	}
-	.myimg{
-		width: 200upx;
-		height: 60upx;
-	}
-	.mytypeTbs{
-		background-color: #FEEEEF;
-		font-size: 16px;
-		font-weight: 540;
-	}
-	.selTbs{
-		color: #EF1823;
-	}
-	.my-top-bar{
-		background-color: #ED1B24;
-	}
-
-	.selbtn{
-		background-color: #ED1B24;
-		color: #FFFFFF;
-		font-size: 12px;
-		height: 28px;
-		transform: none;
-	}
-	.noSelbtn{
-		background-color: #F9F9F9;
-		color: #858585;
-		font-size: 12px;
-		height: 28px;
-		transform: none;
+		height: 100vh;
 	}
 	.listImg1{
 		width: 220upx;
 		height: 164upx;
-	}
-	.my-search-form{
-		background-color: #F4494F;
-		color: white;
 	}
 </style>
