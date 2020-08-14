@@ -152,8 +152,8 @@ export default class Request {
 
   post (url, data, options = {}) {
     return this.request({
-      url,
-      data,
+      url:url,
+      data:data,
       method: 'POST',
       ...options
     })

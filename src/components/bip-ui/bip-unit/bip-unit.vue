@@ -4,14 +4,12 @@
 			<text>求购编号：12346579812</text>
 			<text class="fr bg-red">正在报价</text>
 		</view>
-		<view class="unit-body">			
+<!-- 		<view class="unit-body">			
 			<text v-for="(item, index) in laycell.uiCels" :key="index">
 				<text class="bg-gradual-orange">{{ item.labelString }}：</text>
-				<!-- <text v-if="item.isMoney" :class="item.class">￥</text> -->
 				<text :class="item.class">{{record.data[item.id]}}</text>
-				<!-- <text v-if="item.isMoney" :class="item.class">元</text> -->
 			</text>
-		</view>
+		</view> -->
 		<view class="unit-foot solids-bottom">
 			<!-- <text class="bg-blue" @tap="editRow">编辑</text> -->
 			<button type="primary" class="fl btn" @click="editRow">编辑行</button>
@@ -32,22 +30,22 @@ import CRecord from '@/classes/pub/CRecord';
 })
 export default class bipUnit extends Vue {
 	unitModel1: Array<Object> = [];
-	@Prop({type:Object}) laycell!:BipLayCells;
-	@Prop({type:Number,default:0}) rowId!:number;
-	@Inject('env') env!:CCliEnv;
-	record:CRecord = new CRecord();
-	cds: CDataSet = new CDataSet(null);
+	// @Prop({type:Object}) laycell!:BipLayCells;
+	// @Prop({type:Number,default:0}) rowId!:number;
+	// @Inject('env') env!:CCliEnv;
+	// record:CRecord = new CRecord();
+	// cds: CDataSet = new CDataSet(null);
 	mounted(){
-		this.cds = this.env.getDataSet(this.laycell.obj_id);
-		this.record = this.cds.getRecord(this.rowId);
+		// this.cds = this.env.getDataSet(this.laycell.obj_id);
+		// this.record = this.cds.getRecord(this.rowId);
 	}
 	
 	delRow() {
-		this.$emit('delRow',this.rowId)
+		// this.$emit('delRow',this.rowId)
 	}
 	
 	editRow(){
-		this.$emit('editRow',this.rowId)
+		// this.$emit('editRow',this.rowId)
 	}
 }
 </script>

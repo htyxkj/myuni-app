@@ -5,11 +5,25 @@
 			<block slot="content"><view class="header-title">{{title}}</view></block>
 		</cu-custom>
 		<template v-if="loginState">
-			<home v-if="tabcur==0" ></home>
-			<menuPage v-if="tabcur==1"></menuPage>
-			<message v-if="tabcur==2"></message>
-			<my v-if="tabcur==3"></my>
-			<customize v-if="tabcur==-1" :menu="menubarr"></customize>
+			<template v-if="tabcur==-1">
+				<customize :menu="menubarr"></customize>
+			</template>
+			<template v-else-if="tabcur==0">
+				<home ></home>
+			</template>
+			<template v-else-if="tabcur==1">
+				<menuPage></menuPage>
+			</template>
+			<template v-else-if="tabcur==2">
+				<bip-task></bip-task>
+			</template>
+			<template v-else>
+				<my></my>
+			</template>
+			<!-- <message v-if="tabcur==2"></message> -->
+			
+			
+			
 		</template>
 		<mIndexBar :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 	</view>
@@ -20,6 +34,7 @@
 	import home from './home.vue';
 	import menuPage from '../menu/menuPage.vue';
 	import message from '../message/message.vue';
+	import BipTask from '../task/BipTask.vue';
 	import my from '../my/my.vue';
 	import customize from '../customize/customize.vue';
 	import mIndexBar from '../../components/mIndexBar.vue'
@@ -30,7 +45,7 @@
 		Tools
 	} from '../../classes/tools/Tools';
 	@Component({
-		components:{home,my,message,menuPage,mIndexBar,customize}
+		components:{home,my,message,menuPage,mIndexBar,customize,BipTask}
 	})
 	export default class Index extends Vue{
 		title:string = '首页'
@@ -72,7 +87,7 @@
 					tt = '菜单';
 					break;
 				case 2:
-					tt = '消息';
+					tt = '审核中心';
 					break;
 				case 3:
 					tt = '我';
@@ -103,6 +118,9 @@
 </script>
 
 <style lang="scss">
+	page {
+	    margin-bottom: 0 !important;
+	}
 	.cu-bar.tabbar .action [class*="cuIcon-"] {
 		margin: 0 auto 8rpx !important;		
 	}

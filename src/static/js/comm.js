@@ -28,9 +28,9 @@
 // export const ItemType = "mine";
 
 
-export const BaseUri =  "http://127.0.0.1:9999/jd";
-export const BaseDBID = "154";
-export const ItemType = "mine";
+export const BaseUri =  "http://192.168.1.46:9999/jd";
+export const BaseDBID = "ERP";
+export const ItemType = "";
 
 
 

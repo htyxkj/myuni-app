@@ -93,51 +93,6 @@ export default class bipListUnit2 extends Vue {
 				}
 			}
 		}
-		
-		
-		
-		
-		// let _idx = 0;
-		// for(let i=0;i<=2&&row<k&&_idx<k;i++){
-		// 	let cels:Array<any> = celsRowList[row]||[];
-		// 	let cel = this.sList[_idx];
-		// 	let kk =  cel.ccHorCell||3;
-		// 	if(kk>=3){
-		// 		if(w>0){
-		// 			cels.push(cel);
-		// 			celsRowList[row] = cels
-		// 			row++;
-		// 			_idx++;
-		// 			celsRowList[row] = [cel]
-		// 		}else{
-		// 			cels.push(cel);
-		// 			celsRowList[row] = cels
-		// 		}
-		// 		i=0;
-		// 		row++;
-		// 		_idx++;
-		// 		w = 0;
-		// 	}else{
-		// 		let n = kk;
-		// 		if(w+n<=3){
-		// 			w += n;
-		// 			cels.push(cel);
-		// 			_idx++;
-		// 			celsRowList[row] = cels
-		// 			if(w == 3){
-		// 				i=0;
-		// 				w = 0;
-		// 				row++;
-		// 			}
-		// 		}else{
-		// 			row++;
-		// 			i=0;
-		// 			w = 0;
-		// 		}
-		// 	}
-
-		// }
-		console.log(celsRowList)
 		return celsRowList;
 	}
 

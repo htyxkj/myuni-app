@@ -325,7 +325,7 @@
 				let res = await this.saveUser(dsm.currRecord.data.phone,dsm.currRecord.data.name,dsm.currRecord.data.phone);
 				if(res){
 					uni.showModal({title:"提示",content:"注册成功！",showCancel:false,success:function(){
-						uni.navigateBack()	
+						uni.navigateBack({delta:1})	
 					}}) 
 				}else{
 					uni.showModal({title:"提示",content:"注册失败！",showCancel:false,success:function(){

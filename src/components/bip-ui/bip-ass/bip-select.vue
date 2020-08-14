@@ -59,7 +59,7 @@ export default class bipSelect extends Vue {
 	}
 	open() {
 		this.methordName = this.editName+"_"+(this.index<0?0:this.index)+"_"+this.cell.id
-		uni.$off(this.methordName)
+		uni.$off(this.methordName,this.selectBack)
 		uni.$on(this.methordName,this.selectBack);
 		uni.showLoading({
 			title:'跳转中...'

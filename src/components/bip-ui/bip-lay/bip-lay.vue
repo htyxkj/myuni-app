@@ -46,7 +46,7 @@
 		}
 		
 		beforeDestroy(){
-			uni.$off('appinfo')
+			uni.$off('appinfo',this.subMethod)
 		}
 		
 	}
