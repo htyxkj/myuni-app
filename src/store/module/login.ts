@@ -38,7 +38,7 @@ class Login extends VuexModule implements ILogin {
 	@Mutation
 	private SET_SNKEY(value:any){
 		this.snkey = value;
-		uni.setStorage({key:'snkey',data:value})
+		uni.setStorage({key:'snkey',data:this.snkey})
 	}
     //#endregion
     //#region API

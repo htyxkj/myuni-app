@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-white" :isBack="true">
+		<cu-custom bgColor="bg-gradual-pink" :isBack="true">
 			<block slot="content"><view class="header-title text-black">{{title}}</view></block>
 		</cu-custom>
 		<scroll-view scroll-y class="page" refresher-enabled @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered" @scrolltolower="getNextPage">
@@ -101,14 +101,15 @@
 		noNextPage:boolean = false;//没有下一页了
 		payVideo:any = null;//当前正在播放的视频
 		uri:any ="";//
-		snkey:any = "";//
 		title:any = "";
 		onLoad(e:any) {
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
-			this.snkey = LoginModule.snkey
 			this.type_sid = e.sid
 			this.title = e.name
 			this.initData(e.sid);
+		}
+		get snkey(){
+			return LoginModule.snkey
 		}
 		/**
 		 * 下拉刷新

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="cu-bar search my-top-bar">
+		<view class="cu-bar search my-top-bar" :style="style">
 			<image class ="myimg" mode="aspectFill" src="../../../../static/mine/newsVideo/logo.png" ></image>
 			<view class="search-form round my-search-form">
 				<text class="cuIcon-search"></text>
@@ -142,11 +142,18 @@
 		tjoldVl:any = "";//条件
 
 		uri:any ="";//
-		snkey:any = "";//
 		mounted(){
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
-			this.snkey = LoginModule.snkey
 			this.initType();
+		}
+		style() {
+			var StatusBar= Vue.prototype.StatusBar;
+			var CustomBar= Vue.prototype.this.CustomBar;
+			var style = `height:${CustomBar}px;padding-top:${StatusBar}px;`;
+			return style
+		}
+		get snkey(){
+			return LoginModule.snkey
 		}
 		//新闻类别切换
 		async newsTabSelect(e:any){
@@ -293,8 +300,17 @@
 							var videoReg = /\.(mp4|flv|m3u8|rtmp|hls|rtsp)$/;
 							let isVideo:boolean = videoReg.test(name);
 							if(isVideo){
-								j1.video.push(url);
+								let _url = commURL.BaseUri+'/mydoc/db_01/'+fjroot+"/"+name
+								j1.video.push(_url);
 							}
+							
+						}
+					}
+					if(d1.extconnection){
+						var videoReg = /\.(mp4|flv|m3u8|rtmp|hls|rtsp)$/;
+						let isVideo:boolean = videoReg.test(d1.extconnection);
+						if(isVideo){
+							j1.video.push(d1.extconnection);
 						}
 					}
 					this.articleData.push(j1)

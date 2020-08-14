@@ -24,14 +24,14 @@
 // export const ItemType = null;
 
 // 张矿微平台
-// export const BaseUri =  "https://test.juminfuwu.cn/bip-mine/";
-// export const BaseDBID = "01";
-// export const ItemType = "mine";
+export const BaseUri =  "https://test.juminfuwu.cn/bip-mine/";
+export const BaseDBID = "01";
+export const ItemType = "mine";
 
 
-export const BaseUri =  "http://192.168.1.46:9999/jd";
-export const BaseDBID = "ERP";
-export const ItemType = "";
+// export const BaseUri =  "http://192.168.1.46:9999/jd";
+// export const BaseDBID = "ERP";
+// export const ItemType = "";
 
 
 

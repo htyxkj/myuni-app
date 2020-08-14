@@ -44,6 +44,8 @@
 	import {
 		Tools
 	} from '../../classes/tools/Tools';
+	import comm from '@/static/js/comm.js';
+	let commURL: any = comm;
 	@Component({
 		components:{home,my,message,menuPage,mIndexBar,customize,BipTask}
 	})
@@ -60,6 +62,12 @@
 				console.log('登录状态：',LoginModule.loginState)
 				if(!this.loginState){
 					uni.reLaunch({'url':'/pages/login/login'})
+					return;
+				}
+				if(commURL.ItemType == 'mine'){
+					uni.redirectTo({
+						'url': '/pages/alone/mine/index/index'
+					})
 					return;
 				}
 				if(options.tabcur){
@@ -109,6 +117,8 @@
 					LoginModule.setUser(user)
 					let ms = JSON.parse(uni.getStorageSync('menus'))
 					LoginModule.setMenus(ms)
+					let snkey = uni.getStorageSync('snkey')
+					LoginModule.setSnKey(snkey)
 					return true;
 				}
 			}

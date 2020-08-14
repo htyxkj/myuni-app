@@ -73,7 +73,7 @@
 					j1.description = d1.description;
 					j1.smakename = d1.smakename;
 					j1.sid = d1.sid;
-					j1.content = d1.content
+					j1.content = d1.content.replace(/snkey={BIPSNKEY}/g,'snkey='+this.snkey);
 					j1.mkdate = moment(d1.mkdate).format('YYYY-MM-DD')
 					let fjn = d1.fj_name;
 					let fjroot = d1.fj_root;
