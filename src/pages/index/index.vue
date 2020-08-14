@@ -25,7 +25,7 @@
 			
 			
 		</template>
-		<mIndexBar :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
+		<mIndexBar v-if="loginState" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 	</view>
 </template>
 

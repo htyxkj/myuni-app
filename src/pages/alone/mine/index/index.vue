@@ -3,26 +3,22 @@
 		<template v-if="loginState">
 			<news-video :type="tabcur" v-if="tabcur == 0 || tabcur == 1 "></news-video>
 			<learning v-if="tabcur == 2"></learning>
+			<ask-answer v-if="tabcur == 3"></ask-answer>
 		</template>
 		<mIndexBar :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 	</view>
 </template>
 
 <script lang="ts">
-    import {Vue,Component} from 'vue-property-decorator';
-	import home from '../../../index/home.vue';
-	import menuPage from '../../../menu/menuPage.vue';
-	import message from '../../../message/message.vue';
-	import mine from '../../../mine/mine.vue';
-	import customize from '../../../customize/customize.vue';
-	
+    import {Vue,Component} from 'vue-property-decorator';	
 	import newsVideo from '../newsVideo/newsVideo.vue'//新闻视频
 	import learning from '../learning/learning.vue';//学习园地
+	import askAnswer from '../askAnswer/askAnswer.vue';//你问我答
 	import mIndexBar from '../menuBar/mIndexBar.vue';//底部菜单
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import {Tools} from '../../../../classes/tools/Tools';
 	@Component({
-		components:{learning,mIndexBar,newsVideo}
+		components:{learning,mIndexBar,newsVideo,askAnswer}
 	})
 	export default class Index extends Vue{
 		tabcur:number = 0
