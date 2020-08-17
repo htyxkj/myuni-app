@@ -46,6 +46,7 @@
 	} from '../../classes/tools/Tools';
 	import comm from '@/static/js/comm.js';
 	let commURL: any = comm;
+	import {singIn} from '@/pages/index/singIn/singIn'
 	@Component({
 		components:{home,my,message,menuPage,mIndexBar,customize,BipTask}
 	})
@@ -56,26 +57,24 @@
 		vueId: string = Tools.guid()
 		
 		menubarr:any=null
-				
-		onLoad(options:any) {
-			// setTimeout(()=>{
-				console.log('登录状态：',LoginModule.loginState)
-				if(!this.loginState){
-					uni.reLaunch({'url':'/pages/login/login'})
-					return;
-				}
-				if(commURL.ItemType == 'mine'){
-					uni.redirectTo({
-						'url': '/pages/alone/mine/index/index'
-					})
-					return;
-				}
-				if(options.tabcur){
-					this.tabcur = options.tabcur;
-				}
-				this.title = this.makeTitle(this.tabcur)
-			// },200)
 
+		onLoad(options:any) {
+			singIn.ServApi.init(options);
+			console.log('登录状态：',LoginModule.loginState)
+			if(!this.loginState){
+				uni.reLaunch({'url':'/pages/login/login'})
+				return;
+			}
+			if(commURL.ItemType == 'mine'){
+				uni.redirectTo({
+					'url': '/pages/alone/mine/index/index'
+				})
+				return;
+			}
+			if(options.tabcur){
+				this.tabcur = options.tabcur;
+			}
+			this.title = this.makeTitle(this.tabcur)
 		}
 		
 		tabSelect(e:any){
