@@ -6,7 +6,7 @@
 					 @tap="tabSelect" :data-id="index">
 					 	<text :class="index==0?['text-red','text-blod','cuIcon-infofill']:['text-green','cuIcon-roundcheckfill']"></text>{{item.name}}
 					 	<template v-if="item.total>0">
-					 		(<text class="text-bold text-red">{{item.total}}</text>)
+					 		(<text class="text-bold" :class="index==0?'text-red':'text-green'">{{item.total}}</text>)
 					 	</template>
 					</view>
 				</view>
@@ -15,7 +15,7 @@
 						<un-task-list @totalM="totalChange"></un-task-list>
 					</template>
 					<template v-else>
-						<task-list></task-list>
+						<task-list @totalM="totalChange"></task-list>
 					</template>
 				</view>
 			<!-- </template> -->
@@ -31,13 +31,13 @@
 		Watch
 	} from 'vue-property-decorator';
 
-	import loadRefresh from '@/components/load-refresh/load-refresh.vue';
+	
 	import bipUnit from '@/components/bip-ui/bip-unit/bip-unit.vue';
 	import UnTaskList from '@/components/bip-ui/bip-task/UnTaskList.vue';
 	import TaskList from '@/components/bip-ui/bip-task/TaskList.vue';
 	@Component({
 		components: {
-			loadRefresh,TaskList,UnTaskList
+			TaskList,UnTaskList
 		}
 	})
 	export default class BipTask extends Vue {

@@ -1,7 +1,11 @@
 <template>
-	<view class="text-cut" :style="'width:100%'">
-		<text>{{ cell.labelString }}：</text>
-		<text>{{mode}}</text>
+	<view class="flex justify-between text-cut">
+		<view class="flex-sub">
+			<text>{{ cell.labelString }}：</text>
+		</view>
+		<view class="flex-sub text-cut text-bold">
+			<text >{{mode}}</text>
+		</view>
 	</view>
 </template>
 

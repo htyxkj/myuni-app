@@ -12,6 +12,7 @@
     import { Vue, Provide, Prop, Component,Watch,Emit } from 'vue-property-decorator';
 	// import bipUnit from '@/components/bip-ui/bip-unit/bip-unit.vue';
 	import BipTaskUnit from './BipTaskUnit.vue'
+	import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 	import {
 		BIPUtil
 	} from '@/classes/api/request';
@@ -19,7 +20,7 @@
 	import mLoad from '@/components/mLoad.vue';
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import QueryCont from '@/classes/search/QueryCont';
-	@Component({components:{BipTaskUnit,mLoad}})
+	@Component({components:{BipTaskUnit,mLoad,loadRefresh}})
 	export default class UnTaskList extends Vue{
 		currPage: number = 1;
 		loadModal:boolean = false;

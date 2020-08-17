@@ -3,13 +3,9 @@
 		<view class="flex-sub">
 			<text>{{ cell.labelString }}：</text>
 		</view>
-		<view class="flex-sub text-cut">
+		<view class="flex-sub text-cut text-bold">
 			<text>{{modes}}</text>
 		</view>
-<!-- 		<view class="flex-treble text-cut">
-
-		</view>
-		<text class="text-progress text-bold cuIcon-tag"></text> -->
 	</view>
 </template>
 

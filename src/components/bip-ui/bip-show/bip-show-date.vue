@@ -1,10 +1,11 @@
 <template>
-	<view class="flex text-cut justify-between" :style="'width:100%'">
-		<view class="basis-xs">
+	<view class="flex justify-between text-cut">
+		<view class="flex-sub">
 			<text>{{ cell.labelString }}：</text>
-			<text>{{mode}}</text>
 		</view>
-		<text class="cuIcon-calendar text-progress text-bold"></text>
+		<view class="flex-sub text-cut text-bold">
+			<text>{{mode}}</text><text class="cuIcon-calendar" style="margin-left: 40upx;"></text>
+		</view>
 	</view>
 </template>
 

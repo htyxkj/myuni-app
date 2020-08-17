@@ -8,7 +8,7 @@
 		</cu-custom>
 		<template v-if="initUIOK">
 			<view class="margin-lr-sm margin-tb-sm">
-				<bip-lay v-if="lay.binit" :layout="lay" :key="index"></bip-lay>
+				<bip-lay v-if="lay.binit" :layout="lay"></bip-lay>
 				<view class="padding-bottom-xl margin-bottom-xl"></view>
 			</view>
 		</template>
