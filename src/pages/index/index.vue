@@ -58,8 +58,12 @@
 		
 		menubarr:any=null
 
+		olOption:any = null;
 		onLoad(options:any) {
-			singIn.ServApi.init(options);
+			singIn.ServApi.init(options,this.init);
+			this.olOption = options
+		}
+		init(){
 			console.log('登录状态：',LoginModule.loginState)
 			if(!this.loginState){
 				uni.reLaunch({'url':'/pages/login/login'})
@@ -71,8 +75,8 @@
 				})
 				return;
 			}
-			if(options.tabcur){
-				this.tabcur = options.tabcur;
+			if(this.olOption.tabcur){
+				this.tabcur = this.olOption.tabcur;
 			}
 			this.title = this.makeTitle(this.tabcur)
 		}
