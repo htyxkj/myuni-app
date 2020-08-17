@@ -53,6 +53,7 @@
     "@dcloudio/uni-quickapp-webview": "^2.0.0-27920200618002",
     "@dcloudio/uni-stat": "^2.0.0-27920200618002",
     "core-js": "^3.6.5",
+    "dingtalk-jsapi": "^2.12.0",
     "flyio": "^0.6.2",
     "js-base64": "^3.2.4",
     "moment": "^2.27.0",

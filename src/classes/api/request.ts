@@ -27,9 +27,10 @@ export namespace BIPUtil {
 		 * @description 登录方法 根据账户登录不需要密码
 		 * @param user 用户信息
 		 */
-		loginWithOutPwd(userCode:string){
+		loginWithOutPwd(userCode:string,params:any={}){
 			let param = tools.getLoginWithOutPwdParmasUri();
 			param.usercode = userCode;
+			param = Object.assign(param,params)
 			return this.getFromServer(param);
 		}
 		/**
