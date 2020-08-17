@@ -1,4 +1,4 @@
-import * as dd from 'dingtalk-jsapi';
+let dd = require( 'dingtalk-jsapi');
 import {Vue,Provide,Component} from 'vue-property-decorator';
 import User from '@/classes/User';
 import Menu from '@/classes/Menu';
