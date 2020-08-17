@@ -66,7 +66,8 @@ export default class bipListUnit2 extends Vue {
 			let kk =  cel.ccHorCell||3;
 			if(kk>=3){
 				if(w==0){
-					celsRowList[row] = [cel]
+					celsRowList[row] = [cel];
+					row++;
 				}
 				else{
 					let nr = row+1;

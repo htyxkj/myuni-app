@@ -5,7 +5,9 @@ import Operation from '../operation/Operation';
 import PageInfo from '../search/PageInfo';
 
 import Cell from './coob/Cell';
-
+import CeaPars from '../cenv/CeaPars';
+import { baseUtils } from '@/classes/api/baseutils'
+let tools = baseUtils.tools;
 export default class CDataSet {
 	ccells: Cells;
 	cdata: CData;
@@ -32,7 +34,7 @@ export default class CDataSet {
 	_total: number = 0; //总数
 
 	hjList: Array<string> = [];
-
+	ceaPars?:CeaPars;//审批流信息
 	// baseI?: BaseI;
 
 	constructor(_cells: any) {
@@ -134,7 +136,7 @@ export default class CDataSet {
 	}
 
 	sayHello(){
-		console.log(123)
+		// console.log(123)
 	}
 	addRecord(cr:CRecord){
 		if(this.index<0){
@@ -212,12 +214,14 @@ export default class CDataSet {
 		cdata.data = datas;
 		return cdata;
 	}
+	
 	getRecordAtIndex(_i: number = -1) {
 		if (_i === -1) {
 			return this.currRecord;
 		}
 		return this.cdata.getDataAtIndex(_i);
 	}
+	
 	checkNotNull():Array<any>{
 		console.log("检查非空！")
         let rtn =[true,""]
@@ -278,4 +282,76 @@ export default class CDataSet {
         })
         return rtn;
     }
+
+	haveAuth() {
+	    let crd = this.currRecord;
+	    if (this.i_smake > -1) {
+	      let cell = this.ccells.cels[this.i_smake];
+	      let smake = crd.data[cell.id];
+	      let user = tools.getUser();
+	      if (smake == user.userCode) {
+	        return true;
+	      } else {
+	        return user.attr <= 1;
+	      }
+	    }
+	    return true;
+	}
+	
+	/**
+   * 判断当前行能否删除
+   */
+	canDel(): boolean {
+		if (this.haveAuth()) {
+			let crd = this.currRecord;
+			if (this.i_state > -1) {
+				let cell = this.ccells.cels[this.i_state];
+				let statestr = crd.data[cell.id];
+				let state: number = parseInt(statestr);
+				return state == 0 || state ==1;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
+	  /**
+	   * 查询单据是否可修改
+	   * @param _i 数据下标
+	   */
+	currCanEdit(_i: number = -1) {
+	    //判断是否是临时改
+	    if(this.ceaPars){
+	      if(this.ccells.attr)
+	      if((this.ccells.attr & 0x4000) > 0 && this.ceaPars.statefr !== "6"){
+	        return true;
+	      }
+	    }
+	    if((this.ccells.attr & 0x8 )>0){
+	      return false;
+	    }
+	    if (this.ds_par != null) {
+	      return this.ds_par.currCanEdit();
+	    }
+	    let crd = this.currRecord;
+	    if (_i !== -1) {
+	      crd = this.cdata.getDataAtIndex(_i);
+	    }
+	    if (crd) {
+			if (this.haveAuth()) {
+				if (this.i_state > -1) {
+				  let cell = this.ccells.cels[this.i_state];
+				  let statestr = crd.data[cell.id];
+				  let state: number = parseInt(statestr);
+				  // if (state == 0) crd.c_state |= 2;
+				  return state == 0;
+				} else {
+				  // crd.c_state |= 2;
+				  return true;
+				}
+			}
+	    }
+	    return false;
+	}
+
 }

@@ -7,7 +7,7 @@
 					<text>{{pkList[0].labelString}}：{{record.data[pkList[0].id]||''}}</text>
 				</view>
 				<view class="action">
-					<text class="text-blue cuIcon-edit" @tap.stop="editRow">详情</text>
+					<text class="text-blue cuIcon-edit" @tap.stop="editRow">编辑</text>
 					<text class="text-red cuIcon-deletefill" @tap.stop="delRow">删除</text>
 				</view>
 			</view>
@@ -79,8 +79,8 @@ export default class bipBillUnit extends Vue {
 			if(kk>=3){
 				if(w==0){
 					celsRowList[row] = [cel]
-				}
-				else{
+					row++;
+				}else{
 					let nr = row+1;
 					celsRowList[nr] = [cel]
 					row++;

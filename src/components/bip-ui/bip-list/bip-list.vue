@@ -93,6 +93,11 @@ export default class bipList extends Vue{
 	get record():CRecord{
 		return this.cds.getRecord(this.cds.index)
 	}
+	
+	get unEditAble(){
+		let attr = this.cell.attr&0x40;
+		return attr>0;
+	}
 
 	get showMode(){
 		return this.mode || this.mode1;
@@ -102,7 +107,10 @@ export default class bipList extends Vue{
 	open(){
 		// console.log('open')
 		// console.log(this.cell)
-		this.isShow = true;
+		if(!this.unEditAble){
+			this.isShow = true;
+		}
+		
 	}
 
 	cancel(){

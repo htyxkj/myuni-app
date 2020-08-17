@@ -56,6 +56,8 @@ export default class bipRefsCl extends Vue{
 		this.recordChange();
 	}
 	
+	
+	
 	@Watch('record')
 	recordChange(){
 		this.$nextTick(()=>{

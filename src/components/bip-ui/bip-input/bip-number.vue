@@ -2,7 +2,7 @@
 	<view class="cu-form-group solid-bottom text-green">
 		<template v-if="cell">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
-			<input class="text-right" :placeholder="cell.labelString" type="number" v-model="mode" @blur="dataChange" />
+			<input class="text-right" :placeholder="cell.labelString" type="number" v-model="mode" @blur="dataChange" :disabled="editable" />
 		</template>
 	</view>
 </template>
@@ -72,6 +72,11 @@
 		cellDataChange(){
 			console.log('监听值变化');
 			this.recordChange();
+		}
+		
+		get editable(){
+			let attr = this.cell.attr&0x40;
+			return attr>0;
 		}
 		
 		

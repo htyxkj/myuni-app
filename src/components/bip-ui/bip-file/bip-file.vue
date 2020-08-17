@@ -39,7 +39,15 @@ export default class bipFile extends Vue{
 	}
 	open(){
 		console.log('open uploadFile')
-		this.showFda = true;
+		if(!this.unEditAble){
+			this.showFda = true;
+		}
+		
+	}
+	
+	get unEditAble(){
+		let attr = this.cell.attr&0x40;
+		return attr>0;
 	}
 	
 	hide(){

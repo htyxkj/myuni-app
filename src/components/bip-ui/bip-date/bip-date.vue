@@ -36,8 +36,10 @@ export default class bipDate extends Vue {
 	}
 	
 	open(){
-		let rr:any = this.$refs.calendar
-		rr.show();
+		if(!this.unEditAble){
+			let rr:any = this.$refs.calendar
+			rr.show();
+		}
 	}
 	
 	onConfirm(e:any){
@@ -53,7 +55,10 @@ export default class bipDate extends Vue {
 	get record():CRecord{
 		return this.cds.getRecord(this.cds.index)
 	}
-	
+	get unEditAble(){
+		let attr = this.cell.attr&0x40;
+		return attr>0;
+	}
 	@Watch('record')
 	recordChange(){
 		// console.log('recordchang')

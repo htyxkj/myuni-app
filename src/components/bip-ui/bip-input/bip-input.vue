@@ -4,12 +4,13 @@
 		<template v-if="cell">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
 			<template v-if="type=='text'">
-				<input name="input" :placeholder="cell.labelString" type="text" v-model="mode" @blur="dataChange"  />
+				<input name="input" :placeholder="cell.labelString" type="text" v-model="mode" @blur="dataChange" :disabled="editable"/>
 				<template v-if="clearable">
 					<text :class="[mode?'cuIcon-close':'','text-red']" @tap.stop="clear()"></text>
 				</template>
 			</template>
 			<template v-else>
+				
 				<input :placeholder="cell.labelString" type="password" :password="at0" v-model="mode"/>
 				<text :class="[mode?(!at0?'cuIcon-attentionforbid':'cuIcon-attention'):'','text-grey']" @tap.stop="open()"></text>
 			</template>
@@ -64,6 +65,11 @@
 		
 		get record():CRecord{
 			return this.cds.getRecord(this.cds.index)
+		}
+		
+		get editable(){
+			let attr = this.cell.attr&0x40;
+			return attr>0;
 		}
 		
 		cellDataChange(){

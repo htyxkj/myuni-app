@@ -58,15 +58,24 @@ export default class bipSelect extends Vue {
 		this.getRefVal();
 	}
 	open() {
-		this.methordName = this.editName+"_"+(this.index<0?0:this.index)+"_"+this.cell.id
-		uni.$off(this.methordName,this.selectBack)
-		uni.$on(this.methordName,this.selectBack);
-		uni.showLoading({
-			title:'跳转中...'
-		})
-		uni.navigateTo({url:'/pages/selecteditor/selecteditor?editName='+this.editName+"&methordname="+this.methordName,complete: () => {
-			uni.hideLoading();
-		}});
+		if(!this.unEditAble){
+			this.methordName = this.editName+"_"+(this.index<0?0:this.index)+"_"+this.cell.id
+			uni.$off(this.methordName,this.selectBack)
+			uni.$on(this.methordName,this.selectBack);
+			uni.showLoading({
+				title:'跳转中...'
+			})
+			uni.navigateTo({url:'/pages/selecteditor/selecteditor?editName='+this.editName+"&methordname="+this.methordName,complete: () => {
+				uni.hideLoading();
+			}});
+		}else{
+			
+		}
+	}
+	
+	get unEditAble(){
+		let attr = this.cell.attr&0x40;
+		return attr>0;
 	}
 	selectBack(param:any){
 		// console.log(param)
