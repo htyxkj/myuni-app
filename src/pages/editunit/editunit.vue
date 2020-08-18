@@ -1,13 +1,16 @@
 <template>
 	<view>
-		<cu-custom :bgColor="'bg-blue'" :isBack="true">
-			<block slot="content"><view class="header-title">{{ cds.ccells.desc }}</view></block>
+		<cu-custom :bgColor="'bg-blue'" :isBack="true"  >
+			<block slot="content"><view class="header-title">{{ title }}</view></block>
 		</cu-custom>
 		<template v-if="initOK">
 			<view class="margin-lr-sm margin-tb-sm">
 				<bip-comm v-for="(item) in laycell.uiCels" :obj_id="laycell.obj_id" :cell="item" :key="item.id"></bip-comm>
 			</view>
-			<bip-menu-bar @tabSelect="execCmd"></bip-menu-bar>
+			<!-- <bip-menu-bar @tabSelect="execCmd"></bip-menu-bar> -->
+			<view class="padding flex flex-direction">
+				<button class="cu-btn bg-green margin-tb-sm" @click="editOK">确定</button>
+			</view>
 		</template>
 		
 	</view>
@@ -45,12 +48,27 @@
 		execCmd(btn: any) {
 			let cmd = btn.cmd;
 		}
+		
+		editOK(){
+			console.log(this.cds.currRecord,this.cds);
+			console.log(this.env);
+			uni.$emit('editRowOK',this.cds.currRecord);
+			uni.navigateBack({delta:1})
+		}
+		
 		get env1(){
 			return EnvModule.env;
 		}
 		
 		get laycell(){
 			return EnvModule.laycell;
+		}
+		
+		get title(){
+			if(this.cds&&this.cds.ccells){
+				return this.cds.ccells.desc||''
+			}
+			return ''
 		}
 	
 	}
