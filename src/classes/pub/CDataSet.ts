@@ -353,5 +353,13 @@ export default class CDataSet {
 	    }
 	    return false;
 	}
-
+	/**
+	 * 判断单据是否可以提交
+	 */
+	isPosted(): boolean {
+		let bpost = true;
+		if ((this.currRecord.c_state & 1) > 0 || (this.currRecord.c_state & 2) > 0)
+		  bpost = false;
+		return bpost;
+	}
 }
