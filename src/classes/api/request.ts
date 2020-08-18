@@ -129,7 +129,14 @@ export namespace BIPUtil {
 			let param = tools.getBuidParams(buid);
 			return this.getFromServer(param);
 		}
-
+		/**
+		 * @description 执行审批流 
+		 * @param ceaParam CeaPars对象
+		 * @param id 33:获取下一个审批节点；34：执行审批；39：执行审批退回；40：执行放弃审核
+		 */
+		getCheckInfo(ceaParam:any,id:number){
+			return this.getFromServer(tools.getCheckInfoParam(ceaParam,id));
+		}
 		/**
 		 * 弹出框执行SQL语句 常量里面定义的 DLG.
 		 * @param value 当前选中行内容

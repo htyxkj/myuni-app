@@ -105,20 +105,20 @@ export default class mescrollUni extends Vue {
 		return uni.upx2px(Number(this.top || 0));
 	}
 	get fixedTop() {
-		return this.fixed ? this.numTop + this.windowTop + 'px' : 0;
+		return this.fixed ? this.numTop + this.windowTop + 'upx' : 0;
 	}
 	get padTop() {
-		return !this.fixed ? this.numTop + 'px' : 0;
+		return !this.fixed ? this.numTop + 'upx' : 0;
 	}
 	// bottom数值,单位upx,需转成px 目的是使上拉布局往上偏移
 	get numBottom() {
 		return uni.upx2px(Number(this.bottom || 0));
 	}
 	get fixedBottom() {
-		return this.fixed ? this.numBottom + this.windowBottom + 'px' : 0;
+		return this.fixed ? this.numBottom + this.windowBottom + 'upx' : 0;
 	}
 	get padBottom() {
-		return !this.fixed ? this.numBottom + 'px' : 0;
+		return !this.fixed ? this.numBottom + 'upx' : 0;
 	}
 	// 空布局的配置
 	get optEmpty() {
@@ -129,7 +129,7 @@ export default class mescrollUni extends Vue {
 		return this.isDownReset ? 'transform 300ms' : '';
 	}
 	get translateY() {
-		return this.downHight > 0 ? 'translateY(' + this.downHight + 'px)' : ''; // transform会使fixed失效,需注意把fixed元素写在mescroll之外
+		return this.downHight > 0 ? 'translateY(' + this.downHight + 'upx)' : ''; // transform会使fixed失效,需注意把fixed元素写在mescroll之外
 	}
 	//注册列表滚动事件,用于下拉刷新
 	scroll(e: any) {

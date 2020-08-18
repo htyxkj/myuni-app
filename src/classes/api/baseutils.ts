@@ -129,6 +129,21 @@ export namespace baseUtils {
 			});
 		}
 		/**
+		 * @description 获取执行审核信息参数
+		 * @param ceaParam 审核信息
+		 * @param id 参数ID 33:获取下一个审批节点，34：审核通过
+		 */
+		getCheckInfoParam(ceaParam:any,id:number){
+			let checkParasm = {
+				dbid:commURL.BaseDBID,
+				usercode: JSON.parse(uni.getStorageSync('user') + '').userCode,
+				apiId: GlobalVariable.APIID_CHK,
+				chkid:id,
+				cea:JSON.stringify(ceaParam)
+			}
+			return checkParasm
+		}
+		/**
 		 * @description 获取对象统计参数
 		 * @param qe 查询条件
 		 * @param groupfilds 分组字段

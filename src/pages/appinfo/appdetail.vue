@@ -11,6 +11,8 @@
 				<bip-lay v-if="lay.binit" :layout="lay"></bip-lay>
 				<view class="padding-bottom-xl margin-bottom-xl"></view>
 			</view>
+			<bip-work ref="work"></bip-work>
+			 <!-- @checkOK="checkOK" -->
 		</template>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
@@ -29,6 +31,7 @@ import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue';
 // import uniCard from '@/components/uni-ui/uni-card/uni-card.vue'
 import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue';
 import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue';
+import BipWork from  '@/components/cwork/BipWork.vue';
 
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
@@ -48,7 +51,7 @@ const DataUtil = dataTool.utils;
 
 import CeaPars from "@/classes/cenv/CeaPars";
 @Component({
-	components: { mLoad, bipLay, bipMenuBar, bipBillBar }
+	components: { mLoad, bipLay, bipMenuBar, bipBillBar , BipWork}
 })
 export default class appDetail extends Vue {
 	vueId: string = Tools.guid();
@@ -91,8 +94,14 @@ export default class appDetail extends Vue {
 		if(cmd == icl.B_CMD_COPY){
 			this.copyCRecord()
 		}
-	}
 
+		if(cmd == icl.B_CMD_SUBMIT){
+			this.submint();
+		}
+	}
+	/**
+	 * 删除
+	 */
 	deleteRecord(){
 		let c0 = this.dsm.currRecord;
 		if((c0.c_state&1)>0){
@@ -126,7 +135,9 @@ export default class appDetail extends Vue {
 			}
 		});
 	}
-
+	/**
+	 * 新建
+	 */
 	addNewCRecord(){
 		let c0 = this.dsm.currRecord;
 		if((c0.c_state&1)>0||(c0.c_state&2)>0){
@@ -136,7 +147,9 @@ export default class appDetail extends Vue {
 		let cr = DataUtil.createRecord(this.dsm,this.env);
 		this.dsm.addRecord(cr);
 	}
-
+	/**
+	 * 复制
+	 */
 	copyCRecord(){
 		let c0 = this.dsm.currRecord;
 		if((c0.c_state&1)>0||(c0.c_state&2)>0){
@@ -146,7 +159,9 @@ export default class appDetail extends Vue {
 		let cr = DataUtil.copyRecord(this.dsm,this.env);
 		this.dsm.addRecord(cr);
 	}
-
+	/**
+	 * 保存
+	 */
 	saveData() {
 		let bk:any = this.dsm.checkNotNull();
 		if(!bk[0]){
@@ -175,7 +190,54 @@ export default class appDetail extends Vue {
 				console.log(e);
 			});
 	}
+	/**
+     * 审批流提交
+     */
+    submint(){
+        if(this.dsm.opera){
+            if(this.dsm.isPosted()){
+                //可以提交
+                let crd = this.dsm.currRecord
+                let params = {
+                    sid: crd.data[this.dsm.opera.pkfld],
+                    sbuid: crd.data[this.dsm.opera.buidfld],
+                    statefr: crd.data[this.dsm.opera.statefld],
+                    stateto: crd.data[this.dsm.opera.statefld],
+                    sorg:crd.data[this.dsm.opera.sorgfld],
+                    spuserId: ""
+                }  
+                this.cea = new CeaPars(params)
+                tools.getCheckInfo(this.cea,33).then((res:any)=>{
+					console.log(res)
+                    if(res.data.id==0){
+                        let data = res.data.data.info
+                        let work:any = this.$refs.work;
+                        let smakefld:string='';
+                        if(this.dsm.opera){
+                            if(this.dsm.opera.smakefld){
+                                smakefld = crd.data[this.dsm.opera.smakefld];
+                            }
+                        }
+                        this.dsm.ceaPars = this.cea
+                        work.open(data,this.cea,smakefld);
+                    }
+                }).catch((err:any)=>{
+					uni.showToast({
+						title: err+";BaseApplet submint",
+						icon:"none"
+					})
+                }).finally(()=>{
 
+                });
+            }
+        }
+        if(!this.dsm.isPosted()){
+			uni.showToast({
+				title: '请先保存数据！',
+				icon:"none"
+			})
+        }
+    }
 	//加载数据
 	findData(objid:string = ''){
 		this.loading = true;
