@@ -17,8 +17,8 @@
 			<text class="cuIcon-search" @tap="query"></text>
 		</view>
 		<bip-select :arr="array" :show="isShow" @cancel="cancel" :index="index" @selectChange="selectChange" @select="selectOK" :showKey="'name'" :isStr="false"></bip-select>
-		<view class="margin-top"></view>
-		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="360" :pageNo="currPage" :totalPageNo="totalPage"
+		<view style="margin-top: 2upx;"></view>
+		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
 		 @loadMore="loadMore" @refresh="refresh">
 		 <view slot="content-list">
 		 	<bip-selector-unit v-for="(item,index) in pdList" :key='index' :item="item" :index="index" @select="select"></bip-selector-unit>
@@ -60,7 +60,7 @@ export default class selecteditor extends Vue {
 	isShow = false;
 	currPage: number = 1;
 	totalPage: number = 0;
-
+	pageSize:number = 15;
 	async onLoad(option: any) {
 		this.editName = option.editName;
 		this.methordName = option.methordname||''
@@ -81,12 +81,16 @@ export default class selecteditor extends Vue {
 				let ro = { id: index, name: item };
 				this.array.push(ro);
 			})
-			this.getListDataFromNet(this.currPage,10)
+			this.getListDataFromNet(this.currPage,this.pageSize)
 		}
 	}
 	//缓存数据
 	get aidmaps() {
 		return InsAidModule.aidInfos;
+	}
+	
+	query(){
+		
 	}
 	
 
@@ -107,21 +111,21 @@ export default class selecteditor extends Vue {
 	}
 	
 	loadMore() {
-		console.log('loadMore')
+		// console.log('loadMore')
 		// 请求新数据完成后调用 组件内loadOver()方法
 		// 注意更新当前页码 currPage
 		if(this.totalPage>=this.currPage){
 			this.currPage++;
-			console.log('查询第'+this.currPage+'也数据')
-			this.getListDataFromNet(this.currPage,10)
-			console.log(this.pdList.length)
+			// console.log('查询第'+this.currPage+'也数据')
+			this.getListDataFromNet(this.currPage,this.pageSize)
+			// console.log(this.pdList.length)
 		}
 	}
 	// 下拉刷新数据列表
 	refresh() {
-		console.log('refresh')
+		// console.log('refresh')
 		this.currPage = 1;
-		this.getListDataFromNet(this.currPage,10)
+		this.getListDataFromNet(this.currPage,this.pageSize)
 	}
 	
 	//查询字段列表发生改变
@@ -166,7 +170,8 @@ export default class selecteditor extends Vue {
 				listData = listData.concat(vrr.values);
 				this.qe.page = vrr.page;
 				this.currPage = this.qe.page.currPage;
-				this.totalPage = Math.ceil(this.qe.page.total/10);
+				this.pageSize = this.qe.page.pageSize;
+				this.totalPage = Math.ceil(this.qe.page.total/this.pageSize);
 				if(pageNum==1){
 					this.pdList = []
 				}

@@ -1,8 +1,8 @@
 <template>
-	<view class="shadow bg-white cu-form-group solids-bottom">
-		<view v-for="itm in sindex" :key="itm">
+	<view class="flex shadow bg-white cu-form-group solids-bottom">
+		<view v-for="itm in sindex" :key="itm" :class="itm==0?['flex-twice']:['flex-treble','text-cut']">
 			<template v-if="itm<2">
-				{{labers[itm]}}：{{item[cells[itm].id]}}
+				<text class="text-blue">{{labers[itm]}}：</text>{{item[cells[itm].id]}}
 			</template>
 		</view>
 		<button class="cu-btn bg-gray text-blue" @click="selectOK">选中</button>

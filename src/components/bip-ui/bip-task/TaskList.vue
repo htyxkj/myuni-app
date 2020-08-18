@@ -1,5 +1,5 @@
 <template>
-	<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="360" :pageNo="currPage" :totalPageNo="totalPage"
+	<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="330" :pageNo="currPage" :totalPageNo="totalPage"
 	 @loadMore="loadMore" @refresh="refresh">
 	 <view slot="content-list">
 	 	<bip-task-unit v-for="(item,index) in list" :key="index" :rowId="index" :record="item" :cells="cell"></bip-task-unit>
