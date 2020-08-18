@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-let  dd =require('dingtalk-jsapi');
-=======
 let dd = require( 'dingtalk-jsapi');
->>>>>>> c08db9e0c4107853e059d2c1aa8a596ea58c0885
 import {Vue,Provide,Component} from 'vue-property-decorator';
 import User from '@/classes/User';
 import Menu from '@/classes/Menu';
