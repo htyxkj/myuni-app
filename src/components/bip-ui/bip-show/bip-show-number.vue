@@ -15,9 +15,21 @@
 	export default class bipShowComm extends Vue{
 		@Prop({type:Object}) cell!:Cell;
 		@Prop() record!:any;
+		@Prop({type:String}) obj_id!:string;
+		@Prop({type:Number,default:0}) rowId!:number;
 		mode:string = ''
 		created(){
-			this.mode = this.formatNumber(this.record.data[this.cell.id]||'')
+			this.$nextTick(()=>{
+				this.cellRowChange();
+				let mid = this.obj_id+"_row_"+this.rowId;
+				// uni.$off(mid);
+				uni.$on(mid,()=>{this.cellRowChange()});
+			})
+		}
+		
+		cellRowChange(){
+			// console.log(this.cell.id)
+			this.mode = this.formatNumber(this.record.data[this.cell.id]||'');
 		}
 		
 		formatNumber(mm:string){

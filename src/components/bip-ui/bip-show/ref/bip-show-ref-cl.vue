@@ -18,6 +18,7 @@
 		@Prop({type:Object}) cell!:Cell;
 		@Prop({type:String}) obj_id!:string;
 		@Inject('bipInsAid') bipInsAid!:BipInsAidNew;
+		@Prop({type:Number,default:0}) rowId!:number;
 		@Prop() record!:any;
 		mode:string = ''
 		showValue:string = ''
@@ -30,11 +31,22 @@
 			
 			this.showValue = this.mode;
 			let mkey = this.obj_id+"_"+this.cell.id
-			uni.$on(mkey,this.cellDataChange);
+			uni.$on(mkey,()=>{this.cellDataChange()});
 			this.makeCLshow();
+			
+			let mid = this.obj_id+"_row_"+this.rowId;
+			// uni.$off(mid);
+			uni.$on(mid,()=>{this.cellRowChange()});
 			// console.log(this.mode,this.showValue);
 		}
-		
+		cellRowChange(){
+			if(this.cell.type<12){
+				this.mode = this.record.data[this.cell.id]||0
+			}else{
+				this.mode = this.record.data[this.cell.id]||''
+			}
+			this.makeCLshow();
+		}
 		get modes(){
 			return this.showValue || this.mode;
 		}

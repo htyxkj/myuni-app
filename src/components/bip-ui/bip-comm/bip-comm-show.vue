@@ -1,16 +1,16 @@
 <template>
 	<view class="flex-sub bg-white margin-sm padding-sm radius text-cut solid-bottom">
 		<template v-if="cell.type==3">
-			<bip-show-number :cell="cell" :record="record"></bip-show-number>
+			<bip-show-number :cell="cell" :record="record" :rowId="rowId" :obj_id="obj_id"></bip-show-number>
 		</template>
 		<template v-else-if="cell.type==91||cell.type==93">
-			<bip-show-date :cell="cell" :record="record"></bip-show-date>
+			<bip-show-date :cell="cell" :record="record" :rowId="rowId" :obj_id="obj_id"></bip-show-date>
 		</template>
 		<template v-else-if="cell.refValue ||cell.editName">
-			<bip-show-ref :cell="cell" :obj_id="obj_id" :record="record" ></bip-show-ref>
+			<bip-show-ref :cell="cell" :obj_id="obj_id" :record="record" :rowId="rowId"></bip-show-ref>
 		</template>
 		<template v-else>
-			<bip-show-comm :cell="cell" :record="record"></bip-show-comm>
+			<bip-show-comm :cell="cell" :record="record" :rowId="rowId" :obj_id="obj_id"></bip-show-comm>
 		</template>
 	</view>
 </template>
@@ -38,8 +38,8 @@ import bipShowRef from '../bip-show/bip-show-ref.vue';
 export default class bipCommShow extends Vue{
 	// @Inject('env') env!:CCliEnv;
 	@Prop({type:String}) obj_id!:string;
-	@Prop() cell!:Cell;
 	@Prop({type:Number,default:0}) rowId!:number;
+	@Prop() cell!:Cell;
 	@Prop() record!:any;
 	id:string = Tools.guid()
 	// bipInsAid:BipInsAidNew = new BipInsAidNew('')

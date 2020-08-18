@@ -52,12 +52,9 @@ export default class layGrid extends Vue {
 	cds: CDataSet = new CDataSet(null);
 	created() {
 		this.cds = this.env.getDataSet(this.laycell.obj_id);
-		console.log(this.cds, '11123');
 	}
 	mounted() {
-		console.log(this.cds, '123');
 		this.cds.sayHello();
-		console.log(this.laycell);
 	}
 	
 	addLine(){
@@ -86,7 +83,13 @@ export default class layGrid extends Vue {
 	
 	okRow(crd:any){
 		// console.log(crd,'laygrade')
-		this.cds.currRecord = crd;		
+		this.cds.currRecord = crd;
+		console.log(this.cds)
+		let mName = this.cds.ccells.obj_id;
+		let index = this.cds.index>-1?this.cds.index:0;
+		let invokeName = mName+"_row_"+index;
+		uni.$emit(invokeName,crd);
+		console.log()
 	}
 	
 	delRow(rid:number,obj_id:string){

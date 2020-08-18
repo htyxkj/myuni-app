@@ -22,6 +22,8 @@
 		@Prop({type:Object}) cell!:Cell;
 		@Prop() record!:any;
 		@Inject('bipInsAid') bipInsAid!:BipInsAidNew;
+		@Prop({type:Number,default:0}) rowId!:number;
+		@Prop({type:String}) obj_id!:string;
 		mode:string = '';
 		showValue:string = '';
 		aidKey:string = '';
@@ -41,6 +43,14 @@
 						this.makeRefshow();
 				}
 			}
+			
+			let mid = this.obj_id+"_row_"+this.rowId;
+			// uni.$off(mid);
+			uni.$on(mid,()=>{this.cellRowChange()});
+		}
+		
+		cellRowChange(){
+			this.recordChange();
 		}
 		
 		get aidValues(){

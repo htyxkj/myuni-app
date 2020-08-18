@@ -2,14 +2,14 @@
 	<view>
 		<template v-if="bipInsAid.id">
 			<template v-if="bipInsAid.cl">
-				<bip-show-ref-cl :cell="cell" :obj_id="obj_id" :record="record" ></bip-show-ref-cl>
+				<bip-show-ref-cl :cell="cell" :obj_id="obj_id" :record="record" :rowId="rowId"></bip-show-ref-cl>
 			</template>
 			<template v-else>
-				<bip-show-ref-fz :cell="cell" :obj_id="obj_id" :record="record" ></bip-show-ref-fz>	
+				<bip-show-ref-fz :cell="cell" :obj_id="obj_id" :record="record" :rowId="rowId"></bip-show-ref-fz>	
 			</template>
 		</template>
 		<template v-else>
-			<bip-show-comm :cell="cell" :record="record"></bip-show-comm>
+			<bip-show-comm :cell="cell" :record="record" :obj_id="obj_id" :rowId="rowId"></bip-show-comm>
 		</template>
 	</view>
 </template>
@@ -32,6 +32,7 @@ export default class bipShowRef extends Vue{
 	@Prop({ type: Object }) cell!: Cell;
 	@Prop({type:String}) obj_id!:string;
 	@Prop() record!:any;
+	@Prop({type:Number,default:0}) rowId!:number;
 	@Provide('bipInsAid') bipInsAid:BipInsAidNew = new BipInsAidNew("");
 	editName = '';
 	aidKey = '';

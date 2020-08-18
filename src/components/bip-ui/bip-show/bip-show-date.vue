@@ -20,8 +20,20 @@
 	export default class bipShowDate extends Vue{
 		@Prop({type:Object}) cell!:Cell;
 		@Prop() record!:any;
+		@Prop({type:String}) obj_id!:string;
+		@Prop({type:Number,default:0}) rowId!:number;
 		mode:string = ''
 		created(){
+			this.$nextTick(()=>{
+				this.cellRowChange();
+				let mid = this.obj_id+"_row_"+this.rowId;
+				// uni.$off(mid);
+				uni.$on(mid,()=>{this.cellRowChange()});
+			})
+			
+		}
+		
+		cellRowChange(){
 			this.mode = this.record.data[this.cell.id]||''
 		}
 	}
