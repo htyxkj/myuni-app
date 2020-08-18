@@ -15,7 +15,7 @@
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
 			<!-- <bip-menu-bar @tabSelect="execCmd"></bip-menu-bar> -->
-			<bip-bill-bar @tabSelect="execCmd" :attr="3"></bip-bill-bar>
+			<bip-bill-bar @tabSelect="execCmd" :attr="3" :bmore="true"></bip-bill-bar>
 		</template>
 	</view>
 </template>
@@ -45,6 +45,8 @@ import { icl } from '../../classes/tools/CommICL';
 import QueryEntity from '@/classes/search/QueryEntity';
 import { dataTool } from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils;
+
+import CeaPars from "@/classes/cenv/CeaPars";
 @Component({
 	components: { mLoad, bipLay, bipMenuBar, bipBillBar }
 })
@@ -69,6 +71,9 @@ export default class appDetail extends Vue {
 	lay: BipLayout = new BipLayout('');
 	qe: QueryEntity = new QueryEntity('', '');
 	initUIOK:boolean = false;
+	
+	cea:CeaPars = new CeaPars({});
+	
 	execCmd(btn: any) {
 		let cmd = btn.cmd;
 		console.log(cmd);
@@ -190,6 +195,18 @@ export default class appDetail extends Vue {
 				infos.data.forEach((cr:any)=>{
 					cds.addRecord(cr);
 				})
+				let crd = cds.currRecord;
+				if(crd != null && cds.opera){
+					let params = {
+						sid: crd.data[cds.opera.pkfld],
+						sbuid: crd.data[cds.opera.buidfld],
+						statefr: crd.data[cds.opera.statefld],
+						stateto: crd.data[cds.opera.statefld],
+						spuserId: ""
+					}  
+					this.cea = new CeaPars(params);
+					this.dsm.ceaPars = this.cea;
+				}
 			}
 			this.loading = false;
 		});

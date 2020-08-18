@@ -64,7 +64,6 @@ export default class appInfo extends Vue {
 	cells: Array<Cells> = new Array<Cells>();
 	lay: BipLayout = new BipLayout('');
 
-
 	execCmd(btn: any) {
 		let cmd = btn.cmd;
 		if(cmd == icl.B_CMD_ADD){
@@ -214,6 +213,8 @@ export default class appInfo extends Vue {
 				this.dsm.initContrlIndex();
 			}
 		});
+		
+		
 		
 		this.mbs.init(this.uriParam.pattr, this.dsm);
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
