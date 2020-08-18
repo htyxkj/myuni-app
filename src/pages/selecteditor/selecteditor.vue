@@ -17,7 +17,7 @@
 			<text class="cuIcon-search" @tap="query"></text>
 		</view>
 		<bip-select :arr="array" :show="isShow" @cancel="cancel" :index="index" @selectChange="selectChange" @select="selectOK" :showKey="'name'" :isStr="false"></bip-select>
-		<view style="margin-top: 2upx;"></view>
+		<view class="margin-top-xs"></view>
 		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
 		 @loadMore="loadMore" @refresh="refresh">
 		 <view slot="content-list">
@@ -50,7 +50,7 @@ export default class selecteditor extends Vue {
 	editName='';
 	methordName = '';
 	@Provide('bipInsAid') bipInsAid: BipInsAidNew = new BipInsAidNew('');//辅助对象
-	index = 0;//选中项默认是0
+	index = 1;//选中项默认是0
 	loading=false;//加载显示与否
 	pdList: Array<any> = []//数据列表
 	array: Array<any> = []//数据列表

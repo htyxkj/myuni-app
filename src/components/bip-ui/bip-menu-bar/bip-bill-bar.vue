@@ -1,8 +1,8 @@
 <template>
 	<view class="cu-bar tabbar bg-white shadow foot" style="z-index: 99999;">
-		<view v-if="(attr & 1) > 0 && addBtn" class="submit solids light bg-blue padding-sm" @click="tabSelect(addBtn)" data-id="ADD" :data-btn="addBtn" ><text class="bip-btn text-bold">添加</text></view>
-		<view v-if="(attr & 2) > 0 && saveBtn" class="submit solids light bg-cyan padding-sm" @click="tabSelect(saveBtn)" data-id="SAVE" :data-btn="saveBtn" ><text class="bip-btn text-bold">保存</text></view>
-		<template v-if="bottomData">
+		<view v-if="(attr & 1) == 1 && addBtn" class="submit solids light bg-blue padding-sm" @click="tabSelect(addBtn)" data-id="ADD" :data-btn="addBtn" ><text class="bip-btn text-bold">添加</text></view>
+		<view v-if="(attr & 2) == 2 && saveBtn" class="submit solids light bg-cyan padding-sm" @click="tabSelect(saveBtn)" data-id="SAVE" :data-btn="saveBtn" ><text class="bip-btn text-bold">保存</text></view>
+		<template v-if="bottomData&&bmore">
 			<view class="submit solids bip-btn padding-sm " @tap="open"><text class="cuIcon-settingsfill text-blue lg"></text>更多操作</view>
 			<uni-popup :show="showP" type="bottom" :custom="true" @change="change">
 				<!-- <bip-share :arrdata="bottomData" @close="close" @itemClick="itemClick"></bip-share> -->
@@ -38,6 +38,7 @@ export default class bipBillBar extends Vue {
 	tabcurColor: string = 'text-green';
 	@Prop({ default: '', type: String }) tbI!: string;
 	@Prop({ default: 1, type: Number }) attr!: number;
+	@Prop({ default: false, type: Boolean }) bmore!: number;
 	@Inject('mbs') mbs!: BipMenuBar;
 	showP: boolean = false;
 	bottomData: Array<any> = [];

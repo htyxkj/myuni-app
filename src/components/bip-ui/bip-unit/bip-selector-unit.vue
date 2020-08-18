@@ -1,11 +1,17 @@
 <template>
-	<view class="flex shadow bg-white cu-form-group solids-bottom">
-		<view v-for="itm in sindex" :key="itm" :class="itm==0?['flex-twice']:['flex-treble','text-cut']">
-			<template v-if="itm<2">
-				<text class="text-blue">{{labers[itm]}}：</text>{{item[cells[itm].id]}}
-			</template>
+	<view class="cu-form-group flex align-center margin-bottom-sm" @click="selectOK">
+		<view>
+			<view v-for="itm in sindex" :key="itm">
+				<template v-if="itm<2">
+					<view class="">
+						<text>{{labers[itm]}}：</text>{{item[cells[itm].id]}}
+					</view>
+				</template>
+			</view>
 		</view>
-		<button class="cu-btn bg-gray text-blue" @click="selectOK">选中</button>
+	<!-- 	<view class="flex-sub" style="margin-right: -84upx;">
+			<button class="cu-btn bg-gray text-blue" @click="selectOK">选中</button>
+		</view> -->
 	</view>
 </template>
 <script lang="ts">

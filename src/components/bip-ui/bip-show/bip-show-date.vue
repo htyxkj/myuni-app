@@ -4,7 +4,8 @@
 			<text>{{ cell.labelString }}：</text>
 		</view>
 		<view class="flex-sub text-cut text-bold">
-			<text>{{mode}}</text><text class="cuIcon-calendar" style="margin-left: 40upx;"></text>
+			<text>{{mode}}</text>
+			<!-- <text class="cuIcon-calendar" style="margin-left: 40upx;"></text> -->
 		</view>
 	</view>
 </template>

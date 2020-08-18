@@ -3,7 +3,7 @@
 		<view class="flex-sub">
 			<text>{{ cell.labelString }}：</text>
 		</view>
-		<view class="flex-sub text-cut text-bold">
+		<view class="flex-treble text-cut text-bold">
 			<text >{{mode}}</text>
 		</view>
 	</view>
@@ -21,7 +21,10 @@
 		@Prop() record!:any;
 		mode:string = ''
 		created(){
-			this.mode = this.record.data[this.cell.id]||''
+			this.$nextTick(()=>{
+				this.mode = this.record.data[this.cell.id]||''
+			});
+			
 		}
 	}
 </script>

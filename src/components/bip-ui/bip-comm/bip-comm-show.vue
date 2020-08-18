@@ -47,8 +47,9 @@ export default class bipCommShow extends Vue{
 	// editName='';
 	// bassist:boolean = false;
 	// mode:any = ''
-	// created(){	
-	// }	
+	created(){	
+		// console.log(this.cell,this.record)
+	}	
 }
 </script>
 

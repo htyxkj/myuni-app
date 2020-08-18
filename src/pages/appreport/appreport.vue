@@ -5,11 +5,14 @@
 			<block slot="content"><view class="header-title">{{ title }}</view></block>
 		</cu-custom>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
-		<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :showUpBtn="true" :down="downOption" :fixed="true" :top="260" :bottom="5" class="bg-white">
-			<view v-for="(item,index) in pdList" :key="index">
-				<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
-			</view>
-		</mescroll-uni>	
+		<template v-if="dsm&&dsm.ccells">
+			<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :showUpBtn="true" :down="downOption" :fixed="true" :top="260" :bottom="5" class="bg-white">
+				<view v-for="(item,index) in pdList" :key="index">
+					<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+				</view>
+			</mescroll-uni>	
+		</template>
+		
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 	</view>
 </template>
@@ -175,7 +178,7 @@ export default class appReport extends Vue {
 		this.cells = layCels;
 		this.dsm_cont = new CDataSet(this.cells[0]);
 		this.dsm = new CDataSet(this.cells[1]);
-		
+		console.log(this.dsm)
 		this.qe.pcell = this.dsm.ccells.obj_id;
 		this.qe.tcell = this.dsm_cont.ccells.obj_id;
 		this.qe.oprid = 13;

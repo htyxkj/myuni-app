@@ -3,7 +3,7 @@
 		<template v-if="label">
 			<view class="title">{{ cell.labelString }}</view>
 		</template>
-		<input type="text" v-model="modes" disabled="true"/>
+			<input type="text" v-model="modes" disabled="true"/>
 		<text class="text-progress text-bold cuIcon-tag"></text>
 	</view>
 </template>
@@ -30,7 +30,7 @@ export default class bipRefsCl extends Vue{
 	@Prop({type:Boolean,default:false}) label!:boolean;
 	@Prop({type:Number,default:-1}) rowId!:number;
 	@Inject('bipInsAid') bipInsAid!:BipInsAidNew;
-	mode:string = '';
+	mode:string = '0';
 	showValue:string = '';
 	cds:CDataSet = new CDataSet(null)
 	created(){
@@ -60,26 +60,35 @@ export default class bipRefsCl extends Vue{
 	
 	@Watch('record')
 	recordChange(){
-		this.$nextTick(()=>{
-			let rr = this.record.data[this.cell.id];
-			if(rr !== this.mode){
-				this.mode = rr||''
+		console.log(Object.keys(this.record.data).length)
+		if(Object.keys(this.record.data).length>0){
+			this.$nextTick(()=>{
+				let rr = this.record.data[this.cell.id];
+				console.log(rr,this.mode,this.record,'recordChange')
+				this.mode = rr;
 				this.makeCLshow();
-			}
-		})
-		
+				// if(rr !== this.mode){
+				// 	this.mode = rr||''
+				// 	this.makeCLshow();
+				// }
+			})
+		}
 	}
 	
 	makeCLshow(){
-		if(this.mode !== '' &&this.bipInsAid.values){
-			let idx = this.bipInsAid.values.findIndex((item:any)=>{
-				return item[this.bipInsAid.cells.cels[0].id]+'' === this.mode+'';
-			})
-			if(idx>-1){
-				let item = this.bipInsAid.values[idx];
-				this.showValue = item[this.bipInsAid.cells.cels[1].id];
+		if(Object.keys(this.record.data).length>0){
+			if(this.mode !== '' &&this.bipInsAid.values){
+				let idx = this.bipInsAid.values.findIndex((item:any)=>{
+					let k1 = item[this.bipInsAid.cells.cels[0].id];
+					return k1 == this.mode;
+				})
+				if(idx>-1){
+					let item = this.bipInsAid.values[idx];
+					this.showValue = item[this.bipInsAid.cells.cels[1].id];
+				}
 			}
 		}
+		
 	}	
 }
 </script>

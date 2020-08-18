@@ -1,9 +1,9 @@
 <template>
 	<view class="margin-bottom-sm">
 		<view class="cu-bar bg-white solid-bottom" @tap.stop="openlist">
-			<view class="action">
+			<view class="action" v-if="pkList.length>0">
 				<text class="cuIcon-titles text-red"></text>
-				<text>{{pkList[0].labelString}}：{{record.data[pkList[0].id]||''}}</text>
+				<text class="text-bold">{{pkList[0].labelString}}：{{record.data[pkList[0].id]||''}}</text>
 			</view>
 		</view>
 		<view class="flex p-xs bg-white mb-sm" v-for="(item,index) in celsRowList" :key="index" @tap.stop="openlist">
@@ -30,6 +30,9 @@ export default class bipListUnit2 extends Vue {
 	@Prop() record!:any;
 	@Prop({type:Boolean,default:true}) showList!:boolean;
 	
+	mounted(){
+		// console.log(this.record)
+	}
 	openlist(){
 		this.$emit('openitem',this.rowId);
 	}
@@ -54,7 +57,8 @@ export default class bipListUnit2 extends Vue {
 	get pkList(){
 		return this.cels.filter((item:any)=>{
 			return item.isShow&&(item.attr&1)>0;
-		})
+		})||[]
+		
 	}
 
 	get celsRowList(){
@@ -94,6 +98,7 @@ export default class bipListUnit2 extends Vue {
 				}
 			}
 		}
+		// console.log(celsRowList,this.sList)
 		return celsRowList;
 	}
 

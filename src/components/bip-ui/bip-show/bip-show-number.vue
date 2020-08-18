@@ -1,7 +1,7 @@
 <template>
 	<view class="flex text-cut justify-between" :style="'width:100%'">
-		<text class="text-green">{{ cell.labelString }}：</text>
-		<text>{{mode}}</text>
+		<text class="text-green flex-sub">{{ cell.labelString }}：</text>
+		<text class="flex-twice">{{mode}}</text>
 	</view>
 </template>
 
