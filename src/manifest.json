@@ -74,9 +74,10 @@
             "https" : false
         },
         "router" : {
-            "base" : "/bip-mine/webMobile/"
+            "base" : "/bip-erp/webMobileNew/",
+            "mode" : "history"
         },
         "title" : "BIP",
-        "domain" : "https://test.juminfuwu.cn/bip-mine/webMobile"
+        "domain" : "http://120.79.16.71:8081/bip-erp/webMobileNew"
     }
 }

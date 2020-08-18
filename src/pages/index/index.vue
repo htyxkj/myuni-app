@@ -1,31 +1,29 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink" :isBack="false">
-			<!-- <block slot="backText">返回</block> -->
-			<block slot="content"><view class="header-title">{{title}}</view></block>
-		</cu-custom>
-		<template v-if="loginState">
-			<template v-if="tabcur==-1">
-				<customize :menu="menubarr"></customize>
+		<view  v-if="loginState">
+			<cu-custom bgColor="bg-gradual-pink" :isBack="false">
+				<block slot="content"><view class="header-title">{{title}}</view></block>
+			</cu-custom>
+			<template>
+				<template v-if="tabcur==-1">
+					<customize :menu="menubarr"></customize>
+				</template>
+				<template v-else-if="tabcur==0">
+					<home ></home>
+				</template>
+				<template v-else-if="tabcur==1">
+					<menuPage></menuPage>
+				</template>
+				<template v-else-if="tabcur==2">
+					<bip-task></bip-task>
+				</template>
+				<template v-else>
+					<my></my>
+				</template>
+				<!-- <message v-if="tabcur==2"></message> -->
 			</template>
-			<template v-else-if="tabcur==0">
-				<home ></home>
-			</template>
-			<template v-else-if="tabcur==1">
-				<menuPage></menuPage>
-			</template>
-			<template v-else-if="tabcur==2">
-				<bip-task></bip-task>
-			</template>
-			<template v-else>
-				<my></my>
-			</template>
-			<!-- <message v-if="tabcur==2"></message> -->
-			
-			
-			
-		</template>
-		<mIndexBar v-if="loginState" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
+			<mIndexBar v-if="loginState" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
+		</view>
 	</view>
 </template>
 
@@ -60,15 +58,11 @@
 
 		olOption:any = null;
 		onLoad(options:any) {
-			singIn.ServApi.init(options,this.init);
+			singIn.ServApi.init(options,this.loginOk,this.loginFailure);
 			this.olOption = options
 		}
-		init(){
-			console.log('登录状态：',LoginModule.loginState)
-			if(!this.loginState){
-				uni.reLaunch({'url':'/pages/login/login'})
-				return;
-			}
+		//登录成功
+		loginOk(){
 			if(commURL.ItemType == 'mine'){
 				uni.redirectTo({
 					'url': '/pages/alone/mine/index/index'
@@ -79,6 +73,13 @@
 				this.tabcur = this.olOption.tabcur;
 			}
 			this.title = this.makeTitle(this.tabcur)
+		}
+		//登录失败
+		loginFailure(){
+			if(!this.loginState){
+				uni.reLaunch({'url':'/pages/login/login'})
+				return;
+			}
 		}
 		
 		tabSelect(e:any){

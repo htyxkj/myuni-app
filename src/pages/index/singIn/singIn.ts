@@ -1,13 +1,9 @@
 let dd = require( 'dingtalk-jsapi');
-import {Vue,Provide,Component} from 'vue-property-decorator';
 import User from '@/classes/User';
 import Menu from '@/classes/Menu';
-import comm from '@/static/js/comm.js';
-let commURL: any = comm;
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
 import { LoginModule } from '@/store/module/login'; //导入vuex模块，自动注入
-import { isFunction } from 'xe-utils/methods';
 
 export namespace singIn {
 	class ServerUtils {
@@ -16,22 +12,28 @@ export namespace singIn {
 		corpId:string="";  //企业唯一码  
 		appId:string="";   //默认00
 		agentId:string="";//应用id
-		retMethod:any = null;
+		loginOk:any = null;//登录成功回调方法
+		loginFailure:any = null;//登录失败回调方法
 		//第三方单点登录
-		async init(route:any,retm:any){
-			this.retMethod = retm;
+		async init(route:any,loginOk:any,loginFailure:any){
+			console.log("第三方单点登录")
+			this.loginOk = loginOk;
+			this.loginFailure = loginFailure;
 			this.route = route;
             if(this.route.jumpRoute)
 				this.jumpRoute = this.route.jumpRoute;
-            if (dd.env.platform !="notInDingTalk") {//钉钉内
+			if (dd.env.platform !="notInDingTalk") {//钉钉内
+				console.log("钉钉单点登录")
                 await this.loginDD();
                 return;
-            }
+            }else{
+				this.loginFailure();
+			}
 		}
 		//钉钉内免密登录
 		async loginDD(){
 			//禁用iOS Webview弹性效果
-            dd.ui.webViewBounce.disable({onSuccess: function() {},onFail: function() {}});
+            // dd.ui.webViewBounce.disable({onSuccess: function() {},onFail: function() {}});
             if(this.loginState){
                 console.log("已登录状态！")
             }else{
@@ -85,13 +87,16 @@ export namespace singIn {
 					LoginModule.setMenus(ms);
 					LoginModule.setSnKey(data.data.snkey)
 					uni.setStorageSync('isLogin',true);
+					this.loginOk();
 				}else{
 					uni.showToast({
 						title: res.data.message,
 						icon:"none"
 					})
+					setTimeout(() => {
+						this.loginFailure()	
+					}, 700);
 				}
-				// this.retMethod();
             }catch(e){
 				uni.showToast({
 					title: '系统连接错误！！！',
