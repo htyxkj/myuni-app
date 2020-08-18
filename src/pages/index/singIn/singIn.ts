@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 let  dd =require('dingtalk-jsapi');
+=======
+let dd = require( 'dingtalk-jsapi');
+>>>>>>> c08db9e0c4107853e059d2c1aa8a596ea58c0885
 import {Vue,Provide,Component} from 'vue-property-decorator';
 import User from '@/classes/User';
 import Menu from '@/classes/Menu';
@@ -16,8 +20,10 @@ export namespace singIn {
 		corpId:string="";  //企业唯一码  
 		appId:string="";   //默认00
 		agentId:string="";//应用id
+		retMethod:any = null;
 		//第三方单点登录
-		async init(route:any){
+		async init(route:any,retm:any){
+			this.retMethod = retm;
 			this.route = route;
             if(this.route.jumpRoute)
 				this.jumpRoute = this.route.jumpRoute;
@@ -82,12 +88,14 @@ export namespace singIn {
 					LoginModule.setState(true)
 					LoginModule.setMenus(ms);
 					LoginModule.setSnKey(data.data.snkey)
+					uni.setStorageSync('isLogin',true);
 				}else{
 					uni.showToast({
 						title: res.data.message,
 						icon:"none"
 					})
 				}
+				// this.retMethod();
             }catch(e){
 				uni.showToast({
 					title: '系统连接错误！！！',
