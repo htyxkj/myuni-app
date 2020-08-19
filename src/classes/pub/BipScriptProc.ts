@@ -17,7 +17,9 @@ export default class BipScriptProc {
   }
 
   executea(ogs: string | Array<string>, flag: string, cell: Cell): any {
-    if (!ogs) return null;
+    if (!ogs){
+		return null;
+	}
     if (typeof ogs === "string") {
       let s0: any = ogs;
       let c0 = s0.charAt(0);

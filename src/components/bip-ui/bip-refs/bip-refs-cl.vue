@@ -37,8 +37,6 @@ export default class bipRefsCl extends Vue{
 		this.$nextTick(()=>{
 			this.cds = this.env.getDataSet(this.obj_id);
 			this.mode = this.record.data[this.cell.id];
-			let mkey = this.obj_id+"_"+this.cell.id
-			uni.$on(mkey,this.cellDataChange);
 			this.makeCLshow();
 		})
 	}
@@ -58,19 +56,13 @@ export default class bipRefsCl extends Vue{
 	
 	
 	
-	@Watch('record')
+	@Watch('record',{deep:true})
 	recordChange(){
-		console.log(Object.keys(this.record.data).length)
 		if(Object.keys(this.record.data).length>0){
 			this.$nextTick(()=>{
 				let rr = this.record.data[this.cell.id];
-				console.log(rr,this.mode,this.record,'recordChange')
 				this.mode = rr;
 				this.makeCLshow();
-				// if(rr !== this.mode){
-				// 	this.mode = rr||''
-				// 	this.makeCLshow();
-				// }
 			})
 		}
 	}

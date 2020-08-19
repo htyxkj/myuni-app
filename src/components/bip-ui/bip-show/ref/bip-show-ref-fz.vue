@@ -44,17 +44,17 @@
 				}
 			}
 			
-			let mid = this.obj_id+"_row_"+this.rowId;
-			uni.$on(mid,()=>{this.cellRowChange()});
+			// let mid = this.obj_id+"_row_"+this.rowId;
+			// uni.$on(mid,()=>{this.cellRowChange()});
 		}
-		beforDestory(){
-			let mid = this.obj_id+"_row_"+this.rowId;
-			uni.$off(mid,()=>{this.cellRowChange()});
-		}
-		
-		cellRowChange(){
-			this.recordChange();
-		}
+		// beforDestory(){
+		// 	let mid = this.obj_id+"_row_"+this.rowId;
+		// 	uni.$off(mid,()=>{this.cellRowChange()});
+		// }
+		// @Watch('record',{deep:true})
+		// cellRowChange(){
+		// 	this.recordChange();
+		// }
 		
 		get aidValues(){
 			return InsAidModule.aidValues;
@@ -79,10 +79,12 @@
 			}
 		}
 		
-		@Watch('record')
+		@Watch('record',{deep:true})
 		recordChange(){
 			let rr = this.record.data[this.cell.id];
 			if(rr !== this.mode){
+				this.mode = this.record.data[this.cell.id]||''
+				this.showValue = this.mode;
 				this.makeRefshow()
 			}
 		}

@@ -13,6 +13,8 @@
 	import CDataSet from '@/classes/pub/CDataSet';
 	import CRecord from '@/classes/pub/CRecord';
 	import CCliEnv from '@/classes/cenv/CCliEnv'
+	import { dataTool } from '@/classes/tools/DataTools';
+	const DataUtil = dataTool.utils;
 	@Component({})
 	export default class bipInput extends Vue{
 		@Inject('env') env!:CCliEnv;
@@ -47,6 +49,7 @@
 				if(this.mode != this.record.data[this.cell.id]){
 					this.mode = this.formatNumber(this.mode);
 					this.cds.cellChange(this.mode,this.cell.id);
+					DataUtil.checkGS(this.cds,this.env,this.cell);
 				}
 			})
 			
@@ -72,6 +75,7 @@
 		cellDataChange(){
 			console.log('监听值变化');
 			this.recordChange();
+			// DataUtil.checkGS(this.cds,this.env,this.cell)
 		}
 		
 		get editable(){
@@ -81,7 +85,7 @@
 		
 		
 		
-		@Watch('record')
+		@Watch('record',{deep:true})
 		recordChange(){
 			// console.log('recordchang')
 			this.$nextTick(()=>{
