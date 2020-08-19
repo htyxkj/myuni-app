@@ -30,8 +30,8 @@
 			}
 			
 			this.showValue = this.mode;
-			let mkey = this.obj_id+"_"+this.cell.id
-			uni.$on(mkey,()=>{this.cellDataChange()});
+			// let mkey = this.obj_id+"_"+this.cell.id
+			// uni.$on(mkey,()=>{this.cellDataChange()});
 			this.makeCLshow();
 			
 			let mid = this.obj_id+"_row_"+this.rowId;
@@ -40,10 +40,7 @@
 			// console.log(this.mode,this.showValue);
 		}
 		
-		beforDestory(){
-			let mid = this.obj_id+"_row_"+this.rowId;
-			uni.$off(mid,()=>{this.cellRowChange()});
-		}
+		@Watch('record',{deep:true})
 		cellRowChange(){
 			if(this.cell.type<12){
 				this.mode = this.record.data[this.cell.id]||0

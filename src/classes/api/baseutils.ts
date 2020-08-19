@@ -395,10 +395,21 @@ export namespace baseUtils {
 		 * @param ysf
 		 */
 		calcTwoValue(o0: any, o1: any, ysf: string) {
+			debugger
 			if (ysf == '+' || ysf == '|') {
-				if (o0 == null) return o1;
-				if (o1 == null) return o0;
-				if (ysf == '+' && !(o0 instanceof Date) && (!(o0 instanceof Number) || !(o1 instanceof Number))) return o0 + '' + o1;
+				if (o0 == null) {
+					return o1;
+				}
+				if (o1 == null) {
+					return o0;
+				}
+				
+				if (ysf == '+') {
+					let bs0 = typeof o0 === "string";
+					let bs1 = typeof o1 === "string";
+					if(bs0||bs1)
+						return o0 + '' + o1;
+				}
 			}
 			return this.calcTwoObject(o0, o1, ysf, 0);
 		}

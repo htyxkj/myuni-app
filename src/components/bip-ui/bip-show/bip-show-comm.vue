@@ -25,21 +25,24 @@
 		created(){
 			this.$nextTick(()=>{
 				this.cellRowChange();
-				let mid = this.obj_id+"_row_"+this.rowId;
-				// uni.$off(mid);
-				uni.$on(mid,()=>{this.cellRowChange()});
+				// let mid = this.obj_id+"_row_"+this.rowId;
+				// // uni.$off(mid);
+				// uni.$on(mid,()=>{this.cellRowChange()});
 			})
 			
 		}
 		
-		beforDestory(){
-			let mid = this.obj_id+"_row_"+this.rowId;
-			uni.$off(mid,()=>{this.cellRowChange()});
-		}
+		// beforDestory(){
+		// 	let mid = this.obj_id+"_row_"+this.rowId;
+		// 	uni.$off(mid,()=>{this.cellRowChange()});
+		// }
 		
+		@Watch('record',{deep:true})
 		cellRowChange(){
 			this.mode = this.record.data[this.cell.id]||''
 		}
+		
+		
 	}
 </script>
 

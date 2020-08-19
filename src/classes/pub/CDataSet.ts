@@ -8,6 +8,9 @@ import Cell from './coob/Cell';
 import CeaPars from '../cenv/CeaPars';
 import { baseUtils } from '@/classes/api/baseutils'
 let tools = baseUtils.tools;
+import BipScriptProc from "./BipScriptProc";
+import { GlobalVariable } from "../tools/ICL";
+import { DateUtils } from "../tools/DateUtils";
 export default class CDataSet {
 	ccells: Cells;
 	cdata: CData;
@@ -36,13 +39,13 @@ export default class CDataSet {
 	hjList: Array<string> = [];
 	ceaPars?:CeaPars;//审批流信息
 	// baseI?: BaseI;
-
+	scriptProc: BipScriptProc;
 	constructor(_cells: any) {
 		this.ccells = _cells;
 		this.cdata = new CData('');
 		this.page = new PageInfo(1, 10);
 		this.index = -1;
-		// this.scriptProc = new BipScriptProc(this.currRecord, this.ccells);
+		this.scriptProc = new BipScriptProc(this.currRecord, this.ccells);
 		this.x_pk = this.indexPKID(this.ccells, true, true);
 		if (_cells) {
 			let pcell = this.ccells.obj_id;
@@ -144,6 +147,7 @@ export default class CDataSet {
 		}
 		this.cdata.data.push(cr);
 		this.currRecord = cr;
+		this.scriptProc.data = this.currRecord;
 		this.index = this.cdata.size()-1;
 		if(cr.subs){
 			cr.subs.forEach((cdata:CData)=>{
@@ -359,7 +363,7 @@ export default class CDataSet {
 	isPosted(): boolean {
 		let bpost = true;
 		if ((this.currRecord.c_state & 1) > 0 || (this.currRecord.c_state & 2) > 0)
-		  bpost = false;
+			bpost = false;
 		return bpost;
 	}
 }

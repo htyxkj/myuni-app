@@ -9,6 +9,7 @@ import Dept from '@/classes/Dept';
 import { GlobalVariable } from './ICL'; //常量类
 import { DateUtils } from './DateUtils';
 import CData from '../pub/CData';
+import BipScriptProc from "../pub/BipScriptProc";
 let DateTool = DateUtils.DateTool;
 let _ = require('lodash');
 export namespace dataTool {
@@ -36,6 +37,7 @@ export namespace dataTool {
 	class DSTool {
 		private _cds: CDataSet = new CDataSet(null);
 		private _env: CCliEnv = new CCliEnv();
+		
 		createRecord(cds: CDataSet, env: CCliEnv): CRecord {
 			this._cds = cds;
 			this._env = env;
@@ -290,10 +292,9 @@ export namespace dataTool {
 					cd0.currRecord.subs.push(cds.cdata);
 				}
 				let st = cd0.currRecord.c_state;
-				console.log(cd0.currRecord)
 				cd0.currRecord.c_state = st|billState.EDITSUB;
 			}
-			
+			this.checkGS(cds,env)
 		}
 		/**
 		 *  @description 删除数据集中的某一条记录
@@ -312,6 +313,166 @@ export namespace dataTool {
 				}
 				
 			}
+		}
+		
+		async checkAllGS(cds:CDataSet,env:CCliEnv) {
+		    if(!cds.currRecord){
+				return
+		    }
+		    if (Object.keys(cds.currRecord.data).length === 0) {
+				return;
+		    }
+		    for(let i=0;i<cds.ccells.cels.length;i++){
+				let col = cds.ccells.cels[i];
+				let scstr = col.script;
+				if (scstr && scstr.indexOf("=:") === 0) {
+					scstr = scstr.replace("=:", "");
+					// 公式计算 
+					let vl;
+					// console.log(cds.ds_par,cds.ds_par.currRecord)
+					//获取父级字段内容
+					if(col.pRefIds.length >0){
+						if(cds.ds_par){
+							let cdm = env.getDataSet(cds.ds_par);
+							vl= cdm.currRecord.data[col.pRefIds[0]]
+						}
+					} else{
+						if(cds.scriptProc.data.id != cds.currRecord.id){
+							cds.scriptProc = new BipScriptProc(cds.currRecord, cds.ccells);
+						}
+						vl = await cds.scriptProc.execute(scstr, "", col);
+						if(vl && (vl.isNaN || vl == 'NaN'))
+							vl = 0;
+					}
+					if (vl instanceof Array) {
+						
+					} else {
+						if (vl == "Invalid date") {
+							let dd = DateUtils.DateTool.now();
+							if (col.type == 91) {
+								cds.currRecord.data[col.id] = DateUtils.DateTool.getDate(dd,GlobalVariable.DATE_FMT_YMD);
+							} else {
+								cds.currRecord.data[col.id] = dd;
+							}
+						} else {
+							cds.currRecord.data[col.id] = vl;
+						}
+					}
+				}
+				if (scstr) {
+					if (col.initValue && (col.attr & 0x80) > 0) {
+						if (col.initValue.indexOf("%") > 0) {
+							let scval = "%";
+							if (cds.currRecord.data[scstr]) {
+								scval = cds.currRecord.data[scstr];
+							}
+							let vl = col.initValue.replace("%", scval);
+							cds.currRecord.data[col.id] = vl;
+						}
+					}
+				}
+		    }
+		}
+	
+	
+		async checkGS(cds:CDataSet,env:CCliEnv,cell:any = null) {
+		    if(cell){
+		        let id = cell.id
+		        for(var i=0;i<cds.ccells.cels.length;i++){
+		            let col = cds.ccells.cels[i];
+		            let scstr = col.script;
+		            if(scstr){
+		                let _i = col.refCellIds.findIndex(item=>{
+		                    return item == id
+		                });
+		                let vl;
+		                if(_i>-1){
+		                    if(scstr && scstr.indexOf("=:") === 0) {
+		                        scstr = scstr.replace("=:", "");
+		                        //获取父级字段内容
+								if(scstr.indexOf("##")>-1){
+									scstr = scstr.substr(0,scstr.indexOf("##"));
+								}
+		                        if(col.pRefIds.length >0){
+									if(cds.ds_par){
+										let dsm = env.getDataSet(cds.ds_par);
+										vl= dsm.currRecord.data[col.pRefIds[0]]
+									}
+		                        } else{
+									if(cds.scriptProc.data.id != cds.currRecord.id){
+										cds.scriptProc = new BipScriptProc(cds.currRecord, cds.ccells);
+									}
+									vl = await cds.scriptProc.execute(scstr, "", col);
+									console.log(scstr,vl,'utils');
+									if(vl && (vl.isNaN || vl == 'NaN')){
+										vl = 0;
+									}
+								}
+								if (vl instanceof Array) {
+									console.log('公式计算返回数组',vl)
+								} else {
+									if (vl == "Invalid date") {
+										let dd = DateUtils.DateTool.now();
+										if (col.type == 91) {
+											cds.currRecord.data[col.id] = DateUtils.DateTool.getDate(dd, GlobalVariable.DATE_FMT_YMD);
+										} else {
+											cds.currRecord.data[col.id] = dd;
+										}
+									} else {
+										cds.currRecord.data[col.id] = vl;
+									}
+								}
+							}
+							if ((col.initValue && (col.attr & 0x80) > 0) &&  (cds.currRecord.c_state & 1)>0) {
+								this.incCalc(cds.ccells,cds.currRecord);
+							}
+							if((col.attr & 0x2000) >0){
+								cds.cellChange(vl,col.id);
+							}
+							this.checkGS(cds,env,col)
+		                }
+		            }
+		        }
+		        for(var i=0;i<cds.ds_sub.length;i++){
+					let cd = cds.ds_sub[i];
+					this.checkGSByRefId(id,cd,env);
+		        }
+		    }else{
+		        this.checkAllGS(cds,env)
+		    }
+		}
+		
+		checkGSByRefId(id:string,cds:CDataSet,env:CCliEnv){
+		    if(cds.cdata && cds.cdata.data && cds.cdata.data.length>0){
+				cds.ccells.cels.forEach((col:any) => {
+					let scstr = col.script;
+					if (scstr && scstr.indexOf("=:") === 0) {
+						scstr = scstr.replace("=:", "");
+						// 公式计算 
+						let vl;
+						//获取父级字段内容
+						if(col.pRefIds.length >0){
+							if(cds.ds_par){
+								if(col.pRefIds[0] == id){
+									let dsm = env.getDataSet(cds.ds_par);
+									vl= dsm.currRecord.data[col.pRefIds[0]]
+									let currRecord = cds.currRecord;
+									for(let j=0;j<cds.cdata.data.length;j++){
+										cds.currRecord = cds.cdata.data[j];
+										cds.currRecord.data[col.id] = vl;
+										this.checkGS(cds,env,col);
+										if(cds.currRecord.id == currRecord.id){
+											currRecord = cds.currRecord;
+										}
+										cds.currRecord.c_state |=2;
+									}
+									cds.currRecord = currRecord;
+								}
+							}
+						}
+					}  
+				});
+		    }
 		}
 	}
 
