@@ -55,6 +55,11 @@
 			})
 		}
 		
+		beforDestory(){
+			let mkey = this.obj_id+"_"+this.cell.id
+			uni.$off(mkey,this.cellDataChange)
+		}
+		
 		dataChange(e:any){
 			this.$nextTick(()=>{
 				if(this.mode != this.record.data[this.cell.id])

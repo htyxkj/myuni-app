@@ -45,8 +45,11 @@
 			}
 			
 			let mid = this.obj_id+"_row_"+this.rowId;
-			// uni.$off(mid);
 			uni.$on(mid,()=>{this.cellRowChange()});
+		}
+		beforDestory(){
+			let mid = this.obj_id+"_row_"+this.rowId;
+			uni.$off(mid,()=>{this.cellRowChange()});
 		}
 		
 		cellRowChange(){

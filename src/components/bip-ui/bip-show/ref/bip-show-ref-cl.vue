@@ -39,6 +39,11 @@
 			uni.$on(mid,()=>{this.cellRowChange()});
 			// console.log(this.mode,this.showValue);
 		}
+		
+		beforDestory(){
+			let mid = this.obj_id+"_row_"+this.rowId;
+			uni.$off(mid,()=>{this.cellRowChange()});
+		}
 		cellRowChange(){
 			if(this.cell.type<12){
 				this.mode = this.record.data[this.cell.id]||0

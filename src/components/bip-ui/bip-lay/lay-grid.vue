@@ -70,13 +70,13 @@ export default class layGrid extends Vue {
 	}
 	
 	editRow(rid:number,obj_id:string){
-		console.log('editRow',rid)
+		// console.log('editRow',rid)
 		this.cds.index = rid;
 		this.cds.currRecord = this.cds.getRecord(rid);
 		EnvModule.setEnvInf(this.env);
 		EnvModule.setLay(this.laycell);
-		uni.$off('editRowOK')
-		uni.$on('editRowOK',this.okRow)
+		uni.$off('editRowOK',this.okRow);
+		uni.$on('editRowOK',this.okRow);
 		uni.navigateTo({url:'/pages/editunit/editunit?id='+obj_id+'&rid='+rid});
 		
 	}
@@ -84,12 +84,12 @@ export default class layGrid extends Vue {
 	okRow(crd:any){
 		// console.log(crd,'laygrade')
 		this.cds.currRecord = crd;
-		console.log(this.cds)
+		// console.log(this.cds)
 		let mName = this.cds.ccells.obj_id;
 		let index = this.cds.index>-1?this.cds.index:0;
 		let invokeName = mName+"_row_"+index;
 		uni.$emit(invokeName,crd);
-		console.log()
+		// console.log()
 	}
 	
 	delRow(rid:number,obj_id:string){

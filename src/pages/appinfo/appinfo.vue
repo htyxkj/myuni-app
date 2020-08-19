@@ -144,7 +144,7 @@ export default class appInfo extends Vue {
 		}
 		let cr = this.dsm.currRecord;
 		tools
-			.saveData(cr, this.uriParam.pcell, this.uriParam.pbuid)
+			.saveData(cr, this.uriParam.pcell, this.uriParam.pflow)
 			.then((res: any) => {
 				console.log(res);
 				let rtn = res.data;

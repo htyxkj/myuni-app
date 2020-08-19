@@ -1,9 +1,9 @@
 <template>
 	<view class="cu-bar tabbar bg-white shadow foot" style="z-index: 99999;">
-		<view v-if="(attr & 1) == 1 && addBtn" class="submit solids light bg-blue padding-sm" @click="tabSelect(addBtn)" data-id="ADD" :data-btn="addBtn" ><text class="bip-btn text-bold">添加</text></view>
-		<view v-if="(attr & 2) == 2 && saveBtn" class="submit solids light bg-cyan padding-sm" @click="tabSelect(saveBtn)" data-id="SAVE" :data-btn="saveBtn" ><text class="bip-btn text-bold">保存</text></view>
+		<view v-if="(attr & 1) == 1 && addBtn" class="submit bg-blue margin-sm" @click="tabSelect(addBtn)" data-id="ADD" :data-btn="addBtn" ><text>添加</text></view>
+		<view v-if="(attr & 2) == 2 && saveBtn" class="submit bg-green margin-sm" @click="tabSelect(saveBtn)" data-id="SAVE" :data-btn="saveBtn" ><text>保存</text></view>
 		<template v-if="bottomData&&bmore">
-			<view class="submit solids bip-btn padding-sm " @tap="open"><text class="cuIcon-settingsfill text-blue lg"></text>更多操作</view>
+			<view class="submit margin-sm" @tap="open"><text class="cuIcon-settingsfill text-blue lg"></text>更多操作</view>
 			<uni-popup :show="showP" type="bottom" :custom="true" @change="change">
 				<!-- <bip-share :arrdata="bottomData" @close="close" @itemClick="itemClick"></bip-share> -->
 				<view class="cu-list grid col-4 border bg-white">

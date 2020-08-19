@@ -32,6 +32,11 @@
 			
 		}
 		
+		beforDestory(){
+			let mid = this.obj_id+"_row_"+this.rowId;
+			uni.$off(mid,()=>{this.cellRowChange()});
+		}
+		
 		cellRowChange(){
 			this.mode = this.record.data[this.cell.id]||''
 		}

@@ -27,6 +27,11 @@
 			})
 		}
 		
+		beforDestory(){
+			let mid = this.obj_id+"_row_"+this.rowId;
+			uni.$off(mid,()=>{this.cellRowChange()});
+		}
+		
 		cellRowChange(){
 			// console.log(this.cell.id)
 			this.mode = this.formatNumber(this.record.data[this.cell.id]||'');

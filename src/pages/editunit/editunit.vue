@@ -50,8 +50,8 @@
 		}
 		
 		editOK(){
-			console.log(this.cds.currRecord,this.cds);
-			console.log(this.env);
+			// console.log(this.cds.currRecord,this.cds);
+			// console.log(this.env);
 			uni.$emit('editRowOK',this.cds.currRecord);
 			uni.navigateBack({delta:1})
 		}

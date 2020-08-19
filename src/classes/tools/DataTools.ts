@@ -10,6 +10,7 @@ import { GlobalVariable } from './ICL'; //常量类
 import { DateUtils } from './DateUtils';
 import CData from '../pub/CData';
 let DateTool = DateUtils.DateTool;
+let _ = require('lodash');
 export namespace dataTool {
 	/**
 	 * 数据状态类
@@ -268,15 +269,31 @@ export namespace dataTool {
 		 *  @
 		 */
 		addRecord(cr:CRecord,cds:CDataSet,env:CCliEnv){
+			cds.addRecord(cr);
 			if(cds.ds_par){
 				let cd0 = env.getDataSet(cds.ds_par);
 				if(cd0.size()==0){
 					let cr0 = this.createRecord(cd0,env);
 					cd0.addRecord(cr0);
 				}
-				cd0.currRecord.subs.push(cr);
+				let subs = cd0.currRecord.subs||[];
+				if(subs.length>0){
+					let _i = _.findIndex(subs,(item:any)=>{
+						return item.obj_id = cds.p_cell;
+					})
+					if(_i>-1){
+						cd0.currRecord.subs[_i] = cds.cdata;
+					}else{
+						cd0.currRecord.subs.push(cds.cdata);
+					}
+				}else{
+					cd0.currRecord.subs.push(cds.cdata);
+				}
+				let st = cd0.currRecord.c_state;
+				console.log(cd0.currRecord)
+				cd0.currRecord.c_state = st|billState.EDITSUB;
 			}
-			cds.addRecord(cr);
+			
 		}
 		/**
 		 *  @description 删除数据集中的某一条记录
