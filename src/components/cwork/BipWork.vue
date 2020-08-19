@@ -1,11 +1,11 @@
 <template>
     <div>
-        <view class="cu-modal" :class="centerDialogVisible?'show':''">
+        <view class="cu-modal" style="z-index:9999" :class="centerDialogVisible?'show':''">
 			<view class="cu-dialog">
                 <template v-if="!bchked && isReview">
                     <view class="cu-bar bg-white justify-end">
                         <view class="content">审批意见</view>
-                        <view class="action" @tap="hideModal">
+                        <view class="action" @tap="centerDialogVisible = false">
                             <text class="cuIcon-close text-red"></text>
                         </view>
                     </view>
@@ -16,158 +16,87 @@
                     </view>
                 </template>
                 <template v-else>
-                    <template v-if="!isReview">
-                        <template v-if="this.cea && this.cea.statefr =='6'  && this.cea.stateto =='6' ">
-                            <view class="bip-work-title"><h4>执行</h4></view>
-                        </template>
-                        <template v-else>
-                            <view class="bip-work-title"><h3>审批人员</h3></view>
-                            <template v-if="chkInfos">
-                                <view v-if="chkInfos.currState.hq">
-                                    <view>
-                                        <template v-for="cnodes in chkInfos.currState.cnodes">
-                                            <view v-for="user in cnodes.users" :key="user.userName">{{user.userName}}</view>
-                                        </template>
-                                        <template v-for="cnodes in chkInfos.currState.cnodes">
-                                            <view v-for="user in cnodes.userssh" :key="user.userName">{{user.userName}}  √</view>
-                                        </template>
+                    <view class="cu-bar bg-white justify-end">
+                        <view class="content">{{title}}</view>
+                        <view class="action" @tap="centerDialogVisible = false">
+                            <text class="cuIcon-close text-red"></text>
+                        </view>
+                    </view>
+                    <view class="bip-work">
+                        <template v-if="!isReview">
+                            <template v-if="this.cea && this.cea.statefr =='6'  && this.cea.stateto =='6' ">
+                                <view class="bip-work-title"><h4>执行</h4></view>
+                            </template>
+                            <template v-else>
+                                <view class="bip-work-title"><h3>审批人员</h3></view>
+                                <template v-if="chkInfos">
+                                    <view v-if="chkInfos.currState.hq" class="bip-select-list" >
+                                        <view>
+                                            <template v-for="cnodes in chkInfos.currState.cnodes">
+                                                <view v-for="user in cnodes.users" :key="user.userName">{{user.userName}}</view>
+                                            </template>
+                                            <template v-for="cnodes in chkInfos.currState.cnodes">
+                                                <view v-for="user in cnodes.userssh" :key="user.userName">{{user.userName}}  √</view>
+                                            </template>
+                                        </view>
                                     </view>
-                                </view>
-                                <view v-if="!chkInfos.currState.hq">
-                                    <view  v-for="user in chkInfos.currState.users" :key="user.userName">{{user.userName}}</view>
-                                </view>
+                                    <view v-if="!chkInfos.currState.hq" class="bip-select-list" >
+                                        <view  v-for="user in chkInfos.currState.users" :key="user.userName">{{user.userName}}</view>
+                                    </view>
+                                </template>
                             </template>
                         </template>
-                    </template>
-                    <template v-else>
-                        <view class="bip-work-title"><h3>审批节点</h3></view>
-                        <view class="bip-select-list">
-                            <el-select v-model="stateId" placeholder="请选择" size="small" @change="selectChange">
-                                <el-option
-                                v-for="item in nodeList"
-                                :key="item.stateId"
-                                :label="item.stateName"
-                                :value="item.stateId">
-                                </el-option>
-                            </el-select>
-                        </view>
-                        <view class="bip-work-title"><h3>审批人员</h3></view>
-                        <view>  
-                            <el-checkbox-group v-model="userListSelect">
-                                <template v-for="item in userList" >
-                                    {{item.node}}
-                                    <el-checkbox :disabled="item.hq" v-for="user in item.users" :key="user.userCode" :id="user.userCode" :label="user.userCode" :md-value="user.userCode">{{user.userName}}</el-checkbox>
-                                </template>
-                            </el-checkbox-group>
-                        </view>
-                        <view v-if="signature" class="view-sm-24"> -->
-                            <!-- <el-form @submit.native.prevent label-position="right" label-width="60px">
-                                <bip-input-autograph :cell="cell" :cds="cds" :model="signatureValue" :bgrid="false" :row="0" @dataChange="dataChange"></bip-input-autograph>
-                            </el-form> -->
-                        </view>
-                    </template>
+                        <template v-else>
+                            <view class="bip-work-title"><h3>审批节点</h3></view>
+                            <view class="bip-select-list">
+                                <select v-model="stateId" placeholder="请选择" size="small" @change="selectChange">
+                                    <option
+                                    v-for="item in nodeList"
+                                    :key="item.stateId"
+                                    :label="item.stateName"
+                                    :value="item.stateId">
+                                    </option>
+                                </select>
+                            </view>
+                            <view class="bip-work-title"><h3>审批人员</h3></view>
+                            <view class="bip-select-list">
+                                <checkbox-group  @change="checkboxChange">
+                                    <label v-for="(item,index) in userList" :key="index">
+                                        <label v-for="spuser in item.users" :key="spuser.userCode" >
+                                            <checkbox :disabled="item.hq" :class="userListSelect.indexOf(spuser.userCode)>-1?'checked':''" :value="spuser.userCode" color="#FFCC33" style="transform:scale(0.7)"/>
+                                            {{spuser.userName}}
+                                        </label>
+                                    </label>
+                                </checkbox-group>
+                            </view>
+                            <view v-if="signature" class="view-sm-24"> 
+                                <!-- <el-form @submit.native.prevent label-position="right" label-width="60px">
+                                    <bip-input-autograph :cell="cell" :cds="cds" :model="signatureValue" :bgrid="false" :row="0" @dataChange="dataChange"></bip-input-autograph>
+                                </el-form> -->
+                            </view>
+                        </template>
+                    </view>
                 </template>
-
-
                 <view class="cu-bar bg-white justify-end">
                     <template v-if="!bchked && isReview">
                         <view class="action">
-                            <button @tap="centerDialogVisible = false" size="small">取 消</button>
-                            <button @tap="overrule" size="small" v-if="currState !='0'&& currState!='1'">驳回</button>
-                            <button type="primary" @tap="bchked = true" size="small">确 定</button>
+                            <button class="btn" @tap="centerDialogVisible = false" size="small">取 消</button>
+                            <button class="btn" @tap="overrule" size="small" v-if="currState !='0'&& currState!='1'">驳回</button>
+                            <button class="btn" type="primary" @tap="bchked = true" size="small">确 定</button>
                         </view>
                     </template>
                     <template v-else>
                         <view class="action">
-                            <button @tap="bchked = false" size="small" :disabled="!canRetrial">重审</button>
-                            <button @tap="centerDialogVisible = false" size="small">取 消</button>
-                            <button @tap="returnBack" size="small" :disabled="!canBack">退回</button>
-                            <button type="primary" @tap="checkUp" size="small" :disabled="!isReview">确 定</button>
+                            <button class="btn" @tap="bchked = false" size="small" :disabled="!canRetrial">重审</button>
+                            <button class="btn" @tap="centerDialogVisible = false" size="small">取 消</button>
+                            <button class="btn" @tap="returnBack" size="small" :disabled="!canBack">退回</button>
+                            <button class="btn" type="primary" @tap="checkUp" size="small" :disabled="!isReview">确 定</button>
                          </view>
                     </template>
                 </view>
             </view>
+            <message ref="msg"></message>
 		</view>
-    <!-- <el-dialog v-loading="loading" :visible.sync="centerDialogVisible" width="30%"
-        ref="chk" class="bip-work" :title="title" :show-close="false" :close-on-click-modal="false" :close-on-press-escape="false">
-        <template v-if="!bchked && isReview">
-            <view class="bip-work-title"><h3>审批意见</h3></view>
-            <view>
-                <el-input
-                    type="textarea"
-                    :autosize="{ minRows: 4, maxRows: 6}"
-                    placeholder="请输入内容"
-                    v-model="remark" resize="none">
-                </el-input>
-            </view>
-        </template>
-        <template v-else>
-            <template v-if="!isReview">
-                <template v-if="this.cea && this.cea.statefr =='6'  && this.cea.stateto =='6' ">
-                    <view class="bip-work-title"><h4>执行</h4></view>
-                </template>
-                <template v-else>
-                    <view class="bip-work-title"><h3>审批人员</h3></view>
-                    <template v-if="chkInfos">
-                        <view v-if="chkInfos.currState.hq">
-                            <view>
-                                <template v-for="cnodes in chkInfos.currState.cnodes">
-                                    <view v-for="user in cnodes.users" :key="user.userName">{{user.userName}}</view>
-                                </template>
-                                <template v-for="cnodes in chkInfos.currState.cnodes">
-                                    <view v-for="user in cnodes.userssh" :key="user.userName">{{user.userName}}  √</view>
-                                </template>
-                            </view>
-                        </view>
-                        <view v-if="!chkInfos.currState.hq">
-                            <view  v-for="user in chkInfos.currState.users" :key="user.userName">{{user.userName}}</view>
-                        </view>
-                    </template>
-                </template>
-            </template>
-            <template v-else>
-                <view class="bip-work-title"><h3>审批节点</h3></view>
-                <view class="bip-select-list">
-                    <el-select v-model="stateId" placeholder="请选择" size="small" @change="selectChange">
-                        <el-option
-                        v-for="item in nodeList"
-                        :key="item.stateId"
-                        :label="item.stateName"
-                        :value="item.stateId">
-                        </el-option>
-                    </el-select>
-                </view>
-                <view class="bip-work-title"><h3>审批人员</h3></view>
-                <view>  
-                    <el-checkbox-group v-model="userListSelect">
-                        <template v-for="item in userList" >
-                            {{item.node}}
-                            <el-checkbox :disabled="item.hq" v-for="user in item.users" :key="user.userCode" :id="user.userCode" :label="user.userCode" :md-value="user.userCode">{{user.userName}}</el-checkbox>
-                        </template>
-                    </el-checkbox-group>
-                </view>
-                <view v-if="signature" class="view-sm-24"> -->
-                    <!-- <el-form @submit.native.prevent label-position="right" label-width="60px">
-                        <bip-input-autograph :cell="cell" :cds="cds" :model="signatureValue" :bgrid="false" :row="0" @dataChange="dataChange"></bip-input-autograph>
-                    </el-form> -->
-                <!-- </view>
-            </template>
-        </template>
-  
-        <span slot="footer" class="dialog-footer">
-            <template v-if="!bchked && isReview">
-                <el-button @click="centerDialogVisible = false" size="small">取 消</el-button>
-                <el-button @click="overrule" size="small" v-if="currState !='0'&& currState!='1'">驳回</el-button>
-                <el-button type="primary" @click="bchked = true" size="small">确 定</el-button>
-            </template>
-            <template v-else>
-                <el-button @click="bchked = false" size="small" :disabled="!canRetrial">重审</el-button>
-                <el-button @click="centerDialogVisible = false" size="small">取 消</el-button>
-                <el-button @click="returnBack" size="small" :disabled="!canBack">退回</el-button>
-                <el-button type="primary" @click="checkUp" size="small" :disabled="!isReview">确 定</el-button>
-            </template>
-        </span>
-    </el-dialog> -->
     </div>
 </template>
 <script lang="ts">
@@ -454,10 +383,11 @@ export default class BipWork extends Vue{
                 if(res.data.id ==0){
                     let msg = this.bchked?"提交":"审核";
                     msg += '成功！';
-                    this.showMsg(msg);
+                    this.showMsg(msg,"success");
                     this.$emit('checkOK',this.stateId)
-                    this.centerDialogVisible = false
-                    // this.$bus.$emit('cell_edit')
+                    setTimeout(() => {
+                        this.centerDialogVisible = false    
+                    }, 800);
                 }else{
                     this.showMsg(res.data.message)
                 }
@@ -509,9 +439,11 @@ export default class BipWork extends Vue{
             } 
             tools.getCheckInfo(this.cea,id).then((res:any)=>{
                 if(res.data.id ==0){
-                    this.showMsg('退回成功！')
+                    this.showMsg('退回成功！','success')
                     this.$emit('checkOK',this.chkInfos.upState)
-                    this.centerDialogVisible = false
+                    setTimeout(() => {
+                        this.centerDialogVisible = false
+                    }, 800);
                 }else{
                     this.showMsg(res.data.message)
                 }
@@ -526,9 +458,11 @@ export default class BipWork extends Vue{
             var id = 39; 
             tools.getCheckInfo(this.cea,id).then((res:any)=>{
                 if(res.data.id ==0){
-                    this.showMsg('退回成功！')
+                    this.showMsg('退回成功！','success')
                     this.$emit('checkOK',this.chkInfos.upState)
-                    this.centerDialogVisible = false
+                    setTimeout(() => {
+                        this.centerDialogVisible = false
+                    }, 800);
                 }else{
                     this.showMsg(res.data.message)
                 }
@@ -566,9 +500,11 @@ export default class BipWork extends Vue{
         this.loading = true;
         tools.getCheckInfo(this.cea,id).then((res:any)=>{
             if(res.data.id==0){
-                this.showMsg('驳回成功！')
+                this.showMsg('驳回成功！','success')
                 this.$emit('checkOK',this.chkInfos.upState)
-                this.centerDialogVisible = false
+                setTimeout(() => {
+                    this.centerDialogVisible = false
+                }, 800);
             }else{
                 this.showMsg('驳回失败！')
             }
@@ -584,11 +520,17 @@ export default class BipWork extends Vue{
         this.signatureValue = value;
     }
 
-    showMsg(msg:any){
-        uni.showToast({
-            title: msg,
-            icon:"none"
-        })
+    checkboxChange(e:any){
+        this.userListSelect = e.detail.value
+    }
+
+    showMsg(message:any,state:string='err'){
+        let msg:any = this.$refs['msg'];
+        if(state == 'err'){
+            msg.error({background: true,content:message})
+        }else if(state =='success'){
+            msg.success({background: true,content:message})
+        }
     }
     get loginState(){
         let v = LoginModule.loginState
@@ -612,3 +554,24 @@ export default class BipWork extends Vue{
     }
 }
 </script>
+<style lang="scss" scoped>
+    .bip-work{
+        min-height: 400upx;
+    }
+    .bip-work-title{
+        margin-top: 20upx;
+        margin-left: 20upx;
+        h3{
+            font-size: 18px;
+        }
+        text-align: start;
+    }
+    .bip-select-list{
+        text-align: start;
+        margin-top: 10upx;
+        margin-left: 30upx;
+    }
+    .btn{
+        margin-left: 20upx;
+    }
+</style>
