@@ -16,12 +16,15 @@
 			@touchstart="coverTouchstart"
 			@touchmove="coverTouchmove"
 			@touchend="coverTouchend">
-			<scroll-view scroll-y show-scrollbar="true" class="list" @scrolltolower="loadMore" :style="getHeight">
+			
+			<scroll-view scroll-y show-scrollbar="true" class="list" @scrolltolower="loadMore" :scroll-top="scrollTop" :style="getHeight">
 				<!-- 数据集插槽 -->
 				<slot name="content-list"></slot>
 				<!-- 上拉加载 -->
 				<view class="load-more">{{loadText}}</view>
 			</scroll-view>
+			<!-- 回到顶部按钮 (fixed元素,需写在scroll-view外面,防止滚动的时候抖动)-->
+			<image v-if="showtop" class="bip-totop" src="@/static/totop.png" mode="widthFix" @click="toTopClick"></image>
 		</view>
 	</view>
 </template>
@@ -57,12 +60,15 @@
 		},
 		data() {
 			return {
+				rfobj:{},
 				startY: 0,
 				moveY: 0,
 				hasMore: true,
 				moving: false,
 				refresh: false,
 				loading: false,
+				showtop:false,
+				scrollTop: -1,
 				coverTransform: 'translateY(0px)',
 				coverTransition: '0s',
 				playState: 'paused' // 动画的状态 暂停/开始
@@ -114,7 +120,12 @@
 					return
 				}
 				this.coverTransition = 'transform .1s linear'
-				this.startY = e.touches[0].clientY
+				this.startY = e.touches[0].clientY;
+				if(e.target.offsetTop>500){
+					this.showtop = true;
+				}else{
+					this.showtop = false;
+				}
 			},
 			coverTouchmove(e) {
 				if (!this.isRefresh || this.refresh) {
@@ -147,20 +158,28 @@
 					this.coverTransform = 'translateY(0px)'
 					this.playState = 'paused'
 				}, this.refreshTime)
+				// console.log('coverTouchend')
 			},
 			runRefresh() {
 				// 开始
+				this.scrollTop = 0
 				this.refresh = true
 				this.coverTransition = 'transform .1s linear'
 				this.coverTransform = `translateY(60px)`
 				this.playState = 'running'
 				// 结束
 				setTimeout(() => {
+					this.scrollTop = -1
 					this.refresh = false
 					this.coverTransition = 'transform 0.3s cubic-bezier(.21,1.93,.53,.64)'
 					this.coverTransform = 'translateY(0px)'
 					this.playState = 'paused'
 				}, this.refreshTime)
+			},
+			toTopClick() {
+				this.showtop = false;
+				// this.scrollTop = 0;
+				this.runRefresh();
 			}
 		}
 	}
@@ -232,6 +251,20 @@
 				padding: 16rpx;
 			}
 		}
+		/* 回到顶部的按钮 */
+		.bip-totop {
+			position: fixed !important;
+			right: 2%;
+			bottom: 4.6%;
+			background-size: 100% 100%;
+			cursor: pointer;
+			width: 72upx;
+			height: 72upx;
+			border-radius: 50%;
+			opacity: 1;
+		}
 	}
+	
+
 }
 </style>
