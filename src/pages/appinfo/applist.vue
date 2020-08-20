@@ -7,7 +7,7 @@
 			</block>
 		</cu-custom>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
-		<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :showUpBtn="true" :down="downOption" :fixed="true" :top="460" :bottom="100" class="bg-white">
+		<mescroll-uni @down="downCallback" @up="upCallback" @init="mescrollInit" :up="upOption" :showUpBtn="true" :down="downOption" :fixed="true" :top="360" :bottom="100" class="bg-white">
 			<view v-for="(item, index) in pdList" :key="index">
 				<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
 			</view>
@@ -336,7 +336,5 @@ export default class appList extends Vue {
 </script>
 
 <style lang="scss">
-page {
-	margin-bottom: 120upx;
-}
+
 </style>

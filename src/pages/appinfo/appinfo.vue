@@ -81,7 +81,10 @@ export default class appInfo extends Vue {
 			this.copyCRecord()
 		}
 		if (cmd == icl.B_CMD_DEL) {
-			this.deleteRecord();
+			let candel = this.dsm.canDel()
+			if(candel){
+				this.deleteRecord();
+			}
 		}
 		if(cmd == icl.B_CMD_SUBMIT){
 			this.submint();

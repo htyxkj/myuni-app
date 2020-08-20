@@ -3,8 +3,7 @@
 		<scroll-view
 			:id="viewId"
 			class="mescroll-uni"
-			:class="{ 'mescroll-uni-fixed': fixed }"
-			:style="{ 'padding-top': padTop, 'padding-bottom': padBottom, top: fixedTop, bottom: fixedBottom }"
+			:style="{ 'position': 'fixed',height:'79vh'}"
 			:scroll-top="scrollTop"
 			:scroll-with-animation="scrollAnim"
 			@scroll="scroll"

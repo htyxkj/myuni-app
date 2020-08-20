@@ -13,8 +13,8 @@
 					<text class="cuIcon-triangledownfill"></text>
 				</template>
 			</view>
-			<input placeholder="查询什么呢" type="text" v-model="searchMode" @confirm="query" />
-			<text class="cuIcon-search" @tap="query"></text>
+			<input placeholder="查询什么呢" type="text" v-model="searchMode" @confirm="refresh" />
+			<text class="cuIcon-search" @tap="refresh"></text>
 		</view>
 		<bip-select :arr="array" :show="isShow" @cancel="cancel" :index="index" @selectChange="selectChange" @select="selectOK" :showKey="'name'" :isStr="false"></bip-select>
 		<view class="margin-top-xs"></view>
@@ -89,11 +89,6 @@ export default class selecteditor extends Vue {
 		return InsAidModule.aidInfos;
 	}
 	
-	query(){
-		
-	}
-	
-
 	/**
 	 *  根据辅助的Key值获取辅助对象
 	 *  @returns 返回辅助对象

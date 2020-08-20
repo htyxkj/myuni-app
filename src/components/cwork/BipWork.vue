@@ -1,6 +1,6 @@
 <template>
     <div>
-        <view class="cu-modal" style="z-index:9999" :class="centerDialogVisible?'show':''">
+        <view class="cu-modal" style="z-index:999999" :class="centerDialogVisible?'show':''">
 			<view class="cu-dialog">
                 <template v-if="!bchked && isReview">
                     <view class="cu-bar bg-white justify-end">
@@ -84,19 +84,33 @@
                 </template>
                 <view class="cu-bar bg-white justify-end">
                     <template v-if="!bchked && isReview">
-                        <view class="action">
-                            <button class="btn" @tap="centerDialogVisible = false" size="small">取 消</button>
-                            <button class="btn" @tap="overrule" size="small" v-if="currState !='0'&& currState!='1'">驳回</button>
-                            <button class="btn" type="primary" @tap="bchked = true" size="small">确 定</button>
+                        <view class="cu-list grid col-3"  style="padding-right:16upx">
+                            <view>
+                                <button class="cu-btn margin-right bg-white margin-tb-sm" @tap="centerDialogVisible = false">取消</button>
+                            </view>
+                            <view>
+                                <button class="cu-btn margin-right bg-red margin-tb-sm" @tap="overrule" v-if="currState !='0'&& currState!='1'">驳回</button>
+                            </view>
+                            <view>
+                                <button class="cu-btn margin-right bg-blue margin-tb-sm" @tap="bchked = true">确定</button>
+                            </view>
                         </view>
                     </template>
                     <template v-else>
-                        <view class="action">
-                            <button class="btn bg-yellow" @tap="bchked = false" size="small" :disabled="!canRetrial">重审</button>
-                            <button class="btn" @tap="centerDialogVisible = false" size="small">取 消</button>
-                            <button class="btn" type="warn" @tap="returnBack" size="small" :disabled="!canBack">退回</button>
-                            <button class="btn" type="primary" @tap="checkUp" size="small" :disabled="!isReview">确 定</button>
-                         </view>
+                         <view class="cu-list grid col-4" style="padding-right:16upx">
+                            <view>
+			                    <button class="cu-btn margin-right bg-white margin-tb-sm" @tap="bchked = false" :disabled="!canRetrial">重审</button>
+                            </view>
+                            <view>
+                                <button class="cu-btn margin-right bg-white margin-tb-sm" @tap="centerDialogVisible = false">取消</button>
+                            </view>
+                            <view>
+                                <button class="cu-btn margin-right bg-red margin-tb-sm" @tap="returnBack" :disabled="!canBack">退回</button>
+                            </view>
+                            <view>
+                                <button class="cu-btn margin-right bg-blue margin-tb-sm" @tap="checkUp" :disabled="!isReview">确定</button>
+                            </view>
+                        </view>
                     </template>
                 </view>
             </view>

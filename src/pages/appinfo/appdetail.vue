@@ -80,7 +80,10 @@ export default class appDetail extends Vue {
 		let cmd = btn.cmd;
 		console.log(cmd);
 		if (cmd == icl.B_CMD_DEL) {
-			this.deleteRecord();
+			let candel = this.dsm.canDel()
+			if(candel){
+				this.deleteRecord();
+			}
 		}
 		if (cmd == icl.B_CMD_SAVE) {
 			this.saveData();
