@@ -11,8 +11,7 @@
 				<bip-lay v-if="lay.binit" :layout="lay"></bip-lay>
 				<view class="padding-bottom-xl margin-bottom-xl"></view>
 			</view>
-			<bip-work ref="work"></bip-work>
-			 <!-- @checkOK="checkOK" -->
+			<bip-work ref="work" @checkOK="checkOK"></bip-work>
 		</template>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
@@ -229,7 +228,8 @@ export default class appDetail extends Vue {
                 }).finally(()=>{
 
                 });
-            }
+			}
+			console.log("sa")
         }
         if(!this.dsm.isPosted()){
 			uni.showToast({
@@ -237,6 +237,13 @@ export default class appDetail extends Vue {
 				icon:"none"
 			})
         }
+	}
+	checkOK(state:number|string){
+        let i = this.dsm.i_state;
+        if(i>-1){
+			this.dsm.currRecord.data[this.dsm.ccells.cels[i].id] = state
+			uni.$emit(this.dsm.ccells.obj_id+"_"+this.dsm.ccells.cels[i].id)
+		}
     }
 	//加载数据
 	findData(objid:string = ''){

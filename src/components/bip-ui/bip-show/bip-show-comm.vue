@@ -1,6 +1,6 @@
 <template>
 	<view class="flex justify-between text-cut">
-		<view class="flex-sub">
+		<view class="flex-sub" :class="[cell.isReq?'text-red':'']">
 			<text>{{ cell.labelString }}：</text>
 		</view>
 		<view class="flex-treble text-cut text-bold">

@@ -1,7 +1,7 @@
 <template>
 	<view class="cu-form-group solid-bottom">
 		<template v-if="label">
-			<view class="title">{{ cell.labelString }}</view>
+			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString }}</view>
 		</template>
 			<input type="text" v-model="modes" disabled="true"/>
 		<text class="text-progress text-bold cuIcon-tag"></text>
