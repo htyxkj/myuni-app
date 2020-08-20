@@ -381,4 +381,13 @@ export default class CDataSet {
 			bpost = false;
 		return bpost;
 	}
+	
+	setStateOrAnd(state: number, bor: boolean = true) {
+	    if (bor) {
+	      this.currRecord.c_state |= state;
+	    } else {
+	      this.currRecord.c_state &= state;
+	    }
+	    if (this.index > -1) this.cdata.data[this.index].c_state = this.currRecord.c_state;
+	  }
 }

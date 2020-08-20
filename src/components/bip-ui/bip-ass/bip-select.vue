@@ -20,6 +20,8 @@ import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自�
 import BipInsAidNew from '@/classes/BipInsAidNew';
 import CCliEnv from '@/classes/cenv/CCliEnv'
 import CDataSet from '@/classes/pub/CDataSet';
+import { dataTool } from '@/classes/tools/DataTools';
+const DataUtil = dataTool.utils;
 @Component({})
 export default class bipSelect extends Vue {
 	@Inject('env') env!:CCliEnv;
@@ -58,7 +60,7 @@ export default class bipSelect extends Vue {
 		this.getRefVal();
 	}
 	open() {
-		if(!this.unEditAble){
+		if(!this.disabled){
 			this.methordName = this.editName+"_"+(this.index<0?0:this.index)+"_"+this.cell.id
 			uni.$off(this.methordName,this.selectBack)
 			uni.$on(this.methordName,this.selectBack);
@@ -73,9 +75,22 @@ export default class bipSelect extends Vue {
 		}
 	}
 	
-	get unEditAble(){
-		let attr = this.cell.attr&0x40;
-		return attr>0;
+	get disabled(){
+		if(this.cds.ccells!=null){
+			let attr = this.cell.attr&0x40;
+			if(attr>0){
+				return true;
+			}else{
+				return !DataUtil.currCanEdit(this.cds,this.env);
+			}
+		}
+		else{
+			if(this.cell){
+				let attr = this.cell.attr&0x40;
+				return attr>0 ;
+			}
+			return false;
+		}
 	}
 	selectBack(param:any){
 		// console.log(param)

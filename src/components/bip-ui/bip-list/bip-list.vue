@@ -21,6 +21,8 @@ import {icl} from '@/classes/tools/CommICL';
 const ICL = icl; 
 import { baseUtils } from '@/classes/api/baseutils';
 let bstools = baseUtils.tools;
+import { dataTool } from '@/classes/tools/DataTools';
+const DataUtil = dataTool.utils;
 import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
 @Component({
 	components: {bipSelect}
@@ -94,9 +96,22 @@ export default class bipList extends Vue{
 		return this.cds.getRecord(this.cds.index)
 	}
 	
-	get unEditAble(){
-		let attr = this.cell.attr&0x40;
-		return attr>0;
+	get disabled(){
+		if(this.cds.ccells!=null){
+			let attr = this.cell.attr&0x40;
+			if(attr>0){
+				return true;
+			}else{
+				return !DataUtil.currCanEdit(this.cds,this.env);
+			}
+		}
+		else{
+			if(this.cell){
+				let attr = this.cell.attr&0x40;
+				return attr>0 ;
+			}
+			return false;
+		}
 	}
 
 	get showMode(){
@@ -107,7 +122,7 @@ export default class bipList extends Vue{
 	open(){
 		// console.log('open')
 		// console.log(this.cell)
-		if(!this.unEditAble){
+		if(!this.disabled){
 			this.isShow = true;
 		}
 		

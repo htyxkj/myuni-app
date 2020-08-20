@@ -294,7 +294,7 @@ export namespace dataTool {
 				let st = cd0.currRecord.c_state;
 				cd0.currRecord.c_state = st|billState.EDITSUB;
 			}
-			this.checkGS(cds,env)
+			this.checkGS(cds,env);
 		}
 		/**
 		 *  @description 删除数据集中的某一条记录
@@ -505,6 +505,49 @@ export namespace dataTool {
 					}  
 				});
 		    }
+		}
+	
+		/**
+		   * 查询单据是否可修改
+		   * @param _i 数据下标
+		   */
+		currCanEdit(cds:CDataSet,env:CCliEnv,_i:number = -1):boolean {
+		    //判断是否是临时改
+			debugger
+		    if(cds.ceaPars){
+				if((cds.ccells.attr & 0x4000) > 0 && parseInt(cds.ceaPars.statefr) !== 6){
+					return true;
+				}
+		    }
+			if(cds.ccells.attr != null){
+				if((cds.ccells.attr & 0x8 )>0){
+				  return false;
+				}
+			}
+		    if (cds.ds_par) {
+				let dsm = env.getDataSet(cds.ds_par)
+				return this.currCanEdit(dsm,env);
+		    }
+		    let crd = cds.currRecord;
+		    if (_i !== -1) {
+				crd = cds.cdata.getDataAtIndex(_i);
+		    }
+		    if (crd) {
+				if (cds.haveAuth()) {
+					if (cds.i_state > -1) {
+						let cell = cds.ccells.cels[cds.i_state];
+						let statestr = crd.data[cell.id];
+						if(statestr==undefined){
+							statestr="0";
+						}
+						let state: number = parseInt(statestr);
+						return state == 0;
+					} else {
+						return true;
+					}
+				}
+		    }
+		    return false;
 		}
 	}
 

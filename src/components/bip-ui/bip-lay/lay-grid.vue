@@ -18,7 +18,7 @@
 					<button class="cu-btn cuIcon bg-green text-xxl" @click="addLine"><text class="cuIcon-add"></text></button>
 				</view>
 				<view class="flex-sub bg-gray padding-sm margin-xs radius">
-					<button class="cu-btn cuIcon bg-green text-xxl"><text class="cuIcon-qrcode"></text></button>
+					<button class="cu-btn cuIcon bg-green text-xxl" @click="checkEdit"><text class="cuIcon-qrcode"></text></button>
 				</view>
 			</view>
 		</view>
@@ -58,6 +58,9 @@ export default class layGrid extends Vue {
 	}
 	
 	addLine(){
+		if(this.disabled){
+			return ;
+		}
 		if(!this.isCard){
 			this.isCard = true;
 		}
@@ -73,9 +76,7 @@ export default class layGrid extends Vue {
 		this.cds.currRecord = this.cds.getRecord(rid);
 		EnvModule.setEnvInf(this.env);
 		EnvModule.setLay(this.laycell);
-
 		uni.navigateTo({url:'/pages/editunit/editunit?id='+obj_id+'&rid='+rid});
-		
 	}
 	
 	delRow(rid:number,obj_id:string){
@@ -84,6 +85,15 @@ export default class layGrid extends Vue {
 
 	IsCard(e: any) {
 		this.isCard = e.detail.value;
+	}
+	
+	checkEdit(){
+		let editable = DataUtil.currCanEdit(this.cds,this.env);
+		console.log(editable,'laygrid')
+	}
+	
+	get disabled(){
+		return !DataUtil.currCanEdit(this.cds,this.env);
 	}
 }
 </script>

@@ -47,12 +47,19 @@
 		
 		execCmd(btn: any) {
 			let cmd = btn.cmd;
+			
 		}
 		
 		editOK(){
 			// console.log(this.cds.currRecord,this.cds);
 			// console.log(this.env);
 			// uni.$emit('editRowOK',this.cds.currRecord);
+			if(this.cds.ds_par){
+				let dsm = this.env.getDataSet(this.cds.ds_par);
+				if(dsm){
+					dsm.setStateOrAnd(2)
+				}
+			}
 			uni.navigateBack({delta:1})
 		}
 		

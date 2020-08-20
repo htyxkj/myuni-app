@@ -4,15 +4,15 @@
 		<template v-if="cell">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
 			<template v-if="type=='text'">
-				<input name="input" :placeholder="cell.labelString" type="text" v-model="mode" @blur="dataChange" :disabled="editable"/>
+				<input name="input" :placeholder="cell.labelString" type="text" v-model="mode" @blur="dataChange" :disabled="disabled"/>
 				<template v-if="clearable">
 					<text :class="[mode?'cuIcon-close':'','text-red']" @tap.stop="clear()"></text>
 				</template>
 			</template>
 			<template v-else>
 				
-				<input :placeholder="cell.labelString" type="password" :password="at0" v-model="mode"/>
-				<text :class="[mode?(!at0?'cuIcon-attentionforbid':'cuIcon-attention'):'','text-grey']" @tap.stop="open()"></text>
+				<input :placeholder="cell.labelString" type="password" :password="at0" v-model="mode" :disabled="disabled"/>
+				<text :class="[mode?(!at0?'cuIcon-attentionforbid':'cuIcon-attention'):'','text-grey']" @tap.stop="open()" :disabled="disabled"></text>
 			</template>
 		</template>
 		<template v-else>
@@ -28,7 +28,9 @@
 	import Cell from '@/classes/pub/coob/Cell';
 	import CDataSet from '@/classes/pub/CDataSet';
 	import CRecord from '@/classes/pub/CRecord';
-	import CCliEnv from '@/classes/cenv/CCliEnv'
+	import CCliEnv from '@/classes/cenv/CCliEnv';
+	import { dataTool } from '@/classes/tools/DataTools';
+	const DataUtil = dataTool.utils;
 	@Component({})
 	export default class bipInput extends Vue{
 		@Inject('env') env!:CCliEnv;
@@ -72,9 +74,22 @@
 			return this.cds.getRecord(this.cds.index)
 		}
 		
-		get editable(){
-			let attr = this.cell.attr&0x40;
-			return attr>0;
+		get disabled(){
+			if(this.cds.ccells!=null){
+				let attr = this.cell.attr&0x40;
+				if(attr>0){
+					return true;
+				}else{
+					return !DataUtil.currCanEdit(this.cds,this.env);
+				}
+			}
+			else{
+				if(this.cell){
+					let attr = this.cell.attr&0x40;
+					return attr>0 ;
+				}
+				return false;
+			}
 		}
 		
 		cellDataChange(){

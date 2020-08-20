@@ -15,6 +15,8 @@ import bipPickerDate from '../bip-picker/bip-picker-date.vue'
 import CRecord from '@/classes/pub/CRecord';
 import CCliEnv from '@/classes/cenv/CCliEnv'
 import CDataSet from '@/classes/pub/CDataSet';
+import { dataTool } from '@/classes/tools/DataTools';
+const DataUtil = dataTool.utils;
 @Component({
 	components: {bipPickerDate }
 })
@@ -36,7 +38,7 @@ export default class bipDate extends Vue {
 	}
 	
 	open(){
-		if(!this.unEditAble){
+		if(!this.disabled){
 			let rr:any = this.$refs.calendar
 			rr.show();
 		}
@@ -55,9 +57,22 @@ export default class bipDate extends Vue {
 	get record():CRecord{
 		return this.cds.getRecord(this.cds.index)
 	}
-	get unEditAble(){
-		let attr = this.cell.attr&0x40;
-		return attr>0;
+	get disabled(){
+		if(this.cds.ccells!=null){
+			let attr = this.cell.attr&0x40;
+			if(attr>0){
+				return true;
+			}else{
+				return !DataUtil.currCanEdit(this.cds,this.env);
+			}
+		}
+		else{
+			if(this.cell){
+				let attr = this.cell.attr&0x40;
+				return attr>0 ;
+			}
+			return false;
+		}
 	}
 	@Watch('record')
 	recordChange(){

@@ -2,7 +2,7 @@
 	<view class="cu-form-group solid-bottom text-green">
 		<template v-if="cell">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
-			<input class="text-right" :placeholder="cell.labelString" type="number" v-model="mode" @blur="dataChange" :disabled="editable" />
+			<input class="text-right" :placeholder="cell.labelString" type="number" v-model="mode" @blur="dataChange" :disabled="disabled" />
 		</template>
 	</view>
 </template>
@@ -78,9 +78,23 @@
 			// DataUtil.checkGS(this.cds,this.env,this.cell)
 		}
 		
-		get editable(){
-			let attr = this.cell.attr&0x40;
-			return attr>0;
+		get disabled(){
+			if(this.cds.ccells!=null){
+				let attr = this.cell.attr&0x40;
+				if(attr>0){
+					return true;
+				}else{
+					return !DataUtil.currCanEdit(this.cds,this.env);
+				}
+			}
+			else{
+				if(this.cell){
+					let attr = this.cell.attr&0x40;
+					return attr>0 ;
+				}
+				return false;
+			
+			}
 		}
 		
 		

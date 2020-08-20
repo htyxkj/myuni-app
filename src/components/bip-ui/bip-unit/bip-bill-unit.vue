@@ -41,13 +41,13 @@ export default class bipBillUnit extends Vue {
 	
 	delRow() {
 		console.log('delRow')
-		this.$emit('delRow',this.rowId,this.obj_id)
+		this.$emit('delRow',this.rowId,this.obj_id);
 		
 	}
 	
 	editRow(){
 		console.log('editRow')
-		this.$emit('editRow',this.rowId,this.obj_id)
+		this.$emit('editRow',this.rowId,this.obj_id);
 	}
 
 
