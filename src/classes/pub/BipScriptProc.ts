@@ -371,12 +371,14 @@ export default class BipScriptProc {
             }
             bufs[idx] = ov;
           } else {
-            bufs[idx] = this.expItem(sv0, true);
+				bufs[idx] = this.expItem(sv0, true);
           }
         } else {
-          bufs[idx] = ov;
+			bufs[idx] = ov;
         }
-        if (idx > 1) idx = baseTool.calcItems(bufs, cfhs, idx);
+        if (idx > 1) {
+			idx = baseTool.calcItems(bufs, cfhs, idx);
+		}
       }
       bfh = !bfh;
     }
@@ -395,8 +397,8 @@ export default class BipScriptProc {
     if (c0 == "&") {
       // 暂时不处理
     }
-    var cx = 0,
-      t0 = 0;
+    var cx = 0;
+    var  t0 = 0;
     var ov = null,
       ors = {};
     var b0 = c0 == "^" || c0 == "<";

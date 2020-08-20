@@ -179,7 +179,22 @@ export default class CDataSet {
 	}
 	setState(state:number){
 		this.currRecord.c_state = state;
+		if(this.ds_sub&&this.ds_sub.length>0){
+			this.ds_sub.forEach(cd0 => {
+			cd0.setStateSub(state);
+		  });
+		}
 	}
+	setStateSub(state: number) {
+	    this.cdata.data.forEach((crd: CRecord) => {
+			crd.c_state = state;
+			if (crd.subs.length > 0) {
+				crd.subs.forEach(cd0 => {
+				cd0.setStateSub(state);
+	        });
+	      }
+	    });
+	  }
 	
 	size(){
 		return this.cdata.data.length;

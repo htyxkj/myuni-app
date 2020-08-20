@@ -428,6 +428,7 @@ export namespace dataTool {
 							}
 							if((col.attr & 0x2000) >0){
 								cds.cellChange(vl,col.id);
+								//
 							}
 							this.checkGS(cds,env,col)
 		                }
@@ -437,6 +438,37 @@ export namespace dataTool {
 					let cd = cds.ds_sub[i];
 					this.checkGSByRefId(id,cd,env);
 		        }
+				if(cds.hjList.length>0&&cds.ds_par){
+					let vvs: Array<number> = new Array<number>();
+					cds.cdata.data.forEach(row => {
+						let crd: CRecord = row;
+						cds.hjList.forEach((fld: string, index) => {
+							let v = crd.data[fld];
+							v = v ? parseFloat(v) : 0;
+							let v1 = vvs[index];
+							v1 = v1 ? parseFloat(v1 + "") : 0;
+							vvs[index] = v + v1;
+						});
+					});
+					let dsm = env.getDataSet(cds.ds_par);
+					if(dsm){
+						cds.hjList.forEach((fld: string, index) => {
+							let v = vvs[index];
+							// let cel;
+							let _i = cds.ccells.cels.findIndex(cell => {
+								// if(cell.id == fld ){
+								// 	cel =cell;
+								// }
+								return cell.id == fld;
+							});
+							if (_i > -1) {
+								// dsm.currRecord.data[fld] = v;
+								dsm.cellChange(v,fld);
+								// this.checkGS(dsm,env);
+							}
+						});
+					}
+				}
 		    }else{
 		        this.checkAllGS(cds,env)
 		    }

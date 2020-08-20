@@ -143,26 +143,28 @@ export default class appInfo extends Vue {
 			return ;
 		}
 		let cr = this.dsm.currRecord;
-		tools
-			.saveData(cr, this.uriParam.pcell, this.uriParam.pflow)
-			.then((res: any) => {
-				console.log(res);
-				let rtn = res.data;
-				if (rtn.id == 0) {
-					let vv = rtn.data;
-					Object.keys(vv).forEach((key:string)=>{
-						console.log(vv[key],key)
-						this.dsm.cellChange(vv[key],key);
-						let methordKey =this.dsm.ccells.obj_id+"_"+key
-						uni.$emit(methordKey)
-					})
-					this.dsm.setState(icl.R_POSTED);
-					uni.showToast({title:'保存成功！'});
-				}
-			})
-			.catch((e: any) => {
-				console.log(e);
-			});
+		if((cr.c_state & icl.R_EDITED) > 0){
+			tools
+				.saveData(cr, this.uriParam.pcell, this.uriParam.pflow)
+				.then((res: any) => {
+					console.log(res);
+					let rtn = res.data;
+					if (rtn.id == 0) {
+						let vv = rtn.data;
+						Object.keys(vv).forEach((key:string)=>{
+							console.log(vv[key],key)
+							this.dsm.cellChange(vv[key],key);
+							let methordKey =this.dsm.ccells.obj_id+"_"+key
+							uni.$emit(methordKey)
+						})
+						this.dsm.setState(icl.R_POSTED);
+						uni.showToast({title:'保存成功！'});
+					}
+				})
+				.catch((e: any) => {
+					console.log(e);
+				});
+		}
 	}
 
 	async onLoad(option: any) {
