@@ -7,6 +7,7 @@
 		<view class="margin-lr-sm margin-tb-sm">
 			<bip-lay v-if="lay.binit" :layout="lay" :key="'-1'"></bip-lay>
 			<view class="padding-bottom-xl margin-bottom-xl"></view>
+			<bip-work ref="work" @checkOK="checkOK"></bip-work>
 		</view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
@@ -25,6 +26,7 @@ import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue'
 import uniCard from '@/components/uni-ui/uni-card/uni-card.vue'
 import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue'
 import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue'
+import BipWork from  '@/components/cwork/BipWork.vue';
 
 
 import { BIPUtil } from '@/classes/api/request';
@@ -42,8 +44,9 @@ import { icl } from '../../classes/tools/CommICL';
 
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
+import CeaPars from "@/classes/cenv/CeaPars";
 @Component({
-	components: { mLoad,bipLay,bipMenuBar,bipBillBar,uniCard}
+	components: { mLoad,bipLay,bipMenuBar,bipBillBar,uniCard,BipWork}
 })
 export default class appInfo extends Vue {
 	vueId: string = Tools.guid();
@@ -64,6 +67,8 @@ export default class appInfo extends Vue {
 	cells: Array<Cells> = new Array<Cells>();
 	lay: BipLayout = new BipLayout('');
 
+	cea:CeaPars = new CeaPars({});
+
 	execCmd(btn: any) {
 		let cmd = btn.cmd;
 		if(cmd == icl.B_CMD_ADD){
@@ -78,7 +83,9 @@ export default class appInfo extends Vue {
 		if (cmd == icl.B_CMD_DEL) {
 			this.deleteRecord();
 		}
-
+		if(cmd == icl.B_CMD_SUBMIT){
+			this.submint();
+		}
 	}
 
 	deleteRecord(){
@@ -167,6 +174,61 @@ export default class appInfo extends Vue {
 		}
 	}
 
+	/**
+     * 审批流提交
+     */
+    submint(){
+        if(this.dsm.opera){
+            if(this.dsm.isPosted()){
+                //可以提交
+                let crd = this.dsm.currRecord
+                let params = {
+                    sid: crd.data[this.dsm.opera.pkfld],
+                    sbuid: crd.data[this.dsm.opera.buidfld],
+                    statefr: crd.data[this.dsm.opera.statefld],
+                    stateto: crd.data[this.dsm.opera.statefld],
+                    sorg:crd.data[this.dsm.opera.sorgfld],
+                    spuserId: ""
+                }  
+                this.cea = new CeaPars(params)
+                tools.getCheckInfo(this.cea,33).then((res:any)=>{
+                    if(res.data.id==0){
+                        let data = res.data.data.info
+                        let work:any = this.$refs.work;
+                        let smakefld:string='';
+                        if(this.dsm.opera){
+                            if(this.dsm.opera.smakefld){
+                                smakefld = crd.data[this.dsm.opera.smakefld];
+                            }
+                        }
+                        this.dsm.ceaPars = this.cea
+                        work.open(data,this.cea,smakefld);
+                    }
+                }).catch((err:any)=>{
+					uni.showToast({
+						title: err+";BaseApplet submint",
+						icon:"none"
+					})
+                }).finally(()=>{
+
+                });
+			}
+        }
+        if(!this.dsm.isPosted()){
+			uni.showToast({
+				title: '请先保存数据！',
+				icon:"none"
+			})
+        }
+	}
+	checkOK(state:number|string){
+        let i = this.dsm.i_state;
+        if(i>-1){
+			this.dsm.currRecord.data[this.dsm.ccells.cels[i].id] = state
+			uni.$emit(this.dsm.ccells.obj_id+"_"+this.dsm.ccells.cels[i].id)
+		}
+	}
+	
 	async onLoad(option: any) {
 		if (option.pbuid) {
 			this.cr = option.color ? option.color : 'blue';

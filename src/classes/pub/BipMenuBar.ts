@@ -37,12 +37,12 @@ export default class BipMenuBar{
                 this.menuList.push(btn)
             }
             if((menuAttr&CommICL.B_IWORKEA)>0){
-                let btn = new BipMenuBtn(CommICL.B_CMD_SUBMIT,"提交")
+                let btn = new BipMenuBtn(CommICL.B_CMD_SUBMIT,"提交/审核")
                 btn.setIconFontIcon('pullup');
                 this.menuList.push(btn)
-                btn = new BipMenuBtn(CommICL.B_CMD_CHECK,"审核")
-                btn.setIconFontIcon('appreciate');
-                this.menuList.push(btn)
+                // btn = new BipMenuBtn(CommICL.B_CMD_CHECK,"审核")
+                // btn.setIconFontIcon('appreciate');
+                // this.menuList.push(btn)
             }
             // if((menuAttr&CommICL.B_IFIND)>0){
             //     this.setNavButton(menuAttr)

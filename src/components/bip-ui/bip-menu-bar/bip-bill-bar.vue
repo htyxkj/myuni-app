@@ -6,17 +6,20 @@
 			<view class="submit margin-sm" @tap="open"><text class="cuIcon-settingsfill text-blue lg"></text>更多操作</view>
 			<uni-popup :show="showP" type="bottom" :custom="true" @change="change">
 				<!-- <bip-share :arrdata="bottomData" @close="close" @itemClick="itemClick"></bip-share> -->
-				<view class="cu-list grid col-4 border bg-white">
-					<template v-for="(item,index) in bottomData">
-						<template v-if="item.cmd !== 'ADD' && item.cmd !== 'SAVE'">
-							<view class="cu-item" :key="index" @click="tabSelect(item)"  :data-id="item.cmd" :data-btn="item" :class="[item.cmd=='DEL'?'text-red':'',item.cmd=='COPY'?'text-green':'',item.cmd=='SUBMIT'?'text-blue':'',item.cmd=='CHECK'?'text-purple':'']">
-								<view :class="['cuIcon-' + item.icon]"></view>
-								<text class="text-lg">{{ item.name }}</text>
-							</view>
+				<view class=" bg-white myradius">
+					<view class="padding mytitle">更多操作</view>
+					<view class="cu-list grid col-4">
+						<template v-for="(item,index) in bottomData">
+							<template v-if="item.cmd !== 'ADD' && item.cmd !== 'SAVE'">
+								<view class="cu-item" :key="index" @click="tabSelect(item)"  :data-id="item.cmd" :data-btn="item" :class="[item.cmd=='DEL'?'text-red':'',item.cmd=='COPY'?'text-green':'',item.cmd=='SUBMIT'?'text-blue':'',item.cmd=='CHECK'?'text-purple':'']">
+									<view :class="['cuIcon-' + item.icon]"></view>
+									<text class="text-lg">{{ item.name }}</text>
+								</view>
+							</template>
 						</template>
-					</template>
+					</view>
 				</view>
-				<view class="cu-bar bg-yellow solid-bottom" @tap="close"><view class="action text-center text-white" :style="'font-size:14px;'">取消</view></view>
+				<view class="cu-bar bg-gray" @tap="close"><view class="action text-center" :style="'font-size:14px;'">取消</view></view>
 			</uni-popup>
 		</template>
 	</view>
@@ -99,5 +102,12 @@ export default class bipBillBar extends Vue {
 <style lang="scss">
 .bip-btn {
 	font-size: 36upx;
+}
+.myradius{
+	border-radius: 10px 10px 0 0;
+}
+.mytitle{
+	padding-bottom: 0px;
+    color: black;
 }
 </style>

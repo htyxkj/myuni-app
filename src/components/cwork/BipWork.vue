@@ -49,14 +49,19 @@
                         <template v-else>
                             <view class="bip-work-title"><h3>审批节点</h3></view>
                             <view class="bip-select-list">
-                                <select v-model="stateId" placeholder="请选择" size="small" @change="selectChange">
+                                <view class="cu-form-group solid-bottom">
+                                    <input type="text" v-model="jdShowMode" @tap.stop="jdShow = true" disabled="true"/>
+                                    <text :class="['cuIcon-triangledownfill', 'text-grey']" @tap.stop="jdShow = true"></text>
+                                    <bip-select :arr="nodeList" :show="jdShow" @cancel="jdShow = false" @selectChange="selectChange" @select="selectChange" :showKey="'stateName'" :isStr="false" :index="1"></bip-select>
+                                </view>
+                                <!-- <select v-model="stateId" placeholder="请选择" size="small" @change="selectChange">
                                     <option
                                     v-for="item in nodeList"
                                     :key="item.stateId"
                                     :label="item.stateName"
                                     :value="item.stateId">
                                     </option>
-                                </select>
+                                </select> -->
                             </view>
                             <view class="bip-work-title"><h3>审批人员</h3></view>
                             <view class="bip-select-list">
@@ -109,8 +114,9 @@ import User from '@/classes/User';
 import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 import CDataSet from '../../classes/pub/CDataSet';
 import { values } from 'xe-utils/methods';
+import bipSelect from '@/components/bip-ui/bip-select/bip-select.vue'
 @Component({
-    components:{}
+    components:{bipSelect}
 })
 export default class BipWork extends Vue{
     centerDialogVisible:boolean = false
@@ -134,7 +140,11 @@ export default class BipWork extends Vue{
     cell:any={id:"signature",labelString:"签名",}
     cds:CDataSet = new CDataSet("");
     user:any = null;
+
+    jdShow:boolean = false;
+    jdShowMode:any = "";
     open(info:any,cea:CeaPars,smakefld:String){ 
+        this.jdShow = false;
         if(!this.loginState){
             uni.reLaunch({'url':'/pages/login/login'})
             return;
@@ -153,15 +163,12 @@ export default class BipWork extends Vue{
         if(!this.user){
             return;
         }
-        console.log("asdfasdfasfdsd")
         if (this.cea.statefr == "0" || this.cea.statefr == "1" || this.cea.statefr == "5") {
             if (this.smakefld !== this.user.userCode && this.smakefld != undefined) {
                 this.showMsg("只有制单人可以提交!");
                 this.centerDialogVisible = false
                 return;
             }
-            if(this.chkInfos.list)
-                this.stateId = this.chkInfos.list[0].stateId
         } else {
             if(this.chkInfos.currState.hq){//会签
                 if(this.chkInfos.currState.cnodes.length <= 0){//没有人
@@ -170,7 +177,6 @@ export default class BipWork extends Vue{
                         return;
                     }
                 }
-                this.stateId = this.chkInfos.list[0].stateId
             }else{
                 if(!this.chkInfos.currState.users && !this.chkInfos.currState.userssh){
                     if (this.cea.statefr+'' !== "6") {
@@ -184,7 +190,6 @@ export default class BipWork extends Vue{
                         return;
                     }
                 }else{
-                    this.stateId = this.chkInfos.list[0].stateId
                     this.chkInfos.list.forEach((item:any) => {
                         if(!item.users && item.stateId !='6'){
                             this.showMsg("节点："+item.stateName+" 未定义审批人！"); 
@@ -240,6 +245,8 @@ export default class BipWork extends Vue{
             }
         }
         if(this.nodeList&&this.nodeList.length>0){ 
+            this.stateId = this.nodeList[0].stateId
+            this.jdShowMode = this.nodeList[0].stateName
             this.initSelectUser()
         }
     }
@@ -249,7 +256,6 @@ export default class BipWork extends Vue{
     }
 
     initSelectUser(){
-        console.log("initSelectUser")
         if (this.chkInfos) {
             this.chkInfos.list.forEach((item:any) => {
                 if(item.stateId =='6'){
@@ -314,8 +320,10 @@ export default class BipWork extends Vue{
     }
 
     selectChange(value:any){
-        this.stateId = value;
+        this.stateId = value.stateId;
+        this.jdShowMode = value.stateName
         this.initSelectUser();
+        this.jdShow = false;
     }
 
     //提交审核
@@ -519,7 +527,7 @@ export default class BipWork extends Vue{
     dataChange(value:any){
         this.signatureValue = value;
     }
-
+    //勾选审批人
     checkboxChange(e:any){
         this.userListSelect = e.detail.value
     }

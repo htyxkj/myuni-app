@@ -16,7 +16,6 @@ export namespace singIn {
 		loginFailure:any = null;//登录失败回调方法
 		//第三方单点登录
 		async init(route:any,loginOk:any,loginFailure:any){
-			console.log("第三方单点登录")
 			this.loginOk = loginOk;
 			this.loginFailure = loginFailure;
 			this.route = route;
