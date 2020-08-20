@@ -16,16 +16,16 @@
                     </view>
                 </template>
                 <template v-else>
-                    <view class="cu-bar bg-white justify-end">
+                    <view class="cu-bar bg-blue justify-end">
                         <view class="content">{{title}}</view>
                         <view class="action" @tap="centerDialogVisible = false">
-                            <text class="cuIcon-close text-red"></text>
+                            <text class="cuIcon-close"></text>
                         </view>
                     </view>
                     <view class="bip-work">
                         <template v-if="!isReview">
                             <template v-if="this.cea && this.cea.statefr =='6'  && this.cea.stateto =='6' ">
-                                <view class="bip-work-title"><h4>执行</h4></view>
+                                <view class="bip-work-title"><h4>当前节点：<text class="text-blue text-bold">执行</text></h4></view>
                             </template>
                             <template v-else>
                                 <view class="bip-work-title"><h3>审批人员</h3></view>
@@ -92,9 +92,9 @@
                     </template>
                     <template v-else>
                         <view class="action">
-                            <button class="btn" @tap="bchked = false" size="small" :disabled="!canRetrial">重审</button>
+                            <button class="btn bg-yellow" @tap="bchked = false" size="small" :disabled="!canRetrial">重审</button>
                             <button class="btn" @tap="centerDialogVisible = false" size="small">取 消</button>
-                            <button class="btn" @tap="returnBack" size="small" :disabled="!canBack">退回</button>
+                            <button class="btn" type="warn" @tap="returnBack" size="small" :disabled="!canBack">退回</button>
                             <button class="btn" type="primary" @tap="checkUp" size="small" :disabled="!isReview">确 定</button>
                          </view>
                     </template>
@@ -565,10 +565,10 @@ export default class BipWork extends Vue{
 <style lang="scss" scoped>
     .bip-work{
         min-height: 400upx;
+		margin: 0 20upx;
     }
     .bip-work-title{
         margin-top: 20upx;
-        margin-left: 20upx;
         h3{
             font-size: 18px;
         }
@@ -577,7 +577,7 @@ export default class BipWork extends Vue{
     .bip-select-list{
         text-align: start;
         margin-top: 10upx;
-        margin-left: 30upx;
+        // margin-left: 30upx;
     }
     .btn{
         margin-left: 20upx;

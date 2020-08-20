@@ -22,7 +22,7 @@ export default class CCliEnv{
     }
 	
     getDataSet(obid:string):any{
-        if(obid==='' || this.dsm.ccells.obj_id === obid){
+        if(obid==='' || obid==null || this.dsm.ccells.obj_id === obid){
             return this.dsm
         }
         let cds = null
