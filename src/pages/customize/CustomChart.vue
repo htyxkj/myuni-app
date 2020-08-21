@@ -130,7 +130,7 @@
 				animation: true,
 				enableScroll: true,//开启图表拖拽功能
 				xAxis: {
-					disableGrid:false,
+					disableGrid:true,
 					type:'grid',
 					gridType:'dash',
 					itemCount:5,
@@ -381,7 +381,16 @@
 			for(let i=0;i<chartD.length;i++){
 				var item = chartD[i];
 				var name = await this.getGroupFldName(item,0);
-				let d1 = { name: name, data: item[this.selValue[0]] }
+				let d1 = { name: name, data: item[this.selValue[0]] ,
+							format:(item:any)=>{
+								if(item._proportion_ == 0){
+									return "";
+								}
+								let vl = (item._proportion_*100).toFixed(2)+'%'
+								vl = item.name +"："+ vl;
+								return vl
+							}
+						}
 				data.push(d1);
 			}
 			delete option.yAxis

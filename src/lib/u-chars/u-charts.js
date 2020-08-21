@@ -31,7 +31,7 @@ var config = {
   fontSize: 13,
   //dataPointShape: ['diamond', 'circle', 'triangle', 'rect'],
   dataPointShape: ['circle', 'circle', 'circle', 'circle'],
-  colors: ['#1890ff', '#2fc25b', '#facc14', '#f04864', '#8543e0', '#90ed7d'],
+  colors: ['#1890ff', '#2fc25b', '#facc14', '#f04864', '#8543e0', '#90ed7d','#E3D161','#5122D9','#4D8647','#6750A6','#FFB6C1','#DC143C','#696969','#FF0000' , '#CD5C5C','#FF4500','#FFA500',	'#DAA520','#7FFF00','#008000',	'#90EE90','#3CB371','#00FFFF',	'#00BFFF','#1E90FF','#6495ED'	,'#6A5ACD','#FF00FF','#FF1493'],
   pieChartLinePadding: 15,
   pieChartTextPadding: 5,
   xAxisTextPadding: 3,
@@ -1324,7 +1324,7 @@ function getPieTextMaxLength(series) {
   let maxLength = 0;
   for (let i = 0; i < series.length; i++) {
     let item = series[i];
-    let text = item.format ? item.format(+item._proportion_.toFixed(2)) : util.toFixed(item._proportion_ * 100) + '%';
+    let text = item.format ? item.format(item) : util.toFixed(item._proportion_ * 100) + '%';
     maxLength = Math.max(maxLength, measureText(text));
   }
 
@@ -1898,7 +1898,7 @@ function drawPieText(series, opts, config, context, radius, center) {
   var lastTextObject = null;
 
   var seriesConvert = series.map(function(item) {
-    var text = item.format ? item.format(+item._proportion_.toFixed(2)) : util.toFixed(item._proportion_.toFixed(4) * 100) +'%';
+    var text = item.format ? item.format(item) : util.toFixed(item._proportion_.toFixed(4) * 100) +'%';
     if(item._rose_proportion_) item._proportion_=item._rose_proportion_;
     var arc = 2 * Math.PI - (item._start_ + 2 * Math.PI * item._proportion_ / 2);
     var color = item.color;
@@ -4509,7 +4509,7 @@ function drawFunnelText(series, opts, context, eachSpacing, labelAlign,activeWid
   for(let i=0;i<series.length;i++){
     let item = series[i];
     let startX,endX,startY,fontSize;
-    let text = item.format ? item.format(+item._proportion_.toFixed(2)) : util.toFixed(item._proportion_ * 100) +'%';
+    let text = item.format ? item.format(item) : util.toFixed(item._proportion_ * 100) +'%';
     if(labelAlign == 'right'){
       if(i==0){
         startX=(item.funnelArea[2]+centerPosition.x)/2;
