@@ -72,6 +72,9 @@ export default class layGrid extends Vue {
 	}
 	
 	editRow(rid:number,obj_id:string){
+		if(this.disabled){
+			return ;
+		}
 		this.cds.index = rid;
 		this.cds.currRecord = this.cds.getRecord(rid);
 		EnvModule.setEnvInf(this.env);
@@ -80,6 +83,9 @@ export default class layGrid extends Vue {
 	}
 	
 	delRow(rid:number,obj_id:string){
+		if(this.disabled){
+			return ;
+		}
 		this.cds.removeIndex(rid);
 	}
 
