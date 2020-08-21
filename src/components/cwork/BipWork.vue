@@ -68,7 +68,7 @@
                                 <checkbox-group  @change="checkboxChange">
                                     <label v-for="(item,index) in userList" :key="index">
                                         <label v-for="spuser in item.users" :key="spuser.userCode" >
-                                            <checkbox :disabled="item.hq" :class="userListSelect.indexOf(spuser.userCode)>-1?'checked':''" :value="spuser.userCode" color="#FFCC33" style="transform:scale(0.7)"/>
+                                            <checkbox :disabled="item.hq" :checked="userListSelect.indexOf(spuser.userCode)>-1?true:false" :class="userListSelect.indexOf(spuser.userCode)>-1?'checked':''" :value="spuser.userCode" color="#FFCC33" style="transform:scale(0.7)"/>
                                             {{spuser.userName}}
                                         </label>
                                     </label>
@@ -330,7 +330,6 @@ export default class BipWork extends Vue{
                 }
             });
         }
-        console.log("cds")
     }
 
     selectChange(value:any){
