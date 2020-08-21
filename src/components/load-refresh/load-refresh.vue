@@ -17,7 +17,7 @@
 			@touchmove="coverTouchmove"
 			@touchend="coverTouchend">
 			
-			<scroll-view scroll-y show-scrollbar="true" class="list" @scrolltolower="loadMore" :scroll-top="scrollTop" :style="getHeight">
+			<scroll-view scroll-y show-scrollbar="true" class="list" @scrolltolower="loadMore" @scroll="scroll" :scroll-top="scrollTop" :style="getHeight">
 				<!-- 数据集插槽 -->
 				<slot name="content-list"></slot>
 				<!-- 上拉加载 -->
@@ -102,6 +102,14 @@
 			}
 		},
 		methods: {
+			//开始滚动
+			scroll(e){
+				if(e.detail.scrollTop >10){
+					this.showtop = true;
+				}else{
+					this.showtop = false;
+				}
+			},
 			// 根据pageNo和totalPageNo的值来判断 是否触发@loadMore
 			loadMore() {
 				const { pageNo, totalPageNo } = this
@@ -162,6 +170,7 @@
 			},
 			runRefresh() {
 				// 开始
+				this.showtop = false;
 				this.scrollTop = 0
 				this.refresh = true
 				this.coverTransition = 'transform .1s linear'
@@ -177,7 +186,6 @@
 				}, this.refreshTime)
 			},
 			toTopClick() {
-				this.showtop = false;
 				// this.scrollTop = 0;
 				this.runRefresh();
 			}
