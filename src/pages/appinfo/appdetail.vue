@@ -210,7 +210,6 @@ export default class appDetail extends Vue {
                 }  
                 this.cea = new CeaPars(params)
                 tools.getCheckInfo(this.cea,33).then((res:any)=>{
-					console.log(res)
                     if(res.data.id==0){
                         let data = res.data.data.info
                         let work:any = this.$refs.work;
@@ -232,7 +231,6 @@ export default class appDetail extends Vue {
 
                 });
 			}
-			console.log("sa")
         }
         if(!this.dsm.isPosted()){
 			uni.showToast({
