@@ -395,7 +395,6 @@ export namespace baseUtils {
 		 * @param ysf
 		 */
 		calcTwoValue(o0: any, o1: any, ysf: string) {
-			debugger
 			if (ysf == '+' || ysf == '|') {
 				if (o0 == null) {
 					return o1;

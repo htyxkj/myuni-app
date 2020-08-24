@@ -513,7 +513,6 @@ export namespace dataTool {
 		   */
 		currCanEdit(cds:CDataSet,env:CCliEnv,_i:number = -1):boolean {
 		    //判断是否是临时改
-			debugger
 		    if(cds.ceaPars){
 				if((cds.ccells.attr & 0x4000) > 0 && parseInt(cds.ceaPars.statefr) !== 6){
 					return true;

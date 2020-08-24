@@ -1,4 +1,5 @@
 <template>
+	<view>
 	<view class="cu-modal" :class="show ? 'show' : ''">
 		<view class="cu-dialog">
 			<view class="cu-bar bg-white justify-end">
@@ -30,6 +31,7 @@
 				</view>
 			</view>
 		</view>
+	</view>
 	</view>
 </template>
 <script lang="ts">
@@ -89,3 +91,9 @@ export default class bipFileInfo extends Vue {
 	}
 }
 </script>
+
+<style scoped>
+	.cu-modal{
+		z-index: 10 !important;
+	}
+</style>
