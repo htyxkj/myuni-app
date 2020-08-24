@@ -157,11 +157,14 @@ export namespace BIPUtil {
 			// let data = qs.stringify(param);
 			return  http.post(GlobalVariable.REGAPI, param, { header: { 'content-type': 'application/x-www-form-urlencoded' } });
 		}
-		uniAppUploadFile(file:any,params:any,success:any,fail:any){
+
+		getFileServer(params: any,config:any) {
+			return http.post('/sysupd', params,config);
+		}
+		uniAppUploadFile(files:any,params:any,success:any,fail:any){
 			 uni.uploadFile({
-			 	url: commURL.BaseUri+'/sysupd?updid=37&snkey='+uni.getStorageSync('snkey'),  
-			 	filePath: file,
-			 	name: 'file', 
+			 	url: commURL.BaseUri+'/sysupd',  
+			 	files: files,
 			 	formData: params,
 			 	success:success,
 				fail:fail

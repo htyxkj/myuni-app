@@ -17,7 +17,7 @@
 								<text class='cuIcon-close'></text>
 							</view>
 						</view>
-						<view class="solids" @tap="ChooseImage" v-if="imgList.length<4">
+						<view class="solids" @tap="ChooseImage" v-if="imgList.length<12">
 							<text class='cuIcon-cameraadd'></text>
 						</view>
 					</view>
@@ -26,7 +26,7 @@
 			<view class="cu-bar bg-white justify-end">
 				<view class="action">
 					<button class="cu-btn line-green text-green" @tap="hideModal">取消</button>
-					<button class="cu-btn bg-green margin-left" @tap="hideModal">上传</button>
+					<button class="cu-btn bg-green margin-left" @tap="upFile">上传</button>
 			
 				</view>
 			</view>
@@ -36,12 +36,23 @@
 </template>
 <script lang="ts">
 import { Vue, Provide, Prop, Component, Inject } from 'vue-property-decorator';
+import { BIPUtil } from '@/classes/api/request';
+let tools = BIPUtil.ServApi;
+import Cell from '@/classes/pub/coob/Cell';
+import CCliEnv from '@/classes/cenv/CCliEnv';
 @Component({})
 export default class bipFileInfo extends Vue {
+	@Inject('env') env!:CCliEnv;
+	@Prop({default:'text',type:String}) type!:string
+	@Prop({default:false,type:Boolean}) clearable!:boolean
+	@Prop({type:Object}) cell!:Cell;
+	@Prop({type:String}) obj_id!:string;
 	@Prop({ type: Boolean, default: false }) show!: boolean;
 	imgList = [];
 	imgList2 = [];
 	count: number = 9;
+	upLoadDid:any = null;
+
 	hideModal(){
 		this.$emit('hide')
 	}
@@ -68,10 +79,10 @@ export default class bipFileInfo extends Vue {
 
 	DelImg(e: any) {
 		uni.showModal({
-			title: '召唤师',
-			content: '确定要删除这段回忆吗？',
-			cancelText: '再看看',
-			confirmText: '再见',
+			title: '删除',
+			content: '确定要删除这个附件吗（同时会删除服务器上的文件）？',
+			cancelText: '取消',
+			confirmText: '删除',
 			success: res => {
 				if (res.confirm) {
 					this.imgList.splice(e.currentTarget.dataset.index, 1);
@@ -82,13 +93,45 @@ export default class bipFileInfo extends Vue {
 			}
 		});
 	}
-	
+
+	/**
+	 * 上传文件
+	 */
+	upFile(){
+		let params = {
+			fjkey : this.obj_id,
+			updid:37,
+			snkey:uni.getStorageSync('snkey')
+		}
+		tools.uniAppUploadFile(this.imgList2,params,this.fileSuccess,this.fileFail); 
+	}
+	//文件上传成功
+	fileSuccess(uploadFileRes:any){
+		let data = uploadFileRes.data;
+		data = JSON.parse(data)
+		if(data.id ==0){
+		 uni.showToast({title:"文件上传成功！",icon:'none'})
+		} else{
+			uni.showToast({title:"文件上传失败！！！",icon:'none'})
+		}
+	}
+	//文件上传失败
+	fileFail(e:any){
+		console.log(e)
+		uni.showToast({title:"文件上传失败！",icon:'none'})
+	}
 	ViewImage(e:any) {
 		uni.previewImage({
 			urls: this.imgList,
 			current: e.currentTarget.dataset.url
 		});
 	}
+
+	makePath(){
+        const key = 999;
+        let add1 = Math.floor(Math.random() * (key));
+        return add1;
+    }
 }
 </script>
 
