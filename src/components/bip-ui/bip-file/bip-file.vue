@@ -1,11 +1,11 @@
 <template>
 	<view class="cu-form-group solid-bottom">
-		<template v-if="label">
+		<template v-if="label" :class="[cell.isReq?'text-red':'']">
 			<view class="title">{{ cell.labelString }}</view>
 		</template>
 		<input type="text" v-model="mode" disabled="true"/>
 		<text class="text-progress text-bold cuIcon-upload" @tap.stop="open()"></text>
-		<bip-file-info :show="showFda" @hide="hide"></bip-file-info>
+		<bip-file-info :cell="cell" :obj_id="obj_id"  :show="showFda" @hide="hide" @success="success"></bip-file-info>
 	</view>
 		
 </template>
@@ -57,6 +57,11 @@ export default class bipFile extends Vue{
 	cellDataChange(){
 		console.log('监听值变化');
 		this.recordChange();
+	}
+	success(fjName:any){
+		console.log(fjName);
+		this.mode = fjName;
+		this.cds.cellChange(this.mode,this.cell.id);
 	}
 		
 	@Watch('record')

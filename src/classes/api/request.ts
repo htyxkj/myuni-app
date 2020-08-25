@@ -158,17 +158,23 @@ export namespace BIPUtil {
 			return  http.post(GlobalVariable.REGAPI, param, { header: { 'content-type': 'application/x-www-form-urlencoded' } });
 		}
 
-		getFileServer(params: any,config:any) {
-			return http.post('/sysupd', params,config);
-		}
-		uniAppUploadFile(files:any,params:any,success:any,fail:any){
-			 uni.uploadFile({
-			 	url: commURL.BaseUri+'/sysupd',  
-			 	files: files,
+		async uniAppUploadFile(filePath:any,params:any,success:any,fail:any){
+			var s='',name, key;
+			for(var p in params) {
+				if(params.hasOwnProperty(p)) { name = p };
+				key = params[p];
+				s += "&" + name + "=" + encodeURIComponent(key);
+			};
+			s = s.substring(1,s.length);
+			let url = '/sysupd?'+s
+			await uni.uploadFile({
+				url: commURL.BaseUri+url,  
+				filePath: filePath,
 			 	formData: params,
+			 	name: params.fileName, 
 			 	success:success,
 				fail:fail
-			 });
+			});
 		}
 		/**
 		 *@description 获取User对象

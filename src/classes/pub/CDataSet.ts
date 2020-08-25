@@ -334,44 +334,6 @@ export default class CDataSet {
 		}
 		return false;
 	}
-	  /**
-	   * 查询单据是否可修改
-	   * @param _i 数据下标
-	   */
-	currCanEdit(_i: number = -1) {
-	    //判断是否是临时改
-	    if(this.ceaPars){
-	      if(this.ccells.attr)
-	      if((this.ccells.attr & 0x4000) > 0 && this.ceaPars.statefr !== "6"){
-	        return true;
-	      }
-	    }
-	    if((this.ccells.attr & 0x8 )>0){
-	      return false;
-	    }
-	    if (this.ds_par != null) {
-	      return this.ds_par.currCanEdit();
-	    }
-	    let crd = this.currRecord;
-	    if (_i !== -1) {
-	      crd = this.cdata.getDataAtIndex(_i);
-	    }
-	    if (crd) {
-			if (this.haveAuth()) {
-				if (this.i_state > -1) {
-				  let cell = this.ccells.cels[this.i_state];
-				  let statestr = crd.data[cell.id];
-				  let state: number = parseInt(statestr);
-				  // if (state == 0) crd.c_state |= 2;
-				  return state == 0;
-				} else {
-				  // crd.c_state |= 2;
-				  return true;
-				}
-			}
-	    }
-	    return false;
-	}
 	/**
 	 * 判断单据是否可以提交
 	 */

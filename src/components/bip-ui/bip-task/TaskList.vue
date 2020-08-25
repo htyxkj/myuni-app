@@ -20,6 +20,7 @@
 	import mLoad from '@/components/mLoad.vue';
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import QueryCont from '@/classes/search/QueryCont';
+	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	@Component({components:{BipTaskUnit,mLoad,loadRefresh}})
 	export default class TaskList extends Vue{
 		currPage: number = 1;
@@ -48,7 +49,7 @@
 		//查询服务端任务数据
 		queryTaskInfo() {
 			let dataStr = JSON.stringify({
-				tousr: 'admin'
+				tousr: LoginModule.user.userCode
 			});
 			let qe: QueryEntity = new QueryEntity(this.obj_id, this.obj_id, dataStr);
 			qe.page.currPage = this.currPage;
