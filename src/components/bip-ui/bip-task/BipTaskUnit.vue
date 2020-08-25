@@ -85,7 +85,7 @@
 				title: '跳转中...'
 			});
 			uni.navigateTo({
-				url: '/pages/appinfo/appdetail?'+cmd,
+				url: '/pages/appinfo/appdetailsp?'+cmd,
 				complete: () => {
 					uni.hideLoading();
 				}
