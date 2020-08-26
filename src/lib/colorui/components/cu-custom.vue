@@ -45,6 +45,10 @@
 				type: [Boolean, String],
 				default: false
 			},
+			cusBack: {
+				type: [Boolean, String],
+				default: false
+			},
 			bgImage: {
 				type: String,
 				default: ''
@@ -52,9 +56,13 @@
 		},
 		methods: {
 			BackPage() {
-				uni.navigateBack({
-					delta: 1
-				});
+				if(this.cusBack){
+					this.$emit("back")
+				}else{
+					uni.navigateBack({
+						delta: 1
+					});
+				}
 			}
 		}
 	}

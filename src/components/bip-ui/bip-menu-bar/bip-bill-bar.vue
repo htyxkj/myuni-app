@@ -1,5 +1,5 @@
 <template>
-	<view class="cu-bar tabbar bg-white shadow foot" style="z-index: 99999;">
+	<view class="cu-bar tabbar bg-white shadow foot" style="z-index: 100000;">
 		<view v-if="(attr & 1) == 1 && addBtn" class="submit bg-blue margin-sm" @click="tabSelect(addBtn)" data-id="ADD" :data-btn="addBtn" ><text>添加</text></view>
 		<view v-if="(attr & 2) == 2 && saveBtn" class="submit bg-green margin-sm" @click="tabSelect(saveBtn)" data-id="SAVE" :data-btn="saveBtn" ><text>保存</text></view>
 		<template v-if="bottomData&&bmore">
@@ -11,7 +11,7 @@
 					<view class="cu-list grid col-4">
 						<template v-for="(item,index) in bottomData">
 							<template v-if="item.cmd !== 'ADD' && item.cmd !== 'SAVE'">
-								<view class="cu-item" :key="index" @click="tabSelect(item)"  :data-id="item.cmd" :data-btn="item" :class="[item.cmd=='DEL'?'text-red':'',item.cmd=='COPY'?'text-green':'',item.cmd=='SUBMIT'?'text-blue':'',item.cmd=='CHECK'?'text-purple':'']">
+								<view class="cu-item" :key="index" @click="tabSelect(item)"  :data-id="item.cmd" :data-btn="item" :class="[item.cmd=='DEL'?'text-red':'',item.cmd=='COPY'?'text-green':'',item.cmd=='SUBMIT'?'text-blue':'',item.cmd=='CHECK'?'text-purple':'',item.cmd=='CHECKPROCESS'?'text-mauve':'']">
 									<view :class="['cuIcon-' + item.icon]"></view>
 									<text class="text-lg">{{ item.name }}</text>
 								</view>

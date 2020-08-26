@@ -12,6 +12,7 @@
 				<view class="padding-bottom-xl margin-bottom-xl"></view>
 			</view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
+			<bip-work-process ref="workProcess" @checkOK="checkOK"></bip-work-process>
 		</template>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
@@ -31,6 +32,7 @@ import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue';
 import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue';
 import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue';
 import BipWork from  '@/components/cwork/BipWork.vue';
+import BipWorkProcess from  '@/components/cwork/BipWorkProcess.vue';
 
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
@@ -50,7 +52,7 @@ const DataUtil = dataTool.utils;
 
 import CeaPars from "@/classes/cenv/CeaPars";
 @Component({
-	components: { mLoad, bipLay, bipMenuBar, bipBillBar , BipWork}
+	components: { mLoad, bipLay, bipMenuBar, bipBillBar , BipWork, BipWorkProcess}
 })
 export default class appDetail extends Vue {
 	vueId: string = Tools.guid();
@@ -99,6 +101,10 @@ export default class appDetail extends Vue {
 
 		if(cmd == icl.B_CMD_SUBMIT){
 			this.submint();
+		}
+		
+		if(cmd === icl.B_CMD_CHECK_PROCESS){
+			this.checkProcess();
 		}
 	}
 	/**
@@ -239,6 +245,29 @@ export default class appDetail extends Vue {
 			})
         }
 	}
+
+	/**
+	 * 审批流程查看
+	 */
+	async checkProcess(){
+		if(this.dsm.opera){
+			//可以提交
+			let crd = this.dsm.currRecord
+			let params = {
+				sid: crd.data[this.dsm.opera.pkfld],
+				sbuid: crd.data[this.dsm.opera.buidfld],
+				statefr: crd.data[this.dsm.opera.statefld],
+				stateto: crd.data[this.dsm.opera.statefld],
+				sorg:crd.data[this.dsm.opera.sorgfld],
+				spuserId: ""
+			}  
+			this.cea = new CeaPars(params) 
+ 			let workProcess:any = this.$refs.workProcess;
+			this.dsm.ceaPars = this.cea
+			workProcess.open(this.cea);
+        }
+	}
+
 	checkOK(state:number|string){
         let i = this.dsm.i_state;
         if(i>-1){

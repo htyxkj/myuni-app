@@ -40,6 +40,9 @@ export default class BipMenuBar{
                 let btn = new BipMenuBtn(CommICL.B_CMD_SUBMIT,"提交/审核")
                 btn.setIconFontIcon('pullup');
                 this.menuList.push(btn)
+                btn = new BipMenuBtn(CommICL.B_CMD_CHECK_PROCESS,"流程查看")
+                btn.setIconFontIcon('sort');
+                this.menuList.push(btn)
                 // btn = new BipMenuBtn(CommICL.B_CMD_CHECK,"审核")
                 // btn.setIconFontIcon('appreciate');
                 // this.menuList.push(btn)

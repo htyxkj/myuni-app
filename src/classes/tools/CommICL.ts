@@ -43,6 +43,7 @@ class CommICL{
 	B_CMD_SUBMIT :string = 'SUBMIT'//提交
 	B_CMD_CHKINFO :string = 'CHKINFO'//审批信息
 	B_CMD_CHECK :string = 'CHECK'//审核
+    B_CMD_CHECK_PROCESS:string = 'CHECKPROCESS'//流程查看
 	B_CMD_PRINT :string = 'PRINT'//打印
 	B_CMD_LINK :string = 'LINK'//连接
 	B_CMD_LIST :string = 'LIST'//连接

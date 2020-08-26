@@ -1,10 +1,11 @@
 <template>
-	<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="330" :pageNo="currPage" :totalPageNo="totalPage"
+	<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="300" :pageNo="currPage" :totalPageNo="totalPage"
 	 @loadMore="loadMore" @refresh="refresh">
 	 <view slot="content-list">
-	 	<bip-task-unit v-for="(item,index) in list" :key="index" :rowId="index" :record="item" :cells="cell"></bip-task-unit>
+	 	<bip-task-unit v-for="(item,index) in list" :key="index" :rowId="index" :record="item" :cells="cell" @toDetails="toDetails"></bip-task-unit>
 	 </view>
 	 <mLoad :png="'/static/gs.png'" :msg="'加载中...'" v-if="loadModal"></mLoad>
+		<message ref="msg"></message>
 	</load-refresh>
 </template>
 
@@ -20,9 +21,12 @@
 	import mLoad from '@/components/mLoad.vue';
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import QueryCont from '@/classes/search/QueryCont';
+	import { baseUtils } from '@/classes/api/baseutils';
+	let paramTools = baseUtils.tools;
 	@Component({components:{BipTaskUnit,mLoad,loadRefresh}})
 	export default class UnTaskList extends Vue{
 		currPage: number = 1;
+		pageSize:number = 10;
 		loadModal:boolean = false;
 		totalPage: number = 0;
 		total:number = 0;
@@ -46,13 +50,13 @@
 		}
 		
 		//查询服务端任务数据
-		queryTaskInfo() {
+		async queryTaskInfo() {
 			let dataStr = JSON.stringify({
 				tousr: 'admin'
 			});
 			let qe: QueryEntity = new QueryEntity("SYRW", "SYRW", dataStr);
 			qe.page.currPage = this.currPage;
-			tools.query(qe).then((res: any) => {
+			await tools.query(qe).then((res: any) => {
 				// console.log(res)
 				let rtn = res.data;
 				// console.log(rtn);
@@ -61,6 +65,7 @@
 					// console.log(page,2222)
 					this.currPage = page.currPage;
 					this.total = page.total;
+					this.pageSize = page.pageSize
 					if(this.total>0)
 						this.totalPage = Math.ceil(this.total/page.pageSize)
 					if(this.currPage==1){
@@ -82,7 +87,7 @@
 		}
 		// 上划加载更多
 		loadMore() {
-			// console.log('loadMore')
+			console.log('loadMore')
 			// 请求新数据完成后调用 组件内loadOver()方法
 			// 注意更新当前页码 currPage
 			if(this.totalPage>this.currPage){
@@ -108,6 +113,84 @@
 		
 		@Emit('totalM')
 		emitTotal(n: number){
+		}
+		/**
+		 * 打开详情
+		 */
+		toDetails(cmd:any){
+			cmd.total = this.total;
+			cmd.canUp = true;
+			cmd.canNext =true;
+			if(cmd.rowId == 0 || this.total ==1){
+				cmd.canUp = false;
+			}
+			if(cmd.rowId == this.total-1 || this.total ==1){
+				cmd.canNext =false;
+			}
+			this.$emit("toDetails",cmd);
+		}
+		/**
+		 * 跳转至某行
+		 */
+		async goToRow(rowId:any){
+			if(rowId >= this.currPage * this.pageSize){
+				if(this.totalPage>this.currPage){
+					this.currPage++;
+					await this.queryTaskInfo();
+				}
+			}
+			let record = this.list[rowId];
+			let sbuid = record.data.buid;
+			let sid = record.data.buno;
+			tools.getBULinks(sbuid+"_YD").then((res:any)=>{
+				if(res.data.id==0){
+					let opt:any = res.data.data.opt;
+					let mid = opt.pmenuid;
+					let m0 = paramTools.findMenu(mid);
+					if(m0){
+						let cmd = m0.command;
+						let dd = cmd.split("&");
+						let pbuid = ''
+						let pmenuid =''
+						dd.forEach((aa:any)=>{
+							let pbuids = aa.split('=')
+							if(pbuids[0] == 'pbuid'){
+								pbuid = pbuids[1]
+							}
+							if(pbuids[0] == 'pmenuid'){
+								pmenuid = pbuids[1];
+							}
+						});
+						if(pbuid){
+							tools.getMenuParams(pbuid,mid).then((res:any)=>{
+								let data = res.data;
+								if(data.id==0){
+									let uriParams = data.data.mparams;
+									uni.setStorageSync(pbuid,JSON.stringify(uriParams));
+									let qcont = opt.pkfld+"='"+sid+"'";
+									let con = {rowId:rowId,pbuid:pbuid,pmenuid:pmenuid,title:m0.menuName,qcont:encodeURIComponent(qcont)}
+									this.toDetails(con);
+								}
+							}).catch((err:any)=>{
+								console.log(err);
+							});
+						}
+					}else{
+						this.showErr('没有菜单权限！')
+					}
+				}else{
+					let msg = res.data.message;
+					//弹出提醒
+					this.showErr(msg)
+				}
+			})
+			.catch((res:any)=>{
+				console.log(res);
+			});
+		}
+		showErr(err:string){
+			let msg:any = this.$refs['msg'];
+			msg.error({background: true,content:err})
 		}
 	}
 </script>

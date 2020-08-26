@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom :bgColor="'bg-' + cr" :isBack="true">
+		<cu-custom :bgColor="'bg-' + cr" :isBack="true" :cusBack="true" @back="back" style="height:0px">
 			<block slot="backText">返回</block>
 			<block slot="content">
 				<view class="header-title">{{ title }}->审批</view>
@@ -12,11 +12,24 @@
 				<view class="padding-bottom-xl margin-bottom-xl"></view>
 			</view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
+			<bip-work-process ref="workProcess" @checkOK="checkOK"></bip-work-process>
 		</template>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
 			<!-- <bip-menu-bar @tabSelect="execCmd"></bip-menu-bar> -->
 			<bip-bill-bar @tabSelect="execCmd" :attr="2" :bmore="true"></bip-bill-bar>
+		</template>
+		<template v-if="canUp ==true || canNext == true">
+			<div class="hover-left-css">
+				<button class="cu-btn cuIcon" :disabled="!canUp"  @click="gotPrevious">
+					<text class="cuIcon-back"></text>
+				</button>
+			</div>
+			<div class="hover-right-css">
+				<button class="cu-btn cuIcon" :disabled="!canNext"  @click="goNext">
+					<text class="cuIcon-right"></text>
+				</button>
+			</div>
 		</template>
 	</view>
 </template>
@@ -31,6 +44,7 @@ import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue';
 import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue';
 import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue';
 import BipWork from  '@/components/cwork/BipWork.vue';
+import BipWorkProcess from  '@/components/cwork/BipWorkProcess.vue';
 
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
@@ -50,7 +64,7 @@ const DataUtil = dataTool.utils;
 
 import CeaPars from "@/classes/cenv/CeaPars";
 @Component({
-	components: { mLoad, bipLay, bipMenuBar, bipBillBar , BipWork}
+	components: { mLoad, bipLay, bipMenuBar, bipBillBar , BipWork ,BipWorkProcess}
 })
 export default class appDetailSp extends Vue {
 	vueId: string = Tools.guid();
@@ -75,6 +89,10 @@ export default class appDetailSp extends Vue {
 	initUIOK:boolean = false;
 	
 	cea:CeaPars = new CeaPars({});
+
+	canNext:boolean = true;
+	canUp:boolean = true;
+	rowIndex:any = 0;
 	
 	execCmd(btn: any) {
 		let cmd = btn.cmd;
@@ -99,6 +117,10 @@ export default class appDetailSp extends Vue {
 
 		if(cmd == icl.B_CMD_SUBMIT){
 			this.submint();
+		}
+
+		if(cmd === icl.B_CMD_CHECK_PROCESS){
+			this.checkProcess();
 		}
 	}
 	/**
@@ -224,7 +246,7 @@ export default class appDetailSp extends Vue {
                     }
                 }).catch((err:any)=>{
 					uni.showToast({
-						title: err+";BaseApplet submint",
+						title: err+";appDetailSp submint",
 						icon:"none"
 					})
                 }).finally(()=>{
@@ -239,6 +261,28 @@ export default class appDetailSp extends Vue {
 			})
         }
 	}
+	/**
+	 * 审批流程查看
+	 */
+	async checkProcess(){
+		if(this.dsm.opera){
+			//可以提交
+			let crd = this.dsm.currRecord
+			let params = {
+				sid: crd.data[this.dsm.opera.pkfld],
+				sbuid: crd.data[this.dsm.opera.buidfld],
+				statefr: crd.data[this.dsm.opera.statefld],
+				stateto: crd.data[this.dsm.opera.statefld],
+				sorg:crd.data[this.dsm.opera.sorgfld],
+				spuserId: ""
+			}  
+			this.cea = new CeaPars(params) 
+ 			let workProcess:any = this.$refs.workProcess;
+			this.dsm.ceaPars = this.cea
+			workProcess.open(this.cea);
+        }
+	}
+
 	checkOK(state:number|string){
         let i = this.dsm.i_state;
         if(i>-1){
@@ -325,6 +369,47 @@ export default class appDetailSp extends Vue {
 		}
 	}
 
+	show(option:any){
+		if (option.pbuid) {
+			this.initUIOK = false;
+			this.cr = option.color ? option.color : 'blue';
+			this.title = option.title ? option.title : 'billPage';
+			this.pbuid = option.pbuid;
+			this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
+			if(option.qcont){
+				this.qcont = decodeURIComponent(option.qcont);
+			}
+			this.loading = true;
+			if (this.uriParam) {
+				tools
+					.getCCellsParams(this.uriParam.pcell)
+					.then((res: any) => {
+						this.loading = false;
+						let rtn = res.data;
+						if (rtn.id == 0) {
+							this.qe.pcell = this.uriParam.pcell;
+							this.initUIData(rtn.data.layCels);							
+						} else {
+							uni.showToast({
+								title: '没有获取到对象定义' + this.uriParam
+							});
+						}
+					})
+					.catch((err: any) => {
+						this.loading = false;
+						console.log(err);
+					});
+			}
+			this.canNext = option.canNext;
+			this.canUp = option.canUp;
+			this.rowIndex = option.rowId
+		}
+	}
+
+	back(){
+		this.$emit("back")
+	}
+
 	initUIData(layCels: any) {
 		this.cells = layCels;
 		this.dsm = new CDataSet(this.cells[0]);
@@ -341,14 +426,22 @@ export default class appDetailSp extends Vue {
 				this.dsm.initContrlIndex();
 			}
 		});
-
+		this.uriParam.pattr = 836;//查询，保存，审批，审核
 		this.mbs.init(this.uriParam.pattr, this.dsm);
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
 		this.initUIOK = true;
-		console.log(this.uriParam.playout,this.qcont,'99999999')
 	}
-	
+	//下一条
+    goNext(){
+		let rowId = this.rowIndex+ 1
+      	this.$emit('gorow',rowId);
+    }
+    //上一条
+    gotPrevious(){
+		let rowId = this.rowIndex - 1
+      	this.$emit('gorow',rowId);
+    }
 	@Watch('initUIOK')
 	initUIOKChange(){
 		if(this.initUIOK&&this.qcont){
@@ -364,5 +457,21 @@ export default class appDetailSp extends Vue {
 <style scoped>
 page {
 	margin-bottom: 120upx;
+}
+.hover-right-css{
+  width:55px;
+  height:20px;
+  position:fixed;/*fixed总是以body为定位时的对象，总是根据浏览器的窗口来进行元素的定位，通过"left"、 "top"、 "right"、 "bottom" 属性进行定位。*/
+  right:0px;/*设置与右侧的距离*/
+  bottom:50%;/*设置与底部的距离*/
+  z-index:100;/*设置显示次序，数字越大显示越靠前*/
+}
+.hover-left-css{
+  width:20px;
+  height:20px;
+  position:fixed;/*fixed总是以body为定位时的对象，总是根据浏览器的窗口来进行元素的定位，通过"left"、 "top"、 "right"、 "bottom" 属性进行定位。*/
+  left:0px;/*设置与右侧的距离*/
+  bottom:50%;/*设置与底部的距离*/
+  z-index:100;/*设置显示次序，数字越大显示越靠前*/
 }
 </style>
