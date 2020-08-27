@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<template >
+		<template>
 			<view v-show="spList" class="bg-white nav text-center flex">
 				<view class="cu-item flex-sub" :class="index==TabCur?'text-blue cur':''" v-for="(item,index) in shTabs" :key="index"
 					@tap="tabSelect" :data-id="index">
@@ -20,7 +20,9 @@
 			</view>
 		</template>
 		<template >
-			<appdetailsp v-show="!spList" ref="appdetailsp" @back="back"  @gorow="goRow"></appdetailsp>
+			<scroll-view style="height:100vh;" scroll-y="true" >
+				<appdetailsp v-show="!spList" ref="appdetailsp" @back="back"  @gorow="goRow"></appdetailsp>
+			</scroll-view>
 		</template>
 	</view>
 </template>
