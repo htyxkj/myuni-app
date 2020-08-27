@@ -430,6 +430,8 @@ export default class appDetailSp extends Vue {
 		this.mbs.init(this.uriParam.pattr, this.dsm);
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
+		this.qe.mcont = ''+this.qcont;		
+		this.findData();		
 		this.initUIOK = true;
 	}
 	//下一条
@@ -442,15 +444,15 @@ export default class appDetailSp extends Vue {
 		let rowId = this.rowIndex - 1
       	this.$emit('gorow',rowId);
     }
-	@Watch('initUIOK')
-	initUIOKChange(){
-		if(this.initUIOK&&this.qcont){
-			this.qe.mcont = ''+this.qcont;
-			this.$nextTick(()=>{
-				this.findData();
-			})
-		}
-	}
+	// @Watch('initUIOK')
+	// initUIOKChange(){
+	// 	if(this.initUIOK&&this.qcont){
+	// 		this.qe.mcont = ''+this.qcont;
+	// 		this.$nextTick(()=>{
+	// 			this.findData();
+	// 		})
+	// 	}
+	// }
 }
 </script>
 
