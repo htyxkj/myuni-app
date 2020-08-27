@@ -7,48 +7,50 @@
                     <text class="cuIcon-close text-red"></text>
                 </view>
             </view>
-            <view class="padding-left-xl padding-right-xl padding-top-sm mycontent">
-                <view v-for="(item,index) in info" :key="index">
-                    <view style="position: relative;">
-                        <img class="image2" src="@/static/check/process/process_ty.png">
-                        <view class="grid col-2 oneList" v-if=" (item.stfr == '驳回' || item.stfr == '新建')">
-                            <view class="text-left">&nbsp;&nbsp;{{item.namefr}}<br/>&nbsp;&nbsp;<span style="color:#8FB95C;font-size: 10px">发起申请</span></view>
-                            <view class="text-right">
-                                <span style="font-size:11px">
-                                    {{item.datefr}}
-                                </span>
+            <scroll-view style="height:500upx;" scroll-y="true" >
+                <view class="padding-left-xl padding-right-xl padding-top-sm">
+                    <view v-for="(item,index) in info" :key="index">
+                        <view style="position: relative;">
+                            <img class="image2" src="@/static/check/process/process_ty.png">
+                            <view class="grid col-2 oneList" v-if=" (item.stfr == '驳回' || item.stfr == '新建')">
+                                <view class="text-left">&nbsp;&nbsp;{{item.namefr}}<br/>&nbsp;&nbsp;<span style="color:#8FB95C;font-size: 10px">发起申请</span></view>
+                                <view class="text-right">
+                                    <span style="font-size:11px">
+                                        {{item.datefr}}
+                                    </span>
+                                </view>
                             </view>
                         </view>
-                    </view>
-                    <view style="position: relative;">
-                        <img class="image2" v-if="item.cid < 0 && item.cid != -20000" src="@/static/check/process/process_bh.png">
-                        <img class="image2" v-else-if="item.cid == -20000" src="@/static/check/process/process_ds.png">
-                        <img class="image2" v-else src="@/static/check/process/process_ty.png">
-                        <view class="grid col-2 oneList">
-                            <view class="text-left">&nbsp;&nbsp;{{item.nameto}}</view>
-                            <view class="text-right">
-                                <span style="font-size:11px">
-                                    {{item.datefr}}
-                                </span>
-                            </view> 
-                            <view class="text-left">&nbsp;&nbsp;<span style="color:#8FB95C;font-size: 10px">{{item.stto}}</span></view>
-                            <view class="text-right">
-                                <span style="font-size:11px">
-                                    {{item.dscto}}
-                                </span>
+                        <view style="position: relative;">
+                            <img class="image2" v-if="item.cid < 0 && item.cid != -20000" src="@/static/check/process/process_bh.png">
+                            <img class="image2" v-else-if="item.cid == -20000" src="@/static/check/process/process_ds.png">
+                            <img class="image2" v-else src="@/static/check/process/process_ty.png">
+                            <view class="grid col-2 oneList">
+                                <view class="text-left">&nbsp;&nbsp;{{item.nameto}}</view>
+                                <view class="text-right">
+                                    <span style="font-size:11px">
+                                        {{item.datefr}}
+                                    </span>
+                                </view> 
+                                <view class="text-left">&nbsp;&nbsp;<span style="color:#8FB95C;font-size: 10px">{{item.stto}}</span></view>
+                                <view class="text-right">
+                                    <span style="font-size:11px">
+                                        {{item.dscto}}
+                                    </span>
+                                </view>
                             </view>
-                        </view>
-                        <div>
-                            <img class="image3" v-if="item.cid <0 && item.cid != -20000" src="@/static/check/process/process_bh1.png">
-                            <img class="image3" v-else-if="item.cid == -20000" src="@/static/check/process/process_ds1.png">
-                            <img class="image3" v-else src="@/static/check/process/process_ty1.png">
-                        </div>
+                            <div>
+                                <img class="image3" v-if="item.cid <0 && item.cid != -20000" src="@/static/check/process/process_bh1.png">
+                                <img class="image3" v-else-if="item.cid == -20000" src="@/static/check/process/process_ds1.png">
+                                <img class="image3" v-else src="@/static/check/process/process_ty1.png">
+                            </div>
+                        </view> 
                     </view> 
-                </view> 
-            </view>
+                </view>
+            </scroll-view>
             <view class="cu-bar bg-white justify-end">
                 <view class="action">
-                    <button class="cu-btn bg-green margin-left" @tap="showDlg = false">确定</button>
+                    <button class="cu-btn bg-green margin-left" @tap="showDlg = false">关闭</button>
                 </view>
             </view>
         </view>
@@ -96,12 +98,14 @@ export default class BipWorkProcess extends Vue{
 }
 .image2{
     height: 50upx;
+    width: 50upx;
     position: absolute;
     left: -26upx;
     top: 40upx;
 }
 .image3{
     height: 50upx;
+    width: 100upx;
     position: absolute;
     top: 64upx;
 }

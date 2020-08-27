@@ -352,4 +352,10 @@ export default class CDataSet {
 	    }
 	    if (this.index > -1) this.cdata.data[this.index].c_state = this.currRecord.c_state;
 	  }
+
+	getCell(id: string) {
+		return this.ccells.cels.find(item => {
+			return id === item.id;
+		});
+	}
 }

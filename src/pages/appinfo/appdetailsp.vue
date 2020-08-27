@@ -14,7 +14,7 @@
 				<view class="padding-bottom-xl margin-bottom-xl"></view>
 			</view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
-			<bip-work-process ref="workProcess" @checkOK="checkOK"></bip-work-process>
+			<bip-work-process ref="workProcess"></bip-work-process>
 		</template>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
@@ -23,12 +23,12 @@
 		</template>
 		<template v-if="canUp ==true || canNext == true">
 			<div class="hover-left-css">
-				<button class="cu-btn cuIcon" :disabled="!canUp"  @click="gotPrevious">
+				<button class="cu-btn cuIcon bg-blue" :disabled="!canUp"  @click="gotPrevious">
 					<text class="cuIcon-back"></text>
 				</button>
 			</div>
 			<div class="hover-right-css">
-				<button class="cu-btn cuIcon" :disabled="!canNext"  @click="goNext">
+				<button class="cu-btn cuIcon bg-blue" :disabled="!canNext"  @click="goNext">
 					<text class="cuIcon-right"></text>
 				</button>
 			</div>
@@ -284,12 +284,37 @@ export default class appDetailSp extends Vue {
 			workProcess.open(this.cea);
         }
 	}
+	/**
+	 * 更新审批图片信息
+	 */
+	changeStateImg(){
+		let crd = this.dsm.currRecord;
+		if(crd != null && this.dsm.opera){
+			let params = {
+				sid: crd.data[this.dsm.opera.pkfld],
+				sbuid: crd.data[this.dsm.opera.buidfld],
+				statefr: crd.data[this.dsm.opera.statefld],
+				stateto: crd.data[this.dsm.opera.statefld],
+				sorg:crd.data[this.dsm.opera.sorgfld],
+				spuserId: ""
+			}
+			this.cea = new CeaPars(params);
+			tools.getCheckInfo(this.cea,33).then((res:any)=>{
+				if(res.data.id==0){
+					let data = res.data.data.info
+					let work:any = this.$refs.work;
+					work.initStateImg(data);
+				}
+			});
+		}
+	}
 
 	checkOK(state:number|string){
         let i = this.dsm.i_state;
         if(i>-1){
 			this.dsm.currRecord.data[this.dsm.ccells.cels[i].id] = state
 			uni.$emit(this.dsm.ccells.obj_id+"_"+this.dsm.ccells.cels[i].id)
+			this.changeStateImg();
 		}
     }
 	//加载数据
@@ -319,10 +344,12 @@ export default class appDetailSp extends Vue {
 						sbuid: crd.data[cds.opera.buidfld],
 						statefr: crd.data[cds.opera.statefld],
 						stateto: crd.data[cds.opera.statefld],
+						sorg:crd.data[cds.opera.sorgfld],
 						spuserId: ""
 					}  
 					this.cea = new CeaPars(params);
-					this.dsm.ceaPars = this.cea;
+					this.dsm.ceaPars = this.cea; 
+					this.changeStateImg();
 				}
 			}else{
 				console.log(rr)
@@ -466,18 +493,18 @@ page {
 	margin-bottom: 120upx;
 }
 .hover-right-css{
-  width:55px;
-  height:20px;
+  width:100upx;
+  height:100upx;
   position:fixed;/*fixed总是以body为定位时的对象，总是根据浏览器的窗口来进行元素的定位，通过"left"、 "top"、 "right"、 "bottom" 属性进行定位。*/
   right:0px;/*设置与右侧的距离*/
   bottom:50%;/*设置与底部的距离*/
   z-index:100;/*设置显示次序，数字越大显示越靠前*/
 }
 .hover-left-css{
-  width:20px;
-  height:20px;
+  width:100upx;
+  height:100upx;
   position:fixed;/*fixed总是以body为定位时的对象，总是根据浏览器的窗口来进行元素的定位，通过"left"、 "top"、 "right"、 "bottom" 属性进行定位。*/
-  left:0px;/*设置与右侧的距离*/
+  left:32upx;/*设置与右侧的距离*/
   bottom:50%;/*设置与底部的距离*/
   z-index:100;/*设置显示次序，数字越大显示越靠前*/
 }

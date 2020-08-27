@@ -1,5 +1,16 @@
 <template>
     <div>
+        <view class="stateImg">
+            <template v-if="isSH==3 || isSH==4">
+                <img src="@/static/check/ysh.png">
+            </template>
+            <template v-if="isSH==2">
+                <img src="@/static/check/dsh.png">
+            </template>
+            <template v-if="isSH==1">
+                <img src="@/static/check/bh.png">
+            </template>
+        </view>
         <view class="cu-modal" style="z-index:999999" :class="centerDialogVisible?'show':''">
 			<view class="cu-dialog">
                 <template v-if="!bchked && isReview">
@@ -263,6 +274,10 @@ export default class BipWork extends Vue{
             this.jdShowMode = this.nodeList[0].stateName
             this.initSelectUser()
         }
+    }
+
+    initStateImg(info:any){
+        this.chkInfos = info;
     }
 
     get title(){
@@ -570,6 +585,28 @@ export default class BipWork extends Vue{
         }
         return v;
     }
+    get isSH() {  
+        //0：新建状态，1:驳回状态；2:待审核；3:已审核;4:执行状态
+        var id = 0;
+        if (this.chkInfos && this.chkInfos.currState) {
+            if (this.chkInfos.currState.stateId == "0" || this.chkInfos.currState.stateId == "5") {
+                id = 0;
+            } else if (this.chkInfos.currState.stateId == "1") {
+                id = 1;
+            } else if (this.chkInfos.currState.stateId == "6") {
+                id = 4;
+            } else {
+                if (this.chkInfos.currState.checked) {
+                    id = 3;
+                } else {
+                    id = 2;
+                }
+            }
+        } else {
+            id = 0;
+        }
+      return id;
+    }
     textareaAInput(e:any) {
         this.remark = e.detail.value
     }
@@ -594,5 +631,10 @@ export default class BipWork extends Vue{
     }
     .btn{
         margin-left: 20upx;
+    }
+    .stateImg{
+        position: fixed;
+        top: 160upx;
+        right: 80upx;
     }
 </style>

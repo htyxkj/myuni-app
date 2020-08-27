@@ -5,6 +5,7 @@
 		</template>
 		<input :placeholder="cell.labelString" type="text" v-model="mode" disabled="true" @tap.stop="open()"/>
 		<text :class="['cuIcon-searchlist', 'text-progress','text-bold']" @tap.stop="open()"></text>
+		<message ref="msg"></message>
 	</view>
 </template>
 
@@ -60,6 +61,25 @@ export default class bipSelect extends Vue {
 		this.getRefVal();
 	}
 	open() {
+		let groupV = "";
+        if(this.bipInsAid){
+            if (!((this.cell.attr & 0x40) > 0)) {
+                if(this.bipInsAid.bType =="CGroupEditor"){
+                    let groupFld = this.bipInsAid.groupFld;
+                    if(!this.cds.currRecord.data[groupFld]){
+						let cel:any = this.cds.getCell(groupFld)
+                        if(cel)
+                        	this.showErr('请先填写：'+cel.labelString);
+                        return;
+                    }else{
+						groupV = this.cds.currRecord.data[groupFld];
+					}
+				}
+            }
+        }else{
+			this.showErr('没有辅助：'+this.cell.editName)
+			return;
+        }
 		if(!this.disabled){
 			this.methordName = this.editName+"_"+(this.index<0?0:this.index)+"_"+this.cell.id
 			uni.$off(this.methordName,this.selectBack)
@@ -67,7 +87,7 @@ export default class bipSelect extends Vue {
 			uni.showLoading({
 				title:'跳转中...'
 			})
-			uni.navigateTo({url:'/pages/selecteditor/selecteditor?editName='+this.editName+"&methordname="+this.methordName,complete: () => {
+			uni.navigateTo({url:'/pages/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.editName+"&methordname="+this.methordName,complete: () => {
 				uni.hideLoading();
 			}});
 		}else{
@@ -184,6 +204,10 @@ export default class bipSelect extends Vue {
 				}
 			}
 		})
+	}
+	showErr(err:string){
+		let msg:any = this.$refs['msg'];
+		msg.error({background: true,content:err})
 	}
 }
 </script>

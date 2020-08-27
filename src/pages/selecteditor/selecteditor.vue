@@ -61,7 +61,9 @@ export default class selecteditor extends Vue {
 	currPage: number = 1;
 	totalPage: number = 0;
 	pageSize:number = 15;
+	groupV:any = '';
 	async onLoad(option: any) {
+		this.groupV = option.groupV;
 		this.editName = option.editName;
 		this.methordName = option.methordname||''
 		this.aidKey = ICL.AID_KEY + this.editName;
@@ -148,6 +150,9 @@ export default class selecteditor extends Vue {
 	getListDataFromNet(pageNum: number, pageSize: number) {
 		this.qe.page.pageSize = pageSize;
 		this.qe.page.currPage = pageNum;
+		if(this.groupV != null && this.groupV != ""){
+			this.qe.groupV = this.groupV;
+		}
 		if(this.searchMode){
 			let ii = this.bipInsAid.showColsIndex[this.index];
 			let cell :any = this.bipInsAid.cells.cels[ii];

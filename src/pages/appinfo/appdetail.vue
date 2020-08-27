@@ -12,7 +12,7 @@
 				<view class="padding-bottom-xl margin-bottom-xl"></view>
 			</view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
-			<bip-work-process ref="workProcess" @checkOK="checkOK"></bip-work-process>
+			<bip-work-process ref="workProcess"></bip-work-process>
 		</template>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
@@ -267,12 +267,33 @@ export default class appDetail extends Vue {
 			workProcess.open(this.cea);
         }
 	}
-
+	changeStateImg(){
+		let crd = this.dsm.currRecord;
+		if(crd != null && this.dsm.opera){
+			let params = {
+				sid: crd.data[this.dsm.opera.pkfld],
+				sbuid: crd.data[this.dsm.opera.buidfld],
+				statefr: crd.data[this.dsm.opera.statefld],
+				stateto: crd.data[this.dsm.opera.statefld],
+				sorg:crd.data[this.dsm.opera.sorgfld],
+				spuserId: ""
+			}  
+			this.cea = new CeaPars(params);
+			tools.getCheckInfo(this.cea,33).then((res:any)=>{
+				if(res.data.id==0){
+					let data = res.data.data.info
+					let work:any = this.$refs.work;
+					work.initStateImg(data);
+				}
+			});
+		}
+	}
 	checkOK(state:number|string){
         let i = this.dsm.i_state;
         if(i>-1){
 			this.dsm.currRecord.data[this.dsm.ccells.cels[i].id] = state
 			uni.$emit(this.dsm.ccells.obj_id+"_"+this.dsm.ccells.cels[i].id)
+			this.changeStateImg();
 		}
     }
 	//加载数据
@@ -305,6 +326,7 @@ export default class appDetail extends Vue {
 					}  
 					this.cea = new CeaPars(params);
 					this.dsm.ceaPars = this.cea;
+					this.changeStateImg();
 				}
 			}
 			this.loading = false;

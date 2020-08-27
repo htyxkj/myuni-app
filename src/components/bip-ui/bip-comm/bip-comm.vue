@@ -7,7 +7,7 @@
 			<template v-if="cell.editType==6">
 				<bip-image :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-image>
 			</template>
-			<template v-else-if="bipInsAid.bType === 'CSelectEditor'">
+			<template v-else-if="bipInsAid.bType === 'CSelectEditor' || bipInsAid.bType === 'CGroupEditor'">
 				<bip-select :label="cell.labelString" :cell="cell" :bipInsAid="bipInsAid" :obj_id="obj_id"></bip-select>
 			</template>
 			<template v-else-if="bipInsAid.bType === 'CDateEditor'">
@@ -20,7 +20,7 @@
 				<bip-tree-editor :label="cell.labelString" :cell="cell" :bipInsAid="bipInsAid" :obj_id="obj_id"></bip-tree-editor>
 			</template>
 			<template v-else>
-				<view>{{cell.labelString}}</view>
+				<view>{{cell.labelString}}--{{bipInsAid.bType}}</view>
 			</template>
 		</template>
 		<template v-else>
