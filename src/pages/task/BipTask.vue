@@ -20,9 +20,11 @@
 			</view>
 		</template>
 		<template >
-			<scroll-view style="height:100vh;" scroll-y="true" >
-				<appdetailsp v-show="!spList" ref="appdetailsp" @back="back"  @gorow="goRow"></appdetailsp>
-			</scroll-view>
+			<view v-if="!spList">
+				<scroll-view style="height:90vh;" scroll-y="true" >
+					<appdetailsp ref="appdetailsp" @back="back"  @gorow="goRow"></appdetailsp>
+				</scroll-view>
+			</view>
 		</template>
 	</view>
 </template>

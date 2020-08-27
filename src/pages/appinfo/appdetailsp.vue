@@ -1,12 +1,14 @@
 <template>
 	<view>
-		<cu-custom :bgColor="'bg-' + cr" :isBack="true" :cusBack="true" @back="back" style="height:0px">
-			<block slot="backText">返回</block>
-			<block slot="content">
-				<view class="header-title">{{ title }}->审批</view>
-			</block>
-		</cu-custom>
-		<template v-if="initUIOK">
+		<view style="float: left;">
+			<cu-custom :bgColor="'bg-' + cr" :isBack="true" :cusBack="true" @back="back">
+				<block slot="backText">返回</block>
+				<block slot="content">
+					<view class="header-title">{{ title }}->审批</view>
+				</block>
+			</cu-custom>
+		</view>
+		<template v-if="initUIOK && dsm.currRecord.data">
 			<view class="margin-lr-sm margin-tb-sm">
 				<bip-lay v-if="lay.binit" :layout="lay"></bip-lay>
 				<view class="padding-bottom-xl margin-bottom-xl"></view>
@@ -90,8 +92,8 @@ export default class appDetailSp extends Vue {
 	
 	cea:CeaPars = new CeaPars({});
 
-	canNext:boolean = true;
-	canUp:boolean = true;
+	canNext:boolean = false;
+	canUp:boolean = false;
 	rowIndex:any = 0;
 	
 	execCmd(btn: any) {
@@ -305,6 +307,7 @@ export default class appDetailSp extends Vue {
 			let rr = res.data;
 			if(rr.id==0){
 				let infos = rr.data.data;
+				console.log(infos)
 				let cds = this.env.getDataSet(objid);
 				infos.data.forEach((cr:any)=>{
 					cds.addRecord(cr);
@@ -321,6 +324,8 @@ export default class appDetailSp extends Vue {
 					this.cea = new CeaPars(params);
 					this.dsm.ceaPars = this.cea;
 				}
+			}else{
+				console.log(rr)
 			}
 			this.loading = false;
 		});
@@ -410,7 +415,7 @@ export default class appDetailSp extends Vue {
 		this.$emit("back")
 	}
 
-	initUIData(layCels: any) {
+	async initUIData(layCels: any) {
 		this.cells = layCels;
 		this.dsm = new CDataSet(this.cells[0]);
 		this.dsm_cont = new CDataSet(this.cells[0]);
@@ -418,7 +423,7 @@ export default class appDetailSp extends Vue {
 			this.ds_ext[i - 1] = new CDataSet(this.cells[i]);
 		}
 		let buid = this.uriParam.pflow;
-		tools.getBULinks(buid).then((res: any) => {
+		await tools.getBULinks(buid).then((res: any) => {
 			let rtn1 = res.data;
 			if (rtn1.id == 0) {
 				let ope = rtn1.data.opt;
@@ -430,9 +435,9 @@ export default class appDetailSp extends Vue {
 		this.mbs.init(this.uriParam.pattr, this.dsm);
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
-		this.qe.mcont = ''+this.qcont;		
-		this.findData();		
 		this.initUIOK = true;
+		// this.qe.mcont = ''+this.qcont;
+		// await this.findData()
 	}
 	//下一条
     goNext(){
@@ -444,15 +449,15 @@ export default class appDetailSp extends Vue {
 		let rowId = this.rowIndex - 1
       	this.$emit('gorow',rowId);
     }
-	// @Watch('initUIOK')
-	// initUIOKChange(){
-	// 	if(this.initUIOK&&this.qcont){
-	// 		this.qe.mcont = ''+this.qcont;
-	// 		this.$nextTick(()=>{
-	// 			this.findData();
-	// 		})
-	// 	}
-	// }
+	@Watch('initUIOK')
+	initUIOKChange(){
+		if(this.initUIOK&&this.qcont){
+			this.qe.mcont = ''+this.qcont;
+			this.$nextTick(()=>{
+				this.findData();
+			})
+		}
+	}
 }
 </script>
 
@@ -475,5 +480,14 @@ page {
   left:0px;/*设置与右侧的距离*/
   bottom:50%;/*设置与底部的距离*/
   z-index:100;/*设置显示次序，数字越大显示越靠前*/
+}
+
+</style>
+<style lang="scss" >
+.my-cu-custom-height{
+	height: 0px !important;
+	.cu-custom{
+		height: 0px !important;
+	}
 }
 </style>
