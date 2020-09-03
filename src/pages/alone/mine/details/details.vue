@@ -18,6 +18,19 @@
 			<view v-html="articleData.content"></view>
 
 		</view>
+		<view class="cu-bar bg-white tabbar border shop btm-comment">
+			<view class="btn-group">
+				<input class="bg-gray comm-input" placeholder="发表你的评论..." type="text" @focus="gotocomment"></input>
+			</view>
+			<button class="action" open-type="contact">
+				<view class="cuIcon-comment text-green bottom-icon">
+					<view class="cu-tag badge">99</view>
+				</view>
+			</button>
+			<view class="action">
+				<view class="cuIcon-favor bottom-icon"></view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -95,7 +108,17 @@
 						}
 					}
 					this.articleData = j1
+					this.articleData.content +="<style scoped>img{width: 100% !important;}</style>";
 				}
+		}
+		/***
+		 * 去评论
+		 */
+		gotocomment(){
+			let url = "/pages/alone/mine/details/comment?sid="+this.sid;
+			uni.navigateTo({
+				'url':url,
+			})
 		}
 	}
 </script>
@@ -107,5 +130,21 @@
 		font-size: 48upx;
 		font-weight: 500;
 		text-align: justify;
+	}
+	img{
+    	width: 100% !important;
+	}
+	.btm-comment{
+		position: sticky;
+		bottom: -1px;
+	}
+	.comm-input{
+		height:65upx;
+		padding-left: 20upx;
+		width: 100%;
+		margin-left: 20upx;
+	}
+	.bottom-icon{
+		font-size: 56upx !important;
 	}
 </style>

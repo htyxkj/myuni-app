@@ -123,6 +123,10 @@
             "style" : {}
         }
         ,{
+            "path" : "pages/alone/mine/details/comment",
+            "style" : {}
+        }
+        ,{
             "path" : "pages/alone/mine/learning/learningList",
             "style" : {}
         }

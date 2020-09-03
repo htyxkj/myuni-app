@@ -1,15 +1,17 @@
 <template>
 	<view>
-		<view class="cu-bar search my-top-bar" :style="style">
-			<image class ="myimg" mode="aspectFill" src="../../../../static/mine/newsVideo/logo.png" ></image>
-			<view class="search-form round my-search-form">
-				<text class="cuIcon-search"></text>
-				<input @blur="InputBlur" v-model="tjInput" :adjust-position="false" type="text" confirm-type="search"></input>
-			</view>
-			<view class="action text-white" @tap="gotomypage">
-				<text>我的</text>
-			</view>
-		</view>
+		<cu-custom class="my-top" :isBack="false" :iaAllCus="true">
+			<block slot="iaAllCus">
+				<image class ="myimg" mode="aspectFill" src="../../../../static/mine/newsVideo/logo.png" ></image>
+				<view class="search-form round my-search-form">
+					<text class="cuIcon-search"></text>
+					<input @blur="InputBlur" v-model="tjInput" :adjust-position="false" type="text" confirm-type="search"></input>
+				</view>
+				<view class="action text-white" @tap="gotomypage">
+					<text>我的</text>
+				</view>
+			</block>
+		</cu-custom>
 
 		<view v-if="type == 0">
 			<scroll-view scroll-x class="mytypeTbs nav text-center">
@@ -145,12 +147,6 @@
 		mounted(){
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
 			this.initType();
-		}
-		style() {
-			var StatusBar= Vue.prototype.StatusBar;
-			var CustomBar= Vue.prototype.this.CustomBar;
-			var style = `height:${CustomBar}px;padding-top:${StatusBar}px;`;
-			return style
 		}
 		get snkey(){
 			return LoginModule.snkey
@@ -441,5 +437,8 @@
 	.my-search-form{
 		background-color: #F4494F;
 		color: white;
+	}
+	.my-top{
+		background-color: #E7271A;
 	}
 </style>
