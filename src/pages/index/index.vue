@@ -79,6 +79,13 @@
 			if(!this.loginState){
 				uni.reLaunch({'url':'/pages/login/login'})
 				return;
+			}else{
+				if(commURL.ItemType == 'mine'){
+					uni.redirectTo({
+						'url': '/pages/alone/mine/index/index'
+					})
+					return;
+				}
 			}
 		}
 		

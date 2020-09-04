@@ -29,6 +29,9 @@
 	let commURL: any = comm;
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import CDataSet from '@/classes/pub/CDataSet';
+	import { dataTool } from '@/classes/tools/DataTools';
+	const DataUtil = dataTool.utils;
+	import CCliEnv from '@/classes/cenv/CCliEnv';
 	@Component({
 		
 	})
@@ -44,12 +47,26 @@
 		valueChange(e:any) {
 			this.textareaValue = e.detail.value
 		}
+		get user(){
+			return LoginModule.user
+		}
 		/**
 		 * 发表评论
 		 */
 		async release(){
-			let res:any = await tools.saveData(this.commentCell.currRecord,this.cellID, "");
-			console.log(res)
+			let user = this.user;
+			if(user){
+				let cr = DataUtil.createRecord(this.commentCell,new CCliEnv());
+				cr.data.article_id = this.sid;//文章ID
+				cr.data.user_id = user.userCode;//当前评论人ID
+				cr.data.content = this.textareaValue;
+				let res:any = await tools.saveData(cr,this.cellID, "");
+				console.log(res)
+			}else{
+				uni.redirectTo({
+					'url': '/pages/login/login'
+				})
+			}
 		}
 
 		//获取对象定义
