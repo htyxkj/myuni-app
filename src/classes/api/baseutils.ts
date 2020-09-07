@@ -175,6 +175,20 @@ export namespace baseUtils {
 			});
 		}
 		/**
+		 * @description dlg执行 java
+		 * @param env 数据集
+		 * @param btn 当前点击按钮
+		 */
+		getDlgRunClassParams(env: string,btn:string) {
+			return Object.assign({
+			apiId: GlobalVariable.APIID_DLGCLASSRUN,
+			dbid: commURL.BaseDBID,
+			usercode: JSON.parse(uni.getStorageSync('user') + '').userCode,
+			env: env,
+			btn:btn, 
+			});
+		}
+		/**
 		 * @description 获取访问后台获取对象定义的参数
 		 * @param cellId 对象定义标志 cellId(cellId1;cellId2)
 		 * @returns 返回是一个object{}

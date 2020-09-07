@@ -40,8 +40,15 @@
 		textareaValue:any = "";
 		cellID:string = "B0000001";//
 		commentCell: CDataSet = new CDataSet(null);
+		parent_comment_id = null;
+		parent_comment_user = null;
 		async onLoad(e:any) {
 			this.sid = e.sid
+			if(e.comment_id){
+				this.parent_comment_id = e.comment_id;
+			}
+			if(e.comment_user)
+				this.parent_comment_user = e.comment_user
 			this.commentCell = await this.initCell(this.cellID);
 		}
 		valueChange(e:any) {
@@ -60,8 +67,20 @@
 				cr.data.article_id = this.sid;//文章ID
 				cr.data.user_id = user.userCode;//当前评论人ID
 				cr.data.content = this.textareaValue;
+				if(this.parent_comment_id){
+					cr.data.parent_comment_id = this.parent_comment_id;
+					cr.data.reply_comment_id = this.parent_comment_id;
+				}
+				if(this.parent_comment_user){
+					cr.data.parent_comment_user_id = this.parent_comment_user;
+					cr.data.reply_comment_user_id = this.parent_comment_user;
+				}
 				let res:any = await tools.saveData(cr,this.cellID, "");
-				console.log(res)
+				if(res.data.id ==0){
+					uni.showToast({title:'评论成功',icon:'none'})
+				}else{
+					uni.showToast({title:res.data.message,icon:'none'})
+				}
 			}else{
 				uni.redirectTo({
 					'url': '/pages/login/login'

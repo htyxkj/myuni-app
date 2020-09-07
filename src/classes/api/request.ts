@@ -146,6 +146,15 @@ export namespace BIPUtil {
 			let param = tools.getDlgRunSqlParams(value,btn);
 			return this.getFromServer(param)
 		}
+		/**
+		 * 执行java程序
+		 * @param value 当前选中行内容
+		 * @param btn BipMenuBtn 对象
+		 */
+		getDlgRunClass(env:string,btn:string){
+			let param = tools.getDlgRunClassParams(env,btn);
+			return this.getFromServer(param)
+		}
 
 		/**
 		 * @description 调用js http post 请求
