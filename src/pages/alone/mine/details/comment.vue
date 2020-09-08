@@ -9,7 +9,7 @@
 			<view class="text-right">{{textareaValue.length}}/500</view>
 		</view>
 		<view class="cu-bar btn-group">
-			<button class="cu-btn bg-blue shadow-blur round lg my-btn" @click="release">发表</button>
+			<button class="cu-btn bg-blue shadow-blur round lg my-btn" @click="release" :disabled="!canPublish">发表</button>
 		</view>
 	</view>
 </template>
@@ -33,7 +33,7 @@
 	const DataUtil = dataTool.utils;
 	import CCliEnv from '@/classes/cenv/CCliEnv';
 	@Component({
-		
+		components:{}
 	})
 	export default class Comment extends Vue {
 		sid:any = "";
@@ -42,6 +42,7 @@
 		commentCell: CDataSet = new CDataSet(null);
 		parent_comment_id = null;
 		parent_comment_user = null;
+		canPublish:boolean = true;
 		async onLoad(e:any) {
 			this.sid = e.sid
 			if(e.comment_id){
@@ -50,6 +51,7 @@
 			if(e.comment_user)
 				this.parent_comment_user = e.comment_user
 			this.commentCell = await this.initCell(this.cellID);
+			this.canPublish = true;
 		}
 		valueChange(e:any) {
 			this.textareaValue = e.detail.value
@@ -63,6 +65,7 @@
 		async release(){
 			let user = this.user;
 			if(user){
+				this.canPublish =false;
 				let cr = DataUtil.createRecord(this.commentCell,new CCliEnv());
 				cr.data.article_id = this.sid;//文章ID
 				cr.data.user_id = user.userCode;//当前评论人ID
@@ -78,9 +81,15 @@
 				let res:any = await tools.saveData(cr,this.cellID, "");
 				if(res.data.id ==0){
 					uni.showToast({title:'评论成功',icon:'none'})
+					setTimeout(() => {
+						uni.navigateBack({
+							delta: 1
+						});
+					}, 200);
 				}else{
 					uni.showToast({title:res.data.message,icon:'none'})
 				}
+				this.canPublish = true;
 			}else{
 				uni.redirectTo({
 					'url': '/pages/login/login'

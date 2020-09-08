@@ -8,7 +8,9 @@
 			:heightReduce="185" :pageNo="page_num" :totalPageNo="total_page" @loadMore="loadMore" @refresh="refresh">
 			<view class="padding bg-white" slot="content-list" v-if="comment">
 				<view class="flex" >
-					<view class="radius" style="flex-basis:10%"></view>
+					<view class="radius" style="flex-basis:10%">
+						<image class="cu-avatar xxl round bg-white"  src="../../../../static/gs.png" mode="aspectFit"></image>
+					</view>
 					<view class="radius" style="flex-basis:90%">
 						<view class="flex">
 							<view class="basis-xs comm-user-name">{{comment.user_name}}</view>
@@ -28,20 +30,23 @@
 				</view>
 				<view class="comm-content">{{comment.content}}</view>
 				<view class="comm-data">{{comment.create_time}}</view>
-
 				<view class="title">全部回复（{{total_size}}）</view>
 				<view class="flex padding-top" v-for="(item,index) in comment_list" :key="index">
-					<view class="radius" style="flex-basis:10%"></view>
-					<view class="radius" style="flex-basis:90%">
-						<view class="flex justify-between">
-							<view class="radius comm-user-name">{{item.user_name}}</view>
-							<view class="radius" :class="[item.my_like ==0?'lines-gray':'lines-blue']" @click="doLikeComm(item)">{{item.praise_num}}<text class="cuIcon-appreciate"></text></view>
+					<template v-if="item">
+						<view class="radius" style="flex-basis:10%">
+							<image class="cu-avatar xxl round bg-white"  src="../../../../static/gs.png" mode="aspectFit"></image>
 						</view>
-						<view class="comm-content">
-							{{item.content}}
+						<view class="radius" style="flex-basis:90%">
+							<view class="flex justify-between">
+								<view class="radius comm-user-name">{{item.user_name}}</view>
+								<view class="radius" :class="[item.my_like ==0?'lines-gray':'lines-blue']" @click="doLikeComm(item)">{{item.praise_num}}<text class="cuIcon-appreciate"></text></view>
+							</view>
+							<view class="comm-content">
+								{{item.content}}
+							</view>
+							<view class="comm-data">{{item.create_time}}</view>
 						</view>
-						<view class="comm-data">{{item.create_time}}</view>
-					</view>
+					</template>
 				</view>
 			</view>
 		</load-refresh>
@@ -69,7 +74,7 @@
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import {BipMenuBtn} from '@/classes/BipMenuBtn'
 	@Component({
-		
+		components:{}
 	})
 	export default class Reply extends Vue {
 		sid:any = "";
@@ -80,6 +85,9 @@
 		comment:any = null;//当前评论
 		onLoad(e:any) {
 			this.sid = e.sid
+		}
+		onShow(){
+			this.page_num = 1;
 			this.initCommentData();
 		}
 		/**
@@ -160,7 +168,7 @@
 			this.comment = data.data;
 			if(this.page_num == 1) 
 				this.comment_list = [];
-			this.comment_list = this.comment_list.concat(this.comment.chileComment); //追加新数据
+			this.comment_list = this.comment_list.concat(this.comment.childComment); //追加新数据
 		}
 	}
 </script>

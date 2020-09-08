@@ -25,7 +25,9 @@
 				</view>
 				<view>
 					<view class="flex padding-top" v-for="(item,index) in comment_list" :key="index">
-						<view class="radius" style="flex-basis:10%"></view>
+						<view class="radius" style="flex-basis:10%">
+							<image class="cu-avatar xxl round bg-white"  src="../../../../static/gs.png" mode="aspectFit"></image>                      
+						</view>
 						<view class="radius" style="flex-basis:90%">
 							<view class="flex justify-between">
 								<view class="radius comm-user-name">{{item.user_name}}</view>
@@ -42,10 +44,13 @@
 							<view class="comm-content">
 								{{item.content}}
 							</view>
-							<view>
-								<view v-for="(child_item,index) in item.chileComment" :key="index" class="childComment">
+							<view >
+								<view v-for="(child_item,index) in item.childComment" :key="index" class="childComment" >
 									<view class="childUName">{{child_item.user_name}}</view>
 									<view>{{child_item.content}}</view>
+								</view>
+								<view v-if="item.childComment.length<item.childCount" @click="reply(item)" class="countReply childComment">
+									共{{item.childCount}}条回复>
 								</view>
 							</view>
 							<view>
@@ -90,7 +95,7 @@
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import {BipMenuBtn} from '@/classes/BipMenuBtn'
 	@Component({
-		
+		components:{}
 	})
 	export default class Details extends Vue {
 		sid:any = "";
@@ -109,6 +114,10 @@
 			this.snkey = LoginModule.snkey
 			this.sid = e.sid
 			this.initData();
+			this.initCommentData();
+		}
+		onShow(){
+			this.page_num = 1;
 			this.initCommentData();
 		}
 		/**
@@ -383,5 +392,8 @@
 		font-size: 15px;
 		color: rgb(51, 51, 51);
 		padding: 14px 16px;
+	}
+	.countReply{
+		color: #5677fc;
 	}
 </style>
