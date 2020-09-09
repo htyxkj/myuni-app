@@ -33,7 +33,7 @@
 			</scroll-view>
 		</view>
 		<scroll-view scroll-y class="page" refresher-enabled @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered" @scrolltolower="getNextPage">
-			<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom">
+			<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom bg-white">
 				<template v-if="item.img.length>0 || (item.img.length == 0 && item.video.length == 0 )">
 					<template v-if="item.img.length>=3">
 						<view @tap="gotoarticle(item)">

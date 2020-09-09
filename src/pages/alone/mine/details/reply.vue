@@ -73,8 +73,9 @@
 	let commURL: any = comm;
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import {BipMenuBtn} from '@/classes/BipMenuBtn'
+	import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 	@Component({
-		components:{}
+		components:{loadRefresh}
 	})
 	export default class Reply extends Vue {
 		sid:any = "";
@@ -109,7 +110,6 @@
 				item.praise_num--;
 			}
 			let btn1 = new BipMenuBtn("DLG","评论点赞")
-            btn1.setDlgSname(name);
             btn1.setDlgType("D")
             btn1.setDlgCont("mine.serv.ArticleServlet*203;0;0");//评论点赞
 			let b = JSON.stringify(btn1)
@@ -153,7 +153,6 @@
 		 */
 		async initCommentData(){
 			let btn1 = new BipMenuBtn("DLG","查询评论")
-            btn1.setDlgSname(name);
             btn1.setDlgType("D")
             btn1.setDlgCont("mine.serv.ArticleServlet*205;0;0");//评论
 			let b = JSON.stringify(btn1)

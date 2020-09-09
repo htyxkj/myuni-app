@@ -263,7 +263,7 @@
 		.bip-totop {
 			position: fixed !important;
 			right: 2%;
-			bottom: 4.6%;
+			bottom: 10%;
 			background-size: 100% 100%;
 			cursor: pointer;
 			width: 72upx;
