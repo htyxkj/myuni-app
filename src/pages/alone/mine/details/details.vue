@@ -30,7 +30,11 @@
 						</view>
 						<view class="radius" style="flex-basis:90%">
 							<view class="flex justify-between">
-								<view class="radius comm-user-name">{{item.user_name}}</view>
+								<view class="radius comm-user-name">{{item.user_name}}
+									<template v-if="item.top_status == 1">
+										<span class="top_status">置顶</span>
+									</template>
+								</view>
 								<view class="radius" :class="[item.my_like ==0?'lines-gray':'lines-blue']" @click="doLikeComm(item)">
 									<template v-if="item.praise_num ==0">
 										赞
@@ -55,7 +59,9 @@
 							</view>
 							<view>
 								<view class="comm-data">{{item.create_time}}
-									<view class="reply" @click="reply(item)">回复</view>
+									<view class="reply" v-if="item.user_id != user.userCode" @click="reply(item)">回复</view>
+									<view class="reply" v-if="item.status ==0">(审核中)</view>
+									<view class="reply" v-if="item.user_id == user.userCode" @click="deleteComm(item)">删除</view>
 								</view>
 							</view>
 						</view>
@@ -116,6 +122,7 @@
 			this.sid = e.sid
 			this.initData();
 			this.initCommentData();
+			this.upBrowse();
 		}
 		onShow(){
 			this.page_num = 1;
@@ -179,6 +186,9 @@
 					}
 					this.articleData = j1
 					this.articleData.content +="<style scoped>img{width: 100% !important;}</style>";
+					this.like_num = d1.likenum
+					if(!this.like_num)
+						this.like_num=0;
 				}
 		}
 
@@ -284,7 +294,6 @@
 			let res:any = await tools.getDlgRunClass(v,b);
 			let data = res.data.data;
 			this.comment_num = data.comment_num;
-			this.like_num = data.like_num;
 			this.my_like = data.my_like;
 			this.total_page = data.total_page;
 			this.my_favorites = data.my_favorites;
@@ -327,6 +336,42 @@
 			uni.navigateTo({
 				'url':url,
 			})
+		}
+		/**
+		 * 删除评论
+		 */
+		async deleteComm(item:any){
+			let sid = item.sid;
+			let btn1 = new BipMenuBtn("DLG","删除评论")
+            btn1.setDlgType("D")
+            btn1.setDlgCont("mine.serv.ArticleServlet*207;0;0");//修改文章浏览量
+			let b = JSON.stringify(btn1)
+            let prarm = {
+				"comm_id" : sid,//文章ID
+			}
+			let v = JSON.stringify(prarm);
+			let ret:any = await tools.getDlgRunClass(v,b);
+			if(ret.data.id ==0){
+				this.initCommentData();
+			}
+		}
+		/**
+		 * 修改文章浏览量
+		 */
+		upBrowse(){
+			let btn1 = new BipMenuBtn("DLG","修改文章浏览量")
+            btn1.setDlgType("D")
+            btn1.setDlgCont("mine.serv.ArticleServlet*206;0;0");//修改文章浏览量
+			let b = JSON.stringify(btn1)
+            let prarm = {
+				"article_id":this.sid,//文章ID
+            }
+            let v = JSON.stringify(prarm);
+			tools.getDlgRunClass(v,b);
+		}
+	
+		get user(){
+			return LoginModule.user
 		}
 	}
 </script>
@@ -392,5 +437,12 @@
 	}
 	.countReply{
 		color: #5677fc;
+	}
+	.top_status{
+		color: black;
+		font-size: 12px;
+		background-color: #C3C3C3;
+		padding: 2px;
+		margin: 5px;
 	}
 </style>
