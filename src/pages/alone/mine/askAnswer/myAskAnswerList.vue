@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<cu-custom bgColor="bg-gradual-pink" :isBack="true">
-			<block slot="content"><view class="header-title text-black">{{title}}</view></block>
+			<block slot="content"><view class="header-title text-black">我的提问</view></block>
 		</cu-custom>
 		<scroll-view scroll-y class="page" refresher-enabled @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered" @scrolltolower="getNextPage">
 			<view class="padding-top-sm"></view>
@@ -17,7 +17,7 @@
 							<view class="flex justify-start">
 								<view class="padding-top-sm padding-bottom-sm padding-left">
 									<view>
-										<view><h4>{{item.title}}</h4></view>
+										<view>{{item.state}}<h4>{{item.title}}</h4></view>
 										<view class="text-gray text-sm">
 											<view class="flex justify-start">
 												<view>{{item.smakename}}</view>
@@ -33,7 +33,20 @@
 						<view class="flex justify-start" @tap="gotoarticle(item)">
 							<view class="padding-sm margin-xs">
 								<view>
-									<view><h4>{{item.title}}</h4></view>
+									<view>
+										<h4>
+											<template v-if="item.state == 0">
+												<view class='cu-tag sm margin-right'>审核中</view>
+											</template>
+											<template v-if="item.state == 1">
+												<view class='cu-tag sm margin-right bg-red'>审核驳回</view>
+											</template>
+											<template v-if="item.state == 6">
+												<view class='cu-tag sm margin-right bg-green'>审核通过</view>
+											</template>
+											{{item.title}}
+										</h4>
+									</view>
 									<view style="height: 40upx;"></view>
 									<view class="text-gray text-sm">
 										<view class="flex justify-start">
@@ -76,7 +89,7 @@
 
 <script lang="ts">
 	/**
-	 * 张矿微平台移动端学习园地
+	 * 张矿微平台移动端 你问我答
 	 */
 	import {BIPUtil} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
@@ -92,9 +105,7 @@
 	@Component({
 		
 	})
-	export default class LearningList extends Vue {
-		userType:any = "";//用户类型
-		type_sid:any ="";//当前选中类型
+	export default class MyAskAnswerList extends Vue {
 		qe:QueryEntity = new QueryEntity('','');
 		page:PageInfo = new PageInfo();	
 		articleData:Array<any> = [];
@@ -105,19 +116,23 @@
 		title:any = "";
 		onLoad(e:any) {
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
-			this.type_sid = e.sid
-			this.title = e.name
-			this.initData(e.sid);
+			this.initData();
+		}
+		onShow(){
+			this.initData();
 		}
 		get snkey(){
 			return LoginModule.snkey
+		}
+		get user(){
+			return LoginModule.user;
 		}
 		/**
 		 * 下拉刷新
 		 */
 		async refresherTriggered(){
 			this.refresher_triggered = true;
-			await this.initData(null);
+			await this.initData();
 			setTimeout(() => {
 				this.refresher_triggered = false;	
 			}, 100);
@@ -126,25 +141,16 @@
 		/**
 		 * 根据分类编码查询数据
 		 */
-		async initData(type:any){
-			this.noNextPage = false;
-			if(type)
-				this.type_sid = type;
+		async initData(){
+			this.noNextPage = false; 
 			this.qe.page = new PageInfo();
 			let oneCont = []; 
-			let qCont = new QueryCont('type',this.type_sid,12);
+			let qCont = new QueryCont('smake',this.user.userCode,12);
 			qCont.setContrast(0);
 			qCont.setLink(1);
 			oneCont.push(qCont);
-			this.userType = uni.getStorageSync('userType');
-			if(this.userType == 'Tourist'){//游客身份
-				qCont = new QueryCont('ispublic','1',5);
-				qCont.setContrast(0);
-				qCont.setLink(1);
-				oneCont.push(qCont);
-			}
 			this.qe.cont = "~["+JSON.stringify(oneCont)+"]"
-			let vv:any = await tools.getBipInsAidInfo('ALLARTICLEL',210,this.qe);
+			let vv:any = await tools.getBipInsAidInfo('MYASKALL',210,this.qe);
 			this.articleData = [];
 			if(vv.data.id ==0){
 				let cc = vv.data.data.data.values;
@@ -159,19 +165,12 @@
 			this.page.currPage++;
 			this.qe.page = this.page;
 			let oneCont = []; 
-			let qCont = new QueryCont('type',this.type_sid,12);
+			let qCont = new QueryCont('smake',this.user.userCode,12);
 			qCont.setContrast(0);
 			qCont.setLink(1);
 			oneCont.push(qCont);
-			this.userType = uni.getStorageSync('userType');
-			if(this.userType == 'Tourist'){//游客身份
-				qCont = new QueryCont('ispublic','1',5);
-				qCont.setContrast(0);
-				qCont.setLink(1);
-				oneCont.push(qCont);
-			}
 			this.qe.cont = "~["+JSON.stringify(oneCont)+"]"
-			let vv:any = await tools.getBipInsAidInfo('ALLARTICLEL',210,this.qe);
+			let vv:any = await tools.getBipInsAidInfo('MYASKALL',210,this.qe);
 			if(vv.data.id ==0){
 				let cc = vv.data.data.data.values;
 				if(cc.length == 0){
@@ -187,12 +186,13 @@
 		 */
 		compositionData(cc:any){
 			for(let i=0;i<cc.length;i++){
-					let j1:any = {sid:"",title:"",description:"",smakename:"",mkdate:"",img:[],video:[]};
+					let j1:any = {sid:"",title:"",description:"",smakename:"",mkdate:"",img:[],video:[],state:0};
 					let d1 = cc[i];
 					j1.title = d1.title;
 					j1.description = d1.description;
 					j1.smakename = d1.smakename;
 					j1.sid = d1.sid;
+					j1.state = d1.state
 					j1.mkdate = moment(d1.mkdate).format('YYYY-MM-DD')
 					let fjn = d1.fj_name;
 					let fjroot = d1.fj_root;
@@ -221,7 +221,7 @@
 		 * 去详情页面
 		 */
 		gotoarticle(item:any){
-			let url = "/pages/alone/mine/details/details?sid="+item.sid;
+			let url = "/pages/alone/mine/askAnswer/askAnswerDetails?sid="+item.sid;
 			uni.navigateTo({
 				'url':url,
 			})

@@ -11,6 +11,12 @@
                         <view class="name">{{item.name}}</view>
 					</view>
 				</view> 
+				<view class="cu-item bg-white margin-top-xs"   @tap="gotoMyAsk">
+                    <image class ="cu-avatar bg-white myimg round" mode="aspectFill" :src="imgArr[5]"></image>
+					<view class="content">
+                        <view class="name">我的提问</view>
+					</view>
+				</view> 
 			</view>
 			<view class="cu-tabbar-height"></view>
 		</scroll-view>
@@ -61,9 +67,24 @@
 				uni.setStorageSync(this.key, JSON.stringify(this.typeArr));
 			}
 		}
-
+		/**
+		 * 问题列表
+		 */
 		gotoList(item:any){
-			let url = "/pages/alone/mine/learning/learningList?sid="+item.sid+"&name="+item.name;
+			let url = "/pages/alone/mine/askAnswer/askAnswerList?sid="+item.sid+"&name="+item.name;
+			uni.navigateTo({
+				'url':url,
+			})
+		}
+		/**
+		 * 我的提问
+		 */
+		gotoMyAsk(){
+			let url = "/pages/alone/mine/askAnswer/myAskAnswerList";
+			let userType = uni.getStorageSync('userType');
+			if(userType == 'Tourist'){//游客身份 
+				url = "/pages/login/login"
+			}
 			uni.navigateTo({
 				'url':url,
 			})

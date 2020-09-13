@@ -67,6 +67,14 @@
 					</view>
 				</template>
 			</view>
+
+
+			<template v-if="userType == 'Official'">
+				<view class="cu-bar bg-white tabbar shadow foot">
+					<view class="bg-blue submit" @tap="ask"><text class="cuIcon-upload"></text> 提问</view>
+				</view>
+			</template>
+
 			<view class="text-sm padding text-center" v-if="noNextPage">
 				<text class="text-grey">-----我是有底线的-----</text>
 			</view>
@@ -76,7 +84,7 @@
 
 <script lang="ts">
 	/**
-	 * 张矿微平台移动端学习园地
+	 * 张矿微平台移动端 你问我答
 	 */
 	import {BIPUtil} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
@@ -92,7 +100,7 @@
 	@Component({
 		
 	})
-	export default class LearningList extends Vue {
+	export default class AskAnswerList extends Vue {
 		userType:any = "";//用户类型
 		type_sid:any ="";//当前选中类型
 		qe:QueryEntity = new QueryEntity('','');
@@ -238,6 +246,15 @@
 					v.pause();
 				this.payVideo = item;
 			}
+		}
+		/**
+		 * 提问 打开提问页面
+		 */
+		ask(){
+			let url = "/pages/alone/mine/askAnswer/askAnswerAdd?type_sid="+this.type_sid;
+			uni.navigateTo({
+				'url':url,
+			})
 		}
 	}
 </script>

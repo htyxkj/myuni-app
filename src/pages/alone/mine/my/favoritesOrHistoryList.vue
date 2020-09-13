@@ -1,37 +1,9 @@
 <template>
 	<view>
-		<cu-custom class="my-top" :isBack="false" :iaAllCus="true">
-			<block slot="iaAllCus">
-				<image class ="myimg" mode="aspectFill" src="../../../../static/mine/newsVideo/logo.png" ></image>
-				<view class="search-form round my-search-form">
-					<text class="cuIcon-search"></text>
-					<input @blur="InputBlur" v-model="tjInput" :adjust-position="false" type="text" confirm-type="search"></input>
-				</view>
-				<view class="action text-white" @tap="gotomypage">
-					<text>我的</text>
-				</view>
-			</block>
+		<cu-custom bgColor="bg-gradual-pink" :isBack="true">
+			<block slot="backText">返回</block>
+			<block slot="content"><view class="header-title">{{title}}</view></block>
 		</cu-custom>
-
-		<view v-if="type == 0">
-			<scroll-view scroll-x class="mytypeTbs nav text-center">
-				<view class="cu-item" :class="index==newsTabCur?'selTbs':''" v-for="(item,index) in newsTypeArr" :key="index" @tap="newsTabSelect" :data-id="index" :data-sid="item.sid">
-					{{item.name}}
-				</view>
-			</scroll-view> 
-			<view class="cu-bar btn-group padding-left-xl padding-right-xl" v-if="newsChileTypeArr.length>0">
-				<button class="cu-btn bg-blue shadow-blur" :class="type_sid==item.sid?'selbtn':'noSelbtn'" v-for="(item,index) in newsChileTypeArr" :key="index" @tap="initData(item.sid)">
-					{{item.name}}
-				</button>
-			</view>
-		</view>
-		<view v-if="type == 1">
-			<scroll-view scroll-x class="mytypeTbs nav text-center">
-				<view class="cu-item" :class="index==videoTabCur?'selTbs':''" v-for="(item,index) in videoTypeArr" :key="index" @tap="videoTabSelect" :data-id="index" :data-sid="item.sid">
-					{{item.name}}
-				</view>
-			</scroll-view>
-		</view>
 		<scroll-view scroll-y class="page" refresher-enabled @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered" @scrolltolower="getNextPage">
 			<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom bg-white">
 				<template v-if="item.img.length>0 || (item.img.length == 0 && item.video.length == 0 )">
@@ -130,17 +102,10 @@
 	@Component({
 		
 	})
-	export default class NewsVideo extends Vue {
-		@Prop({ default:0, type:Number }) type!:number;//类型 0：新闻；1：视频
+	export default class FavoritesList extends Vue {
 		newsTabCur:any = 0;
-		newsTypeArr:Array<any>=[];//新闻类别
-		newsChileTypeArr:Array<any>=[];//新闻子类别
-
 		videoTabCur:any = 0;
-		videoTypeArr:Array<any>=[];//视频类别
-		videoChileTypeArr:Array<any>=[];//视频子类别
-		key:any = "NVKEY_";
-		type_sid:any ="";//当前选中类型
+		key:any = "NVKEY_"; 
 		qe:QueryEntity = new QueryEntity('','');
 		page:PageInfo = new PageInfo();	
 		articleData:Array<any> = [];
@@ -149,63 +114,19 @@
 		noNextPage:boolean = false;//没有下一页了
 
 		payVideo:any = null;//当前正在播放的视频
-		tjInput:any = "";//条件
-		tjoldVl:any = "";//条件
-
 		uri:any ="";//
+		title:any ="";
+		type:any = 0
+		onLoad(e:any) {
+			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
+			this.title = e.title
+			this.type = e.type
+		}
 		mounted(){
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
-			this.initType();
 		}
 		get snkey(){
 			return LoginModule.snkey
-		}
-		//新闻类别切换
-		async newsTabSelect(e:any){
-			this.newsTabCur = e.currentTarget.dataset.id;
-			let sid = e.currentTarget.dataset.sid;
-			let dd = await this.getTypeByFather(sid);
-			this.newsChileTypeArr = dd;
-			let _sid = null;
-			if(dd.length == 0){
-				_sid = sid;
-			}else{
-				_sid = dd[0].sid;
-			}
-			this.initData(_sid);
-		}
-		//视频类别切换
-		async videoTabSelect(e:any){
-			this.videoTabCur = e.currentTarget.dataset.id;
-			let sid = e.currentTarget.dataset.sid;
-			let dd = await this.getTypeByFather(sid);
-			this.videoChileTypeArr = dd;
-			let _sid = null;
-			if(dd.length == 0){
-				_sid = sid;
-			}else{
-				_sid = dd[0].sid;
-			}
-			this.initData(_sid);
-		}
-
-		//查询类别
-		async initType(){
-			if(this.type == 0){ //0：新闻
-				let type= await this.getTypeByFather('LX20080013');
-				this.newsTypeArr = type;
-				if(this.newsTypeArr.length>0){
-					let e = {currentTarget:{dataset:{sid:this.newsTypeArr[0].sid,id:0}}}
-					this.newsTabSelect(e)
-				}
-			}else if(this.type == 1){//1：视频
-				let type= await this.getTypeByFather('LX20080003');
-				this.videoTypeArr = type;
-				if(this.videoTypeArr.length>0){
-					let e = {currentTarget:{dataset:{sid:this.videoTypeArr[0].sid,id:0}}}
-					this.videoTabSelect(e)
-				}
-			}
 		}
 		/**
 		 * 下拉刷新
@@ -223,22 +144,12 @@
 		 */
 		async initData(type:any){
 			this.noNextPage = false;
-			if(this.type_sid == type)
-				return;
-			if(type)
-				this.type_sid = type;
 			this.qe.page = new PageInfo();
 			let oneCont = []; 
 			let qCont = new QueryCont('type',this.type_sid,12);
 			qCont.setContrast(0);
 			qCont.setLink(1);
 			oneCont.push(qCont);
-			if(this.tjInput!=null && this.tjInput.length>0){
-				qCont = new QueryCont('title',this.tjInput,12);
-				qCont.setContrast(3);
-				qCont.setLink(1);
-				oneCont.push(qCont);
-			}
 			let userType = uni.getStorageSync('userType');
 			if(userType == 'Tourist'){//游客身份
 				qCont = new QueryCont('ispublic','1',5);
@@ -266,12 +177,6 @@
 			qCont.setContrast(0);
 			qCont.setLink(1);
 			oneCont.push(qCont);
-			if(this.tjInput!=null && this.tjInput.length>0){
-				qCont = new QueryCont('title',this.tjInput,12);
-				qCont.setContrast(3);
-				qCont.setLink(1);
-				oneCont.push(qCont);
-			}
 			this.qe.cont = "~["+JSON.stringify(oneCont)+"]"
 			let vv:any = await tools.getBipInsAidInfo('ALLARTICLEL',210,this.qe);
 			if(vv.data.id ==0){
@@ -339,25 +244,6 @@
 			})
 		}
 		/**
-		 * 打开我的页面
-		 */
-		gotomypage(){
-			let url = "/pages/alone/mine/my/my";
-			let userType = uni.getStorageSync('userType');
-			if(userType == 'Tourist'){//游客身份
-				url = "/pages/login/login"
-			}
-			uni.navigateTo({
-				'url':url,
-			})
-		}
-		InputBlur(e:any) {
-			if(this.tjoldVl != this.tjInput){
-				this.initData(null);
-				this.tjoldVl = this.tjInput
-			}
-		}
-		/**
 		 * 视频播放
 		 */
 		videoPay(item:any){
@@ -384,39 +270,6 @@
             }
             let v = JSON.stringify(prarm);
 			tools.getDlgRunClass(v,b);
-		}
-		/**
-		 * 根据父级分类编码 查询分类
-		 */
-		async getTypeByFather(father:any){
-			var _key:any = this.key+''+father;
-			let data = uni.getStorageSync(_key);
-			if(data){
-				let dd = JSON.parse(data);
-				return dd;
-			}else{
-				let qe:QueryEntity = new QueryEntity('','');
-				qe.page.currPage = 1;
-				qe.page.pageSize = 100; 
-				let oneCont = []; 
-				let qCont = new QueryCont('father',father,12);
-				qCont.setContrast(0);
-				oneCont.push(qCont);
-				qe.cont = "~["+JSON.stringify(oneCont)+"]"
-				let vv:any = await tools.getBipInsAidInfo('ARTICLETYPE',210,qe);
-				if(vv.data.id ==0){
-					let cc = vv.data.data.data.values;
-					uni.setStorageSync(_key, JSON.stringify(cc));
-					return cc;
-				}else{
-					console.log(vv)
-				}
-			}
-			return [];
-		}
-		@Watch("type")
-		typeChange(){
-			this.initType();
 		}
 	}
 </script>

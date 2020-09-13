@@ -69,25 +69,15 @@
 				</view>
 			</view>
 		</load-refresh>
-		<view class="cu-bar bg-white tabbar border shop btm-comment">
-			<view class="btn-group">
-				<input class="bg-gray comm-input" placeholder="发表你的评论..." type="text" @focus="gotocomment"></input>
-			</view>
-			<button class="action" open-type="contact" @click="gotoAllComment">
-				<view class="cuIcon-comment text-green bottom-icon">
-					<view class="cu-tag badge">{{comment_num}}</view>
-				</view>
-			</button>
-			<view class="action" @click="favorites" :class="[my_favorites ==0?'lines-gray':'lines-blue']">
-				<view class="cuIcon-favor bottom-icon"></view>
-			</view>
+		<view class="cu-bar bg-white tabbar shadow foot">
+			<view class="bg-red submit" @tap="deleteAsk"><text class="cuIcon-delete"></text> 删除</view>
 		</view>
 	</view>
 </template>
 
 <script lang="ts">
 	/**
-	 * 张矿微平台移动端 新闻详情页面
+	 * 张矿微平台移动端 我的提问详情页面
 	 */
 	import {BIPUtil} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
@@ -104,7 +94,7 @@
 	@Component({
 		components:{loadRefresh}
 	})
-	export default class Details extends Vue {
+	export default class askAnswerDetails extends Vue {
 		sid:any = "";
 		articleData:any = null;
 		uri:any ="";//
@@ -122,7 +112,6 @@
 			this.sid = e.sid
 			this.initData();
 			this.initCommentData();
-			this.upBrowse();
 		}
 		onShow(){
 			this.page_num = 1;
@@ -356,20 +345,30 @@
 			}
 		}
 		/**
-		 * 修改文章浏览量
+		 * 删除当前提问
 		 */
-		upBrowse(){
-			let btn1 = new BipMenuBtn("DLG","修改文章浏览量")
+		async deleteAsk(){
+			let btn1 = new BipMenuBtn("DLG","文章点赞")
             btn1.setDlgType("D")
-            btn1.setDlgCont("mine.serv.ArticleServlet*206;0;0");//修改文章浏览量
+            btn1.setDlgCont("mine.serv.ArticleServlet*208;0;0");//评论
 			let b = JSON.stringify(btn1)
             let prarm = {
 				"article_id":this.sid,//文章ID
             }
             let v = JSON.stringify(prarm);
-			tools.getDlgRunClass(v,b);
+			let res:any = await tools.getDlgRunClass(v,b);
+			if(res.data.id ==0 ){
+				uni.showToast({
+					title: '删除成功！',
+					icon:"none"
+				})
+				setTimeout(() => {
+					uni.navigateBack({
+						delta: 1
+					});
+				}, 200);
+			}
 		}
-	
 		get user(){
 			return LoginModule.user
 		}

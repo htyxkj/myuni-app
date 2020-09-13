@@ -42,7 +42,7 @@
 		<!-- <button class="bg-blue margin-tb-sm lg" >退出登录</button> -->
 		<!--修改密码-->
 		<!-- <mLoad :png="'/static/gs.png'" :msg="'处理中...'" v-if="canExec"></mLoad> -->
-		<view class="cu-modal" :class="mdPass?'show':''">
+		<view class="cu-modal" style="z-index: 100;" :class="mdPass?'show':''">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-red justify-end">
 					<view class="content">修改密码</view>
@@ -149,14 +149,24 @@
 				console.log('修改密码')
 			}
 		}
-		execModify(){
+		async execModify(){
+			if(this.pwd != this.pwd1){
+				uni.showToast({
+					title: '两次密码不一致！',
+					icon:"none"
+				})
+				return;
+			}
 			this.canExec = true
-			console.log('开始修改密码！')
-			setTimeout(()=>{
-				console.log('修改成功')
+			if(this.user){
+				let cc = await tools.upPwd(this.user,this.pwd,this.oldPwd);
 				this.mdPass = false
 				this.canExec = false
-			},2000);
+				uni.showToast({
+					title: cc.data.message,
+					icon:"none"
+				})
+			}
 		}
 		
 		open(index:number){

@@ -25,8 +25,8 @@
 				<view class="bg-white whiteCrd margin my-margin-top">
 					<view class="bg-white whiteCrd padding-top padding-bottom">
 						<view class="grid text-center col-2">
-							<view>收藏</view>
-							<view>历史</view>
+							<view @click="gotoFavoritesPage">收藏</view>
+							<view @click="gotoHistoryPage">历史</view>
 						</view>
 					</view>
 				</view>
@@ -50,7 +50,7 @@
 				<text class="cuIcon-titles text-progress "></text>关于我们
 			</view>
 		</view>
-		<view class="cu-modal" :class="mdPass?'show':''">
+		<view class="cu-modal" style="z-index: 100;" :class="mdPass?'show':''">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-red justify-end">
 					<view class="content">修改密码</view>
@@ -150,21 +150,31 @@
 		modifyPassClick(){
 			if(!this.mdPass){
 				this.mdPass = true
-				console.log('修改密码')
+				this.oldPwd = '';
+				this.pwd = '';
+				this.pwd1 = '';
 			}
 		}
-		execModify(){
+		async execModify(){
+			if(this.pwd != this.pwd1){
+				uni.showToast({
+					title: '两次密码不一致！',
+					icon:"none"
+				})
+				return;
+			}
 			this.canExec = true
-			console.log('开始修改密码！')
-			setTimeout(()=>{
-				console.log('修改成功')
+			if(this.user){
+				let cc = await tools.upPwd(this.user,this.pwd,this.oldPwd);
 				this.mdPass = false
 				this.canExec = false
-			},2000);
+				uni.showToast({
+					title: cc.data.message,
+					icon:"none"
+				})
+			}
 		}
-		
 		open(index:number){
-			console.log('open',index);
 			switch(index){
 				case 0:
 					this.at0 = !this.at0;
@@ -176,6 +186,21 @@
 					this.at2 = !this.at2;
 					break;
 			}
+		}
+		/**
+		 * 打开收藏页面
+		 */
+		gotoFavoritesPage(){
+			let url = "/pages/alone/mine/my/favoritesOrHistoryList?type=0&title=我的收藏";
+			uni.navigateTo({
+				'url':url,
+			})
+		}
+		gotoHistoryPage(){
+			let url = "/pages/alone/mine/my/favoritesOrHistoryList?type=0&title=历史浏览";
+			uni.navigateTo({
+				'url':url,
+			})
 		}
 	}
 </script>

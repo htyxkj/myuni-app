@@ -4,7 +4,7 @@
 			"path": "pages/index/index",
 			"style": {
 				"disableScroll": true,
-				"navigationBarTitleText": "BIP管理平台"
+				"navigationBarTitleText": "冀中能源"
 			}
 		}, {
 			"path": "pages/login/login",
@@ -129,6 +129,18 @@
         ,{
             "path" : "pages/alone/mine/learning/learningList",
             "style" : {}
+		}
+        ,{
+            "path" : "pages/alone/mine/askAnswer/askAnswerList",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/alone/mine/askAnswer/askAnswerAdd",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/alone/mine/askAnswer/myAskAnswerList",
+            "style" : {}
         }
         ,{
             "path" : "pages/alone/mine/my/my",
@@ -140,6 +152,14 @@
         }
         ,{
             "path" : "pages/alone/mine/details/reply",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/alone/mine/askAnswer/askAnswerDetails",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/alone/mine/my/favoritesOrHistoryList",
             "style" : {}
         }
     ],

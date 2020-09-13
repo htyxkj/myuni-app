@@ -25,10 +25,11 @@
 					<view></view>
 					<!-- <view class="registered" @tap="registered('flexible')">注册</view> --><!-- 灵活用工注册 -->
 					<!-- <view class="registered" @tap="registered('credit')">注册</view>  --><!-- 征信管理注册 -->
+					<view class="registered" @tap="touristLogin">游客登陆</view> <!-- 征信管理注册 -->
 				</view>
 			</view>
 			<view class="padding flex flex-direction">
-				<button form-type="submit" :disabled="canLogin" class="cu-btn bg-blue margin-tb-sm lg shadow loginbtn" @tap="loginSys">登录</button>
+				<button form-type="submit" :disabled="canLogin" class="cu-btn bg-blue margin-tb-sm lg shadow loginbtn" @tap="loginSys(null)">登录</button>
 			</view>
 		</form>
 		<mLoad :png="'/static/gs.png'" :msg="'登录中...'" v-if="loadModal"></mLoad>
@@ -67,15 +68,18 @@
 		loadModal: boolean = false
 		vueId: string = Tools.guid()
 		// user: User = new User('13051424475', '', '')
-		user: User = new User('admin', '', 'system')
+		user: User = new User('', '', '')
 		onLoad() {
 			// console.log('登录页面1112')
 		}
 		/**
 		 * 登录系统
 		 */
-		loginSys() {
-			if (!this.user.userCode) {
+		loginSys(user:any=null) {
+			uni.setStorageSync('userType','Official');
+			if(user == null)
+				user = this.user;
+			if (!user.userCode) {
 				uni.showToast({
 					title: '请输入账号密码',
 					icon:"none"
@@ -84,12 +88,9 @@
 			} else {
 				this.canLogin = true;
 				this.loadModal = true;
-			
-				tools.login(this.user).then((res: any) => {
-					console.log(res)
+				tools.login(user).then((res: any) => {
 					let data = res.data
 					if (data.id != -1) {
-						console.log(data)
 						let _u = data.data.user
 						this.user.userCode = _u.userCode
 						this.user.userName = _u.userName
@@ -97,16 +98,10 @@
 						this.user.deptInfo = _u.deptInfo
 						this.user.gwCode = _u.gwCode
 						let ms:Array<Menu> = data.data.menulist;
-						console.log(ms)
-						// uni.setStorage({key:'user',data:this.user})
-						LoginModule.setUser(this.user)
+						LoginModule.setUser(user)
 						LoginModule.setState(true)
 						LoginModule.setMenus(ms);
 						LoginModule.setSnKey(data.data.snkey)
-						// uni.navigateTo({
-						// 	'url': '/pages/index/index'
-						// })
-						//关闭当前页面，跳转到应用内的某个页面
 						if(!commURL.ItemType){
 							setTimeout(()=>{
 								uni.redirectTo({
@@ -120,7 +115,6 @@
 								})
 							},200);
 						}
-
 					} else {
 						uni.showToast({
 							title: data.message,
@@ -144,6 +138,16 @@
 				// })
 			}
 		}
+		/**
+		 * 张矿微平台 游客登陆
+		 */
+		touristLogin(){
+			let user: User = new User('portal', '', '')
+			this.loginSys(user);
+			uni.setStorageSync('userType','Tourist')
+		}
+
+		
 		//注册页面
 		registered(vl:any){
 			if(vl == 'flexible'){
