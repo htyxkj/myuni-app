@@ -6,23 +6,22 @@
 			</cu-custom>
             <view class="cu-list menu-avatar padding">				
 				<view class="cu-item bg-white margin-top-xs">
-                    <!-- <image class ="cu-avatar bg-white myimg round" mode="aspectFill" :src="imgArr[index]" ></image> -->
-					<view class="content">
+                    <image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/exam/day.png'" ></image>
+					<view class="content" @tap="datAnswer()">
                         <view class="name">每日答题</view>
+						<view class="remark">书读百遍，其义自见。</view>
 					</view>
 				</view> 
-				<view class="cu-item bg-white margin-top-xs">
-                    <!-- <image class ="cu-avatar bg-white myimg round" mode="aspectFill" :src="imgArr[index]" ></image> -->
+				<!-- <view class="cu-item bg-white margin-top-xs">
 					<view class="content">
                         <view class="name">专项答题</view>
 					</view>
 				</view> 
 				<view class="cu-item bg-white margin-top-xs">
-                    <!-- <image class ="cu-avatar bg-white myimg round" mode="aspectFill" :src="imgArr[index]" ></image> -->
 					<view class="content">
                         <view class="name">答题挑战</view>
 					</view>
-				</view> 
+				</view>  -->
 			</view>
 			<view class="cu-tabbar-height"></view>
 		</scroll-view>
@@ -73,9 +72,11 @@
 				uni.setStorageSync(this.key, JSON.stringify(this.typeArr));
 			}
 		}
-
-		gotoList(item:any){
-			let url = "/pages/alone/mine/learning/learningList?sid="+item.sid+"&name="+item.name;
+		/**
+		 * 每日答题
+		 */
+		datAnswer(){
+			let url = "/pages/alone/mine/exam/dayAnswer";
 			uni.navigateTo({
 				'url':url,
 			})
@@ -96,8 +97,8 @@
 		font-size: 32upx;
 	}
 	.myimg{
-		width: 60upx; 
-		height: 60upx;
+		width: 90upx; 
+		height: 90upx;
 		background-color: #FFFFFF;
 	}
 </style>

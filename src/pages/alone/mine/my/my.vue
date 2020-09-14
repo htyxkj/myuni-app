@@ -21,7 +21,7 @@
                     </view>
 				</view>
 			</view>
-			<view class="my-info my-margin-top">
+			<!-- <view class="my-info my-margin-top">
 				<view class="bg-white whiteCrd margin my-margin-top">
 					<view class="bg-white whiteCrd padding-top padding-bottom">
 						<view class="grid text-center col-2">
@@ -30,7 +30,7 @@
 						</view>
 					</view>
 				</view>
-			</view>
+			</view> -->
 		</view>
  		<view class="cu-bar bg-white solid-bottom margin-top " @tap="modifyPassClick">
 			<view class="action">
@@ -197,7 +197,7 @@
 			})
 		}
 		gotoHistoryPage(){
-			let url = "/pages/alone/mine/my/favoritesOrHistoryList?type=0&title=历史浏览";
+			let url = "/pages/alone/mine/my/favoritesOrHistoryList?type=1&title=历史浏览";
 			uni.navigateTo({
 				'url':url,
 			})

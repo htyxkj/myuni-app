@@ -133,7 +133,7 @@
 		 */
 		async refresherTriggered(){
 			this.refresher_triggered = true;
-			await this.initData(null);
+			await this.initData();
 			setTimeout(() => {
 				this.refresher_triggered = false;	
 			}, 100);
@@ -142,42 +142,43 @@
 		/**
 		 * 根据分类编码查询数据
 		 */
-		async initData(type:any){
+		async initData(){
 			this.noNextPage = false;
-			this.qe.page = new PageInfo();
-			let oneCont = []; 
-			let qCont = new QueryCont('type',this.type_sid,12);
-			qCont.setContrast(0);
-			qCont.setLink(1);
-			oneCont.push(qCont);
-			let userType = uni.getStorageSync('userType');
-			if(userType == 'Tourist'){//游客身份
-				qCont = new QueryCont('ispublic','1',5);
-				qCont.setContrast(0);
-				qCont.setLink(1);
-				oneCont.push(qCont);
+			let btn1 = new BipMenuBtn("DLG","收藏或历史记录")
+            btn1.setDlgType("D")
+            btn1.setDlgCont("mine.serv.ArticleServlet*208;0;0");//收藏或历史记录
+			let b = JSON.stringify(btn1)
+            let prarm = {
+				type:this.type,
+				currPage:this.page.currPage
 			}
-			this.qe.cont = "~["+JSON.stringify(oneCont)+"]"
-			let vv:any = await tools.getBipInsAidInfo('ALLARTICLEL',210,this.qe);
+            let v = JSON.stringify(prarm);
+			let res:any = await tools.getDlgRunClass(v,b);
+			console.log(res)
 			this.articleData = [];
-			if(vv.data.id ==0){
-				let cc = vv.data.data.data.values;
-				this.page = vv.data.data.data.page;
-				this.compositionData(cc);
-			}
+			// if(vv.data.id ==0){
+			// 	let cc = vv.data.data.data.values;
+			// 	this.page = vv.data.data.data.page;
+			// 	this.compositionData(cc);
+			// }
 		}
 		/**
 		 * 滑动到底部 查询下一页
 		 */
 		async getNextPage(){
 			this.page.currPage++;
-			this.qe.page = this.page;
-			let oneCont = []; 
-			let qCont = new QueryCont('type',this.type_sid,12);
-			qCont.setContrast(0);
-			qCont.setLink(1);
-			oneCont.push(qCont);
-			this.qe.cont = "~["+JSON.stringify(oneCont)+"]"
+			let btn1 = new BipMenuBtn("DLG","收藏或历史记录")
+            btn1.setDlgType("D")
+            btn1.setDlgCont("mine.serv.ArticleServlet*208;0;0");//收藏或历史记录
+			let b = JSON.stringify(btn1)
+            let prarm = {
+				type:this.type,
+				currPage:this.page.currPage
+			}
+            let v = JSON.stringify(prarm);
+			let res:any = await tools.getDlgRunClass(v,b);
+			console.log(res)
+
 			let vv:any = await tools.getBipInsAidInfo('ALLARTICLEL',210,this.qe);
 			if(vv.data.id ==0){
 				let cc = vv.data.data.data.values;
