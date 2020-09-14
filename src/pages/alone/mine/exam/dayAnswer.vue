@@ -50,7 +50,24 @@
 			</view>
 		</view>
 		<view v-if="isEnd">
-			答题结束
+			<view class="cu-card article">
+				<view class="cu-item shadow">
+					<!-- <view class="title">
+						<view class="text-cut">
+							本次答对题目数
+						</view>
+					</view> -->
+					<view class="title">本次答对题目数</view>
+					<view>{{record.successNum}}</view>
+					<view class="content">
+						<view class="desc">
+							<view class="text-content"> 
+								{{oneTopic.tit_content}}
+							</view>
+						</view>
+					</view> 
+				</view>
+			</view>
 		</view>
 		<view v-if="oneTopic" class="cu-modal bottom-modal" :class="shPrompt?'show':''" @tap="shPrompt = false">
 			<view class="cu-dialog">
@@ -91,6 +108,7 @@ import { values } from 'xe-utils/methods';
 		record:any={
 			Accuracy:100,//准确率
 			errorNum:0,//错题数
+			successNum:0,//对题数
 			time:'00:00:00',//用时
 			record:[]//答题记录
 		};//答题记录
@@ -193,8 +211,10 @@ import { values } from 'xe-utils/methods';
 			let jl = {sid:this.oneTopic.sid,state:success};
 			if(success ==0 ){
 				this.record.errorNum++;
+			}else{
+				this.record.successNum++;
 			}
-			this.record.Accuracy = (this.topicData.length-this.record.errorNum)/this.topicData.length*100
+			this.record.Accuracy = this.record.successNum/this.topicData.length*100
 			this.record.record.push(jl);
 			if(this.topicIndex == this.topicData.length){
 				this.isEnd = true;
