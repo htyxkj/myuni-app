@@ -292,14 +292,16 @@
             }
             let v = JSON.stringify(prarm);
 			let res:any = await tools.getDlgRunClass(v,b);
-			let data = res.data.data;
-			this.comment_num = data.comment_num;
-			this.my_like = data.my_like;
-			this.total_page = data.total_page;
-			this.my_favorites = data.my_favorites;
-			if(this.page_num == 1) 
-				this.comment_list = [];
-			this.comment_list = this.comment_list.concat(data.data); //追加新数据
+			if(res.data.id == 0){
+				let data = res.data.data;
+				this.comment_num = data.comment_num;
+				this.my_like = data.my_like;
+				this.total_page = data.total_page;
+				this.my_favorites = data.my_favorites;
+				if(this.page_num == 1) 
+					this.comment_list = [];
+				this.comment_list = this.comment_list.concat(data.data); //追加新数据
+			}
 		}
 
 		/**

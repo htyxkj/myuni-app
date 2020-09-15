@@ -77,6 +77,10 @@
 		 */
 		datAnswer(){
 			let url = "/pages/alone/mine/exam/dayAnswer";
+			let userType = uni.getStorageSync('userType');
+			if(userType == 'Tourist'){//游客身份 
+				url = "/pages/login/login"
+			}
 			uni.navigateTo({
 				'url':url,
 			})

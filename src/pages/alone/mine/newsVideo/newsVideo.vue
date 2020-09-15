@@ -15,11 +15,14 @@
 
 		<view v-if="type == 0">
 			<scroll-view scroll-x class="mytypeTbs nav text-center">
+				<view class="cu-item" :class="-1==newsTabCur?'selTbs':''" @tap="newsTabSelect" :data-id="-1">
+					推荐
+				</view>
 				<view class="cu-item" :class="index==newsTabCur?'selTbs':''" v-for="(item,index) in newsTypeArr" :key="index" @tap="newsTabSelect" :data-id="index" :data-sid="item.sid">
 					{{item.name}}
 				</view>
 			</scroll-view> 
-			<view class="cu-bar btn-group padding-left-xl padding-right-xl" v-if="newsChileTypeArr.length>0">
+			<view class="cu-bar btn-group" v-if="newsChileTypeArr.length>0" :class="newsChileTypeArr.length<=3?'padding-left-xl padding-right-xl':''">
 				<button class="cu-btn bg-blue shadow-blur" :class="type_sid==item.sid?'selbtn':'noSelbtn'" v-for="(item,index) in newsChileTypeArr" :key="index" @tap="initData(item.sid)">
 					{{item.name}}
 				</button>
@@ -132,7 +135,7 @@
 	})
 	export default class NewsVideo extends Vue {
 		@Prop({ default:0, type:Number }) type!:number;//类型 0：新闻；1：视频
-		newsTabCur:any = 0;
+		newsTabCur:any = -1;
 		newsTypeArr:Array<any>=[];//新闻类别
 		newsChileTypeArr:Array<any>=[];//新闻子类别
 
@@ -163,6 +166,10 @@
 		//新闻类别切换
 		async newsTabSelect(e:any){
 			this.newsTabCur = e.currentTarget.dataset.id;
+			if(this.newsTabCur == -1){
+				console.log("推荐页面")
+				return;
+			}
 			let sid = e.currentTarget.dataset.sid;
 			let dd = await this.getTypeByFather(sid);
 			this.newsChileTypeArr = dd;
@@ -195,7 +202,7 @@
 				let type= await this.getTypeByFather('LX20080013');
 				this.newsTypeArr = type;
 				if(this.newsTypeArr.length>0){
-					let e = {currentTarget:{dataset:{sid:this.newsTypeArr[0].sid,id:0}}}
+					let e = {currentTarget:{dataset:{sid:this.newsTypeArr[0].sid,id:-1}}}
 					this.newsTabSelect(e)
 				}
 			}else if(this.type == 1){//1：视频
@@ -454,14 +461,14 @@
 	.selbtn{
 		background-color: #ED1B24;
 		color: #FFFFFF;
-		font-size: 12px;
+		font-size: 11px;
 		height: 28px;
 		transform: none;
 	}
 	.noSelbtn{
 		background-color: #F9F9F9;
 		color: #858585;
-		font-size: 12px;
+		font-size: 11px;
 		height: 28px;
 		transform: none;
 	}

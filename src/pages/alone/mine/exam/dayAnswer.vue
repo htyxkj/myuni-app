@@ -242,7 +242,7 @@ import { values } from 'xe-utils/methods';
 			uni.showModal({
 				title: '确定要退出答题？',
 				content: '退出后作答历史将不会保存',
-				cancelText: '继续',
+				cancelText: '继续答题',
 				confirmText: '退出',
 				success: res => {
 					if (res.confirm) {
