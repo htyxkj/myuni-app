@@ -71,6 +71,12 @@
 		user: User = new User('', '', '')
 		onLoad() {
 			// console.log('登录页面1112')
+			let logstate = uni.getStorageSync("isLogin");
+			if(logstate !=  true){//没登录
+				if(commURL.ItemType == 'mine'){
+					this.touristLogin();
+				}
+			}
 		}
 		/**
 		 * 登录系统
