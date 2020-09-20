@@ -36,6 +36,15 @@
 			</scroll-view>
 		</view>
 		<scroll-view scroll-y class="page" refresher-enabled @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered" @scrolltolower="getNextPage">
+			<swiper v-if="type == 0 && -1==newsTabCur" class="screen-swiper square-dot "  :indicator-dots="true" :circular="true"
+				:autoplay="true" interval="5000" duration="500">
+				<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
+					<image :src="item.url" mode="scaleToFill" class="screen-swiper-img"></image>
+					<view class="sw-title padding">
+						<h3>{{item.title}}</h3>
+					</view>
+				</swiper-item>
+			</swiper>
 			<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom bg-white">
 				<template v-if="item.img.length>0 || (item.img.length == 0 && item.video.length == 0 )">
 					<template v-if="item.img.length>=3">
@@ -156,6 +165,7 @@
 		tjoldVl:any = "";//条件
 
 		uri:any ="";//
+		swiperList:Array<any> = [];//推荐轮播图
 		mounted(){
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
 			this.initType();
@@ -167,7 +177,9 @@
 		async newsTabSelect(e:any){
 			this.newsTabCur = e.currentTarget.dataset.id;
 			if(this.newsTabCur == -1){
-				console.log("推荐页面")
+				this.newsChileTypeArr = [];
+				this.initSwiperData();
+				this.initData(null,true)
 				return;
 			}
 			let sid = e.currentTarget.dataset.sid;
@@ -227,8 +239,10 @@
 
 		/**
 		 * 根据分类编码查询数据
+		 * type 类别
+		 * rec 是否推荐
 		 */
-		async initData(type:any){
+		async initData(type:any,rec:boolean =false){
 			this.noNextPage = false;
 			if(this.type_sid == type)
 				return;
@@ -236,16 +250,25 @@
 				this.type_sid = type;
 			this.qe.page = new PageInfo();
 			let oneCont = []; 
-			let qCont = new QueryCont('type',this.type_sid,12);
-			qCont.setContrast(0);
-			qCont.setLink(1);
-			oneCont.push(qCont);
+			let qCont = null;
+			if(rec){//推荐 不安类别查询
+				qCont = new QueryCont('isrec','1',12);
+				qCont.setContrast(0);
+				qCont.setLink(1);
+				oneCont.push(qCont);
+			}else{
+				qCont = new QueryCont('type',this.type_sid,12);
+				qCont.setContrast(0);
+				qCont.setLink(1);
+				oneCont.push(qCont);
+			}
 			if(this.tjInput!=null && this.tjInput.length>0){
 				qCont = new QueryCont('title',this.tjInput,12);
 				qCont.setContrast(3);
 				qCont.setLink(1);
 				oneCont.push(qCont);
 			}
+
 			let userType = uni.getStorageSync('userType');
 			if(userType == 'Tourist'){//游客身份
 				qCont = new QueryCont('ispublic','1',5);
@@ -262,6 +285,40 @@
 				this.compositionData(cc);
 			}
 		}
+		
+		/**
+		 * 查询轮播图数据
+		 */
+		async initSwiperData(){
+			let qe:QueryEntity = new QueryEntity('','');
+			this.swiperList = [];
+			qe.page = new PageInfo(1,100);
+			let oneCont = []; 
+			let userType = uni.getStorageSync('userType');
+			if(userType == 'Tourist'){//游客身份
+				let qCont = new QueryCont('ispublic','1',5);
+				qCont.setContrast(0);
+				qCont.setLink(1);
+				oneCont.push(qCont);
+			}
+			qe.cont = "~["+JSON.stringify(oneCont)+"]"
+			let vv:any = await tools.getBipInsAidInfo('ALLCAROUSEL',210,qe);
+			this.articleData = [];
+			if(vv.data.id ==0){
+				let cc = vv.data.data.data.values;
+				for(var i=0;i<cc.length;i++){
+					let sw = cc[i];
+					let nameArr = sw.fj_name.split(";");
+					for(var j=0;j<nameArr.length;j++){
+						let vl:any = {url:'',sid:sw.article_id,title:sw.title};
+						let url = this.uri+'?snkey='+this.snkey+'&fjroot='+sw.fj_root+'&updid=36&fjname='+nameArr[j];
+						vl.url = url;
+						this.swiperList.push(vl);
+					}
+				}
+			}
+		}
+
 		/**
 		 * 滑动到底部 查询下一页
 		 */
@@ -482,5 +539,16 @@
 	}
 	.my-top{
 		background-color: #E7271A;
+	}
+	.sw-title{
+		background-color: #ececec57;
+		padding-top: 5px;
+		padding-bottom: 5px;
+	}
+	.screen-swiper{
+		min-height: 500upx;
+	}
+	.screen-swiper-img{
+		max-height: 400upx;
 	}
 </style>
