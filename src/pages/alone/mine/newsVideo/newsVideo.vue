@@ -36,45 +36,72 @@
 			</scroll-view>
 		</view>
 		<scroll-view scroll-y class="page" refresher-enabled @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered" @scrolltolower="getNextPage">
-			<swiper v-if="type == 0 && -1==newsTabCur" class="screen-swiper square-dot "  :indicator-dots="true" :circular="true"
-				:autoplay="true" interval="5000" duration="500">
-				<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
-					<image :src="item.url" mode="scaleToFill" class="screen-swiper-img"></image>
-					<view class="sw-title padding">
-						<h3>{{item.title}}</h3>
-					</view>
-				</swiper-item>
-			</swiper>
-			<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom bg-white">
-				<template v-if="item.img.length>0 || (item.img.length == 0 && item.video.length == 0 )">
-					<template v-if="item.img.length>=3">
-						<view @tap="gotoarticle(item)">
-							<view class="grid text-center col-3 padding-left padding-right">
-								<view  v-for="(img,index) in item.img " :key="index" >
-									<image mode="aspectFit" class="listImg1" :src="img"></image>
+		<!-- <load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'"  :heightReduce="185" :pageNo="1" :totalPageNo="10" @loadMore="getNextPage" @refresh="refresherTriggered"> -->
+			<view class="bg-white" v-if="articleData" >
+				<swiper v-if="type == 0 && -1==newsTabCur" class="screen-swiper square-dot "  :indicator-dots="true" :circular="true"
+					:autoplay="true" interval="5000" duration="500">
+					<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
+						<image :src="item.url" mode="scaleToFill" class="screen-swiper-img"></image>
+						<view class="sw-title padding">
+							<h3>{{item.title}}</h3>
+						</view>
+					</swiper-item>
+				</swiper>
+				<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom bg-white">
+					<template v-if="item.img.length>0 || (item.img.length == 0 && item.video.length == 0 )">
+						<template v-if="item.img.length>=3">
+							<view @tap="gotoarticle(item)">
+								<view class="grid text-center col-3 padding-left padding-right">
+									<view  v-for="(img,index) in item.img " :key="index" >
+										<image mode="aspectFit" class="listImg1" :src="img"></image>
+									</view>
 								</view>
-							</view>
-							<view class="flex justify-start">
-								<view class="padding-top-sm padding-bottom-sm padding-left">
-									<view>
-										<view><h4>{{item.title}}</h4></view>
-										<view class="text-gray text-sm">
-											<view class="flex justify-start">
-												<view>{{item.smakename}}</view>
-												<view class="padding-left-xl">{{item.mkdate}}</view>
+								<view class="flex justify-start">
+									<view class="padding-top-sm padding-bottom-sm padding-left">
+										<view>
+											<view><h4>{{item.title}}</h4></view>
+											<view class="text-gray text-sm">
+												<view class="flex justify-start">
+													<view>{{item.smakename}}</view>
+													<view class="padding-left-xl">{{item.mkdate}}</view>
+												</view>
 											</view>
 										</view>
 									</view>
 								</view>
 							</view>
-						</view>
+						</template>
+						<template v-if="item.img.length<3">
+							<view class="flex justify-start" @tap="gotoarticle(item)">
+								<view class="padding-sm margin-xs">
+									<view>
+										<view><h4>{{item.title}}</h4></view>
+										<view style="height: 40upx;"></view>
+										<view class="text-gray text-sm">
+											<view class="flex justify-start">
+												<view>{{item.smakename}}</view>
+												<view class="padding-left-xl">{{item.mkdate}}</view>
+												<view class="padding-left-xl">
+													<text class="cuIcon-record"></text>
+													{{item.pageviews}}
+												</view>
+											</view>
+										</view>
+									</view>
+								</view>
+								<view class="padding-sm margin-xs" v-if="item.img.length>0">
+									<image mode="aspectFit" class="listImg1" :src="item.img[0]"></image>
+								</view>
+							</view>
+						</template>
 					</template>
-					<template v-if="item.img.length<3">
+					<template v-else-if="item.video.length>0">
+						<video :ref="'video'+item.sid" :id="'video'+item.sid" @play="videoPay(item)" style="width:100%" :src="item.video[0]"></video>
 						<view class="flex justify-start" @tap="gotoarticle(item)">
-							<view class="padding-sm margin-xs">
+							<view class="padding-left-sm padding-right-sm margin-xs">
 								<view>
 									<view><h4>{{item.title}}</h4></view>
-									<view style="height: 40upx;"></view>
+									<view style="height: 10upx;"></view>
 									<view class="text-gray text-sm">
 										<view class="flex justify-start">
 											<view>{{item.smakename}}</view>
@@ -87,38 +114,15 @@
 									</view>
 								</view>
 							</view>
-							<view class="padding-sm margin-xs" v-if="item.img.length>0">
-								<image mode="aspectFit" class="listImg1" :src="item.img[0]"></image>
-							</view>
 						</view>
 					</template>
-				</template>
-				<template v-else-if="item.video.length>0">
-					<video :ref="'video'+item.sid" :id="'video'+item.sid" @play="videoPay(item)" style="width:100%" :src="item.video[0]"></video>
-					<view class="flex justify-start" @tap="gotoarticle(item)">
-						<view class="padding-left-sm padding-right-sm margin-xs">
-							<view>
-								<view><h4>{{item.title}}</h4></view>
-								<view style="height: 10upx;"></view>
-								<view class="text-gray text-sm">
-									<view class="flex justify-start">
-										<view>{{item.smakename}}</view>
-										<view class="padding-left-xl">{{item.mkdate}}</view>
-										<view class="padding-left-xl">
-											<text class="cuIcon-record"></text>
-											{{item.pageviews}}
-										</view>
-									</view>
-								</view>
-							</view>
-						</view>
-					</view>
-				</template>
+				</view>
+				<view class="text-sm padding text-center" v-if="noNextPage">
+					<text class="text-grey">-----我是有底线的-----</text>
+				</view>
+				<view style="height: 8vh;"></view>
 			</view>
-			<view class="text-sm padding text-center" v-if="noNextPage">
-				<text class="text-grey">-----我是有底线的-----</text>
-			</view>
-			<view style="height: 8vh;"></view>
+		<!-- </load-refresh> -->
 		</scroll-view>
 	</view>
 </template>
@@ -139,8 +143,9 @@
 	let commURL: any = comm;
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import {BipMenuBtn} from '@/classes/BipMenuBtn'
+	import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 	@Component({
-		
+		components:{loadRefresh}
 	})
 	export default class NewsVideo extends Vue {
 		@Prop({ default:0, type:Number }) type!:number;//类型 0：新闻；1：视频
