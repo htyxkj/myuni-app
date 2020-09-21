@@ -231,7 +231,11 @@
 		 */
 		async refresherTriggered(){
 			this.refresher_triggered = true;
-			await this.initData(null);
+			if(this.type == 0 && -1==this.newsTabCur){
+				await this.initData(null,true);
+			}else{
+				await this.initData(null);
+			}
 			setTimeout(() => {
 				this.refresher_triggered = false;	
 			}, 100);
@@ -244,7 +248,7 @@
 		 */
 		async initData(type:any,rec:boolean =false){
 			this.noNextPage = false;
-			if(this.type_sid == type)
+			if(type != null && this.type_sid == type)
 				return;
 			if(type)
 				this.type_sid = type;
@@ -550,5 +554,8 @@
 	}
 	.screen-swiper-img{
 		max-height: 400upx;
+	}
+	.cu-bar.btn-group uni-button {
+		padding: 11px 1px;
 	}
 </style>

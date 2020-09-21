@@ -26,7 +26,7 @@
 		tabcur:number = 0
 		onLoad(options:any) {
 			if(!this.loginState){
-				uni.navigateTo({'url':'/pages/login/login'})
+				uni.reLaunch({'url':'/pages/login/login'})
 				return;
 			}
 			if(options.tabcur){

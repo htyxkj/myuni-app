@@ -229,7 +229,7 @@
 		 * 去详情页面
 		 */
 		gotoarticle(item:any){
-			let url = "/pages/alone/mine/details/details?sid="+item.sid;
+			let url = "/pages/alone/mine/askAnswer/askAnswerDetails?sid="+item.sid;
 			uni.navigateTo({
 				'url':url,
 			})

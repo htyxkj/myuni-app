@@ -18,11 +18,11 @@
 					</view>
 				</view>
 				<view v-html="articleData.content"></view>
-				<view class="padding text-center">
+				<!-- <view class="padding text-center">
 					<button class="cu-btn round lines-blue" :class="[my_like ==0?'lines-gray':'lines-blue']" @click="doLike">
 						<text class="cuIcon-appreciate"></text>{{like_num}}&nbsp;&nbsp;&nbsp;赞
 					</button>
-				</view>
+				</view> -->
 				<view>
 					<view class="flex padding-top" v-for="(item,index) in comment_list" :key="index">
 						<view class="radius" style="flex-basis:10%">
@@ -69,8 +69,20 @@
 				</view>
 			</view>
 		</load-refresh>
-		<view class="cu-bar bg-white tabbar shadow foot">
+		<view class="cu-bar bg-white tabbar shadow foot" v-if="articleData && user.userCode == articleData.smake">
 			<view class="bg-red submit" @tap="deleteAsk"><text class="cuIcon-delete"></text> 删除</view>
+		</view>
+		<view v-else>
+			<view class="cu-bar bg-white tabbar border shop btm-comment">
+				<view class="btn-group">
+					<input class="bg-gray comm-input" placeholder="发表你的解答..." type="text" @focus="gotocomment"></input>
+				</view>
+				<button class="action" open-type="contact" @click="gotoAllComment">
+					<view class="cuIcon-comment text-green bottom-icon">
+						<view class="cu-tag badge">{{comment_num}}</view>
+					</view>
+				</button>
+			</view>
 		</view>
 	</view>
 </template>
@@ -106,6 +118,7 @@
 		my_like:number = 0;//当前人是否点过赞  0：否；1：是
 		comment_list:Array<any> = [];//评论列表
 		my_favorites:number =0;//当前人是否收藏 0：否；1：是
+		canDel:boolean = false;//当前人是否可以删除该问题
 		onLoad(e:any) {
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
 			this.snkey = LoginModule.snkey
@@ -146,10 +159,11 @@
 		 */
 		compositionData(cc:any){
 			for(let i=0;i<1;i++){
-					let j1:any = {sid:"",title:"",description:"",content:"",smakename:"",mkdate:"",img:[],video:[]};
+					let j1:any = {sid:"",title:"",description:"",content:"",smake:"",smakename:"",mkdate:"",img:[],video:[]};
 					let d1 = cc[i];
 					j1.title = d1.title;
 					j1.description = d1.description;
+					j1.smake = d1.smake;
 					j1.smakename = d1.smakename;
 					j1.sid = d1.sid;
 					j1.content = d1.content.replace(/snkey={BIPSNKEY}/g,'snkey='+this.snkey);
@@ -180,38 +194,7 @@
 						this.like_num=0;
 				}
 		}
-
-		/**
-		 * 点赞当前文章
-		 */
-		async doLike(){
-			if(this.my_like ==0){
-				this.my_like = 1;
-				this.like_num++;
-			}else{
-				this.my_like = 0;
-				this.like_num--;
-			}
-			let btn1 = new BipMenuBtn("DLG","文章点赞")
-            btn1.setDlgType("D")
-            btn1.setDlgCont("mine.serv.ArticleServlet*202;0;0");//评论
-			let b = JSON.stringify(btn1)
-            let prarm = {
-				"article_id":this.sid,//文章ID
-            }
-            let v = JSON.stringify(prarm);
-			let res:any = await tools.getDlgRunClass(v,b);
-			if(res.data.id !=0){
-				if(this.my_like ==0){
-					this.my_like = 1;
-					this.like_num++;
-				}else{
-					this.my_like = 0;
-					this.like_num--;
-				}
-			}
-		}
-
+ 
 		/**
 		 * 某条评论点赞
 		 */
@@ -247,6 +230,10 @@
 		 */
 		gotocomment(){
 			let url = "/pages/alone/mine/details/comment?sid="+this.sid;
+			let userType = uni.getStorageSync('userType');
+			if(userType == 'Tourist'){//游客身份
+				url = "/pages/login/login"
+			}
 			uni.navigateTo({
 				'url':url,
 			})
@@ -348,7 +335,7 @@
 		 * 删除当前提问
 		 */
 		async deleteAsk(){
-			let btn1 = new BipMenuBtn("DLG","文章点赞")
+			let btn1 = new BipMenuBtn("DLG","删除当前提问")
             btn1.setDlgType("D")
             btn1.setDlgCont("mine.serv.ArticleServlet*208;0;0");//评论
 			let b = JSON.stringify(btn1)
@@ -369,6 +356,7 @@
 				}, 200);
 			}
 		}
+		
 		get user(){
 			return LoginModule.user
 		}

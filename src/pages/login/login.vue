@@ -74,6 +74,7 @@
 			let logstate = uni.getStorageSync("isLogin");
 			if(logstate !=  true){//没登录
 				if(commURL.ItemType == 'mine'){
+					uni.clearStorage()
 					this.touristLogin();
 				}
 			}
