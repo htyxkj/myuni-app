@@ -8,20 +8,10 @@
 				<view class="cu-item bg-white margin-top-xs">
                     <image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/exam/day.png'" ></image>
 					<view class="content" @tap="datAnswer()">
-                        <view class="name">每日答题</view>
+                        <view class="name">每日练习</view>
 						<view class="remark">书读百遍，其义自见。</view>
 					</view>
 				</view> 
-				<!-- <view class="cu-item bg-white margin-top-xs">
-					<view class="content">
-                        <view class="name">专项答题</view>
-					</view>
-				</view> 
-				<view class="cu-item bg-white margin-top-xs">
-					<view class="content">
-                        <view class="name">答题挑战</view>
-					</view>
-				</view>  -->
 			</view>
 			<view class="cu-tabbar-height"></view>
 		</scroll-view>

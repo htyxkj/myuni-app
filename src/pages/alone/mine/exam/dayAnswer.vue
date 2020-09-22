@@ -4,82 +4,98 @@
 			<block slot="backText">返回</block>
 			<block slot="content"><view class="header-title">答题</view></block>
 		</cu-custom>
-		<view class="cu-card article" v-if="oneTopic && !isEnd">
-			<view class="cu-item shadow">
-				<view class="title">
-					<view class="text-cut">
-						{{tit_type[oneTopic.tit_type]}}
-						{{topicIndex}}/{{topicData.length}}
+		<template v-if="isShowType && topicType.length>0">
+			<view class="cu-list menu-avatar padding">				
+				<view class="cu-item bg-white margin-top-xs" v-for="(item,index) in topicType" :key="index">
+					<image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/askAnswer/'+(index+1)+'.png'" ></image>
+					<view class="content"  @tap="initData(item)" >
+						<view class="name">{{item.name}}</view>
 					</view>
-				</view>
-				<view class="content">
-					<view class="desc">
-						<view class="text-content"> 
-							{{oneTopic.tit_content}}
-						</view>
-						<view v-for="(item,index) in oneTopic.child" :key="index">
-							<template v-if="isok">
-								<view class="text-cut padding-sm radius margin-xs" 
-								:class="[
-									(item.check ==1 && item.isno ==1) ?'ans-bg-ok':'',
-									(item.check ==1 && item.isno == 0) ?'ans-bg-no':'',
-									(item.check ==0 && item.isno ==1) ?'ans-bg-no':''
-									]"
-								>
-									{{letter[index]}}.{{item.solution}}
-								</view>
-							</template>
-							<template v-else>
-								<view class="text-cut padding-sm radius margin-xs" 
-								:class="item.check ==1 ?'ans-bg-sel':'ans-bg'"  @tap="selAns(item)">
-									{{letter[index]}}.{{item.solution}}
-								</view>
-							</template>
-						</view>
-						<view v-if="oneTopic.answer" class="text-right padding-sm" @tap="shPrompt = true">
-							查看提示
-						</view>
-					</view>
-				</view>
-				<view v-if="ansSelIndex.length>0">
-					<view class="cu-bar btn-group">
-						<button class="cu-btn block line-orange lg" style="width:60%" @tap="ok" v-if="!isok" >确定</button>
-						<button class="cu-btn block line-orange lg" style="width:60%" @tap="next" v-if="isok" >下一题</button>
-					</view>
-				</view>
+				</view> 
 			</view>
-		</view>
-		<view v-if="isEnd">
-			<view class="cu-card article">
+		</template>
+		<template v-else>
+			<view class="cu-card article" v-if="oneTopic && !isEnd">
 				<view class="cu-item shadow">
-					<!-- <view class="title">
+					<view class="title">
 						<view class="text-cut">
-							本次答对题目数
+							{{tit_type[oneTopic.tit_type]}}
+							{{topicIndex}}/{{topicData.length}}
 						</view>
-					</view> -->
-					<view class="title">本次答对题目数</view>
-					<view>{{record.successNum}}</view>
+					</view>
 					<view class="content">
 						<view class="desc">
 							<view class="text-content"> 
 								{{oneTopic.tit_content}}
 							</view>
+							<view v-for="(item,index) in oneTopic.child" :key="index">
+								<template v-if="isok">
+									<view class="text-cut padding-sm radius margin-xs" 
+									:class="[
+										(item.check ==1 && item.isno ==1) ?'ans-bg-ok':'',
+										(item.check ==1 && item.isno == 0) ?'ans-bg-no':'',
+										(item.check ==0 && item.isno ==1) ?'ans-bg-no':''
+										]"
+									>
+										{{letter[index]}}.{{item.solution}}
+									</view>
+								</template>
+								<template v-else>
+									<view class="text-cut padding-sm radius margin-xs" 
+									:class="item.check ==1 ?'ans-bg-sel':'ans-bg'"  @tap="selAns(item)">
+										{{letter[index]}}.{{item.solution}}
+									</view>
+								</template>
+							</view>
+							<view v-if="oneTopic.answer" class="text-right padding-sm" @tap="shPrompt = true">
+								查看提示
+							</view>
 						</view>
-					</view> 
+					</view>
+					<view v-if="ansSelIndex.length>0">
+						<view class="cu-bar btn-group">
+							<button class="cu-btn block line-orange lg" style="width:60%" @tap="ok" v-if="!isok" >确定</button>
+							<button class="cu-btn block line-orange lg" style="width:60%" @tap="next" v-if="isok" >下一题</button>
+						</view>
+					</view>
 				</view>
 			</view>
-		</view>
-		<view v-if="oneTopic" class="cu-modal bottom-modal" :class="shPrompt?'show':''" @tap="shPrompt = false">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white text-right">
-					<view class="action text-green" @tap="shPrompt = false"></view>
-					<view class="action text-green" @tap="shPrompt = false">确定</view>
-				</view>
-				<view class="grid col-3 padding margin-bottom">
-					{{oneTopic.answer}}
+			<view v-if="isEnd">
+				<view class="cu-card article">
+					<view class="cu-item shadow"> 
+						<view class="title">本次答对题目数</view>
+						<view class="succ-num padding-left  text-bold">{{record.successNum}}</view>
+						<view style="width:100%">
+							<view class="grid text-start col-2">
+								<view class="padding">正确率：{{record.Accuracy}}%</view>
+								<view class="padding">用时：{{record.time}}</view>
+							</view>
+							<view class="grid margin-bottom text-start col-2">
+								<view class="padding">错题数：{{record.errorNum}}</view>
+								<view class="padding">积分：{{record.integral}}</view>
+							</view>
+						</view>
+						<view>
+							<view class="cu-bar btn-group">
+								<button class="cu-btn block line-grey" @tap="back">返回</button>
+								<button class="cu-btn block line-orange" @tap="refresh">再来一组</button>
+							</view>
+						</view>
+					</view>
 				</view>
 			</view>
-		</view>
+			<view v-if="oneTopic" class="cu-modal bottom-modal" :class="shPrompt?'show':''" @tap="shPrompt = false">
+				<view class="cu-dialog">
+					<view class="cu-bar bg-white text-right">
+						<view class="action text-green" @tap="shPrompt = false"></view>
+						<view class="action text-green" @tap="shPrompt = false">确定</view>
+					</view>
+					<view class="grid col-3 padding margin-bottom">
+						{{oneTopic.answer}}
+					</view>
+				</view>
+			</view>
+		</template>
 	</view>
 </template>
 
@@ -93,7 +109,7 @@
 	import QueryCont from '@/classes/search/QueryCont';
 	import {Vue,Provide,Prop,Component} from 'vue-property-decorator';
 	import {BipMenuBtn} from '@/classes/BipMenuBtn'
-import { values } from 'xe-utils/methods';
+	import { values } from 'xe-utils/methods';
 	@Component({
 	})
 	export default class dayAnswer extends Vue {
@@ -110,28 +126,51 @@ import { values } from 'xe-utils/methods';
 			errorNum:0,//错题数
 			successNum:0,//对题数
 			time:'00:00:00',//用时
+			integral:0,//积分
 			record:[]//答题记录
 		};//答题记录
 		isEnd:boolean = false;//答题结束
-		mounted(){
+		
+		selTopicType:any = null;
+		topicType:any=[];
+		isShowType:boolean = true;
+		startTime:any=null;
+		async mounted(){
+			//初始化题目类别，通用题目，专业题目
+			await this.initTopicType();
 			this.initTitType();
 			this.topicData = [];
-			this.initData()
+			this.startTime = new Date();
+		}
+		async initTopicType(){
+			this.topicType = [];
+			let qe:QueryEntity = new QueryEntity('','');
+			let vv:any = await tools.getBipInsAidInfo('PROBLEM_TYPE',210,qe);
+			if(vv.data.id ==0){
+				let vl = vv.data.data.data.values;
+				// if(vl.length ==1){
+				// 	this.initData(vl[0]);
+				// }else{
+					this.topicType = vl;
+				// }
+			}
 		}
 		/**
-		 * 查询当天题目
+		 * 查询随机题目
 		 */
-		async initData(){
+		async initData(item:any){
+			this.selTopicType = item;
 			let btn1 = new BipMenuBtn("DLG","每日答题")
             btn1.setDlgType("D")
-            btn1.setDlgCont("mine.serv.ExamServlet*201;0;0");//收藏或历史记录
+            btn1.setDlgCont("mine.serv.ExamServlet*201;0;0");//查询随机题目
 			let b = JSON.stringify(btn1)
-            let prarm = {}
+            let prarm = {type:item.sid}
             let v = JSON.stringify(prarm);
 			let res:any = await tools.getDlgRunClass(v,b);
 			if(res.data.id ==0){
 				this.topicData = res.data.data.data;
 				this.oneTopic = this.topicData[0]
+				this.isShowType = false;
 			}else if(res.data.id == -2){
 				uni.clearStorage()
 				uni.reLaunch({'url':'/pages/login/login'})
@@ -199,26 +238,32 @@ import { values } from 'xe-utils/methods';
 		/**
 		 * 答题
 		 */
-		ok(){
+		async ok(){
 			this.isok = true;
 			let success = 1;//回答正确
+			let checkItem=[];
 			for(var i=0;i<this.oneTopic.child.length;i++){
 				let item = this.oneTopic.child[i];
 				if((item.check ==1 && item.isno ==0) || (item.check == 0 && item.isno == 1)){
 					success = 0;
-				}			 
+				}
+				if(item.check){
+					checkItem.push(item.item)
+				}
 			}
-			let jl = {sid:this.oneTopic.sid,state:success};
+			let jl = {sid:this.oneTopic.sid,state:success,checkItem:checkItem};
 			if(success ==0 ){
-				this.record.errorNum++;
+				this.record.errorNum++; 
 			}else{
 				this.record.successNum++;
 			}
-			this.record.Accuracy = this.record.successNum/this.topicData.length*100
+			this.record.Accuracy = parseInt((this.record.successNum/this.topicData.length*100)+"")
 			this.record.record.push(jl);
 			if(this.topicIndex == this.topicData.length){
 				this.isEnd = true;
+				await this.statisticsIntegral()
 			}
+			this.record.time = this.formatDuring(new Date().getTime() - this.startTime.getTime())
 		}
 		/**
 		 * 下一题
@@ -230,10 +275,25 @@ import { values } from 'xe-utils/methods';
 			this.oneTopic = this.topicData[this.topicIndex-1];
 		}
 		/**
+		 * 统计积分
+		 */
+		async statisticsIntegral(){
+			let btn1 = new BipMenuBtn("DLG","每日答题")
+            btn1.setDlgType("D")
+            btn1.setDlgCont("mine.serv.ExamServlet*202;0;0");//查询随机题目
+			let b = JSON.stringify(btn1)
+            let v = JSON.stringify(this.record);
+			let res:any = await tools.getDlgRunClass(v,b);
+			if(res.data.id ==0){
+				let vv = res.data.data;
+				this.record.integral = vv.integral;
+			}
+		}
+		/**
 		 * 返回
 		 */
 		back(){
-			if(this.isEnd){
+			if(this.isEnd || this.isShowType){
 				uni.navigateBack({
 					delta: 1
 				}); 
@@ -252,6 +312,46 @@ import { values } from 'xe-utils/methods';
 					}
 				}
 			})
+		}
+		
+		/**
+		 * 再来一组
+		 */
+		refresh(){
+			this.topicData = [];
+			this.oneTopic =null;
+			this.topicIndex = 1;
+			this.ansSelIndex=[];
+			this.shPrompt = false;
+			this.isok = false;//当前题是否已答题
+			this.record={
+				Accuracy:100,//准确率
+				errorNum:0,//错题数
+				successNum:0,//对题数
+				time:'00:00:00',//用时
+				integral:0,//积分
+				record:[]//答题记录
+			};//答题记录 
+			this.isEnd = false; 
+			this.initData(this.selTopicType);
+		}
+		/**
+		 * 时间格式化  mss  毫秒值
+		 */
+		formatDuring(mss:any) {
+			let hours = parseInt(((mss % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))+'')+'';
+			if(hours.length == 1){
+				hours = '0'+hours;
+			}
+			let minutes = parseInt(((mss % (1000 * 60 * 60)) / (1000 * 60))+'')+'';
+			if(minutes.length == 1){
+				minutes = '0'+minutes;
+			}
+			let seconds = parseInt(((mss % (1000 * 60)) / 1000)+'')+'';
+			if(seconds.length == 1){
+				seconds = '0'+seconds;
+			}
+			return  hours + ":" + minutes + ":" + seconds;
 		}
 	}
 </script>
@@ -276,4 +376,8 @@ import { values } from 'xe-utils/methods';
     color: #fb0000;
     background-color: #fb000017;
 }
+.succ-num{
+	font-size: 56upx;
+}
+
 </style>

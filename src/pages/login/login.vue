@@ -6,7 +6,7 @@
 		</cu-custom> -->
 		<!-- 主体表单 -->
 		<form>
-			<view class="header margin-top">
+			<view class="header">
 				<image src="../../static/gs.png" mode="aspectFit"></image>
 			</view>
 			<view class="cu-form-group margin-top input">
@@ -29,7 +29,7 @@
 				</view>
 			</view>
 			<view class="padding flex flex-direction">
-				<button form-type="submit" :disabled="canLogin" class="cu-btn bg-blue margin-tb-sm lg shadow loginbtn" @tap="loginSys(null)">登录</button>
+				<button form-type="submit" :disabled="canLogin" class="cu-btn margin-tb-sm lg shadow loginbtn" @tap="loginSys(null)">登录</button>
 			</view>
 		</form>
 		<mLoad :png="'/static/gs.png'" :msg="'登录中...'" v-if="loadModal"></mLoad>
@@ -46,6 +46,7 @@
 	import {
 		Tools
 	} from '../../classes/tools/Tools';
+	import {BipMenuBtn} from '@/classes/BipMenuBtn'
 	import User from '@/classes/User';
 	import Menu from '@/classes/Menu';
 	import comm from '@/static/js/comm.js';
@@ -116,6 +117,13 @@
 								})
 							},200);
 						}else if(commURL.ItemType == 'mine'){
+							let btn1 = new BipMenuBtn("DLG","修改文章浏览量")
+							btn1.setDlgType("D")
+							btn1.setDlgCont("mine.serv.ExamServlet*203;0;0");//修改文章浏览量
+							let b = JSON.stringify(btn1)
+							let prarm = {"type":"login"}
+							let v = JSON.stringify(prarm);
+							tools.getDlgRunClass(v,b);
 							setTimeout(()=>{
 								uni.redirectTo({
 									'url': '/pages/alone/mine/index/index'
@@ -190,6 +198,7 @@
 	.header {
 		text-align: center;
 		background-color: #FFFFFF;
+		padding-top: 100upx;
 	}
 
 	.header image {
@@ -213,5 +222,7 @@
 	}
 	.loginbtn{
 		border-radius: 50upx;
+		background-color: #e20b1cd9;
+		color: #FFFFFF;
 	}
 </style>

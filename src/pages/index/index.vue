@@ -64,7 +64,7 @@
 		//登录成功
 		loginOk(){
 			if(commURL.ItemType == 'mine'){
-				uni.redirectTo({
+				uni.reLaunch({
 					'url': '/pages/alone/mine/index/index'
 				})
 				return;

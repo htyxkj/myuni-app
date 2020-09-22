@@ -35,10 +35,11 @@
 				</view>
 			</scroll-view>
 		</view>
-		<scroll-view scroll-y class="page" refresher-enabled @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered" @scrolltolower="getNextPage">
+		<!-- <scroll-view scroll-y class="page" refresher-enabled @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered" @scrolltolower="getNextPage"> -->
 		<!-- <load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'"  :heightReduce="185" :pageNo="1" :totalPageNo="10" @loadMore="getNextPage" @refresh="refresherTriggered"> -->
+		<my-scroll :on-refresh="refresherTriggered" :on-infinite="getNextPage" :refresher-triggered="refresher_triggered">
 			<view class="bg-white" v-if="articleData" >
-				<swiper v-if="type == 0 && -1==newsTabCur" class="screen-swiper square-dot "  :indicator-dots="true" :circular="true"
+				<swiper v-if="type == 0 && -1==newsTabCur" class="margin-bottom screen-swiper square-dot "  :indicator-dots="true" :circular="true"
 					:autoplay="true" interval="5000" duration="500">
 					<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
 						<image :src="item.url" mode="scaleToFill" class="screen-swiper-img"></image>
@@ -97,7 +98,7 @@
 					</template>
 					<template v-else-if="item.video.length>0">
 						<video :ref="'video'+item.sid" :id="'video'+item.sid" @play="videoPay(item)" style="width:100%" :src="item.video[0]"></video>
-						<view class="flex justify-start" @tap="gotoarticle(item)">
+						<view class="flex justify-start" @tap="gotoarticle(item,true)">
 							<view class="padding-left-sm padding-right-sm margin-xs">
 								<view>
 									<view><h4>{{item.title}}</h4></view>
@@ -122,8 +123,9 @@
 				</view>
 				<view style="height: 8vh;"></view>
 			</view>
+			</my-scroll>
 		<!-- </load-refresh> -->
-		</scroll-view>
+		<!-- </scroll-view> -->
 	</view>
 </template>
 
@@ -144,8 +146,9 @@
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import {BipMenuBtn} from '@/classes/BipMenuBtn'
 	import loadRefresh from '@/components/load-refresh/load-refresh.vue';
+	import myScroll from '@/components/load-refresh/my-scroll.vue';
 	@Component({
-		components:{loadRefresh}
+		components:{loadRefresh,myScroll}
 	})
 	export default class NewsVideo extends Vue {
 		@Prop({ default:0, type:Number }) type!:number;//类型 0：新闻；1：视频
@@ -309,10 +312,9 @@
 				qCont.setContrast(0);
 				qCont.setLink(1);
 				oneCont.push(qCont);
+				qe.cont = "~["+JSON.stringify(oneCont)+"]"
 			}
-			qe.cont = "~["+JSON.stringify(oneCont)+"]"
 			let vv:any = await tools.getBipInsAidInfo('ALLCAROUSEL',210,qe);
-			this.articleData = [];
 			if(vv.data.id ==0){
 				let cc = vv.data.data.data.values;
 				for(var i=0;i<cc.length;i++){
@@ -405,8 +407,8 @@
 		/**
 		 * 去详情页面
 		 */
-		gotoarticle(item:any){
-			let url = "/pages/alone/mine/details/details?sid="+item.sid;
+		gotoarticle(item:any,isVideo:boolean = false){
+			let url = "/pages/alone/mine/details/details?sid="+item.sid+"&isVideo="+isVideo;
 			uni.navigateTo({
 				'url':url,
 			})

@@ -116,6 +116,8 @@
 		my_like:number = 0;//当前人是否点过赞  0：否；1：是
 		comment_list:Array<any> = [];//评论列表
 		my_favorites:number =0;//当前人是否收藏 0：否；1：是
+
+		readTime:any = null;//开始浏览页面的时间
 		onLoad(e:any) {
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
 			this.snkey = LoginModule.snkey
@@ -123,10 +125,25 @@
 			this.initData();
 			this.initCommentData();
 			this.upBrowse();
+			this.readTime = new Date();
+			let isVideo = e.isVideo;
+			let _key = "IntegralRule_Articles";
+			this.IntegralRule(_key)
 		}
 		onShow(){
 			this.page_num = 1;
 			this.initCommentData();
+			this.readTime = new Date();
+		}
+		//页面卸载
+		onUnload(){
+			var _key:any = "IntegralRule_Articles";
+			let data = uni.getStorageSync(_key);
+			data = JSON.parse(data);
+			let duration = parseInt(data.duration);
+			if(new Date().getTime() - this.readTime.getTime() >=  (duration*1000)){
+				this.upIntegral();
+			}
 		}
 		/**
 		 * 刷新
@@ -372,7 +389,48 @@
             let v = JSON.stringify(prarm);
 			tools.getDlgRunClass(v,b);
 		}
-	
+		/**
+		 * 积分
+		 */
+		upIntegral(){
+			let btn1 = new BipMenuBtn("DLG","修改文章浏览量")
+			btn1.setDlgType("D")
+			btn1.setDlgCont("mine.serv.ExamServlet*203;0;0");//修改文章浏览量
+			let b = JSON.stringify(btn1)
+			let prarm = {"type":"browse_articles"}
+			let v = JSON.stringify(prarm);
+			tools.getDlgRunClass(v,b);
+		}
+
+		/**
+		 * 查询积分规则
+		 */
+		async IntegralRule(_key:any){
+			let data = uni.getStorageSync(_key);
+			if(data){
+				let dd = JSON.parse(data);
+				return dd;
+			}else{
+				let qe:QueryEntity = new QueryEntity('','');
+				qe.page.currPage = 1;
+				qe.page.pageSize = 100; 
+				let oneCont = []; 
+				let qCont = new QueryCont('type','browse_articles',12);
+				qCont.setContrast(0);
+				oneCont.push(qCont);
+				qe.cont = "~["+JSON.stringify(oneCont)+"]"
+				let vv:any = await tools.getBipInsAidInfo('INTEGRALRULE',210,qe);
+				console.log(vv);
+				if(vv.data.id ==0){
+					let cc = vv.data.data.data.values[0];
+					uni.setStorageSync(_key, JSON.stringify(cc));
+					return cc;
+				}else{
+					console.log(vv)
+				}
+			}
+		}
+
 		get user(){
 			return LoginModule.user
 		}
