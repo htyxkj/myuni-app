@@ -46,7 +46,6 @@
 	import {
 		Tools
 	} from '../../classes/tools/Tools';
-	import {BipMenuBtn} from '@/classes/BipMenuBtn'
 	import User from '@/classes/User';
 	import Menu from '@/classes/Menu';
 	import comm from '@/static/js/comm.js';
@@ -109,15 +108,8 @@
 									'url': '/pages/index/index'
 								})
 							},200);
-						}else if(commURL.ItemType == 'mine'){
-							let btn1 = new BipMenuBtn("DLG","登陆积分")
-							btn1.setDlgType("D")
-							btn1.setDlgCont("mine.serv.ExamServlet*203;0;0");//修改文章浏览量
-							let b = JSON.stringify(btn1)
-							let prarm = {"type":"login"}
-							let v = JSON.stringify(prarm);
+						}else if(commURL.ItemType == 'mine'){	
 							setTimeout(() => {
-								tools.getDlgRunClass(v,b);	
 								uni.redirectTo({
 									'url': '/pages/alone/mine/index/index'
 								}) 							

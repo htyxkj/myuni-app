@@ -25,6 +25,7 @@
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import comm from '@/static/js/comm.js';
 	let commURL: any = comm;
+	import {BipMenuBtn} from '@/classes/BipMenuBtn'
 	@Component({
 		components:{learning,mIndexBar,newsVideo,askAnswer,exam}
 	})
@@ -37,6 +38,16 @@
 				// 以游客身份登陆
 				await this.touristLogin();
 				return;
+			}
+			let btn1 = new BipMenuBtn("DLG","登陆积分")
+			btn1.setDlgType("D")
+			btn1.setDlgCont("mine.serv.ExamServlet*203;0;0");//修改文章浏览量
+			let b = JSON.stringify(btn1)
+			let prarm = {"type":"login"}
+			let v = JSON.stringify(prarm);
+			let vv:any =await tools.getDlgRunClass(v,b);
+			if(vv && vv.data && vv.data.id ==-2){
+				this.touristLogin();
 			}
 			if(options.tabcur){
 				this.tabcur = options.tabcur;
@@ -88,9 +99,9 @@
 				})
 				return;
 			} else {
-				tools.login(user).then((res: any) => {
+				tools.loginWithOutPwd(user.userCode,{}).then((res: any) => {
 					let data = res.data
-					if (data.id != -1) {
+					if (data && data.id != -1) {
 						let _u = data.data.user
 						LoginModule.setState(true) 
 						LoginModule.setSnKey(data.data.snkey)
@@ -116,8 +127,14 @@
 		 */
 		touristLogin(){
 			let user: User = new User('portal', '', '')
+			let u = LoginModule.user;
+			if(u && u.userCode && u.userCode != user.userCode){
+				user.userCode = u.userCode;
+				uni.setStorageSync('userType','Official');
+			}else{
+				uni.setStorageSync('userType','Tourist')
+			}
 			this.loginSys(user);
-			uni.setStorageSync('userType','Tourist')
 		}
 	
 
@@ -128,7 +145,7 @@
 			let reminderInterval = 3600
 			let qe:QueryEntity = new QueryEntity('','');
 			let vv:any = await tools.getBipInsAidInfo('UNIAPPVERSION',300,qe);
-			if(vv.data.id ==0){
+			if( vv && vv.data.id ==0){
 				let val = vv.data.data.data.values;
 				for(var i=0;i<val.length;i++){
 					if(val[i].code == "version"){

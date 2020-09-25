@@ -1,6 +1,6 @@
 <template>
 	<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" 
-			:heightReduce="355" :pageNo="page_num" :totalPageNo="total_page" @loadMore="getNextPage" @refresh="refresh">
+			:heightReduce="275" :pageNo="page_num" :totalPageNo="total_page" @loadMore="getNextPage" @refresh="refresh">
 		<view class="bg-white my-data-list" v-if="articleData" slot="content-list">
 			<swiper v-if="type == 0 && 1==isrecommend" class="margin-bottom screen-swiper square-dot "  :indicator-dots="true" :circular="true"
 				:autoplay="true" interval="5000" duration="500">
