@@ -16,7 +16,7 @@
                         </view>
                         <view class="grid text-center text-white padding-left col-2">
                             <view></view>
-                            <view>0</view>
+                            <view>{{my_integral}}</view>
                         </view>
                     </view>
 				</view>
@@ -107,6 +107,8 @@
 	let tools = BIPUtil.ServApi;
 	import {icl} from '@/classes/tools/CommICL';
 	const ICL = icl; 
+	import QueryEntity from '@/classes/search/QueryEntity';
+	import QueryCont from '@/classes/search/QueryCont';
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
@@ -114,6 +116,7 @@
 		components:{}
 	})
 	export default class My extends Vue{
+		my_integral:number = 0;
 		mdPass:boolean = false
 		canExec:boolean = false
 		oldPwd:string = ''
@@ -125,11 +128,15 @@
 		gwName:any = '';//岗位名称
 		editName:any ='MULGW';//岗位辅助
 
-		async mounted() {
+		mounted() {
+			this.initIntegral();
 		}
 		get user(){
 			return LoginModule.user
 		}
+		/**
+		 * 退出系统
+		 */
 		exitSys(){
 			uni.showModal({
 				title: '系统提示',
@@ -196,11 +203,38 @@
 				'url':url,
 			})
 		}
+		/**
+		 * 打开浏览记录页面
+		 */
 		gotoHistoryPage(){
 			let url = "/pages/alone/mine/my/favoritesOrHistoryList?type=1&title=历史浏览";
 			uni.navigateTo({
 				'url':url,
 			})
+		}
+
+		/**
+		 * 查询当前用户积分
+		 */
+		async initIntegral(){
+			let qe:QueryEntity = new QueryEntity('','');
+			qe.page.currPage = 1;
+			qe.page.pageSize = 100; 
+			let oneCont = []; 
+			let qCont = new QueryCont('user_id',this.user.userCode,12);
+			qCont.setContrast(0);
+			oneCont.push(qCont);
+			qe.cont = "~["+JSON.stringify(oneCont)+"]"
+			let vv:any = await tools.getBipInsAidInfo('MYINTEGRAL',210,qe);
+			console.log(vv)
+			if(vv.data.id ==0){
+				let vl = vv.data.data.data.values;
+				if(vl.length>0){
+					this.my_integral = vl[0].total_integral;
+				}else{
+					this.my_integral = 0;
+				}
+			}
 		}
 	}
 </script>

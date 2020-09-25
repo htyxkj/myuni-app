@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink" :isBack="true">
+		<cu-custom bgColor="bg-zk-top" :isBack="true">
 			<block slot="backText">返回</block>
 			<block slot="content"><view class="header-title">发表评论</view></block>
 		</cu-custom>
@@ -44,14 +44,16 @@
 		parent_comment_user = null;
 		canPublish:boolean = true;
 		async onLoad(e:any) {
-			this.sid = e.sid
-			if(e.comment_id){
-				this.parent_comment_id = e.comment_id;
+			if(e){
+				this.sid = e.sid
+				if(e.comment_id){
+					this.parent_comment_id = e.comment_id;
+				}
+				if(e.comment_user)
+					this.parent_comment_user = e.comment_user
+				this.commentCell = await this.initCell(this.cellID);
+				this.canPublish = true;
 			}
-			if(e.comment_user)
-				this.parent_comment_user = e.comment_user
-			this.commentCell = await this.initCell(this.cellID);
-			this.canPublish = true;
 		}
 		valueChange(e:any) {
 			this.textareaValue = e.detail.value
@@ -91,7 +93,7 @@
 				}
 				this.canPublish = true;
 			}else{
-				uni.redirectTo({
+				uni.reLaunch({
 					'url': '/pages/login/login'
 				})
 			}

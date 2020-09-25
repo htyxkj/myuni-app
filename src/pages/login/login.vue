@@ -29,7 +29,7 @@
 				</view>
 			</view>
 			<view class="padding flex flex-direction">
-				<button form-type="submit" :disabled="canLogin" class="cu-btn margin-tb-sm lg shadow loginbtn" @tap="loginSys(null)">登录</button>
+				<button form-type="submit" :disabled="canLogin" class="cu-btn margin-tb-sm loginbtn lg shadow " @tap="loginSys(null)">登录</button>
 			</view>
 		</form>
 		<mLoad :png="'/static/gs.png'" :msg="'登录中...'" v-if="loadModal"></mLoad>
@@ -71,14 +71,7 @@
 		// user: User = new User('13051424475', '', '')
 		user: User = new User('', '', '')
 		onLoad() {
-			// console.log('登录页面1112')
-			let logstate = uni.getStorageSync("isLogin");
-			if(logstate !=  true){//没登录
-				if(commURL.ItemType == 'mine'){
-					uni.clearStorage()
-					this.touristLogin();
-				}
-			}
+			uni.clearStorage();
 		}
 		/**
 		 * 登录系统
@@ -117,18 +110,18 @@
 								})
 							},200);
 						}else if(commURL.ItemType == 'mine'){
-							let btn1 = new BipMenuBtn("DLG","修改文章浏览量")
+							let btn1 = new BipMenuBtn("DLG","登陆积分")
 							btn1.setDlgType("D")
 							btn1.setDlgCont("mine.serv.ExamServlet*203;0;0");//修改文章浏览量
 							let b = JSON.stringify(btn1)
 							let prarm = {"type":"login"}
 							let v = JSON.stringify(prarm);
-							tools.getDlgRunClass(v,b);
-							setTimeout(()=>{
+							setTimeout(() => {
+								tools.getDlgRunClass(v,b);	
 								uni.redirectTo({
 									'url': '/pages/alone/mine/index/index'
-								})
-							},200);
+								}) 							
+							}, 300);
 						}
 					} else {
 						uni.showToast({
@@ -222,7 +215,7 @@
 	}
 	.loginbtn{
 		border-radius: 50upx;
-		background-color: #e20b1cd9;
-		color: #FFFFFF;
+		background-color: red !important;
+		color: #FFFFFF !important;
 	}
 </style>

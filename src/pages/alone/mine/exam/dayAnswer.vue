@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink" :isBack="true" :cusBack="true" @back="back">
+		<cu-custom bgColor="bg-zk-top" :isBack="true" :cusBack="true" @back="back">
 			<block slot="backText">返回</block>
 			<block slot="content"><view class="header-title">答题</view></block>
 		</cu-custom>
@@ -41,10 +41,16 @@
 									</view>
 								</template>
 								<template v-else>
-									<view class="text-cut padding-sm radius margin-xs" 
-									:class="item.check ==1 ?'ans-bg-sel':'ans-bg'"  @tap="selAns(item)">
-										{{letter[index]}}.{{item.solution}}
-									</view>
+									<template v-if="oneTopic.tit_type == '2'">
+										<view class="text-cut padding-sm radius margin-xs" :class="item.check ==1 ?'ans-bg-sel':'ans-bg'"  @tap="selAns(item)">
+											{{item.solution}}
+										</view>
+									</template>
+									<template v-else>
+										<view class="text-cut padding-sm radius margin-xs" :class="item.check ==1 ?'ans-bg-sel':'ans-bg'"  @tap="selAns(item)">
+											{{letter[index]}}.{{item.solution}}
+										</view>
+									</template>
 								</template>
 							</view>
 							<view v-if="oneTopic.answer" class="text-right padding-sm" @tap="shPrompt = true">

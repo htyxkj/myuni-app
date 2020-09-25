@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view  v-if="loginState">
+		<view  v-if="ifDefaultIndex">
 			<cu-custom bgColor="bg-gradual-pink" :isBack="false">
 				<block slot="content"><view class="header-title">{{title}}</view></block>
 			</cu-custom>
@@ -22,7 +22,7 @@
 				</template>
 				<!-- <message v-if="tabcur==2"></message> -->
 			</template>
-			<mIndexBar v-if="loginState" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
+			<mIndexBar v-if="ifDefaultIndex" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 		</view>
 	</view>
 </template>
@@ -57,9 +57,18 @@
 		menubarr:any=null
 
 		olOption:any = null;
+		ifDefaultIndex:boolean = false;
 		onLoad(options:any) {
-			singIn.ServApi.init(options,this.loginOk,this.loginFailure);
-			this.olOption = options
+			if(commURL.ItemType == 'mine'){
+				uni.reLaunch({
+					'url': '/pages/alone/mine/index/index'
+				})
+				return;
+			}else{
+				this.ifDefaultIndex = true;
+				singIn.ServApi.init(options,this.loginOk,this.loginFailure);
+				this.olOption = options
+			}
 		}
 		//登录成功
 		loginOk(){
@@ -80,12 +89,13 @@
 				uni.reLaunch({'url':'/pages/login/login'})
 				return;
 			}else{
-				if(commURL.ItemType == 'mine'){
-					uni.redirectTo({
-						'url': '/pages/alone/mine/index/index'
-					})
-					return;
-				}
+				uni.reLaunch({'url':'/pages/login/login'})
+				// if(commURL.ItemType == 'mine'){
+				// 	uni.reLaunch({
+				// 		'url': '/pages/alone/mine/index/index'
+				// 	})
+				// 	return;
+				// }
 			}
 		}
 		

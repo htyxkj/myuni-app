@@ -2,7 +2,7 @@
 	<view>
 		<scroll-view scroll-y class="page">
 			<cu-custom bgColor="bg-white" :isBack="false">
-				<block slot="content"><view class="header-title text-black">考试中心</view></block>
+				<block slot="content"><view class="header-title">考试中心</view></block>
 			</cu-custom>
             <view class="cu-list menu-avatar padding">				
 				<view class="cu-item bg-white margin-top-xs">
@@ -84,7 +84,7 @@
 	}
 	.remark{
 		color: #D3D3D3;
-		font-size: 10upx;
+		font-size: 20upx;
 	}
 	.name{
 		color: #1C1C1C;

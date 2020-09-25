@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink" :isBack="true">
+		<cu-custom bgColor="bg-zk-top" :isBack="true">
 			<block slot="backText">返回</block>
 			<block slot="content"><view class="header-title">详情</view></block>
 		</cu-custom>

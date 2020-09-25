@@ -1,67 +1,69 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink" :isBack="true">
+		<cu-custom bgColor="bg-zk-top" :isBack="true">
 			<block slot="backText">返回</block>
 			<block slot="content"><view class="header-title">详情</view></block>
 		</cu-custom>
 		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" 
 			:heightReduce="185" :pageNo="page_num" :totalPageNo="total_page" @loadMore="loadMore" @refresh="refresh">
-			<view class="padding bg-white" v-if="articleData"  slot="content-list">
+			<view class="bg-white" v-if="articleData"  slot="content-list">
 				<template v-if="articleData.video.length>0">
-					<video :ref="'video'+articleData.sid" :id="'video'+articleData.sid" @play="videoPay(articleData)" style="width:100%" :src="articleData.video[0]"></video>
+					<video show-mute-btn autoplay loop :ref="'video'+articleData.sid" :id="'video'+articleData.sid" @play="videoPay()" style="width:100%" :src="articleData.video[0]"></video>
 				</template>
-				<view class="title">{{articleData.title}}</view>
-				<view class="text-gray text-xl">
-					<view class="flex justify-start">
-						<view>{{articleData.smakename}}</view>
-						<view class="padding-left-xl">{{articleData.mkdate}}</view>
-					</view>
-				</view>
-				<view v-html="articleData.content"></view>
-				<view class="padding text-center">
-					<button class="cu-btn round lines-blue" :class="[my_like ==0?'lines-gray':'lines-blue']" @click="doLike">
-						<text class="cuIcon-appreciate"></text>{{like_num}}&nbsp;&nbsp;&nbsp;赞
-					</button>
-				</view>
-				<view>
-					<view class="flex padding-top" v-for="(item,index) in comment_list" :key="index">
-						<view class="radius" style="flex-basis:10%">
-							<image class="cu-avatar xxl round bg-white"  src="../../../../static/gs.png" mode="aspectFit"></image>                      
+				<view class="padding">
+					<view class="title">{{articleData.title}}</view>
+					<view class="text-gray text-xl">
+						<view class="flex justify-start">
+							<view>{{articleData.smakename}}</view>
+							<view class="padding-left-xl">{{articleData.mkdate}}</view>
 						</view>
-						<view class="radius" style="flex-basis:90%">
-							<view class="flex justify-between">
-								<view class="radius comm-user-name">{{item.user_name}}
-									<template v-if="item.top_status == 1">
-										<view class='cu-tag margin-left'>置顶</view>
-									</template>
-								</view>
-								<view class="radius" :class="[item.my_like ==0?'lines-gray':'lines-blue']" @click="doLikeComm(item)">
-									<template v-if="item.praise_num ==0">
-										赞
-									</template>
-									<template v-else>
-										{{item.praise_num}}
-									</template>
-									<text class="cuIcon-appreciate"></text>
-								</view>
+					</view>
+					<view v-html="articleData.content"></view>
+					<view class="padding text-center">
+						<button class="cu-btn round lines-blue" :class="[my_like ==0?'lines-gray':'lines-blue']" @click="doLike">
+							<text class="cuIcon-appreciate"></text>{{like_num}}&nbsp;&nbsp;&nbsp;赞
+						</button>
+					</view>
+					<view>
+						<view class="flex padding-top" v-for="(item,index) in comment_list" :key="index">
+							<view class="radius" style="flex-basis:10%">
+								<image class="cu-avatar xxl round bg-white"  src="../../../../static/gs.png" mode="aspectFit"></image>                      
 							</view>
-							<view class="comm-content">
-								{{item.content}}
-							</view>
-							<view >
-								<view v-for="(child_item,index) in item.childComment" :key="index" class="childComment" >
-									<view class="childUName">{{child_item.user_name}}</view>
-									<view>{{child_item.content}}</view>
+							<view class="radius" style="flex-basis:90%">
+								<view class="flex justify-between">
+									<view class="radius comm-user-name">{{item.user_name}}
+										<template v-if="item.top_status == 1">
+											<view class='cu-tag margin-left'>置顶</view>
+										</template>
+									</view>
+									<view class="radius" :class="[item.my_like ==0?'lines-gray':'lines-blue']" @click="doLikeComm(item)">
+										<template v-if="item.praise_num ==0">
+											赞
+										</template>
+										<template v-else>
+											{{item.praise_num}}
+										</template>
+										<text class="cuIcon-appreciate"></text>
+									</view>
 								</view>
-								<view v-if="item.childComment && item.childComment.length<item.childCount" @click="reply(item)" class="countReply childComment">
-									共{{item.childCount}}条回复>
+								<view class="comm-content">
+									{{item.content}}
 								</view>
-							</view>
-							<view>
-								<view class="comm-data">{{item.create_time}}
-									<view class="reply" v-if="item.user_id != user.userCode" @click="reply(item)">回复</view>
-									<view class="reply" v-if="item.status ==0">(审核中)</view>
-									<view class="reply" v-if="item.user_id == user.userCode" @click="deleteComm(item)">删除</view>
+								<view >
+									<view v-for="(child_item,index) in item.childComment" :key="index" class="childComment" >
+										<view class="childUName">{{child_item.user_name}}</view>
+										<view>{{child_item.content}}</view>
+									</view>
+									<view v-if="item.childComment && item.childComment.length<item.childCount" @click="reply(item)" class="countReply childComment">
+										共{{item.childCount}}条回复>
+									</view>
+								</view>
+								<view>
+									<view class="comm-data">{{item.create_time}}
+										<view class="reply" v-if="item.user_id != user.userCode" @click="reply(item)">回复</view>
+										<view class="reply" v-if="item.status ==0">(审核中)</view>
+										<view class="reply" v-if="item.user_id == user.userCode" @click="deleteComm(item)">删除</view>
+									</view>
 								</view>
 							</view>
 						</view>
@@ -71,7 +73,7 @@
 		</load-refresh>
 		<view class="cu-bar bg-white tabbar border shop btm-comment">
 			<view class="btn-group">
-				<input class="bg-gray comm-input" placeholder="发表你的评论..." type="text" @focus="gotocomment"></input>
+				<input id="detailsPLInput" class="bg-gray comm-input" placeholder="发表你的评论..." type="text" @click.stop="gotocomment"/>
 			</view>
 			<button class="action" open-type="contact" @click="gotoAllComment">
 				<view class="cuIcon-comment text-green bottom-icon">
@@ -118,6 +120,7 @@
 		my_favorites:number =0;//当前人是否收藏 0：否；1：是
 
 		readTime:any = null;//开始浏览页面的时间
+		isVideo:boolean = false;//是否是视频
 		onLoad(e:any) {
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
 			this.snkey = LoginModule.snkey
@@ -126,8 +129,7 @@
 			this.initCommentData();
 			this.upBrowse();
 			this.readTime = new Date();
-			let isVideo = e.isVideo;
-			let _key = "IntegralRule_Articles";
+			let _key = "browse_articles";
 			this.IntegralRule(_key)
 		}
 		onShow(){
@@ -137,13 +139,32 @@
 		}
 		//页面卸载
 		onUnload(){
-			var _key:any = "IntegralRule_Articles";
-			let data = uni.getStorageSync(_key);
-			data = JSON.parse(data);
-			let duration = parseInt(data.duration);
-			if(new Date().getTime() - this.readTime.getTime() >=  (duration*1000)){
-				this.upIntegral();
+			console.log("onUnload")
+			let userType = uni.getStorageSync('userType');
+			if(userType == 'Tourist'){//游客身份 
+				return;
 			}
+			var _key:any = "browse_articles";
+			if(this.isVideo){
+				_key = "browse_video";
+			}
+			let data = uni.getStorageSync(_key);
+			if(data){
+				data = JSON.parse(data);
+				let duration = parseInt(data.duration);
+				if(new Date().getTime() - this.readTime.getTime() >=  (duration*1000)){
+					this.upIntegral(_key);
+				}
+			}
+		}
+		/**
+		 * 视频开始播放
+		 */
+		videoPay(){
+			let _key = "browse_video";
+			this.IntegralRule(_key)
+			this.readTime = new Date();
+			this.isVideo = true;
 		}
 		/**
 		 * 刷新
@@ -198,7 +219,8 @@
 							var videoReg = /\.(mp4|flv|m3u8|rtmp|hls|rtsp)$/;
 							let isVideo:boolean = videoReg.test(name);
 							if(isVideo){
-								j1.video.push(url);
+								let _url = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+name
+								j1.video.push(_url);
 							}
 						}
 					}
@@ -275,10 +297,17 @@
 		 * 去评论
 		 */
 		gotocomment(){
-			let url = "/pages/alone/mine/details/comment?sid="+this.sid;
-			uni.navigateTo({
-				'url':url,
-			})
+			console.log("https://blog.csdn.net/u011415782/article/details/93216659")
+			let userType = uni.getStorageSync('userType');
+			if(userType == 'Tourist'){//游客身份
+				uni.reLaunch({
+					'url':"/pages/login/login",
+				})
+			}else{
+				uni.navigateTo({
+					'url':  "/pages/alone/mine/details/comment?sid="+this.sid
+				})
+			}
 		}
 		/**
 		 * 查看全部评论
@@ -392,12 +421,12 @@
 		/**
 		 * 积分
 		 */
-		upIntegral(){
+		upIntegral(type:any){
 			let btn1 = new BipMenuBtn("DLG","修改文章浏览量")
 			btn1.setDlgType("D")
 			btn1.setDlgCont("mine.serv.ExamServlet*203;0;0");//修改文章浏览量
 			let b = JSON.stringify(btn1)
-			let prarm = {"type":"browse_articles"}
+			let prarm = {"type": type}
 			let v = JSON.stringify(prarm);
 			tools.getDlgRunClass(v,b);
 		}
@@ -415,7 +444,7 @@
 				qe.page.currPage = 1;
 				qe.page.pageSize = 100; 
 				let oneCont = []; 
-				let qCont = new QueryCont('type','browse_articles',12);
+				let qCont = new QueryCont('type',_key,12);
 				qCont.setContrast(0);
 				oneCont.push(qCont);
 				qe.cont = "~["+JSON.stringify(oneCont)+"]"

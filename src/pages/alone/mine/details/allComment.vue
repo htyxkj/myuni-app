@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink" :isBack="true">
+		<cu-custom bgColor="bg-zk-top" :isBack="true">
 			<block slot="backText">返回</block>
 			<block slot="content"><view class="header-title">评论</view></block>
 		</cu-custom>
@@ -133,6 +133,10 @@
 			let userType = uni.getStorageSync('userType');
 			if(userType == 'Tourist'){//游客身份
 				url = "/pages/login/login"
+				uni.reLaunch({
+					'url':url,
+				})
+				return;
 			}
 			uni.navigateTo({
 				'url':url,

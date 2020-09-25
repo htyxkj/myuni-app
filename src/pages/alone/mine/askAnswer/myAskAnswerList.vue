@@ -1,7 +1,7 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-gradual-pink" :isBack="true">
-			<block slot="content"><view class="header-title text-black">我的提问</view></block>
+		<cu-custom bgColor="bg-zk-top" :isBack="true">
+			<block slot="content"><view class="header-title">我的提问</view></block>
 		</cu-custom>
 		<scroll-view scroll-y class="page" refresher-enabled @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered" @scrolltolower="getNextPage">
 			<view class="padding-top-sm"></view>

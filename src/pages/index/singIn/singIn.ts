@@ -21,6 +21,7 @@ export namespace singIn {
 			this.route = route;
             if(this.route.jumpRoute)
 				this.jumpRoute = this.route.jumpRoute;
+			console.log(dd.env.platform)
 			if (dd.env.platform !="notInDingTalk") {//钉钉内
 				console.log("钉钉单点登录")
                 await this.loginDD();
@@ -56,7 +57,10 @@ export namespace singIn {
 							})
 							uni.reLaunch({'url':'/pages/login/login'});
 						}
-					});
+					},function() { 
+							uni.reLaunch({'url':'/pages/login/login'});
+						}
+					);
 				});
 			}
 		}
