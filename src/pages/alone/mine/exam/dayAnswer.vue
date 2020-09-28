@@ -64,6 +64,22 @@
 							<button class="cu-btn block line-orange lg" style="width:60%" @tap="next" v-if="isok" >下一题</button>
 						</view>
 					</view>
+					<view class="content" v-if="isok">
+						<view class="desc">
+							<view class="title">
+								<view class="text-cut">
+									正确答案：
+								</view>
+							</view>
+							<view v-for="(item,index) in oneTopic.child" :key="index">
+								<template v-if="item.isno == '1'">
+									<view class="text-cut padding-sm radius margin-xs" :class="item.check ==1 ?'ans-bg-sel':'ans-bg'"  @tap="selAns(item)">
+										{{letter[index]}}.{{item.solution}}
+									</view>
+								</template> 
+							</view>
+						</view>
+					</view>
 				</view>
 			</view>
 			<view v-if="isEnd">
@@ -119,6 +135,7 @@
 	@Component({
 	})
 	export default class dayAnswer extends Vue {
+		animation:any = "";
 		topicData:Array<any> = [];
 		tit_type:any={};
 		oneTopic:any =null;
@@ -141,6 +158,14 @@
 		topicType:any=[];
 		isShowType:boolean = true;
 		startTime:any=null;
+
+		Toggle(){
+			this.animation = 'shake'
+			setTimeout(()=>{
+				this.animation= '';
+			}, 1000)
+		}
+
 		async mounted(){
 			//初始化题目类别，通用题目，专业题目
 			await this.initTopicType();
