@@ -64,7 +64,7 @@
 							<button class="cu-btn block line-orange lg" style="width:60%" @tap="next" v-if="isok" >下一题</button>
 						</view>
 					</view>
-					<view class="content" v-if="isok">
+					<view class="content" v-if="isok && !istrue">
 						<view class="desc">
 							<view class="title">
 								<view class="text-cut">
@@ -144,6 +144,7 @@
 		ansSelIndex:any=[];
 		shPrompt:boolean = false;
 		isok:boolean = false;//当前题是否已答题
+		istrue:boolean = true;//当前题是否回答正确
 		record:any={
 			Accuracy:100,//准确率
 			errorNum:0,//错题数
@@ -285,6 +286,7 @@
 			let jl = {sid:this.oneTopic.sid,state:success,checkItem:checkItem};
 			if(success ==0 ){
 				this.record.errorNum++; 
+				this.istrue = false;
 			}else{
 				this.record.successNum++;
 			}

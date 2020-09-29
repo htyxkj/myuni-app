@@ -219,6 +219,7 @@
 							var videoReg = /\.(mp4|flv|m3u8|rtmp|hls|rtsp)$/;
 							let isVideo:boolean = videoReg.test(name);
 							if(isVideo){
+								name = encodeURIComponent(name)
 								let _url = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+name
 								j1.video.push(_url);
 							}

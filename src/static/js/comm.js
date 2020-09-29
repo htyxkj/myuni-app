@@ -26,14 +26,16 @@
 // 张矿微平台
 // export const BaseUri =  "https://test.juminfuwu.cn/bip-mine/";
 // export const BaseDBID = "01";
+export const BaseUri =  "http://47.104.211.216:8089/bip-mine";
+export const BaseDBID = "01";
 export const ItemType = "mine";
 
 
-export const BaseUri =  "http://127.0.0.1:9999/jd";
-export const BaseDBID = "154";
+// export const BaseUri =  "http://127.0.0.1:9999/jd";
+// export const BaseDBID = "154";
 // export const ItemType = "";
 
 
-export const version = 101;
+export const version = 102;
 export const SMSURL = "https://www.bip-soft.com/ssms/";
 export default {BaseUri, BaseDBID,SMSURL,ItemType,version}

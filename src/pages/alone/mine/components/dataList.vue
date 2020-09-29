@@ -449,7 +449,6 @@
 		height:300px;
 	}
 	.my-image{
-		width: 100%;
-		height: 225px;
+		height: 450upx !important;
 	}
 </style>
