@@ -77,8 +77,11 @@
 					LoginModule.setState(true)
 					let user = JSON.parse(uni.getStorageSync('user'))
 					LoginModule.setUser(user)
-					let ms = JSON.parse(uni.getStorageSync('menus'))
-					LoginModule.setMenus(ms)
+					let menus = uni.getStorageSync('menus')
+					if(menus){
+						let ms = JSON.parse(menus)
+						LoginModule.setMenus(ms)
+					}
 					let snkey = uni.getStorageSync('snkey')
 					LoginModule.setSnKey(snkey)
 					return true;

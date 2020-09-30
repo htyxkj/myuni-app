@@ -84,6 +84,10 @@
 			let userType = uni.getStorageSync('userType');
 			if(userType == 'Tourist'){//游客身份 
 				url = "/pages/login/login"
+				uni.reLaunch({
+					'url':url,
+				})
+				return;
 			}
 			uni.navigateTo({
 				'url':url,
