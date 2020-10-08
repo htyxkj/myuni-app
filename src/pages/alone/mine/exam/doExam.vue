@@ -2,7 +2,7 @@
 	<view>
 		<cu-custom bgColor="bg-zk-top" :isBack="true" :cusBack="true" @back="back">
 			<block slot="backText">返回</block>
-			<block slot="content"><view class="header-title">答题</view></block>
+			<block slot="content"><view class="header-title">{{title}}</view></block>
 		</cu-custom>
 		<template v-if="isShowType && topicType.length>0">
 			<view class="cu-list menu-avatar padding">				
@@ -100,7 +100,7 @@
 						<view>
 							<view class="cu-bar btn-group">
 								<button class="cu-btn block line-grey" @tap="back">返回</button>
-								<button class="cu-btn block line-orange" @tap="refresh">再来一组</button>
+								<!-- <button class="cu-btn block line-orange" @tap="refresh">再来一组</button> -->
 							</view>
 						</view>
 					</view>
@@ -134,7 +134,7 @@
 	import { values } from 'xe-utils/methods';
 	@Component({
 	})
-	export default class dayAnswer extends Vue {
+	export default class doExam extends Vue {
 		animation:any = "";
 		topicData:Array<any> = [];
 		tit_type:any={};
@@ -160,7 +160,7 @@
 		topicType:any=[];
 		isShowType:boolean = true;
 		startTime:any=null;
-
+		title:any = "考试";
 		Toggle(){
 			this.animation = 'shake'
 			setTimeout(()=>{
@@ -192,16 +192,22 @@
 		 * 查询随机题目
 		 */
 		async initData(item:any){
+			this.topicData = [];
+			this.oneTopic = null;
 			this.selTopicType = item;
-			let btn1 = new BipMenuBtn("DLG","每日答题")
+			let btn1 = new BipMenuBtn("DLG","考试题目")
             btn1.setDlgType("D")
-            btn1.setDlgCont("mine.serv.ExamServlet*201;0;0");//查询随机题目
+            btn1.setDlgCont("mine.serv.ExamServlet*205;0;0");//查询随机题目
 			let b = JSON.stringify(btn1)
             let prarm = {type:item.sid}
             let v = JSON.stringify(prarm);
 			let res:any = await tools.getDlgRunClass(v,b);
 			if(res.data.id ==0){
 				this.topicData = res.data.data.data;
+				if(res.data.data.title && res.data.data.title.length>0){
+					this.title = res.data.data.title;
+				}
+				this.record.test_paper_id = res.data.data.test_paper_id
 				this.oneTopic = this.topicData[0]
 				this.isShowType = false;
 			}else if(res.data.id == -2){
@@ -210,7 +216,7 @@
 			}else{
 				uni.showModal({
 					title: '系统提示',
-					content: '系统错误请联系管理员?',
+					content: res.data.message,
 					confirmText: '确定',
 					showCancel:false,
 					success: res => {

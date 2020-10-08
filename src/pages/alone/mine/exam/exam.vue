@@ -12,6 +12,13 @@
 						<view class="remark">书读百遍，其义自见。</view>
 					</view>
 				</view> 
+				<view class="cu-item bg-white margin-top-xs">
+                    <image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/exam/Special.png'" ></image>
+					<view class="content" @tap="doExam()">
+                        <view class="name">考试</view>
+						<view class="remark"></view>
+					</view>
+				</view> 
 			</view>
 			<view class="cu-tabbar-height"></view>
 		</scroll-view>
@@ -67,6 +74,20 @@
 		 */
 		datAnswer(){
 			let url = "/pages/alone/mine/exam/dayAnswer";
+			let userType = uni.getStorageSync('userType');
+			if(userType == 'Tourist'){//游客身份 
+				url = "/pages/login/login"
+				uni.reLaunch({
+					'url':url,
+				})
+				return;
+			}
+			uni.navigateTo({
+				'url':url,
+			})
+		}
+		doExam(){
+			let url = "/pages/alone/mine/exam/doExam";
 			let userType = uni.getStorageSync('userType');
 			if(userType == 'Tourist'){//游客身份 
 				url = "/pages/login/login"
