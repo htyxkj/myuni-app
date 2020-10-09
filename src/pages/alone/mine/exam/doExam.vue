@@ -29,7 +29,7 @@
 								{{oneTopic.tit_content}}
 							</view>
 							<view v-for="(item,index) in oneTopic.child" :key="index">
-								<template v-if="isok">
+								<!-- <template v-if="isok">
 									<view class=" padding-sm radius margin-xs" 
 									:class="[
 										(item.check ==1 && item.isno ==1) ?'ans-bg-ok':'',
@@ -40,7 +40,8 @@
 										{{letter[index]}}.{{item.solution}}
 									</view>
 								</template>
-								<template v-else>
+								<template v-else> -->
+								<template>
 									<template v-if="oneTopic.tit_type == '2'">
 										<view class=" padding-sm radius margin-xs" :class="item.check ==1 ?'ans-bg-sel':'ans-bg'"  @tap="selAns(item)">
 											{{item.solution}}
@@ -64,7 +65,7 @@
 							<button class="cu-btn block line-orange lg" style="width:60%" @tap="next" v-if="isok" >下一题</button>
 						</view>
 					</view>
-					<view class="content" v-if="isok && !istrue">
+					<!-- <view class="content" v-if="isok && !istrue">
 						<view class="desc">
 							<view class="title">
 								<view class="">
@@ -79,7 +80,7 @@
 								</template> 
 							</view>
 						</view>
-					</view>
+					</view> -->
 				</view>
 			</view>
 			<view v-if="isEnd">

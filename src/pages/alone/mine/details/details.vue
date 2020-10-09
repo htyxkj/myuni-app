@@ -6,7 +6,7 @@
 		</cu-custom>
 		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" 
 			:heightReduce="185" :pageNo="page_num" :totalPageNo="total_page" @loadMore="loadMore" @refresh="refresh">
-			<view class="bg-white" v-if="articleData"  slot="content-list">
+			<view style="background-color: #ffffff" v-if="articleData"  slot="content-list">
 				<template v-if="articleData.video.length>0">
 					<video show-mute-btn autoplay loop :ref="'video'+articleData.sid" :id="'video'+articleData.sid" @play="videoPay()" style="width:100%" :src="articleData.video[0]"></video>
 				</template>
@@ -298,7 +298,6 @@
 		 * 去评论
 		 */
 		gotocomment(){
-			console.log("https://blog.csdn.net/u011415782/article/details/93216659")
 			let userType = uni.getStorageSync('userType');
 			if(userType == 'Tourist'){//游客身份
 				uni.reLaunch({
@@ -474,9 +473,7 @@
 		font-size: 48upx;
 		font-weight: 500;
 		text-align: justify;
-	}
-	img{
-    	width: 100% !important;
+		color: #121516;
 	}
 	.btm-comment{
 		position: sticky;

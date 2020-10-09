@@ -25,7 +25,7 @@
 					<view></view>
 					<!-- <view class="registered" @tap="registered('flexible')">注册</view> --><!-- 灵活用工注册 -->
 					<!-- <view class="registered" @tap="registered('credit')">注册</view>  --><!-- 征信管理注册 -->
-					<view class="registered" @tap="touristLogin">游客登陆</view> <!-- 征信管理注册 -->
+					<view class="registered" @tap="touristLogin">游客登陆</view> <!-- 张矿微平台 -->
 				</view>
 			</view>
 			<view class="padding flex flex-direction">
@@ -90,6 +90,15 @@
 				this.loadModal = true;
 				tools.login(user).then((res: any) => {
 					let data = res.data
+					if(data.id ==2){//注册时间到期
+						uni.showToast({
+							title: data.message,
+							icon:"none"
+						})
+						this.canLogin = false;
+						this.loadModal = false;
+						return;
+					}
 					if (data.id != -1) {
 						let _u = data.data.user
 						this.user.userCode = _u.userCode

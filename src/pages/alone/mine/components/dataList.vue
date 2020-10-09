@@ -5,7 +5,7 @@
 			<swiper v-if="type == 0 && 1==isrecommend" class="margin-bottom screen-swiper square-dot "  :indicator-dots="true" :circular="true"
 				:autoplay="true" interval="5000" duration="500">
 				<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
-					<image :src="item.url" mode="scaleToFill" class="screen-swiper-img"></image>
+					<image :src="item.url" mode="aspectFill" class="screen-swiper-img"></image>
 					<view class="sw-title padding">
 						<h3>{{item.title}}</h3>
 					</view>
@@ -23,7 +23,7 @@
 							<view class="flex justify-start">
 								<view class="padding-top-sm padding-bottom-sm padding-left">
 									<view>
-										<view><h4>{{item.title}}</h4></view>
+										<view class="my-text-black">{{item.title}}</view>
 										<view class="text-gray text-sm">
 											<view class="flex justify-start">
 												<view>{{item.smakename}}</view>
@@ -39,7 +39,7 @@
 						<view class="flex justify-start" @tap="gotoarticle(item)">
 							<view class="padding-sm margin-xs">
 								<view>
-									<view><h4>{{item.title}}</h4></view>
+									<view class="my-text-black">{{item.title}}</view>
 									<view style="height: 40upx;"></view>
 									<view class="text-gray text-sm">
 										<view class="flex justify-start">
@@ -432,9 +432,10 @@
 		background-color: #E7271A;
 	}
 	.sw-title{
-		background-color: #ececec57;
+		background-color: #f5f5f557;
 		padding-top: 5px;
 		padding-bottom: 5px;
+		color: #121516;
 	}
 	.screen-swiper{
 		min-height: 500upx;
@@ -450,5 +451,10 @@
 	}
 	.my-image{
 		height: 450upx !important;
+	}
+	.my-text-black{
+		color: #1A1A22;
+		font-weight: 500;
+		font-size: 16px;
 	}
 </style>

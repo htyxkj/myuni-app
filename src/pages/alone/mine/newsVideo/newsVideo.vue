@@ -256,9 +256,6 @@
 	.screen-swiper{
 		min-height: 500upx;
 	}
-	.screen-swiper-img{
-		max-height: 400upx;
-	}
 	.cu-bar.btn-group uni-button {
 		padding: 11px 1px;
 	}

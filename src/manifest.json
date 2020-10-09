@@ -96,6 +96,6 @@
             "mode" : "history"
         },
         "title" : "幸福张矿",
-        "domain" : "https://test.juminfuwu.cn/bip-mine/webMobile/"
+        "domain" : "http://47.104.211.216:8089/bip-mine/webMobile/"
     }
 }
