@@ -25,7 +25,7 @@
 					</view>
 					<view class="content">
 						<view class="desc">
-							<view class="text-content"> 
+							<view class="padding-bottom"> 
 								{{oneTopic.tit_content}}
 							</view>
 							<view v-for="(item,index) in oneTopic.child" :key="index">

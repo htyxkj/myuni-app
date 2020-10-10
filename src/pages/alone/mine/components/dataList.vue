@@ -2,12 +2,22 @@
 	<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" 
 			:heightReduce="275" :pageNo="page_num" :totalPageNo="total_page" @loadMore="getNextPage" @refresh="refresh">
 		<view class="bg-white my-data-list" v-if="articleData" slot="content-list">
-			<swiper v-if="type == 0 && 1==isrecommend" class="margin-bottom screen-swiper square-dot "  :indicator-dots="true" :circular="true"
-				:autoplay="true" interval="5000" duration="500">
+			<swiper v-if="type == 0 && 1==isrecommend" class="screen-swiper square-dot "  :indicator-dots="true" :circular="true"
+				:autoplay="true" interval="500000" duration="500">
 				<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
-					<image :src="item.url" mode="aspectFill" class="screen-swiper-img"></image>
+					<!-- <image :src="item.url" mode="aspectFit" class="screen-swiper-img"></image>
 					<view class="sw-title padding">
 						<h3>{{item.title}}</h3>
+					</view> -->
+					<view class="cu-card case">
+						<view class="shadow">
+							<view class="image" style="background-color: #E7271A;">
+								<image :src="item.url" class="my-image"  mode="aspectFit"></image> 
+								<view class="cu-bar bg-shadeBottom"> 
+									<text class="text-cut">{{item.title}}</text>
+								</view>
+							</view> 
+						</view>
 					</view>
 				</swiper-item>
 			</swiper>
@@ -28,6 +38,10 @@
 											<view class="flex justify-start">
 												<view>{{item.smakename}}</view>
 												<view class="padding-left-xl">{{item.mkdate}}</view>
+												<view class="padding-left-xl">
+													<text class="cuIcon-attentionfill"></text>
+													{{item.pageviews}}
+												</view>
 											</view>
 										</view>
 									</view>
