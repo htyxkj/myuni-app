@@ -5,16 +5,16 @@
 				<block slot="content"><view class="header-title">考试中心</view></block>
 			</cu-custom>
             <view class="cu-list menu-avatar padding">				
-				<view class="cu-item bg-white margin-top-xs">
+				<view class="cu-item bg-white margin-top-xs" @tap="datAnswer()">
                     <image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/exam/day.png'" ></image>
-					<view class="content" @tap="datAnswer()">
+					<view class="content" >
                         <view class="name">每日练习</view>
 						<view class="remark">书读百遍，其义自见。</view>
 					</view>
 				</view> 
-				<view class="cu-item bg-white margin-top-xs">
+				<view class="cu-item bg-white margin-top-xs" @tap="doExam()">
                     <image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/exam/Special.png'" ></image>
-					<view class="content" @tap="doExam()">
+					<view class="content" >
                         <view class="name">考试</view>
 						<view class="remark"></view>
 					</view>
