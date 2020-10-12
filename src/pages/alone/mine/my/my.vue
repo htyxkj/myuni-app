@@ -40,6 +40,14 @@
 				<text class="cuIcon-right"></text>
 			</view>
 		</view>
+		<view class="cu-bar bg-white solid-bottom" @tap="perfectInformation">
+			<view class="action">
+				<text class="cuIcon-titles text-yellow "></text>信息完善
+			</view>
+			<view class="align-end" style="margin-right: 10upx;">
+				<text class="cuIcon-right"></text>
+			</view>
+		</view>
 		<view class="cu-bar bg-white solid-bottom"  @tap="exitSys">
 			<view class="action">
 				<text class="cuIcon-titles text-blue "></text>退出系统
@@ -97,6 +105,38 @@
 				</view>
 			</view>
 		</view>
+
+		<view class="cu-modal" style="z-index: 100;" :class="mdInfo?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-red justify-end">
+					<view class="content">信息完善</view>
+				</view>
+				<view class="padding-xl">
+					<form class="content">
+						<view class="cu-avatar xl round margin-left" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg);"></view>
+						<view class="cu-form-group">
+							<view class="title">部门</view>
+							<input placeholder="部门" type="text" v-model="myInfo.orgcode" />
+						</view>
+						<view class="cu-form-group">
+							<view class="title">手机</view>
+							<input placeholder="手机" type="text" v-model="myInfo.tel" />
+						</view>
+						<view class="cu-form-group">
+							<view class="title">邮箱</view>
+							<input placeholder="邮箱" type="text" v-model="myInfo.email" />
+						</view>
+					</form>
+				</view>
+				<view class="cu-bar bg-white justify-end">
+					<view class="action">
+						<button class="cu-btn line-red text-red" @tap="mdInfo = false" :disabled="canExec">取消</button>
+						<button class="cu-btn bg-blue margin-left" @tap="execPerInf" :disabled="canExec">确定</button>
+					</view>
+				</view>
+			</view>
+		</view>
+	
 	</view>
 </template>
 
@@ -118,6 +158,7 @@
 	export default class My extends Vue{
 		my_integral:number = 0;
 		mdPass:boolean = false
+		mdInfo:boolean = false
 		canExec:boolean = false
 		oldPwd:string = ''
 		pwd:string = ''
@@ -127,6 +168,12 @@
 		at2:boolean = false
 		gwName:any = '';//岗位名称
 		editName:any ='MULGW';//岗位辅助
+
+		myInfo:any ={
+			orgcode:"",
+			tel:"",
+			semail:""
+		};
 
 		mounted() {
 			this.initIntegral();
@@ -154,6 +201,7 @@
 			})
 			
 		}
+		//修改密码
 		modifyPassClick(){
 			if(!this.mdPass){
 				this.mdPass = true
@@ -172,7 +220,7 @@
 			}
 			this.canExec = true
 			if(this.user){
-				let cc = await tools.upPwd(this.user,this.pwd,this.oldPwd);
+				let cc:any = await tools.upPwd(this.user,this.pwd,this.oldPwd);
 				this.mdPass = false
 				this.canExec = false
 				uni.showToast({
@@ -181,6 +229,33 @@
 				})
 			}
 		}
+		
+		//完善信息
+		async perfectInformation(){
+			if(!this.mdInfo){
+				//先查询 用户当前信息
+				let qe:QueryEntity = new QueryEntity('','');
+				qe.page.currPage = 1;
+				qe.page.pageSize = 100; 
+				let oneCont = []; 
+				let qCont = new QueryCont('usrcode',this.user.userCode,12);
+				qCont.setContrast(0);
+				oneCont.push(qCont);
+				qe.cont = "~["+JSON.stringify(oneCont)+"]"
+				let vv:any = await tools.getBipInsAidInfo('MYINFO',210,qe);
+				if(vv.data.id ==0){
+					let vl = vv.data.data.data.values;
+					if(vl.length>0){
+						this.myInfo = vl[0];
+					}
+				}
+				this.mdInfo = true
+			}
+		}
+		async execPerInf(){
+			this.mdInfo = false
+		}
+		//查看密码
 		open(index:number){
 			switch(index){
 				case 0:
@@ -226,7 +301,6 @@
 			oneCont.push(qCont);
 			qe.cont = "~["+JSON.stringify(oneCont)+"]"
 			let vv:any = await tools.getBipInsAidInfo('MYINTEGRAL',210,qe);
-			console.log(vv)
 			if(vv.data.id ==0){
 				let vl = vv.data.data.data.values;
 				if(vl.length>0){
