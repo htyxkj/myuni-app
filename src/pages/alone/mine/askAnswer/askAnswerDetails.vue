@@ -6,7 +6,7 @@
 		</cu-custom>
 		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" 
 			:heightReduce="185" :pageNo="page_num" :totalPageNo="total_page" @loadMore="loadMore" @refresh="refresh">
-			<view class="padding bg-white" v-if="articleData"  slot="content-list">
+			<view class="padding " style="background-color: #ffffff" v-if="articleData"  slot="content-list">
 				<template v-if="articleData.video.length>0">
 					<video :ref="'video'+articleData.sid" :id="'video'+articleData.sid" @play="videoPay(articleData)" style="width:100%" :src="articleData.video[0]"></video>
 				</template>
@@ -26,7 +26,7 @@
 				<view>
 					<view class="flex padding-top" v-for="(item,index) in comment_list" :key="index">
 						<view class="radius" style="flex-basis:10%">
-							<image class="cu-avatar xxl round bg-white"  src="../../../../static/gs.png" mode="aspectFit"></image>                      
+							<image class="cu-avatar xxl round bg-white"   :src="!item.user_iocq?'../../../../static/gs.png':imgUrl+item.user_iocq"  mode="aspectFit"></image>                      
 						</view>
 						<view class="radius" style="flex-basis:90%">
 							<view class="flex justify-between">
@@ -119,7 +119,10 @@
 		comment_list:Array<any> = [];//评论列表
 		my_favorites:number =0;//当前人是否收藏 0：否；1：是
 		canDel:boolean = false;//当前人是否可以删除该问题
+
+		imgUrl:any = "";
 		onLoad(e:any) {
+			this.imgUrl = commURL.BaseUri+"/db_"+commURL.BaseDBID+"/"
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
 			this.snkey = LoginModule.snkey
 			this.sid = e.sid

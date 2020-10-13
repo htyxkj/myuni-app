@@ -7,7 +7,7 @@
 			<view style="text-align:start;" class="padding-left-xl">
                 <view class="flex solid-bottom padding align-center">
 					<view>
-                        <image class="cu-avatar xl round bg-white"  src="../../../../static/gs.png" mode="aspectFit"></image>                      
+                        <image class="cu-avatar xl round bg-white"  :src="path" mode="aspectFit"></image>                      
                     </view>
 					<view style="width:100%">
                         <view class="grid text-white padding-left col-2">
@@ -40,7 +40,7 @@
 				<text class="cuIcon-right"></text>
 			</view>
 		</view>
-		<view class="cu-bar bg-white solid-bottom" @tap="perfectInformation">
+		<view class="cu-bar bg-white solid-bottom" @tap="perfectInformation(true)">
 			<view class="action">
 				<text class="cuIcon-titles text-yellow "></text>信息完善
 			</view>
@@ -113,10 +113,18 @@
 				</view>
 				<view class="padding-xl">
 					<form class="content">
-						<view class="cu-avatar xl round margin-left" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg);"></view>
-						<view class="cu-form-group">
+						<view class="flex align-end bg-white"> 
+							<view class="margin-xs radius">
+								<image class="cu-avatar xl round bg-white"  :src="path" mode="aspectFit"></image> 
+							</view>
+							<view class="margin-xs radius">
+								<uni-view class="text-center text-blue" @tap="chooseImage()">选择图片</uni-view>
+							</view>
+						</view>
+						<view class="cu-form-group solid-bottom"> 
 							<view class="title">部门</view>
-							<input placeholder="部门" type="text" v-model="myInfo.orgcode" />
+							<input placeholder="部门" type="text" v-model="myInfo.orgcodeName" disabled="true" @tap.stop="openOrgSel()"/>
+							<text :class="['cuIcon-searchlist', 'text-progress','text-bold']" @tap.stop="openOrgSel()"></text>
 						</view>
 						<view class="cu-form-group">
 							<view class="title">手机</view>
@@ -124,7 +132,7 @@
 						</view>
 						<view class="cu-form-group">
 							<view class="title">邮箱</view>
-							<input placeholder="邮箱" type="text" v-model="myInfo.email" />
+							<input placeholder="邮箱" type="text" v-model="myInfo.semail" />
 						</view>
 					</form>
 				</view>
@@ -136,7 +144,7 @@
 				</view>
 			</view>
 		</view>
-	
+		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="url" :fixed="false" :maxWidth="500" :minHeight="300"></kps-image-cutter>
 	</view>
 </template>
 
@@ -152,8 +160,13 @@
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
+	import {BipMenuBtn} from '@/classes/BipMenuBtn'
+	import kpsImageCutter from "@/components/uni-ui/ksp-image-cutter/ksp-image-cutter.vue";
+	import bipComm from '@/components/bip-ui/bip-comm/bip-comm.vue';
+	import comm from '@/static/js/comm.js';
+	let commURL: any = comm;
 	@Component({
-		components:{}
+		components:{kpsImageCutter,bipComm}
 	})
 	export default class My extends Vue{
 		my_integral:number = 0;
@@ -168,15 +181,21 @@
 		at2:boolean = false
 		gwName:any = '';//岗位名称
 		editName:any ='MULGW';//岗位辅助
+		url:any="";//要裁剪的头像地址
+		path:any="../../../../static/gs.png";//头像地址
 
+
+		usrSORGEdit:any = "SORG";
 		myInfo:any ={
 			orgcode:"",
+			orgcodeName:"",
 			tel:"",
 			semail:""
 		};
 
 		mounted() {
 			this.initIntegral();
+			this.perfectInformation(false)
 		}
 		get user(){
 			return LoginModule.user
@@ -229,9 +248,8 @@
 				})
 			}
 		}
-		
-		//完善信息
-		async perfectInformation(){
+		//************************完善信息************************/
+		async perfectInformation(st:boolean){
 			if(!this.mdInfo){
 				//先查询 用户当前信息
 				let qe:QueryEntity = new QueryEntity('','');
@@ -246,15 +264,55 @@
 				if(vv.data.id ==0){
 					let vl = vv.data.data.data.values;
 					if(vl.length>0){
-						this.myInfo = vl[0];
+						this.myInfo.orgcode = vl[0]["u.orgcode"]
+						this.myInfo.orgcodeName = vl[0]["s.orgname"]
+						this.myInfo.tel = vl[0].tel;
+						this.myInfo.semail = vl[0].semail;
+						this.myInfo.iocq  = vl[0].iocq ;
 					}
 				}
-				this.mdInfo = true
+				this.mdInfo = st
+			}
+			if(this.myInfo.iocq){
+				this.path = commURL.BaseUri+"/db_"+commURL.BaseDBID+"/"+this.myInfo.iocq+"?c=" + new Date().getTime()
+			}
+			//获取用户部门辅助对象
+			let aidKey = "KEY_"+this.usrSORGEdit
+			if(!uni.getStorageSync(aidKey)){
+				await InsAidModule.fetchInsAid({ id: 200, aid: this.usrSORGEdit });
 			}
 		}
 		async execPerInf(){
+			let btn1 = new BipMenuBtn("DLG","更改用户公司 手机号  邮箱 信息")
+			btn1.setDlgType("D")
+			btn1.setDlgCont("mine.serv.UserServlet*200;0;0");//修改文章浏览量
+			let b = JSON.stringify(btn1)
+			let v = JSON.stringify(this.myInfo);
+			let vv:any =await tools.getDlgRunClass(v,b);
+			uni.showToast({
+				title: vv.data.message,
+				icon:"none"
+			})
 			this.mdInfo = false
 		}
+		openOrgSel() {
+			let groupV = ""; 
+			let methordName = "MYSORG_PERFINFO"
+			uni.$off(methordName,this.selectBack)
+			uni.$on(methordName,this.selectBack);
+			uni.showLoading({
+				title:'跳转中...'
+			})
+			uni.navigateTo({url:'/pages/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.usrSORGEdit+"&methordname="+methordName,complete: () => {
+				uni.hideLoading();
+			}});
+		}
+		selectBack(param:any){
+			this.myInfo.orgcode = param.orgcode
+			this.myInfo.orgcodeName = param.orgname
+		}
+		//************************完善信息************************/
+		
 		//查看密码
 		open(index:number){
 			switch(index){
@@ -309,6 +367,39 @@
 					this.my_integral = 0;
 				}
 			}
+		}
+	
+		/**
+		 * 选择头像
+		 */
+		chooseImage() {
+			uni.chooseImage({
+				success: (res:any) => {
+					// 设置url的值，显示控件
+					this.url = res.tempFilePaths[0];
+				}
+			});
+		}
+		//选完 裁剪完
+		async onok(ev:any) {
+			let params = {
+				updid:39,
+				snkey:uni.getStorageSync('snkey'),
+			}
+			await tools.uniAppUploadFile(ev.path,params,this.fileSuccess,null); 
+		}
+		fileSuccess(res:any){
+			let data = JSON.parse(res.data);
+			let fj_root = data.data.fj_root;
+			this.myInfo.iocq = fj_root
+			this.path = commURL.BaseUri+"/db_"+commURL.BaseDBID+"/"+this.myInfo.iocq+"?c=" + new Date().getTime()
+			this.url = "";
+		}
+
+		//取消
+		oncancle() {
+			// url设置为空，隐藏控件
+			this.url = "";
 		}
 	}
 </script>

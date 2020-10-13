@@ -27,7 +27,7 @@
 					<view>
 						<view class="flex padding-top" v-for="(item,index) in comment_list" :key="index">
 							<view class="radius" style="flex-basis:10%">
-								<image class="cu-avatar xxl round bg-white"  src="../../../../static/gs.png" mode="aspectFit"></image>                      
+								<image class="cu-avatar xxl round bg-white"  :src="!item.user_iocq?'../../../../static/gs.png':imgUrl+item.user_iocq" mode="aspectFit"></image>                      
 							</view>
 							<view class="radius" style="flex-basis:90%">
 								<view class="flex justify-between">
@@ -121,7 +121,11 @@
 
 		readTime:any = null;//开始浏览页面的时间
 		isVideo:boolean = false;//是否是视频
+
+		imgUrl:any = "";
+
 		onLoad(e:any) {
+			this.imgUrl = commURL.BaseUri+"/db_"+commURL.BaseDBID+"/"
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
 			this.snkey = LoginModule.snkey
 			this.sid = e.sid

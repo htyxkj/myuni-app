@@ -51,7 +51,7 @@
 			let key = "coustomizeLayout"+this.menu.id;
 			let la = uni.getStorageSync(key);
 			if(la){
-				this.layout = JSON.parse(uni.getStorageSync(key))
+				this.layout = JSON.parse(la)
 			}
 			if(this.layout.length == 0){
 				for(var i=0;i<gwCode.length;i++){
@@ -90,7 +90,7 @@
 			let key = "coustomizeLayout"+this.menu.id;
 			let la = uni.getStorageSync(key);
 			if(la){
-				this.layout = JSON.parse(uni.getStorageSync(key))
+				this.layout = JSON.parse(la)
 			}
 			if(this.layout.length == 0){
 				for(var i=0;i<gwCode.length;i++){
