@@ -3,7 +3,7 @@
 			:heightReduce="275" :pageNo="page_num" :totalPageNo="total_page" @loadMore="getNextPage" @refresh="refresh">
 		<view class="bg-white my-data-list" v-if="articleData" slot="content-list">
 			<swiper v-if="type == 0 && 1==isrecommend" class="screen-swiper square-dot "  :indicator-dots="true" :circular="true"
-				:autoplay="true" interval="500000" duration="500">
+				:autoplay="true" interval="5000" duration="500">
 				<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
 					<!-- <image :src="item.url" mode="aspectFit" class="screen-swiper-img"></image>
 					<view class="sw-title padding">
