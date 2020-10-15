@@ -36,6 +36,6 @@ export const BaseDBID = "154";
 // export const ItemType = "";
 
 
-export const version = 105;
+export const version = 106;
 export const SMSURL = "https://www.bip-soft.com/ssms/";
 export default {BaseUri, BaseDBID,SMSURL,ItemType,version}
