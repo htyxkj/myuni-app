@@ -136,7 +136,6 @@
 	@Component({
 	})
 	export default class doExam extends Vue {
-		animation:any = "";
 		topicData:Array<any> = [];
 		tit_type:any={};
 		oneTopic:any =null;
@@ -162,11 +161,12 @@
 		isShowType:boolean = true;
 		startTime:any=null;
 		title:any = "考试";
-		Toggle(){
-			this.animation = 'shake'
-			setTimeout(()=>{
-				this.animation= '';
-			}, 1000)
+		makeUp:any = false;//是否是补考
+		async onLoad(options:any) {
+			if(options.makeUp == "1"){
+				this.makeUp = true;
+				this.title = "补考"
+			}
 		}
 
 		async mounted(){
@@ -190,7 +190,7 @@
 			}
 		}
 		/**
-		 * 查询随机题目
+		 * 查询试卷题目
 		 */
 		async initData(item:any){
 			this.topicData = [];
@@ -198,7 +198,11 @@
 			this.selTopicType = item;
 			let btn1 = new BipMenuBtn("DLG","考试题目")
             btn1.setDlgType("D")
-            btn1.setDlgCont("mine.serv.ExamServlet*205;0;0");//查询随机题目
+			if(this.makeUp){
+				btn1.setDlgCont("mine.serv.ExamServlet*207;0;0");//查询试卷补考题目
+			}else{
+				btn1.setDlgCont("mine.serv.ExamServlet*205;0;0");//查询试卷题目
+			}
 			let b = JSON.stringify(btn1)
             let prarm = {type:item.sid}
             let v = JSON.stringify(prarm);
@@ -221,9 +225,9 @@
 					confirmText: '确定',
 					showCancel:false,
 					success: res => {
-						uni.navigateBack({
-							delta: 1
-						}); 
+						// uni.navigateBack({
+						// 	delta: 1
+						// }); 
 					}
 				})
 			}

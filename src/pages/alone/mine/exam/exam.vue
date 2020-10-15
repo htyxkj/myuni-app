@@ -13,9 +13,16 @@
 					</view>
 				</view> 
 				<view class="cu-item bg-white margin-top-xs" @tap="doExam()">
-                    <image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/exam/Special.png'" ></image>
+                    <image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/exam/exam.png'" ></image>
 					<view class="content" >
                         <view class="name">考试</view>
+						<view class="remark"></view>
+					</view>
+				</view> 
+				<view class="cu-item bg-white margin-top-xs" @tap="doExamMakeUp()">
+                    <image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/exam/makeup.png'" ></image>
+					<view class="content" >
+                        <view class="name">补考</view>
 						<view class="remark"></view>
 					</view>
 				</view> 
@@ -86,8 +93,24 @@
 				'url':url,
 			})
 		}
+		//去考试
 		doExam(){
-			let url = "/pages/alone/mine/exam/doExam";
+			let url = "/pages/alone/mine/exam/doExam?makeUp=0";
+			let userType = uni.getStorageSync('userType');
+			if(userType == 'Tourist'){//游客身份 
+				url = "/pages/login/login"
+				uni.reLaunch({
+					'url':url,
+				})
+				return;
+			}
+			uni.navigateTo({
+				'url':url,
+			})
+		}
+		//去补考
+		doExamMakeUp(){
+			let url = "/pages/alone/mine/exam/doExam?makeUp=1";
 			let userType = uni.getStorageSync('userType');
 			if(userType == 'Tourist'){//游客身份 
 				url = "/pages/login/login"
