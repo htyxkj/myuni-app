@@ -12,7 +12,9 @@
 					<view style="width:100%">
                         <view class="grid text-white padding-left col-2">
                             <view class="text-start">{{user.userName}}</view>
-                            <view class="text-center">积分</view>
+                            <view class="text-center">积分
+								<text class="margin-left-xs cuIcon-question" style=" font-size: 25upx;" @tap="integralRule"></text> 
+							</view>
                         </view>
                         <view class="grid text-center text-white padding-left col-2">
                             <view></view>
@@ -122,6 +124,11 @@
 							</view>
 						</view>
 						<view class="cu-form-group solid-bottom"> 
+							<view class="title">单位</view>
+							<input placeholder="单位" type="text" v-model="myInfo.scmName" disabled="true" @tap.stop="openScmSel()"/>
+							<text :class="['cuIcon-searchlist', 'text-progress','text-bold']" @tap.stop="openScmSel()"></text>
+						</view>
+						<view class="cu-form-group solid-bottom"> 
 							<view class="title">部门</view>
 							<input placeholder="部门" type="text" v-model="myInfo.orgcodeName" disabled="true" @tap.stop="openOrgSel()"/>
 							<text :class="['cuIcon-searchlist', 'text-progress','text-bold']" @tap.stop="openOrgSel()"></text>
@@ -144,6 +151,34 @@
 				</view>
 			</view>
 		</view>
+
+		<view class="cu-modal" style="z-index: 100;" :class="showIintegralRuleDlg?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-red justify-end">
+					<view class="content">积分规则</view>
+				</view>
+				<view class="padding-sm">
+					<form class="content">
+						<view class="padding-sm" style="text-align: start;" v-for="(item,index) in integralRul" :key="index">
+							<view >{{item.name}}</view>
+							<view class="margin-left-sm">
+								每
+								<template v-if="item.type=='answer'">答对一题</template>
+								<template v-else>次</template>
+								{{item.fraction}}积分;每天上限{{item.upper_limit}}积分;
+								<template v-if="item.duration">
+									浏览有效时长：{{item.duration}}秒
+								</template>
+							</view>
+						</view>
+					</form>
+				</view>
+				<view class="cu-bar bg-white justify-center">
+					<button style="width:80%" class="cu-btn bg-blue" @tap="showIintegralRuleDlg = false">确定</button>
+				</view>
+			</view>
+		</view>
+
 		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="url" :fixed="false" :maxWidth="500" :minHeight="300"></kps-image-cutter>
 	</view>
 </template>
@@ -185,13 +220,19 @@
 		path:any="../../../../static/gs.png";//头像地址
 
 
-		usrSORGEdit:any = "SORG";
+		usrSORGEdit:any = "MYSORG";
+		usrSCMEdit:any="SCMM";
 		myInfo:any ={
+			scm:"",
+			scmName:"",
 			orgcode:"",
 			orgcodeName:"",
 			tel:"",
 			semail:""
 		};
+
+		showIintegralRuleDlg:boolean = false;
+		integralRul:any=[];
 
 		mounted() {
 			this.initIntegral();
@@ -264,11 +305,13 @@
 				if(vv.data.id ==0){
 					let vl = vv.data.data.data.values;
 					if(vl.length>0){
-						this.myInfo.orgcode = vl[0]["u.orgcode"]
-						this.myInfo.orgcodeName = vl[0]["s.orgname"]
+						this.myInfo.orgcode = vl[0].orgcode
+						this.myInfo.orgcodeName = vl[0].oname
 						this.myInfo.tel = vl[0].tel;
 						this.myInfo.semail = vl[0].semail;
 						this.myInfo.iocq  = vl[0].iocq ;
+						this.myInfo.scm = vl[0].scm
+						this.myInfo.scmName = vl[0].sname
 					}
 				}
 				this.mdInfo = st
@@ -280,6 +323,10 @@
 			let aidKey = "KEY_"+this.usrSORGEdit
 			if(!uni.getStorageSync(aidKey)){
 				await InsAidModule.fetchInsAid({ id: 200, aid: this.usrSORGEdit });
+			}
+			aidKey = "KEY_"+this.usrSCMEdit
+			if(!uni.getStorageSync(aidKey)){
+				await InsAidModule.fetchInsAid({ id: 200, aid: this.usrSCMEdit });
 			}
 		}
 		async execPerInf(){
@@ -293,13 +340,23 @@
 				title: vv.data.message,
 				icon:"none"
 			})
-			this.mdInfo = false
+			if(vv.data.id ==0){
+				this.mdInfo = false
+			}
 		}
+		//部门选择
 		openOrgSel() {
-			let groupV = ""; 
+			if(!this.myInfo.scm || !this.myInfo.scmName){
+				uni.showToast({
+					title:'请先选择正确的单位',
+					icon:"none"
+				})
+				return;
+			}
+			let groupV = this.myInfo.scm; 
 			let methordName = "MYSORG_PERFINFO"
-			uni.$off(methordName,this.selectBack)
-			uni.$on(methordName,this.selectBack);
+			uni.$off(methordName,this.sorgSelectBack)
+			uni.$on(methordName,this.sorgSelectBack);
 			uni.showLoading({
 				title:'跳转中...'
 			})
@@ -307,12 +364,43 @@
 				uni.hideLoading();
 			}});
 		}
-		selectBack(param:any){
+		sorgSelectBack(param:any){
 			this.myInfo.orgcode = param.orgcode
 			this.myInfo.orgcodeName = param.orgname
 		}
+		//公司选择
+		openScmSel(){
+			let groupV = ""; 
+			let methordName = "MYSCM_PERFINFO"
+			uni.$off(methordName,this.scmSelectBack)
+			uni.$on(methordName,this.scmSelectBack);
+			uni.showLoading({
+				title:'跳转中...'
+			})
+			uni.navigateTo({url:'/pages/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.usrSCMEdit+"&methordname="+methordName,complete: () => {
+				uni.hideLoading();
+			}});
+		}
+		scmSelectBack(param:any){
+			if(param.orgcode != this.myInfo.scm){
+				this.myInfo.orgcode=""
+				this.myInfo.orgcodeName=""
+			}
+			this.myInfo.scm = param.orgcode
+			this.myInfo.scmName = param.orgname
+		}
 		//************************完善信息************************/
 		
+		//************************显示积分规则************************/
+		async integralRule(){
+			//GETINTEGRULE
+			let qe:QueryEntity = new QueryEntity('','');
+			let vv:any = await tools.getBipInsAidInfo('GETINTEGRULE',210,qe);
+			if(vv.data.id ==0){
+				this.integralRul = vv.data.data.data.values;
+			}
+			this.showIintegralRuleDlg = true;
+		}
 		//查看密码
 		open(index:number){
 			switch(index){

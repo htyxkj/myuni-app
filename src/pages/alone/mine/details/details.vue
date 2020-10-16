@@ -18,7 +18,7 @@
 							<view class="padding-left-xl">{{articleData.mkdate}}</view>
 						</view>
 					</view>
-					<view v-html="articleData.content"></view>
+					<view v-html="articleData.content" @click="previewImage($event)"></view>
 					<view class="padding text-center">
 						<button class="cu-btn round lines-blue" :class="[my_like ==0?'lines-gray':'lines-blue']" @click="doLike">
 							<text class="cuIcon-appreciate"></text>{{like_num}}&nbsp;&nbsp;&nbsp;赞
@@ -123,6 +123,7 @@
 		isVideo:boolean = false;//是否是视频
 
 		imgUrl:any = "";
+		imgList:Array<any>=[];
 
 		onLoad(e:any) {
 			this.imgUrl = commURL.BaseUri+"/db_"+commURL.BaseDBID+"/"
@@ -235,6 +236,24 @@
 					if(!this.like_num)
 						this.like_num=0;
 				}
+		}
+
+		/**
+		 * 文章内容点击
+		 */
+		previewImage (e:any) {
+			console.log(e)
+			if (e.target.nodeName == 'IMG') {
+				let url = e.target.currentSrc;
+				let item = {
+					src: url
+				};
+				this.imgList.length = 0;
+				this.imgList.push(item);
+				// this.$refs.previewer.show(0);
+			} else {
+				return;
+			}
 		}
 
 		/**
