@@ -186,5 +186,12 @@ export default class bipGps extends Vue{
 			return false;
 		}
 	}
+	@Watch('record')
+	recordChange(){
+		let rr = this.record.data[this.cell.id];
+		if(rr !== this.mode1){
+			this.mode1 = rr||''
+		}
+	}	
 }
 </script>
