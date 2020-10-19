@@ -203,6 +203,15 @@ export namespace baseUtils {
 		getUpPwdParmasUri() {
 			return Object.assign({ apiId: GlobalVariable.APIID_UPPWD, dbid: commURL.BaseDBID });
 		}
+		/**
+		 * 获取钉钉 jsapi 权鉴
+		 */
+		getDDJSAPI_TICKET(){
+			return Object.assign({
+				apiId: GlobalVariable.APIID_DDJSAPI_TICKET,
+				dbid: commURL.BaseDBID,
+			});
+		}
 
 		/**
 		 * @description 根据对象字符串组成，获取对象ID

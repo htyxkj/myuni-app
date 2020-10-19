@@ -1,7 +1,9 @@
 <template>
-	<view style="padding-bottom:120upx">
-		<mMenu v-for="(m,index) in groupMenus" :key="index" :m="m" @openM="openMenu" ></mMenu>
-	</view>
+	<scroll-view scroll-y="true" class="scroll-Y" style="height:100vh">
+		<view >
+			<mMenu v-for="(m,index) in groupMenus" :key="index" :m="m" @openM="openMenu" ></mMenu>
+		</view>
+	</scroll-view>	
 </template>
 
 <script lang="ts">

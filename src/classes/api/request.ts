@@ -157,6 +157,16 @@ export namespace BIPUtil {
 		}
 
 		/**
+		 * 
+		 * @param par 钉钉应用信息
+		 */
+		getDDJSAPI_TICKET(par:any){
+			let param = tools.getDDJSAPI_TICKET();
+			param = Object.assign(param,par);
+			return this.getFromServer(param)
+		}
+
+		/**
 		 * @description 调用js http post 请求
 		 */
 		getFromServer(params: any) {

@@ -30,6 +30,9 @@
 			<template v-else-if="cell.editType==1">
 				<bip-list :label="cell.labelString" :cell="cell" :obj_id="obj_id" ></bip-list>
 			</template>
+			<template v-else-if="cell.editType==12"><!-- 地图 -->
+				<bip-gps :label="cell.labelString" :cell="cell" :obj_id="obj_id" ></bip-gps>
+			</template>
 			<template v-else-if="cell.refValue">
 				<bip-ref :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-ref>
 			</template>
@@ -59,11 +62,12 @@ import bipDate from '../bip-date/bip-date.vue';
 import bipSelect from '../bip-ass/bip-select.vue';
 import bipRef from '../bip-ass/bip-ref.vue';
 import bipList from '../bip-list/bip-list.vue';
+import bipGps from '../bip-gps/bip-gps.vue';
 import bipFile from '../bip-file/bip-file.vue';
 import bipImage from '../bip-file/bip-image.vue';
 import bipTreeEditor from '../bip-tree/bip-tree-editor.vue';
 @Component({
-	components: {bipInput,bipNumber,bipDate,bipSelect,bipRef,bipList,bipFile,bipImage,bipTreeEditor}
+	components: {bipInput,bipNumber,bipDate,bipSelect,bipRef,bipList,bipFile,bipImage,bipTreeEditor,bipGps}
 })
 export default class bipComm extends Vue{
 	@Inject('env') env!:CCliEnv;

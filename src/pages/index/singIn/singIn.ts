@@ -4,6 +4,7 @@ import Menu from '@/classes/Menu';
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
 import { LoginModule } from '@/store/module/login'; //导入vuex模块，自动注入
+import { GlobalVariable } from '@/classes/tools/ICL';
 
 export namespace singIn {
 	class ServerUtils {
@@ -21,7 +22,6 @@ export namespace singIn {
 			this.route = route;
             if(this.route.jumpRoute)
 				this.jumpRoute = this.route.jumpRoute;
-			console.log(dd.env.platform)
 			if (dd.env.platform !="notInDingTalk") {//钉钉内
 				console.log("钉钉单点登录")
                 await this.loginDD();
@@ -90,6 +90,7 @@ export namespace singIn {
 					LoginModule.setMenus(ms);
 					LoginModule.setSnKey(data.data.snkey)
 					uni.setStorageSync('isLogin',true);
+					uni.setStorageSync('loginType',GlobalVariable.LOGIN_TYPE_DING);
 					this.loginOk();
 				}else{
 					uni.showToast({
