@@ -123,8 +123,8 @@
 		font-size: 32upx;
 	}
 	.myimg{
-		width: 200upx; 
-		height: 200upx;
+		width: 110upx; 
+		height: 110upx;
 		background-color: #FFFFFF;
 	}
 </style>

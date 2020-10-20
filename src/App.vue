@@ -3,7 +3,9 @@
     export default Vue.extend({
         mpType: 'app',
         onLaunch() {
-			uni.setStorageSync("location.href",window.location.href.split("#")[0]);
+			if(window && window.location && window.location.href){
+				uni.setStorageSync("location.href",window.location.href.split("#")[0]);
+			}
             uni.getSystemInfo({
 				success:function(e:any){
 					// #ifndef MP
