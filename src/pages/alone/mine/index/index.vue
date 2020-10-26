@@ -39,16 +39,7 @@
 				await this.touristLogin();
 				return;
 			}
-			let btn1 = new BipMenuBtn("DLG","登陆积分")
-			btn1.setDlgType("D")
-			btn1.setDlgCont("mine.serv.ExamServlet*203;0;0");//修改文章浏览量
-			let b = JSON.stringify(btn1)
-			let prarm = {"type":"login"}
-			let v = JSON.stringify(prarm);
-			let vv:any =await tools.getDlgRunClass(v,b);
-			if(vv && vv.data && vv.data.id ==-2){
-				this.touristLogin();
-			}
+			await this.loginIntegral();
 			if(options.tabcur){
 				this.tabcur = options.tabcur;
 			}
@@ -56,7 +47,8 @@
 		/**
 		 * 页面显示
 		 */
-		onShow(){
+		async onShow(){
+			await this.loginIntegral();
 			uni.getSystemInfo({
 			    success:(res) => {
 			        //检测当前平台，如果是安卓则启动安卓更新  
@@ -66,8 +58,9 @@
 			    }  
 			})
 		}
-		tabSelect(e:any){
+		async tabSelect(e:any){
 			this.tabcur = e[0];
+			await this.loginIntegral();
 		}
 		get loginState(){
 			let v = LoginModule.loginState
@@ -94,7 +87,7 @@
 		/**
 		 * 登录系统
 		 */
-		loginSys(user:any=null) {
+		async loginSys(user:any=null) {
 			if (!user.userCode) {
 				uni.showToast({
 					title: '请输入账号密码',
@@ -102,7 +95,7 @@
 				})
 				return;
 			} else {
-				tools.loginWithOutPwd(user.userCode,{}).then((res: any) => {
+				await tools.loginWithOutPwd(user.userCode,{}).then((res: any) => {
 					let data = res.data
 					if (data && data.id != -1) {
 						let _u = data.data.user
@@ -128,7 +121,7 @@
 		/**
 		 * 张矿微平台 游客登陆
 		 */
-		touristLogin(){
+		async touristLogin(){
 			let user: User = new User('portal', '', '')
 			let u = LoginModule.user;
 			if(u && u.userCode && u.userCode != user.userCode){
@@ -137,7 +130,7 @@
 			}else{
 				uni.setStorageSync('userType','Tourist')
 			}
-			this.loginSys(user);
+			await this.loginSys(user);
 		}
 	
 
@@ -258,6 +251,19 @@
 						}
 					});
 				// }
+			}
+		}
+
+		async loginIntegral(){
+			let btn1 = new BipMenuBtn("DLG","登陆积分")
+			btn1.setDlgType("D")
+			btn1.setDlgCont("mine.serv.ExamServlet*203;0;0");//修改文章浏览量
+			let b = JSON.stringify(btn1)
+			let prarm = {"type":"login"}
+			let v = JSON.stringify(prarm);
+			let vv:any =await tools.getDlgRunClass(v,b);
+			if(vv && vv.data && vv.data.id ==-2){
+				await this.touristLogin();
 			}
 		}
 	}
