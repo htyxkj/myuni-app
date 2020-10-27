@@ -176,34 +176,40 @@
 			this.qe.page = new PageInfo();
 			let oneCont = []; 
 			let qCont = null;
-			if(rec){//推荐 不安类别查询
-				qCont = new QueryCont('isrec','1',12);
-				qCont.setContrast(0);
-				qCont.setLink(1);
-				oneCont.push(qCont);
+			let vv:any = null;
+			if(rec){//推荐 单独查询
+				let btn1 = new BipMenuBtn("DLG","查询推荐数据")
+				btn1.setDlgType("D")
+				btn1.setDlgCont("mine.serv.ArticleServlet*211;0;0");//修改文章浏览量
+				let b = JSON.stringify(btn1)
+				let prarm:any={
+					currPage:this.page_num,
+					title:this.tjInput
+				}
+				let v = JSON.stringify(prarm);
+				vv = await tools.getDlgRunClass(v,b);
 			}else{
 				qCont = new QueryCont('type',this.type_sid,12);
 				qCont.setContrast(0);
 				qCont.setLink(1);
 				oneCont.push(qCont);
+				if(this.tjInput!=null && this.tjInput.length>0){
+					qCont = new QueryCont('title',this.tjInput,12);
+					qCont.setContrast(3);
+					qCont.setLink(1);
+					oneCont.push(qCont);
+				}
+				let userType = uni.getStorageSync('userType');
+				if(userType == 'Tourist'){//游客身份
+					qCont = new QueryCont('ispublic','1',5);
+					qCont.setContrast(0);
+					qCont.setLink(1);
+					oneCont.push(qCont);
+				}
+				this.qe.cont = "~["+JSON.stringify(oneCont)+"]"
+				this.qe.page.currPage = this.page_num;
+				vv = await tools.getBipInsAidInfo('ALLARTICLEL',210,this.qe);
 			}
-			if(this.tjInput!=null && this.tjInput.length>0){
-				qCont = new QueryCont('title',this.tjInput,12);
-				qCont.setContrast(3);
-				qCont.setLink(1);
-				oneCont.push(qCont);
-			}
-
-			let userType = uni.getStorageSync('userType');
-			if(userType == 'Tourist'){//游客身份
-				qCont = new QueryCont('ispublic','1',5);
-				qCont.setContrast(0);
-				qCont.setLink(1);
-				oneCont.push(qCont);
-			}
-			this.qe.cont = "~["+JSON.stringify(oneCont)+"]"
-			this.qe.page.currPage = this.page_num;
-			let vv:any = await tools.getBipInsAidInfo('ALLARTICLEL',210,this.qe);
 			if(vv.data.id ==0){
 				let cc = vv.data.data.data.values;
 				let page = vv.data.data.data.page;
