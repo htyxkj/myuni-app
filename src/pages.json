@@ -170,6 +170,10 @@
             "path" : "pages/alone/mine/exam/doExam",
             "style" : {}
         }
+        ,{
+            "path" : "pages/gps/gps",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
