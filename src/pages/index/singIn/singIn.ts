@@ -27,7 +27,7 @@ export namespace singIn {
                 await this.loginDD();
                 return;
             }else{
-				// this.loginFailure();
+				this.loginFailure();
 			}
 		}
 		//钉钉内免密登录

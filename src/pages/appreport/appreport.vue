@@ -5,15 +5,20 @@
 			<block slot="content"><view class="header-title">{{ title }}</view></block>
 		</cu-custom>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
-		<template v-if="dsm&&dsm.ccells">
-			<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
-				@loadMore="loadMore" @refresh="refresh">
-				<view slot="content-list">
-					<view v-for="(item,index) in pdList" :key="index">
-						<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+		<template v-if="!isMap">
+			<template v-if="dsm&&dsm.ccells">
+				<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
+					@loadMore="loadMore" @refresh="refresh">
+					<view slot="content-list">
+						<view v-for="(item,index) in pdList" :key="index">
+							<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+						</view>
 					</view>
-				</view>
-			</load-refresh>
+				</load-refresh>
+			</template>
+		</template>
+		<template v-else-if="isMap">
+			<bip-gps-show v-if="dsm&&dsm.ccells" :cels="dsm.ccells.cels" :pdList="pdList"></bip-gps-show>
 		</template>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 	</view>
@@ -25,6 +30,7 @@ import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
 import mLoad from '@/components/mLoad.vue';
 import bipSearchCon from '@/components/bip-ui/bip-search/bip-search-con.vue'
 import bipListUnit2 from '@/components/bip-ui/bip-unit/bip-list-unit2.vue';
+import bipGpsShow from '@/components/bip-ui/bip-gps/bip-gps-show.vue';
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
 
@@ -42,7 +48,7 @@ import { icl } from '../../classes/tools/CommICL';
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
 @Component({
-	components: { mLoad,bipSearchCon,bipListUnit2}
+	components: { mLoad,bipSearchCon,bipListUnit2,bipGpsShow}
 })
 export default class appReport extends Vue {
 	vueId: string = Tools.guid();
@@ -70,6 +76,8 @@ export default class appReport extends Vue {
 	currPage: number = 1;
 	totalPage: number = 0;
 	pageSize:number = 15;
+
+	isMap:boolean = true;//是否是地图展示页面
  
 	get showCells(){
 		if(this.dsm_cont.ccells){

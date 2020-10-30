@@ -158,6 +158,7 @@
 		 * 下拉刷新
 		 */
 		async refresh(){
+			this.page_num = 1;
 			if(this.type == 0 && 1==this.isrecommend){
 				await this.initData(null,true);
 			}else{
@@ -260,7 +261,8 @@
 						let nameArr = fjn.split(";");
 						for(var j=0;j<nameArr.length;j++){
 							let name =nameArr[j].toLowerCase();
-							let url = this.uri+'?snkey='+this.snkey+'&fjroot='+fjroot+'&updid=36&fjname='+nameArr[j];
+							// let url = this.uri+'?snkey='+this.snkey+'&fjroot='+fjroot+'&updid=36&fjname='+nameArr[j];
+							let url = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+nameArr[j];
 							var imgReg = /\.(png|jpg|gif|jpeg|webp|tiff|psd)$/; //图片名为汉字的也可以匹配到
 							let isImg:boolean = imgReg.test(name); //返回true ,false
 							if(isImg){
@@ -354,7 +356,8 @@
 					let nameArr = sw.fj_name.split(";");
 					for(var j=0;j<nameArr.length;j++){
 						let vl:any = {url:'',sid:sw.article_id,title:sw.title};
-						let url = this.uri+'?snkey='+this.snkey+'&fjroot='+sw.fj_root+'&updid=36&fjname='+nameArr[j];
+						// let url = this.uri+'?snkey='+this.snkey+'&fjroot='+sw.fj_root+'&updid=36&fjname='+nameArr[j];
+						let url = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+sw.fj_root+"/"+nameArr[j];
 						vl.url = url;
 						this.swiperList.push(vl);
 					}

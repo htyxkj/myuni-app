@@ -4,7 +4,7 @@
 			<cu-custom bgColor="bg-gradual-pink" :isBack="false">
 				<block slot="content"><view class="header-title">{{title}}</view></block>
 			</cu-custom>
-			<template>
+			<template v-if="loginState">
 				<template v-if="tabcur==-1">
 					<customize :menu="menubarr"></customize>
 				</template>
@@ -66,7 +66,9 @@
 				return;
 			}else{
 				this.ifDefaultIndex = true;
-				singIn.ServApi.init(options,this.loginOk,this.loginFailure);
+				if(!this.loginState){
+					singIn.ServApi.init(options,this.loginOk,this.loginFailure);
+				}
 				this.olOption = options
 			}
 		}

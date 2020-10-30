@@ -39,7 +39,7 @@
 				await this.touristLogin();
 				return;
 			}
-			await this.loginIntegral();
+			// await this.loginIntegral();
 			if(options.tabcur){
 				this.tabcur = options.tabcur;
 			}
@@ -60,7 +60,7 @@
 		}
 		async tabSelect(e:any){
 			this.tabcur = e[0];
-			await this.loginIntegral();
+			// await this.loginIntegral();
 		}
 		get loginState(){
 			let v = LoginModule.loginState
@@ -254,7 +254,7 @@
 			}
 		}
 
-		async loginIntegral(){
+		async loginIntegral(bl:any=true){
 			let btn1 = new BipMenuBtn("DLG","登陆积分")
 			btn1.setDlgType("D")
 			btn1.setDlgCont("mine.serv.ExamServlet*203;0;0");//修改文章浏览量
@@ -264,6 +264,8 @@
 			let vv:any =await tools.getDlgRunClass(v,b);
 			if(vv && vv.data && vv.data.id ==-2){
 				await this.touristLogin();
+				if(bl)
+				this.loginIntegral(false)
 			}
 		}
 	}
