@@ -8,8 +8,13 @@
 
 <script lang="ts">
 import { Vue, Provide, Component, Prop, Watch } from 'vue-property-decorator';
+import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
 import mLoad from '@/components/mLoad.vue';//加载页面
+import Cell from '@/classes/pub/coob/Cell';
+import BipInsAidNew from '@/classes/BipInsAidNew';
 import {T} from "@/pages/gps/js/TMap"
+import {icl} from '@/classes/tools/CommICL';
+const ICL = icl; 
 @Component({components:{mLoad}})
 export default class MAP extends Vue {
 	loading:any = false;
@@ -47,7 +52,7 @@ export default class MAP extends Vue {
         //添加缩放平移控件
 		this.tMap.addControl(control);
 	}
-	initMapData(){
+	async initMapData(){
 		this.tMap.clearOverLays();
 		if(this.pdList){
 			let points:any=[];
@@ -66,37 +71,148 @@ export default class MAP extends Vue {
 					let msg = "<div>";
 					for(var j=0;j<this.cels.length;j++){
 						if((this.cels[j].attr & 0x400 ) == 0){
-							msg+= (this.cels[j].labelString + "："+data[this.cels[j].id]+"<br/>");
+							let val = data[this.cels[j].id];
+							val = val ==null?"":val;
+							if(val != "" && this.cels[j].refValue){
+								val = await this.makeRef(val,this.cels[j]);
+							}
+							msg+= (this.cels[j].labelString + "："+val+"<br/>");
 						}
 					}
 					this.pointMsg[key]= msg;
+					var marker = new T.Marker(lgt);// 创建标注
+					let _this = this;
+					marker.addEventListener("click", function (e:any) {
+						var lnglat = e.lnglat;
+						//创建信息窗口对象
+						var infoWin = new T.InfoWindow();
+						infoWin.setLngLat(lnglat);
+						//设置信息窗口要显示的内容
+						infoWin.setContent(_this.pointMsg[lnglat.kid]);
+						_this.tMap.addOverLay(infoWin);
+					});// 将标注添加到地图中
+                	this.tMap.addOverLay(marker);
 				}
 			}
-			if(points.length>0){
-				this.CloudMarkerCollection = new T.CloudMarkerCollection(points,{
-					color:'blue',
-					SizeType:'TDT_POINT_SIZE_HUGE',
-					ShapeType:'TDT_POINT_SHAPE_WATERDROP'
-					// 海量点的预设形状。
-					// TDT_POINT_SHAPE_CIRCLE 圆形，为默认形状。
-					// TDT_POINT_SHAPE_STAR星形。
-					// TDT_POINT_SHAPE_SQUARE方形。
-					// TDT_POINT_SHAPE_RHOMBUS菱形。
-					// TDT_POINT_SHAPE_WATERDROP滴状。
-				})
-				let _this = this;
-				this.CloudMarkerCollection.addEventListener("click", function (e:any) {
-					var lnglat = e.lnglat;
-					//创建信息窗口对象
-					var infoWin = new T.InfoWindow();
-					infoWin.setLngLat(lnglat);
-					//设置信息窗口要显示的内容
-					infoWin.setContent(_this.pointMsg[lnglat.kid]);
-					_this.tMap.addOverLay(infoWin);
-				});// 将标注添加到地图中 
-				this.tMap.addOverLay(this.CloudMarkerCollection);
-			}
+			let cc = this.tMap.getViewport(points);
+			this.tMap.centerAndZoom(cc.center,cc.zoom)
+			//海量点
+			// if(points.length>0){
+			// 	this.CloudMarkerCollection = new T.CloudMarkerCollection(points,{
+			// 		color:'blue',
+			// 		SizeType:'TDT_POINT_SIZE_HUGE',
+			// 		ShapeType:'TDT_POINT_SHAPE_WATERDROP'
+			// 		// 海量点的预设形状。
+			// 		// TDT_POINT_SHAPE_CIRCLE 圆形，为默认形状。
+			// 		// TDT_POINT_SHAPE_STAR星形。
+			// 		// TDT_POINT_SHAPE_SQUARE方形。
+			// 		// TDT_POINT_SHAPE_RHOMBUS菱形。
+			// 		// TDT_POINT_SHAPE_WATERDROP滴状。
+			// 	})
+			// 	let _this = this;
+			// 	this.CloudMarkerCollection.addEventListener("click", function (e:any) {
+			// 		var lnglat = e.lnglat;
+			// 		//创建信息窗口对象
+			// 		var infoWin = new T.InfoWindow();
+			// 		infoWin.setLngLat(lnglat);
+			// 		//设置信息窗口要显示的内容
+			// 		infoWin.setContent(_this.pointMsg[lnglat.kid]);
+			// 		_this.tMap.addOverLay(infoWin);
+			// 	});// 将标注添加到地图中 
+			// 	this.tMap.addOverLay(this.CloudMarkerCollection);
+			// }
 		}
+	}
+	async makeRef(val:any,cell:Cell){
+		let ref = cell.refValue ||cell.editName
+		let bipInsAid:BipInsAidNew = new BipInsAidNew("");
+		if(ref.indexOf('{')>-1){
+			ref = ref.substring(ref.indexOf('{')+1,ref.indexOf('}'));
+			if(ref.startsWith('$')){
+				bipInsAid.cl = true;
+				ref = ref.substring(1);
+			}else{
+				if(ref.startsWith('&')){
+					ref = ref.substring(1);
+				}
+			}
+			// console.log(ref)
+			let editName = ref;
+			let aidKey = bipInsAid.cl?(ICL.AID_KEYCL+ref):(ICL.AID_KEY+ref);
+			let rr = this.aidmaps.get(aidKey);
+			if(rr){
+				bipInsAid = bipInsAid.clone(rr);
+				bipInsAid.id = editName;
+			}else{
+				if(!this.inProcess.get(aidKey)){
+					let res = await InsAidModule.fetchInsAid({ id: (bipInsAid.cl?300:200), aid: editName });
+					if(res.data.id ==0){
+						bipInsAid = res.data.data.data;
+					}else{
+						return val;
+					}
+				}
+			}
+			if(bipInsAid.cl){//常量
+				if(bipInsAid.values){
+					let idx = bipInsAid.values.findIndex((item:any)=>{
+						return item[bipInsAid.cells.cels[0].id]+'' === val+'';
+					})
+					if(idx>-1){
+						let item = bipInsAid.values[idx];
+						val = item[bipInsAid.cells.cels[1].id];
+					}
+				}
+			}else{//辅助
+				aidKey = ICL.AID_KEY+bipInsAid.id; 
+				let key = aidKey+"_"+val;
+				let rr = this.aidValues.get(key);
+				if(rr){
+					bipInsAid.values[0] = rr;
+					bipInsAid.makeShow();
+					val = bipInsAid.showV;
+				}else{
+					if(!this.inProcess.get(key)){
+						let key = aidKey+"_"+val;
+						if(!this.inProcess.get(key)){
+							let rtn = this.aidValues.get(key);
+							if(!rtn){
+								let cel = bipInsAid.cells.cels[0];
+								if(cel){
+									let cont = "";
+									if(cel.type<12){
+										cont = cel.id+"="+val+""
+									}else{
+										cont = cel.id+"='"+val+"'"
+									}
+									let vvs = {id:bipInsAid.id,key:key,cont:cont}
+									InsAidModule.fetchInsDataByCont(vvs);
+								}
+							}
+						}else{
+							let rtn = this.aidValues.get(key);
+							if(rtn){
+								bipInsAid.values[0] = rtn;
+								bipInsAid.makeShow();
+								val = bipInsAid.showV;
+							}
+						}
+					} 
+				}
+			}
+		}else{
+		}
+		return val;
+	}
+	get aidmaps(){
+		return InsAidModule.aidInfos;
+	}
+
+	get inProcess(){
+		return InsAidModule.inProcess;
+	}
+	get aidValues(){
+		return InsAidModule.aidValues;
 	}
 
 	@Watch("pdList")

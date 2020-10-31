@@ -77,7 +77,7 @@ export default class appReport extends Vue {
 	totalPage: number = 0;
 	pageSize:number = 15;
 
-	isMap:boolean = true;//是否是地图展示页面
+	isMap:boolean = false;//是否是地图展示页面
  
 	get showCells(){
 		if(this.dsm_cont.ccells){
@@ -155,6 +155,9 @@ export default class appReport extends Vue {
 						this.loading = false;
 						console.log(err);
 					});
+				if(this.uriParam.pbds.ismap){
+					this.isMap = true;
+				}
 			}
 			
 		}
@@ -194,6 +197,10 @@ export default class appReport extends Vue {
 		}
 	}
 	getListDataFromNet(pageNum: number, pageSize: number) {
+		if(this.isMap){
+			pageNum = 1;
+			pageSize = 30000;
+		}
 		this.qe.page.currPage = pageNum
 		this.qe.page.pageSize = pageSize
 		this.loading = true;
