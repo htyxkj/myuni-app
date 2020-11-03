@@ -12,13 +12,13 @@
 				</template>
 				<view class="padding">
 					<view class="title">{{articleData.title}}</view>
-					<view class="text-gray text-xl">
+					<view class="text-gray text-xl padding-top">
 						<view class="flex justify-start">
 							<view>{{articleData.smakename}}</view>
 							<view class="padding-left-xl">{{articleData.mkdate}}</view>
 						</view>
 					</view>
-					<view v-html="articleData.content" @click="previewImage($event)"></view>
+					<view v-html="articleData.content" @click="previewImage"></view>
 					<view class="padding text-center">
 						<button class="cu-btn round lines-blue" :class="[my_like ==0?'lines-gray':'lines-blue']" @click="doLike">
 							<text class="cuIcon-appreciate"></text>{{like_num}}&nbsp;&nbsp;&nbsp;赞
@@ -242,7 +242,6 @@
 		 * 文章内容点击
 		 */
 		previewImage (e:any) {
-			console.log(e)
 			if (e.target.nodeName == 'IMG') {
 				let url = e.target.currentSrc;
 				let item = {

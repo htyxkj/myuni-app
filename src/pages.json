@@ -101,7 +101,10 @@
             "path" : "pages/editunit/editunit",
             "style" : {}
         }
-
+        ,{
+            "path" : "pages/gps/gps",
+            "style" : {}
+        }
 		/***********************************灵活用工平台START*************************************/
         ,{
             "path" : "pages/alone/flexible/registered/registered",//灵活用工平台
@@ -169,11 +172,8 @@
         ,{
             "path" : "pages/alone/mine/exam/doExam",
             "style" : {}
-        }
-        ,{
-            "path" : "pages/gps/gps",
-            "style" : {}
-        }
+		}
+		/***********************************张矿微平台START*************************************/
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -7,6 +7,12 @@
 		</cu-custom>
 		<div :id="tMapDiv" class="TMap"></div>
 		<view>
+			<!-- <view class="padding-lr">
+				<view class="cu-form-group" style="border: 1px solid #c7c7c7">
+					<input placeholder="查询位置" name="input"></input>
+					<text class='cuIcon-search text-orange'></text>
+				</view>
+			</view> -->
 			<view class="padding-lr">
 				<view class="solid-bottom padding">
 					<text >当前位置</text>
@@ -40,6 +46,7 @@ export default class MAP extends Vue {
 	disabled:boolean = false // 非编辑
 	gps:any="";
 	markerPoint:any = null;
+	isZoom:boolean =false;
 	async onLoad(option: any) {
 		this.methordName = option.methordName;
 		let ds = option.ds;
@@ -64,8 +71,10 @@ export default class MAP extends Vue {
         //添加缩放平移控件
 		this.tMap.addControl(control);
 		this.tMapGetH5GPS();
+		this.addMapZoomstart();
+		this.addMapZoomend();
 		if(!this.disabled)
-		this.addMapMousemove();
+			this.addMapMousemove();
 	}
 	//重新定位
 	refreshH5Gps(){
@@ -122,22 +131,51 @@ export default class MAP extends Vue {
 		uni.navigateBack({delta:1});
 	}
 
-	//在地图注册的鼠标滑动事件
+	//地图移动过程中触发此事件。
 	addMapMousemove() {
-		//移除在地图注册的鼠标滑动事件
 		this.removeMapMousemove();
-		this.tMap.addEventListener("mousemove", this.MapMousemove);
+		this.tMap.addEventListener("move", this.MapMousemove);
 	}
+	//移除地图移动事件
 	removeMapMousemove() {
-		//移除在地图注册的鼠标滑动事件
-		this.tMap.removeEventListener("mousemove", this.MapMousemove);
+		this.tMap.removeEventListener("move", this.MapMousemove);
 	}
 	MapMousemove(e:any) {
-		if(this.markerPoint){
+		if(this.markerPoint && this.isZoom){
 			this.markerPoint.setLngLat(this.tMap.getCenter())
 			let geocode = new T.Geocoder();
 			geocode.getLocation(this.tMap.getCenter(),this.searchResult);
 		}
+	}
+	//地图缩放结束事件
+	addMapZoomend(){
+		this.removeMapZoomend();
+		this.tMap.addEventListener("zoomend", this.MapZoomend);
+	}
+	removeMapZoomend(){
+		this.tMap.removeEventListener("zoomend", this.MapZoomend);
+	}
+	MapZoomend(){
+		if(this.markerPoint){
+			this.tMap.panTo(this.markerPoint.getLngLat())
+		}
+		this.isZoom = false;
+		setTimeout(() => {
+			this.addMapMousemove();
+			this.isZoom = true;
+		}, 1000);
+	}
+	//地图缩放开始
+	addMapZoomstart(){
+		this.removeMapZoomstart();
+		this.tMap.addEventListener("zoomstart", this.Mapzoomstart);
+	}
+	removeMapZoomstart(){
+		this.tMap.removeEventListener("zoomstart", this.Mapzoomstart);
+	}
+	Mapzoomstart(){
+		this.isZoom = true;
+		this.removeMapMousemove();
 	}
 
 	// checkOpenGps(){
