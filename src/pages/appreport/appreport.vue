@@ -136,6 +136,9 @@ export default class appReport extends Vue {
 			this.title = option.title ? option.title : 'billPage';
 			this.pbuid = option.pbuid;
 			this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
+			if(this.uriParam.pbds.ismap){
+				this.isMap = true;
+			}
 			if(this.uriParam){
 				this.loading = true;
 				await tools
@@ -155,9 +158,6 @@ export default class appReport extends Vue {
 						this.loading = false;
 						console.log(err);
 					});
-				if(this.uriParam.pbds.ismap){
-					this.isMap = true;
-				}
 			}
 			
 		}

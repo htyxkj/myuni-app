@@ -38,7 +38,9 @@ export default class MAP extends Vue {
 				break;
 			}
 		}
-		this.createdMap();
+		this.$nextTick(function(){
+			this.createdMap();
+		})
 	}
 	// 创建地图
   	createdMap(){
@@ -146,8 +148,10 @@ export default class MAP extends Vue {
 			}else{
 				if(!this.inProcess.get(aidKey)){
 					let res = await InsAidModule.fetchInsAid({ id: (bipInsAid.cl?300:200), aid: editName });
-					if(res.data.id ==0){
+					if(res.data && res.data.id ==0){
 						bipInsAid = res.data.data.data;
+					}else if(res){
+						bipInsAid = res;
 					}else{
 						return val;
 					}
