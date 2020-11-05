@@ -124,6 +124,7 @@
 		 * 下拉刷新
 		 */
 		async refresherTriggered(){
+			console.log("refresherTriggered")
 			this.refresher_triggered = true;
 			await this.initData(null);
 			setTimeout(() => {

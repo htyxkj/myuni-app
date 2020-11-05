@@ -15,9 +15,9 @@
 // export const BaseDBID = "01";
 
 // 征信管理平台
-export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
-export const BaseDBID = "01";
-export const ItemType = null;
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
+// export const BaseDBID = "01";
+// export const ItemType = null;
 
 // 搅拌站
 // export const BaseUri =  "http://120.79.16.71:8081/bip-erp/";
@@ -29,9 +29,9 @@ export const ItemType = null;
 // export const BaseDBID = "01";
 
 // export const BaseUri =  "http://127.0.0.1:801/bip-mine";
-// export const BaseUri =  "http://47.104.211.216:8089/bip-mine";
-// export const BaseDBID = "01";
-// export const ItemType = "mine";
+export const BaseUri =  "http://47.104.211.216:8089/bip-mine";
+export const BaseDBID = "01";
+export const ItemType = "mine";
 
 
 // export const BaseUri =  "http://192.168.3.16:9999/jd";

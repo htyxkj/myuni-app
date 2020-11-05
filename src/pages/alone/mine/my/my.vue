@@ -34,6 +34,14 @@
 				</view>
 			</view> -->
 		</view>
+		<view class="cu-bar bg-white solid-bottom margin-top " @tap="jumpIntegral(user.userCode,user.userName,myInfo.scm)">
+			<view class="action">
+				<text class="cuIcon-titles text-progress "></text>积分排名
+			</view>
+			<view class="align-end" style="margin-right: 10upx;">
+				<text class="cuIcon-right"></text>
+			</view>
+		</view>
  		<view class="cu-bar bg-white solid-bottom margin-top " @tap="modifyPassClick">
 			<view class="action">
 				<text class="cuIcon-titles text-red "></text>修改密码
@@ -55,11 +63,11 @@
 				<text class="cuIcon-titles text-blue "></text>退出系统
 			</view>
 		</view>
-		<view class="cu-bar bg-white solid-bottom margin-top">
+		<!-- <view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
 				<text class="cuIcon-titles text-progress "></text>关于我们
 			</view>
-		</view>
+		</view> -->
 		<view class="cu-modal" style="z-index: 100;" :class="mdPass?'show':''">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-red justify-end">
@@ -415,6 +423,13 @@
 					break;
 			}
 		}
+		/* 跳转至积分排名页面 */
+		jumpIntegral(usrcode:any,usrname:any,scm:any){
+			let url="/pages/alone/mine/scoreRank/scoreRank?usrcode="+usrcode+"&usrname="+usrname+"&scm="+scm;
+			uni.navigateTo({
+				url:url
+			})
+		}
 		/**
 		 * 打开收藏页面
 		 */
@@ -433,7 +448,7 @@
 				'url':url,
 			})
 		}
-
+		
 		/**
 		 * 查询当前用户积分
 		 */
