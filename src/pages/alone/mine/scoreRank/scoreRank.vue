@@ -6,7 +6,7 @@
 				<view class="header-title">{{title}}</view>
 			</block>
 			<block slot="right">
-				<view class="header-title" @tap="jumpScoreDetail()">积分明细</view>
+				<view class="padding-right" @tap="jumpScoreDetail()">积分明细</view>
 			</block>
 		</cu-custom>
 		<view class="main">

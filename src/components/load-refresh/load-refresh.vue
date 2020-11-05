@@ -121,6 +121,7 @@
 			// 单次加载结束
 			loadOver() {
 				this.loading = false
+				this.coverTouchend()
 			},
 			// 回弹效果
 			coverTouchstart(e) {

@@ -1,3 +1,4 @@
+
 <template>
 	<view class="">
 		<!-- 顶部标题栏及返回 -->
@@ -7,19 +8,22 @@
 			</block>
 		</cu-custom>
 		<view class="main">
-			<scroll-view class="page" scroll-y refresher-enabled @scrolltolower="reqNexPageScoreDeatil" @refresherrefresh="refresherTriggered" :refresher-triggered="refresher_triggered">
-				<view class="main-box" v-for="(item,index) in item" :key="index">
-					<view class="score-datail">
-						<view class="hpdate datail">{{item.hpdate}}</view>
-						<view class="type datail">{{item.name}}</view>
-						<view class="score datail">+{{item.num}}分</view>
-					</view>
-					<view class="message">
-						您本次的积分有增长哦~请保持良好的学习习惯，继续挣取积分
+			<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'rgb(225, 225, 225)'" 
+				:heightReduce="100" :pageNo="page_num" :totalPageNo="total_page" @loadMore="getNextPage" @refresh="refresh">
+				<view slot="content-list">
+					<view class="main-box" v-for="(item,index) in item" :key="index">
+						<view class="score-datail">
+							<view class="hpdate datail">{{item.hpdate}}</view>
+							<view class="type datail">{{item.name}}</view>
+							<view class="score datail">+{{item.num}}分</view>
+						</view>
+						<view class="message">
+							您本次的积分有增长哦~请保持良好的学习习惯，继续挣取积分
+						</view>
 					</view>
 				</view>
-				<view class="bottom-msg" v-if="isHide">----------我是有底线的----------</view>
-			</scroll-view>
+			</load-refresh>
+			<!-- </scroll-view> -->
 		</view>
 	</view>
 </template>
@@ -38,25 +42,28 @@ import comm from '@/static/js/comm.js';
 let commURL: any = comm;
 import {Vue,Provide,Prop,Component} from 'vue-property-decorator';
 import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
+import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 @Component({
-	
+	components:{loadRefresh}
 })
 export default class scoreDetail extends Vue {
 	title:string = "积分明细";
 	usrcode:string = "";
 	item:any = [];
 	page:PageInfo = new PageInfo();
-	isHide:boolean = false;
-	refresher_triggered:boolean = false;//下拉刷新状态
+	
+	page_num:number = 1;//当前页数
+	total_page:number = 0;//总页数
 	onLoad(e:any){
 		this.usrcode = e.usrcode;
+		this.page_num = 1;
 		this.reqScoreDeatil()
 	}
 	// 获取积分数据
 	async reqScoreDeatil(){
 		console.log("获取积分数据");
 		let qe:QueryEntity = new QueryEntity('','','','createtime desc');
-		qe.page.currPage = this.page.currPage++;
+		qe.page.currPage = this.page_num;
 		qe.page.pageSize = 10;
 		let qCont = new QueryCont('usrcode',this.usrcode,12,);
 		qCont.setContrast(0);
@@ -64,38 +71,39 @@ export default class scoreDetail extends Vue {
 		oneCont.push(qCont);
 		qe.cont = "~["+JSON.stringify(oneCont)+"]";
 		let vv:any = await tools.getBipInsAidInfo('SCOREDETAIL',210,qe);
-		console.log(qe);
-		console.log(vv)
 		if(vv.data.id == 0){
 			let req = vv.data.data.data;
-			console.log(vv)
-			this.page.total = req.page.total;
+			this.page = req.page;
+			let total = this.page.total;
+			let pageSize =  this.page.pageSize;
+			if(total < pageSize){
+				this.total_page = 1;
+			}else{
+				this.total_page = total/pageSize
+				if(total%pageSize >0){
+					this.total_page++;
+				}
+			}
 			this.item = this.item.concat(req.values);
-			console.log(this.item);
 		}
-		this.refresher_triggered = false;	
+		setTimeout(() => {
+			let lrf: any = this.$refs.loadRefresh;
+			if(lrf)
+				lrf.loadOver();
+		}, 500);
 	}
 	
 	// 滑动到底部  上拉加载 获取下一页数据
-	reqNexPageScoreDeatil(){
-		if(this.page.currPage*10 >= this.page.total){
-			this.isHide = true;
-		}else {
-			this.reqScoreDeatil();
-		}
-		console.log("滑动到底部了")
+	getNextPage(){ 
+		this.page_num ++ ;
+		this.reqScoreDeatil();  
 	}
 	/* 下拉刷新 */
-	refresherTriggered(){
-		console.log("下拉刷新")
+	refresh(){
+		this.page_num = 1;
 		this.item = [];
-		this.isHide = false;
 		this.page.currPage = 1;
-		this.refresher_triggered = true;
-	  this.reqScoreDeatil();
-		// setTimeout(()=>{
-		// 	this.refresher_triggered = false;	
-		// },100)
+	  	this.reqScoreDeatil();
 	}
 }
 </script>
