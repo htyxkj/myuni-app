@@ -17,9 +17,9 @@
 				<view class="flex-sub bg-gray padding-sm margin-xs radius">
 					<button class="cu-btn cuIcon bg-green text-xxl" @click="addLine"><text class="cuIcon-add"></text></button>
 				</view>
-				<view class="flex-sub bg-gray padding-sm margin-xs radius">
+				<!-- <view class="flex-sub bg-gray padding-sm margin-xs radius">
 					<button class="cu-btn cuIcon bg-green text-xxl" @click="checkEdit"><text class="cuIcon-qrcode"></text></button>
-				</view>
+				</view> -->
 			</view>
 		</view>
 	</view>

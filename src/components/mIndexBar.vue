@@ -38,9 +38,8 @@
 		tabcurColor:string = 'text-green'
 		menuArry:any =[];
 		@Prop({
-			default:0,
-			type:Number
-		}) tbI!:number
+			default:0
+		}) tbI!:any
 		
 		mounted(){
 			this.tabcur = this.tbI;

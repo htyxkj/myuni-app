@@ -34,11 +34,11 @@
 				<text class="cuIcon-titles text-blue "></text>退出系统
 			</view>
 		</view>
-		<view class="cu-bar bg-white solid-bottom margin-top">
+		<!-- <view class="cu-bar bg-white solid-bottom margin-top">
 			<view class="action">
 				<text class="cuIcon-titles text-progress "></text>关于我们
 			</view>
-		</view>
+		</view> -->
 		<!-- <button class="bg-blue margin-tb-sm lg" >退出登录</button> -->
 		<!--修改密码-->
 		<!-- <mLoad :png="'/static/gs.png'" :msg="'处理中...'" v-if="canExec"></mLoad> -->

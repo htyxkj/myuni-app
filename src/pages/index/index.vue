@@ -66,7 +66,7 @@
 				return;
 			}else{
 				this.ifDefaultIndex = true;
-				if(!this.loginState){
+				if(!this.loginState || options.corpId){
 					singIn.ServApi.init(options,this.loginOk,this.loginFailure);
 				}
 				this.olOption = options

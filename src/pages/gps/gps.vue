@@ -30,9 +30,14 @@
 </template>
 
 <script lang="ts">
+let dd = require( 'dingtalk-jsapi');
 import { Vue, Provide, Component, Prop, Watch } from 'vue-property-decorator';
 import mLoad from '@/components/mLoad.vue';//加载页面
 import {T} from "./js/TMap"
+import { GlobalVariable } from '@/classes/tools/ICL';
+import { GPSUtil } from "./js/GPSUtil";
+let Gps = GPSUtil.GPS;
+import {singIn} from '@/pages/index/singIn/singIn'
 @Component({components:{mLoad}})
 export default class MAP extends Vue {
 	loading:any = false;
@@ -48,6 +53,7 @@ export default class MAP extends Vue {
 	markerPoint:any = null;
 	isZoom:boolean =false;
 	async onLoad(option: any) {
+		await singIn.ServApi.initDDJSTicket();
 		this.methordName = option.methordName;
 		let ds = option.ds;
 		if(ds == "true")
@@ -83,6 +89,7 @@ export default class MAP extends Vue {
 	}
 	//获取H5定位信息
 	tMapGetH5GPS(){
+		let loginType = uni.getStorageSync("loginType");			
 		this.tMap.clearOverLays();
 		let _this = this;
 		if(this.gps){
@@ -93,14 +100,47 @@ export default class MAP extends Vue {
 			this.loading = true;
 			var lo = new T.Geolocation();
 			let fn = function (e:any) {
-				if(!e.lnglat){
-					let msg:any = _this.$refs['msg'];
-					msg.error({background: true,content:"请检查定位服务是否开启！"})
+				if(!e.lnglat){//H5 定位没有获取到位置信息  判断是否是钉钉  用钉钉的API 再获取一次
+					if(loginType == GlobalVariable.LOGIN_TYPE_DING){
+						dd.ready(function() {
+							dd.device.geolocation.get({
+								onSuccess: function (result:any) {   
+									if(result.errorCode ==0 || result.resultCode == 0){
+										let res:any = null;
+										if(dd.env.platform == 'android'){
+											let resGPS:any = Gps.gcj02_To_Gps84(result.latitude,result.longitude)
+											res = {longitude:resGPS[1],latitude:resGPS[0]}; 
+										}else if(dd.env.platform =='ios'){
+											res = {longitude:result.longitude,latitude:result.latitude}; 
+										}
+										_this.receiveGPS(res);
+									}else{
+										let message = result.errorMessage;
+										let cc = message.split("详细信息:");
+										if(cc.length>=1){
+											message = cc[1];
+										}
+										let msg:any = _this.$refs['msg'];
+										msg.error({background: true,content:message})
+									}
+									_this.loading = false;
+								},
+								onFail: function (err:any) {
+									alert('dd error: ' +JSON.stringify(err)); 
+									_this.loading = false;
+								}
+							})
+						});
+					}else{
+						let msg:any = _this.$refs['msg'];
+						msg.error({background: true,content:"请检查定位服务是否开启！"})
+						_this.loading = false;
+					}
 				}else{
 					let res = {longitude:e.lnglat.lng,latitude:e.lnglat.lat}; 
 					_this.receiveGPS(res);
+					_this.loading = false;
 				}
-				_this.loading = false;
 			}
 			let  options ={maximumAge:600,timeout:5000} 
 			lo.getCurrentPosition(fn,options);

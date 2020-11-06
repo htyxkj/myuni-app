@@ -30,39 +30,38 @@ export namespace singIn {
 				this.loginFailure();
 			}
 		}
+		async initDDJSTicket(){
+			await this.getDDJSTicket();
+		}
 		//钉钉内免密登录
 		async loginDD(){
 			//禁用iOS Webview弹性效果
             // dd.ui.webViewBounce.disable({onSuccess: function() {},onFail: function() {}});
-            if(this.loginState){
-                console.log("已登录状态！")
-            }else{
-                this.corpId =this.route.corpId   //企业唯一码  
-                this.appId = this.route.appId;   //默认00
-                this.agentId = this.route.agentId;//应用id
-                let ddConfig = {corpId:this.corpId,agentId:this.agentId,bipAppid:this.appId};
-				uni.setStorageSync('ddConfig', JSON.stringify(ddConfig));
-				let _this =this;
-                await dd.ready(function() {
-                    dd.runtime.permission.requestAuthCode({
-						corpId: _this.corpId,
-						onSuccess: function(info:any) {
-							_this.loginDDRemote(info.code)
-                            // _this.getDDJSTicket(); 
-						},
-						onFail : function(err:any) {
-							uni.showToast({
-								title: '系统错误，请联系管理员！',
-								icon:"none"
-							})
-							uni.reLaunch({'url':'/pages/login/login'});
-						}
-					},function() { 
-							uni.reLaunch({'url':'/pages/login/login'});
-						}
-					);
-				});
-			}
+			this.corpId =this.route.corpId   //企业唯一码  
+			this.appId = this.route.appId;   //默认00
+			this.agentId = this.route.agentId;//应用id
+			let ddConfig = {corpId:this.corpId,agentId:this.agentId,bipAppid:this.appId};
+			uni.setStorageSync('ddConfig', JSON.stringify(ddConfig));
+			let _this =this;
+			await dd.ready(function() {
+				dd.runtime.permission.requestAuthCode({
+					corpId: _this.corpId,
+					onSuccess: function(info:any) {
+						_this.loginDDRemote(info.code)
+						_this.getDDJSTicket();
+					},
+					onFail : function(err:any) {
+						uni.showToast({
+							title: '系统错误，请联系管理员！',
+							icon:"none"
+						})
+						uni.reLaunch({'url':'/pages/login/login'});
+					}
+				},function() { 
+						uni.reLaunch({'url':'/pages/login/login'});
+					}
+				);
+			});
 		}
 		async loginDDRemote(code:any) { 
             var logindata = {
@@ -109,7 +108,56 @@ export namespace singIn {
 				uni.reLaunch({'url':'/pages/login/login'});
             }
 		}
-		
+		async getDDJSTicket(){ 
+			let ddConfig = uni.getStorageSync('ddConfig')
+			if(!ddConfig)
+				return;
+			ddConfig = JSON.parse(ddConfig);
+			let url =decodeURIComponent(uni.getStorageSync("location.href")); 
+			url =encodeURIComponent(url); 
+			let ddCorpId = ddConfig["corpId"];
+			let ddAgentId = ddConfig["agentId"]; 
+			let bipAppid = ddConfig["bipAppid"]; 
+			var data:any = { 
+				url:url, 
+				agentId:ddAgentId, 
+				corpId:ddCorpId,
+				bipAppid:bipAppid,
+			}  
+			var res:any = await  BIPUtil.ServApi.getDDJSAPI_TICKET(data); 
+			if(res.data.id != undefined){ 
+				if(res.data.id == 0){
+					let ddCfg = JSON.parse(res.data.message); 
+					await dd.runtime.permission.requestAuthCode({
+						corpId: ddCorpId,
+						onSuccess: function(info:any) {
+							dd.config({
+								agentId: ddAgentId, // 必填，微应用ID
+								corpId: ddCorpId,//必填，企业ID
+								timeStamp:ddCfg.timeStamp, // 必填，生成签名的时间戳
+								nonceStr: ddCfg.nonceStr, // 必填，生成签名的随机串
+								signature: ddCfg.DDJSTICKET, // 必填，签名
+								type:0,   //选填。0表示微应用的jsapi,1表示服务窗的jsapi；不填默认为0。该参数从dingtalk.js的0.8.3版本开始支持
+								jsApiList : [
+									'biz.map.locate',
+									'biz.map.view',
+									'device.geolocation.get',
+									'device.geolocation.start',
+									'device.geolocation.stop',
+									'biz.map.search',
+								] // 必填，需要使用的jsapi列表，注意：不要带dd。
+							}); 
+						},
+						onFail : function(err:any) {
+							alert('dd error: ' +JSON.stringify(err));
+						}
+					});
+					dd.error(function(error:any){ 
+						alert('dd error: ' +JSON.stringify(error));
+					});
+				} 
+			} 
+		}
 
 		get loginState(){
 			let v = LoginModule.loginState

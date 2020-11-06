@@ -6,6 +6,7 @@
 		</cu-custom>		
 		<view class="margin-lr-sm margin-tb-sm">
 			<bip-lay v-if="lay.binit" :layout="lay" :key="'-1'"></bip-lay>
+			<bip-work-approver-set class="margin-tb-sm"></bip-work-approver-set>
 			<view class="padding-bottom-xl margin-bottom-xl"></view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
 		</view>
@@ -27,7 +28,7 @@ import uniCard from '@/components/uni-ui/uni-card/uni-card.vue'
 import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue'
 import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue'
 import BipWork from  '@/components/cwork/BipWork.vue';
-
+import BipWorkApproverSet from  '@/components/cwork/BipWorkApproverSet.vue';
 
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
@@ -46,7 +47,7 @@ import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
 import CeaPars from "@/classes/cenv/CeaPars";
 @Component({
-	components: { mLoad,bipLay,bipMenuBar,bipBillBar,uniCard,BipWork}
+	components: { mLoad,bipLay,bipMenuBar,bipBillBar,uniCard,BipWork,BipWorkApproverSet}
 })
 export default class appInfo extends Vue {
 	vueId: string = Tools.guid();

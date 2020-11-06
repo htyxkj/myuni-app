@@ -9,6 +9,7 @@
 		<template v-if="initUIOK">
 			<view class="margin-lr-sm margin-tb-sm">
 				<bip-lay v-if="lay.binit" :layout="lay"></bip-lay>
+				<bip-work-approver-set class="margin-tb-sm"></bip-work-approver-set>
 				<view class="padding-bottom-xl margin-bottom-xl"></view>
 			</view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
@@ -33,7 +34,7 @@ import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue';
 import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue';
 import BipWork from  '@/components/cwork/BipWork.vue';
 import BipWorkProcess from  '@/components/cwork/BipWorkProcess.vue';
-
+import BipWorkApproverSet from  '@/components/cwork/BipWorkApproverSet.vue';
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
 
@@ -52,7 +53,7 @@ const DataUtil = dataTool.utils;
 
 import CeaPars from "@/classes/cenv/CeaPars";
 @Component({
-	components: { mLoad, bipLay, bipMenuBar, bipBillBar , BipWork, BipWorkProcess}
+	components: { mLoad, bipLay, bipMenuBar, bipBillBar , BipWork, BipWorkProcess,BipWorkApproverSet}
 })
 export default class appDetail extends Vue {
 	vueId: string = Tools.guid();
