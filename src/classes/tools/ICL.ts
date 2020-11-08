@@ -13,6 +13,7 @@ export const GlobalVariable = Object.assign({},{
     APIID_AID_ASSIST_DATA:"assistdata",
     APIID_CELLPARAMS:"cellparams",
     APIID_SAVEDATA:"savedata",
+    APIID_SAVEBCUSTDATA:"savebcustdata",
     APIID_QUERY:"finddata",
     APIID_QUERYRPT:"rpt",
     APIID_BUID:"buid",

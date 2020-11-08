@@ -9,8 +9,6 @@ import CeaPars from '../cenv/CeaPars';
 import { baseUtils } from '@/classes/api/baseutils'
 let tools = baseUtils.tools;
 import BipScriptProc from "./BipScriptProc";
-import { GlobalVariable } from "../tools/ICL";
-import { DateUtils } from "../tools/DateUtils";
 export default class CDataSet {
 	ccells: Cells;
 	cdata: CData;

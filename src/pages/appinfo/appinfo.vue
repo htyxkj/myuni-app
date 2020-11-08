@@ -6,7 +6,7 @@
 		</cu-custom>		
 		<view class="margin-lr-sm margin-tb-sm">
 			<bip-lay v-if="lay.binit" :layout="lay" :key="'-1'"></bip-lay>
-			<bip-work-approver-set class="margin-tb-sm"></bip-work-approver-set>
+			<bip-work-approver-set v-if="bcust" :dsm="dsm" class="margin-tb-sm" @custSelUserOk="custSelUserOk"></bip-work-approver-set>
 			<view class="padding-bottom-xl margin-bottom-xl"></view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
 		</view>
@@ -69,6 +69,10 @@ export default class appInfo extends Vue {
 	lay: BipLayout = new BipLayout('');
 
 	cea:CeaPars = new CeaPars({});
+	
+	bcust:boolean = false;//自定义审批流
+	bcustSPUser:any =[];//自定义审批流审批人员
+	bcustCSUser:any = [];//自定义审批流审批结束抄送人员
 
 	execCmd(btn: any) {
 		let cmd = btn.cmd;
@@ -135,6 +139,7 @@ export default class appInfo extends Vue {
 		}
 		let cr = DataUtil.createRecord(this.dsm,this.env);
 		this.dsm.addRecord(cr);
+		this.initCea();
 	}
 
 	copyCRecord(){
@@ -153,6 +158,12 @@ export default class appInfo extends Vue {
 			uni.showToast({title:bk[1],icon:"none"});
 			return ;
 		}
+		if(this.bcust){//自定义审批流 判断是否添加审批人员
+			if(this.bcustSPUser.length == 0){
+				uni.showToast({title:"审批人未定义",icon:"none"});
+				return;
+			}
+		}
 		let cr = this.dsm.currRecord;
 		if((cr.c_state & icl.R_EDITED) > 0){
 			tools
@@ -162,14 +173,15 @@ export default class appInfo extends Vue {
 					let rtn = res.data;
 					if (rtn.id == 0) {
 						let vv = rtn.data;
-						Object.keys(vv).forEach((key:string)=>{
-							console.log(vv[key],key)
-							this.dsm.cellChange(vv[key],key);
-							let methordKey =this.dsm.ccells.obj_id+"_"+key
+						let ks = Object.keys(vv);
+						for(var i=0;i<ks.length;i++){
+							this.dsm.cellChange(vv[ks[i]],ks[i]);
+							let methordKey =this.dsm.ccells.obj_id+"_"+ks[i]
 							uni.$emit(methordKey)
-						})
+						}
 						this.dsm.setState(icl.R_POSTED);
 						uni.showToast({title:'保存成功！'});
+						this.saveBCustUsers();
 					}
 				})
 				.catch((e: any) => {
@@ -177,7 +189,6 @@ export default class appInfo extends Vue {
 				});
 		}
 	}
-
 	/**
      * 审批流提交
      */
@@ -262,9 +273,70 @@ export default class appInfo extends Vue {
 		}
 		
 	}
-	
-	
+	//初始化审批流信息 查询是否是自定义审批流
+	initCea(){
+		if(this.dsm && this.dsm.opera){
+			let crd = this.dsm.currRecord
+			let params = {
+				sid: crd.data[this.dsm.opera.pkfld],
+				sbuid: crd.data[this.dsm.opera.buidfld],
+				statefr: crd.data[this.dsm.opera.statefld],
+				stateto: crd.data[this.dsm.opera.statefld],
+				sorg:crd.data[this.dsm.opera.sorgfld],
+				spuserId: ""
+			}  
+			this.cea = new CeaPars(params)
+			tools.getCheckInfo(this.cea,33).then((res:any)=>{
+				if(res.data.id == 0){
+					this.bcust = res.data.data.info.bcust;
+				}
+			}).catch((err:any)=>{
+				uni.showToast({
+					title: err+";BaseApplet submint",
+					icon:"none"
+				})
+			}).finally(()=>{
 
+			});
+		}
+	}
+	//自定义审批流勾选完人
+	custSelUserOk(res:any){
+		if(res){
+			if(res.type == 0){
+				this.bcustSPUser =  res.users
+			}else {
+				this.bcustCSUser =  res.users
+			}
+		}
+	}
+	//保存自定义审批人抄送人
+	async saveBCustUsers(){
+		if(this.dsm && this.dsm.opera ){ 
+			let crd = this.dsm.currRecord
+			let params = {
+				sid: crd.data[this.dsm.opera.pkfld],
+				sbuid: crd.data[this.dsm.opera.buidfld],
+				bcustCSUser:this.bcustCSUser,
+				bcustSPUser:this.bcustSPUser,
+			}  
+			tools.saveBCustUser(params,50).then((res:any)=>{
+				if(res.data.id==0){
+					
+				}
+				console.log(res)
+			}).catch((err:any)=>{
+				uni.showToast({
+					title: err+";BaseApplet saveBCustUsers",
+					icon:"none"
+				})
+			}).finally(()=>{
+
+			});
+		}else{
+			console.log("DSM 数据缺失")
+		}
+	}
 	async initUIData(layCels: any) {
 		this.cells = layCels;
 		this.dsm = new CDataSet(this.cells[0]);

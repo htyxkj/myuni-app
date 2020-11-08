@@ -242,8 +242,9 @@ export default class appDetailSp extends Vue {
                             if(this.dsm.opera.smakefld){
                                 smakefld = crd.data[this.dsm.opera.smakefld];
                             }
-                        }
-                        this.dsm.ceaPars = this.cea
+						}
+						this.cea.bcust = data.bcust
+						this.dsm.ceaPars = this.cea
                         work.open(data,this.cea,smakefld);
                     }
                 }).catch((err:any)=>{

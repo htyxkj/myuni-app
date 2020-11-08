@@ -9,7 +9,7 @@
 		<template v-if="initUIOK">
 			<view class="margin-lr-sm margin-tb-sm">
 				<bip-lay v-if="lay.binit" :layout="lay"></bip-lay>
-				<bip-work-approver-set class="margin-tb-sm"></bip-work-approver-set>
+				<bip-work-approver-set v-if="bcust" :dsm="dsm" class="margin-tb-sm"  @custSelUserOk="custSelUserOk"></bip-work-approver-set>
 				<view class="padding-bottom-xl margin-bottom-xl"></view>
 			</view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
@@ -20,6 +20,7 @@
 			<!-- <bip-menu-bar @tabSelect="execCmd"></bip-menu-bar> -->
 			<bip-bill-bar @tabSelect="execCmd" :attr="3" :bmore="true"></bip-bill-bar>
 		</template>
+		<message ref="msg"></message>
 	</view>
 </template>
 
@@ -78,6 +79,9 @@ export default class appDetail extends Vue {
 	initUIOK:boolean = false;
 	
 	cea:CeaPars = new CeaPars({});
+	bcust:boolean = false;//自定义审批流
+	bcustSPUser:any =[];//自定义审批流审批人员
+	bcustCSUser:any = [];//自定义审批流审批结束抄送人员
 	
 	execCmd(btn: any) {
 		let cmd = btn.cmd;
@@ -177,22 +181,29 @@ export default class appDetail extends Vue {
 			uni.showToast({title:bk[1],icon:"none"});
 			return ;
 		}
+		if(this.bcust){//自定义审批流 判断是否添加审批人员
+			if(this.bcustSPUser.length == 0){
+				uni.showToast({title:"审批人未定义",icon:"none"});
+				return;
+			}
+		}
 		let cr = this.dsm.currRecord;
-		tools
-			.saveData(cr, this.uriParam.pcell, this.uriParam.pbuid)
+		tools.saveData(cr, this.uriParam.pcell, this.uriParam.pbuid)
 			.then((res: any) => {
 				console.log(res);
 				let rtn = res.data;
 				if (rtn.id == 0) {
 					let vv = rtn.data;
 					Object.keys(vv).forEach((key:string)=>{
-						console.log(vv[key],key)
 						this.dsm.cellChange(vv[key],key);
 						let methordKey =this.dsm.ccells.obj_id+"_"+key
 						uni.$emit(methordKey)
 					})
 					this.dsm.setState(icl.R_POSTED);
 					uni.showToast({title:'保存成功！'});
+					if(this.bcust){
+						this.saveBCustUsers()
+					}
 				}
 			})
 			.catch((e: any) => {
@@ -328,6 +339,7 @@ export default class appDetail extends Vue {
 					this.cea = new CeaPars(params);
 					this.dsm.ceaPars = this.cea;
 					this.changeStateImg();
+					this.initCea();
 				}
 			}
 			this.loading = false;
@@ -377,7 +389,7 @@ export default class appDetail extends Vue {
 		}
 	}
 
-	initUIData(layCels: any) {
+	async initUIData(layCels: any) {
 		this.cells = layCels;
 		this.dsm = new CDataSet(this.cells[0]);
 		this.dsm_cont = new CDataSet(this.cells[0]);
@@ -385,12 +397,12 @@ export default class appDetail extends Vue {
 			this.ds_ext[i - 1] = new CDataSet(this.cells[i]);
 		}
 		let buid = this.uriParam.pflow;
-		tools.getBULinks(buid).then((res: any) => {
+		await tools.getBULinks(buid).then((res: any) => {
 			let rtn1 = res.data;
 			if (rtn1.id == 0) {
 				let ope = rtn1.data.opt;
 				this.dsm.opera = ope;
-				this.dsm.initContrlIndex();
+				this.dsm.initContrlIndex();		
 			}
 		});
 
@@ -400,7 +412,63 @@ export default class appDetail extends Vue {
 		this.initUIOK = true;
 		console.log(this.uriParam.playout,this.qcont,'99999999')
 	}
-	
+	//初始化审批流信息 查询是否是自定义审批流
+	initCea(){
+		if(this.dsm){
+			tools.getCheckInfo(this.dsm.ceaPars,33).then((res:any)=>{
+				if(res.data.id == 0){
+					this.bcust = res.data.data.info.bcust;
+				}
+			}).catch((err:any)=>{
+				uni.showToast({
+					title: err+";BaseApplet submint",
+					icon:"none"
+				})
+			}).finally(()=>{
+
+			});
+		}
+	}
+	//自定义审批流勾选完人
+	custSelUserOk(res:any){
+		if(res){
+			if(res.type == 0){
+				this.bcustSPUser =  res.users
+			}else {
+				this.bcustCSUser =  res.users
+			}
+		}
+	}
+	//保存自定义审批人抄送人
+	async saveBCustUsers(){
+		if(this.dsm && this.dsm.opera ){ 
+			let crd = this.dsm.currRecord
+			let params = {
+				sid: crd.data[this.dsm.opera.pkfld],
+				sbuid: crd.data[this.dsm.opera.buidfld],
+				bcustCSUser:this.bcustCSUser,
+				bcustSPUser:this.bcustSPUser,
+			}  
+			tools.saveBCustUser(params,50).then((res:any)=>{
+				if(res.data.id ==-1){
+                	let msg:any = this.$refs['msg'];
+					msg.error({background: true,content:"保存审批人，抄送人出错！"})
+				}
+			}).catch((err:any)=>{
+				console.log(err)
+				uni.showToast({
+					title: err+";BaseApplet saveBCustUsers",
+					icon:"none"
+				})
+			}).finally(()=>{
+
+			});
+		}else{
+			console.log("DSM 数据缺失")
+		}
+	}
+
+
 	@Watch('initUIOK')
 	initUIOKChange(){
 		if(this.initUIOK&&this.qcont){

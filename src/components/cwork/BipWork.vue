@@ -184,6 +184,7 @@ export default class BipWork extends Vue{
         this.nodeList = info.list
         this.cea = cea
         this.chkInfos = info 
+        this.cea.bcust = this.chkInfos.bcust;
         this.user = LoginModule.user;
         if(!this.user){
             return;

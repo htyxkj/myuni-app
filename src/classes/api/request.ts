@@ -103,6 +103,16 @@ export namespace BIPUtil {
 			param = Object.assign(param, { pcell: pcellId, buid: buid, jsonstr: JSON.stringify(record) });
 			return this.getFromServer(param);
 		}
+		/**
+		 * @description 保存自定义审批人抄送人数据
+		 * @param key 单据主键
+		 * @param sbuid 业务号
+		 * @param bcustspuser 自定义审批人
+		 * @param bcustcsuser 自定义抄送人
+		 */
+		saveBCustUser(ceaParam:any,id:any){ 
+			return this.getFromServer(tools.getSaveBCustUserParam(ceaParam,id));
+		}
 
 		/**
 		 * @description 执行查询普通

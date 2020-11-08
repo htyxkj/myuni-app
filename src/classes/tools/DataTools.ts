@@ -61,6 +61,7 @@ export namespace dataTool {
 
 		//初始化M数据
 		initModal(cds: CDataSet, isNew: boolean = true): CRecord {
+			debugger
 			let ccells: Cells = cds.ccells;
 			let mode: CRecord = new CRecord();
 			if (ccells == null) {

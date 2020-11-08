@@ -12,6 +12,7 @@ export default class CeaPars{
     schk_mk:string = ''
     sorg:string = ''
     signature:string = ''
+    bcust:boolean = false
     constructor(param:any){
         const options={
             sid:'',
@@ -26,7 +27,8 @@ export default class CeaPars{
             ckd:false,
             schk_mk:'',
             sorg:'',
-            signature:''
+            signature:'',
+            bcust:false
           }
         Object.assign(this,options,param);
     }

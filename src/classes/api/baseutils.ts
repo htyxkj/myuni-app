@@ -144,6 +144,21 @@ export namespace baseUtils {
 			return checkParasm
 		}
 		/**
+		 * @description 保存自定义审批人，抄送人
+		 * @param ceaParam 审核信息
+		 * @param id 参数ID 50保存，51查询
+		 */
+		getSaveBCustUserParam(ceaParam:any,id:number){
+			let checkParasm = {
+				dbid:commURL.BaseDBID,
+				usercode: JSON.parse(uni.getStorageSync('user') + '').userCode,
+				apiId: GlobalVariable.APIID_SAVEBCUSTDATA,
+				chkid:id,
+				data:JSON.stringify(ceaParam)
+			}
+			return checkParasm
+		}
+		/**
 		 * @description 获取对象统计参数
 		 * @param qe 查询条件
 		 * @param groupfilds 分组字段
