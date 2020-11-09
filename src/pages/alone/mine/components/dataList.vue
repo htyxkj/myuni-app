@@ -74,16 +74,14 @@
 					</template>
 				</template>
 				<template v-else-if="item.video.length>0">
-					<!-- <view>
-						<video :ref="'video'+item.sid" :id="'video'+item.sid" @play="videoPay(item)" style="width:100%" :src="item.video[0]"></video>
-					</view> -->
-					<view class="cu-card case padding-left padding-right" @tap="gotoarticle(item)">
+					<view v-if="item.fristVideo" class="cu-card case padding-left padding-right" @tap="gotoarticle(item)">
 						<view class="cu-item shadow" style="margin:0px">
 							<view class="image">
 								<image :src="item.video[0]" class="my-image"  mode="widthFix"></image>
-								<view class="cu-tag bg-blue">
+								<!-- 右上角播放 -->
+								<!-- <view class="cu-tag bg-blue">
 									<text class="cuIcon-playfill"></text>
-								</view>
+								</view> -->
 								<view class="cu-bar bg-shadeBottom"> 
 									<text class="text-cut">{{item.title}}</text>
 								</view>
@@ -101,6 +99,37 @@
 										</view>
 									</view>
 								</view>
+							</view>
+						</view>
+					</view>
+					<view v-else>	
+						<view class="flex justify-start" @tap="gotoarticle(item)">
+							<view class="padding-sm margin-xs">
+								<view>
+									<view class="my-text-black">{{item.title}}</view>
+									<view style="height: 40upx;"></view>
+									<view class="text-gray text-sm">
+										<view class="flex justify-start">
+											<view>{{item.smakename}}</view>
+											<view class="padding-left-xl">{{item.mkdate}}</view>
+											<view class="padding-left-xl">
+												<text class="cuIcon-attentionfill"></text>
+												{{item.pageviews}}
+											</view>
+										</view>
+									</view>
+								</view>
+							</view>
+							<view class="padding-sm margin-xs" v-if="item.video.length>0">
+								<!-- <view class="cu-card case">
+									<view class="cu-item shadow">
+										<view class="image">
+											<image :src="item.video[0]" class="listImg1" mode="aspectFit"></image>
+											<view class="cu-bar bg-shadeBottom"> <text class="text-cut">我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。我已天理为凭，踏入这片荒芜，不再受凡人的枷锁遏制。</text></view>
+										</view>
+									</view>
+								</view> -->
+								<image mode="aspectFit" class="listImg1" :src="item.video[0]"></image>
 							</view>
 						</view>
 					</view>
@@ -135,7 +164,8 @@
 		@Prop({ default:0, type:Number }) type!:Number;//类型 0：新闻；1：视频
 		@Prop() type_sid!:string;//当前选中类型
 		@Prop() isrecommend!:any; //是否是推荐
-		@Prop() input_condition!:any;//文本框条件
+		@Prop() input_condition!:any;//文本框条件		
+		isFristVoid:boolean = true;//推荐页面数据中的视频是否是第一条
 		page_num:number = 1;//当前页数
 		total_page:number = 0;//总页数
 		tjInput:any = "";//条件
@@ -179,6 +209,9 @@
 			let qCont = null;
 			let vv:any = null;
 			if(rec){//推荐 单独查询
+				if(this.page_num == 1){
+					this.isFristVoid = true;
+				}
 				let btn1 = new BipMenuBtn("DLG","查询推荐数据")
 				btn1.setDlgType("D")
 				btn1.setDlgCont("mine.serv.ArticleServlet*211;0;0");//修改文章浏览量
@@ -247,7 +280,7 @@
 		compositionData(cc:any){
 			let _articleData = [];
 			for(let i=0;i<cc.length;i++){
-					let j1:any = {sid:"",title:"",description:"",smakename:"",mkdate:"",img:[],video:[],pageviews:0};
+					let j1:any = {sid:"",title:"",description:"",smakename:"",mkdate:"",img:[],video:[],pageviews:0,fristVideo:true};
 					let d1 = cc[i];
 					j1.title = d1.title;
 					j1.description = d1.description;
@@ -271,9 +304,15 @@
 							var videoReg = /\.(mp4|flv|m3u8|rtmp|hls|rtsp)$/;
 							let isVideo:boolean = videoReg.test(name);
 							if(isVideo){
+								let audioUrl = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+name
 								let _url = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+name+'_tb.png'
-								_url = this.imageLoad(_url)
+								// _url = this.imageLoad(_url)
+								this.audioTime(audioUrl)
 								j1.video.push(_url);
+								if(this.isFristVoid == false && this.isrecommend == 1 && this.type ==0){
+									j1.fristVideo = false;
+								}
+								this.isFristVoid = false;
 							}
 							
 						}
@@ -375,6 +414,33 @@
 			// 	return "../../../../static/gs.png"; //暂时默认头像
 			// }
 		}
+		audioTime(src:any){
+			// let audioContext = uni.createInnerAudioContext();
+			// audioContext.volume=0;
+			// audioContext.autoplay = true;
+			// audioContext.src = src;
+			// let that = this;
+			// // 必须写在onCanplay里面，否则获取不到
+			// audioContext.onCanplay(()=> {
+			// 	audioContext.duration; 
+			// 	audioContext.buffered;
+			// 	//如果不写上面2行，打印audioContext，duration，buffered都有值，但打印audioContext.duration或audioContext.buffered值为0
+			// 	if(audioContext.duration*1>0||audioContext.buffered*1>0) {
+			// 	// 部分iphone手机audioContext.duration 会为为0，所以判断audioContext.duration是否为0
+			// 		let videoTime = that.formatSeconds(audioContext.duration==0?audioContext.buffered:audioContext.duration);
+			// 		console.log(videoTime)
+			// 	}
+			// })
+		}
+		formatSeconds(value:any) {
+			// let theTime:any = parseInt(value);// 秒
+			// let middle= 0;// 分
+			// if(theTime > 60) {
+			//     middle= parseInt(theTime/60);
+			//     theTime = parseInt(theTime%60);	
+			// }
+			// return `${middle>9?middle:'0'+middle}′${theTime>9?theTime:'0'+theTime}″`;
+		}
 
 		@Watch("type")
 		typeChange(){
@@ -444,7 +510,7 @@
 		transform: none;
 	}
 	.listImg1{
-		width: 220upx;
+		width: 280upx;
 		height: 164upx;
 	}
 	.my-search-form{

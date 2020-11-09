@@ -3,9 +3,9 @@
 // export const BaseDBID = "148";
 
 // BIP-OA
-export const BaseUri =  "http://115.28.191.203:89/oa/";
-export const BaseDBID = "01";
-export const ItemType = "";
+// export const BaseUri =  "http://115.28.191.203:89/oa/";
+// export const BaseDBID = "01";
+// export const ItemType = "";
 
 // BIP-ERP
 // export const BaseUri =  "https://test.juminfuwu.cn/bip-erp/";
@@ -34,9 +34,9 @@ export const ItemType = "";
 // export const BaseDBID = "01";
 
 // export const BaseUri =  "http://127.0.0.1:801/bip-mine";
-// export const BaseUri =  "http://47.104.211.216:8089/bip-mine";
-// export const BaseDBID = "01";
-// export const ItemType = "mine";
+export const BaseUri =  "http://47.104.211.216:8089/bip-mine";
+export const BaseDBID = "01";
+export const ItemType = "mine";
 
 
 // export const BaseUri =  "http://127.0.0.1:9999/jd";
