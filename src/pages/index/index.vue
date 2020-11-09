@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view  v-if="ifDefaultIndex">
-			<cu-custom bgColor="bg-gradual-pink" :isBack="false">
+			<cu-custom v-show="!isSpDeatilPage" bgColor="bg-gradual-pink" :isBack="false">
 				<block slot="content"><view class="header-title">{{title}}</view></block>
 			</cu-custom>
 			<template v-if="loginState">
@@ -15,14 +15,14 @@
 					<menuPage></menuPage>
 				</template>
 				<template v-else-if="tabcur==2">
-					<bip-task></bip-task>
+					<bip-task @setShowBtn="setShowBtn"></bip-task>
 				</template>
 				<template v-else>
 					<my></my>
 				</template>
 				<!-- <message v-if="tabcur==2"></message> -->
 			</template>
-			<mIndexBar v-if="ifDefaultIndex" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
+			<mIndexBar v-if="ifDefaultIndex" v-show="!isSpDeatilPage" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 		</view>
 	</view>
 </template>
@@ -58,6 +58,9 @@
 
 		olOption:any = null;
 		ifDefaultIndex:boolean = false;
+
+		isSpDeatilPage:boolean = false;
+
 		onLoad(options:any) {
 			if(commURL.ItemType == 'mine'){
 				uni.reLaunch({
@@ -146,6 +149,10 @@
 				}
 			}
 			return v;
+		}
+		//消息中心  点击详情隐藏头部标题底部按钮
+		setShowBtn(res:any){
+			this.isSpDeatilPage = res;
 		}
 	}
 </script>

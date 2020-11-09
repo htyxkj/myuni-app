@@ -1,10 +1,10 @@
 <template>
 	<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="300" :pageNo="currPage" :totalPageNo="totalPage"
-	 @loadMore="loadMore" @refresh="refresh">
-	 <view slot="content-list">
-	 	<bip-task-unit v-for="(item,index) in list" :key="index" :rowId="index" :record="item" :cells="cell" @toDetails="toDetails"></bip-task-unit>
-	 </view>
-	 <mLoad :png="'/static/gs.png'" :msg="'加载中...'" v-if="loadModal"></mLoad>
+		@loadMore="loadMore" @refresh="refresh">
+		<view slot="content-list">
+		<bip-task-unit v-for="(item,index) in list" :key="index" :rowId="index" :record="item" :cells="cell" @toDetails="toDetails"></bip-task-unit>
+		</view>
+		<mLoad :png="'/static/gs.png'" :msg="'加载中...'" v-if="loadModal"></mLoad>
 		<message ref="msg"></message>
 	</load-refresh>
 </template>
@@ -142,51 +142,51 @@
 			let record = this.list[rowId];
 			let sbuid = record.data.buid;
 			let sid = record.data.buno;
-			tools.getBULinks(sbuid+"_YD").then((res:any)=>{
-				if(res.data.id==0){
-					let opt:any = res.data.data.opt;
-					let mid = opt.pmenuid;
-					let m0 = paramTools.findMenu(mid);
-					if(m0){
-						let cmd = m0.command;
-						let dd = cmd.split("&");
-						let pbuid = ''
-						let pmenuid =''
-						dd.forEach((aa:any)=>{
-							let pbuids = aa.split('=')
-							if(pbuids[0] == 'pbuid'){
-								pbuid = pbuids[1]
-							}
-							if(pbuids[0] == 'pmenuid'){
-								pmenuid = pbuids[1];
-							}
-						});
-						if(pbuid){
-							tools.getMenuParams(pbuid,mid).then((res:any)=>{
-								let data = res.data;
-								if(data.id==0){
-									let uriParams = data.data.mparams;
-									uni.setStorageSync(pbuid,JSON.stringify(uriParams));
-									let qcont = opt.pkfld+"='"+sid+"'";
-									let con = {rowId:rowId,pbuid:pbuid,pmenuid:pmenuid,title:m0.menuName,qcont:encodeURIComponent(qcont)}
-									this.toDetails(con);
-								}
-							}).catch((err:any)=>{
-								console.log(err);
-							});
+			//查询是否有 _YD 业务定义
+			let res:any = await tools.getBULinks(sbuid+"_YD");
+			if(res.data.id ==-1){
+				res = await tools.getBULinks(sbuid);
+			}
+			if(res.data.id==0){
+				let opt:any = res.data.data.opt;
+				let mid = opt.pmenuid;
+				let m0 = paramTools.findMenu(mid);
+				if(m0){
+					let cmd = m0.command;
+					let dd = cmd.split("&");
+					let pbuid = ''
+					let pmenuid =''
+					dd.forEach((aa:any)=>{
+						let pbuids = aa.split('=')
+						if(pbuids[0] == 'pbuid'){
+							pbuid = pbuids[1]
 						}
-					}else{
-						this.showErr('没有菜单权限！')
+						if(pbuids[0] == 'pmenuid'){
+							pmenuid = pbuids[1];
+						}
+					});
+					if(pbuid){
+						tools.getMenuParams(pbuid,mid).then((res:any)=>{
+							let data = res.data;
+							if(data.id==0){
+								let uriParams = data.data.mparams;
+								uni.setStorageSync(pbuid,JSON.stringify(uriParams));
+								let qcont = opt.pkfld+"='"+sid+"'";
+								let con = {rowId:rowId,pbuid:pbuid,pmenuid:pmenuid,title:m0.menuName,qcont:encodeURIComponent(qcont)}
+								this.toDetails(con);
+							}
+						}).catch((err:any)=>{
+							console.log(err);
+						});
 					}
 				}else{
-					let msg = res.data.message;
-					//弹出提醒
-					this.showErr(msg)
+					this.showErr('没有菜单权限！')
 				}
-			})
-			.catch((res:any)=>{
-				console.log(res);
-			});
+			}else{
+				let msg = res.data.message;
+				//弹出提醒
+				this.showErr(msg)
+			}
 		}
 		showErr(err:string){
 			let msg:any = this.$refs['msg'];

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view style="float: left;">
+		<view style="float: left; display：inline-block">
 			<cu-custom :bgColor="'bg-' + cr" :isBack="true" :cusBack="true" @back="back">
 				<block slot="backText">返回</block>
 				<block slot="content">
@@ -11,7 +11,8 @@
 		<template v-if="initUIOK && dsm.currRecord.data">
 			<view class="margin-lr-sm margin-tb-sm">
 				<bip-lay v-if="lay.binit" :layout="lay"></bip-lay>
-				<view class="padding-bottom-xl margin-bottom-xl"></view>
+				<view class="padding-xl margin-xl"></view>
+				<view class="padding-xs margin-xs"></view>
 			</view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
 			<bip-work-process ref="workProcess"></bip-work-process>

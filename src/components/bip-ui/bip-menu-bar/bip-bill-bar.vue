@@ -1,5 +1,5 @@
 <template>
-	<view class="cu-bar tabbar bg-white shadow foot" style="z-index: 100000;">
+	<view class="cu-bar tabbar bg-white shadow foot my-b-menu">
 		<view v-if="(attr & 1) == 1 && addBtn" class="submit bg-blue margin-sm" @click="tabSelect(addBtn)" data-id="ADD" :data-btn="addBtn" ><text>添加</text></view>
 		<view v-if="(attr & 2) == 2 && saveBtn" class="submit bg-green margin-sm" @click="tabSelect(saveBtn)" data-id="SAVE" :data-btn="saveBtn" ><text>保存</text></view>
 		<template v-if="bottomData&&bmore">
@@ -109,5 +109,8 @@ export default class bipBillBar extends Vue {
 .mytitle{
 	padding-bottom: 0px;
     color: black;
+}
+.my-b-menu{
+	z-index: 999999 !important;
 }
 </style>

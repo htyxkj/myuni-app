@@ -21,7 +21,7 @@
 					</view>
 				</swiper-item>
 			</swiper>
-			<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom bg-white">
+			<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom bg-white ">
 				<template v-if="item.img.length>0 || (item.img.length == 0 && item.video.length == 0 )">
 					<template v-if="item.img.length>=3">
 						<view @tap="gotoarticle(item)">
@@ -77,7 +77,7 @@
 					<!-- <view>
 						<video :ref="'video'+item.sid" :id="'video'+item.sid" @play="videoPay(item)" style="width:100%" :src="item.video[0]"></video>
 					</view> -->
-					<view class="cu-card case" @tap="gotoarticle(item)">
+					<view class="cu-card case padding-left padding-right" @tap="gotoarticle(item)">
 						<view class="cu-item shadow" style="margin:0px">
 							<view class="image">
 								<image :src="item.video[0]" class="my-image"  mode="widthFix"></image>

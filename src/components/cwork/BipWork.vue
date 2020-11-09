@@ -95,7 +95,10 @@
                 </template>
                 <view class="cu-bar bg-white justify-end">
                     <template v-if="!bchked && isReview">
-                        <view class="cu-list grid col-3"  style="padding-right:16upx">
+                        <view class="cu-list grid col-4"  style="width: 100%;">
+                            <view>
+                                
+                            </view>
                             <view>
                                 <button class="cu-btn margin-right bg-white margin-tb-sm" @tap="centerDialogVisible = false">取消</button>
                             </view>
@@ -108,7 +111,7 @@
                         </view>
                     </template>
                     <template v-else>
-                         <view class="cu-list grid col-4" style="padding-right:16upx">
+                         <view class="cu-list grid col-4" style="width: 100%;">
                             <view>
 			                    <button class="cu-btn margin-right bg-white margin-tb-sm" @tap="bchked = false" :disabled="!canRetrial">重审</button>
                             </view>

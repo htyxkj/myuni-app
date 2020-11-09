@@ -1,5 +1,5 @@
 <template>
-	<view  class="cu-bar tabbar bg-white shadow foot" style="z-index: 99999;">
+	<view  class="cu-bar tabbar bg-white shadow foot" style="z-index: 1000;">
 		<template v-if="menuArry.length ==0">
 			<view class="action" :class="tabcur==0?tabcurColor:''" @tap="tabSelect" data-id="0">
 				<view :class="tabcur==0?'cuIcon-homefill':'cuIcon-home'" style="font-size: 50upx;"></view> 首页

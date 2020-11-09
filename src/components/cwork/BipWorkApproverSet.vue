@@ -223,7 +223,7 @@ export default class BipWorkApproverSet extends Vue{
         let crd = this.dsm.currRecord
         tools.saveBCustUser(this.dsm.ceaPars,51).then((res:any)=>{
             if(res.data.id==0){
-                this.bcustCsUser = res.data.data.bcustCsUser;
+                this.bcustCsUser = res.data.data.bcustCSUser;
                 this.bcustSpUser = res.data.data.bcustSPUser;
                 let cc = {type:0,users:this.bcustSpUser,state:0};
                 this.$emit("custSelUserOk",cc)

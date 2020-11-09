@@ -88,12 +88,14 @@
 						ref.show(e);
 				}, 200);
 			}
+			this.$emit("setShowBtn",true)
 		}
 		/**
 		 * 关闭审批详情打开审批列表页
 		 */
 		back(){
 			this.spList = true;
+			this.$emit("setShowBtn",false)
 		}
 		/**
 		 * 上一条下一条
