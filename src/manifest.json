@@ -92,10 +92,10 @@
             "https" : false
         },
         "router" : {
-            "base" : "/oa/webMobile/",
+            "base" : "/bip-credit/webMobile/",
             "mode" : "history"
         },
-        "title" : "BIP-OA",
-        "domain" : "http://115.28.191.203:89/oa/webMobile/"
+        "title" : "业务工单管控",
+        "domain" : "https://test.juminfuwu.cn/bip-credit/webMobile/"
     }
 }
