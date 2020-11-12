@@ -34,7 +34,7 @@
 				</view>
 			</view> -->
 		</view>
-		<view class="cu-bar bg-white solid-bottom margin-top " @tap="jumpIntegral(user.userCode,user.userName,myInfo.scm)">
+		<view class="cu-bar bg-white solid-bottom margin-top " @tap="jumpIntegral">
 			<view class="action">
 				<text class="cuIcon-titles text-progress "></text>积分排名
 			</view>
@@ -424,7 +424,10 @@
 			}
 		}
 		/* 跳转至积分排名页面 */
-		jumpIntegral(usrcode:any,usrname:any,scm:any){
+		jumpIntegral(){
+			let usrcode = this.user.userCode;
+			let usrname = this.user.userName;
+			let scm = this.myInfo.scm
 			let url="/pages/alone/mine/scoreRank/scoreRank?usrcode="+usrcode+"&usrname="+usrname+"&scm="+scm;
 			uni.navigateTo({
 				url:url

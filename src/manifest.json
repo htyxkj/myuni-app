@@ -92,10 +92,10 @@
             "https" : false
         },
         "router" : {
-            "base" : "/bip-credit/webMobile/",
+            "base" : "/bip-mine/webMobile/",
             "mode" : "history"
         },
-        "title" : "业务工单管控",
-        "domain" : "https://test.juminfuwu.cn/bip-credit/webMobile/"
+        "title" : "幸福张矿",
+        "domain" : "http://47.104.211.216:8089/bip-mine/webMobile/"
     }
 }
