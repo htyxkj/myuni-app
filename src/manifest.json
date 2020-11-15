@@ -92,10 +92,10 @@
             "https" : false
         },
         "router" : {
-            "base" : "/bip-mine/webMobile/",
+            "base" : "/bip-erp/webMobile/",
             "mode" : "history"
         },
-        "title" : "幸福张矿",
-        "domain" : "http://47.104.211.216:8089/bip-mine/webMobile/"
+        "title" : "BIP-ERP",
+        "domain" : "http://8.129.40.31:8081/bip-erp/webMobile/"
     }
 }
