@@ -57,22 +57,22 @@
 		menubarr:any=null
 
 		olOption:any = null;
-		ifDefaultIndex:boolean = false;
+		ifDefaultIndex:boolean = false;//是否显示首页
 
 		isSpDeatilPage:boolean = false;
 
 		onLoad(options:any) {
-			if(commURL.ItemType == 'mine'){
+			if(commURL && commURL.ItemType && commURL.ItemType == 'mine'){
 				uni.reLaunch({
 					'url': '/pages/alone/mine/index/index'
 				})
 				return;
 			}else{
-				this.ifDefaultIndex = true;
 				if(!this.loginState || options.corpId){
 					singIn.ServApi.init(options,this.loginOk,this.loginFailure);
 				}
 				this.olOption = options
+				this.ifDefaultIndex = true;
 			}
 		}
 		//登录成功
@@ -139,13 +139,18 @@
 				let value = uni.getStorageSync('isLogin');
 				if(value){
 					LoginModule.setState(true)
-					let user = JSON.parse(uni.getStorageSync('user'))
-					LoginModule.setUser(user)
-					let ms = JSON.parse(uni.getStorageSync('menus'))
-					LoginModule.setMenus(ms)
+					let _user = uni.getStorageSync('user');
+					if(_user){
+						let user = JSON.parse(_user)
+						LoginModule.setUser(user)
+					}
+					let _ms = uni.getStorageSync('menus');
+					if(_ms){
+						let ms = JSON.parse(_ms)
+						LoginModule.setMenus(ms)
+					}
 					let snkey = uni.getStorageSync('snkey')
 					LoginModule.setSnKey(snkey)
-					return true;
 				}
 			}
 			return v;

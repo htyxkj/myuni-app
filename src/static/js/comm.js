@@ -15,6 +15,11 @@
 // export const BaseUri =  "https://test.juminfuwu.cn/bip-share/";
 // export const BaseDBID = "01";
 
+//燕山石化
+// export const BaseUri =  "http://47.104.211.216:30032/bip-yssh/";
+// export const BaseDBID = "01";
+// export const ItemType = "";
+
 // 信息登记
 // export const BaseUri =  "https://test.juminfuwu.cn/bip-dataquery/";
 // export const BaseDBID = "01";

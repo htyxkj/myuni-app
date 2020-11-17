@@ -40,6 +40,9 @@ export namespace singIn {
 			this.corpId =this.route.corpId   //企业唯一码  
 			this.appId = this.route.appId;   //默认00
 			this.agentId = this.route.agentId;//应用id
+			if(!this.corpId || !this.agentId){
+				this.loginFailure();
+			}
 			let ddConfig = {corpId:this.corpId,agentId:this.agentId,bipAppid:this.appId};
 			uni.setStorageSync('ddConfig', JSON.stringify(ddConfig));
 			let _this =this;

@@ -31,7 +31,8 @@
 	import { BIPUtil } from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
 	import QueryEntity from '@/classes/search/QueryEntity';
-	import QueryCont from '@/classes/search/QueryCont';
+	import QueryCont from '@/classes/search/QueryCont';	
+	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	@Component({})
 	export default class mIndexBar extends Vue {
 		tabcur:number = 0
@@ -43,7 +44,8 @@
 		
 		mounted(){
 			this.tabcur = this.tbI;
-			this.initMenu();
+			if(this.loginState)
+				this.initMenu();
 		}
 		tabSelect(e:any){
 			this.tabcur = parseInt(e.currentTarget.dataset.id)
@@ -83,6 +85,23 @@
 					this.$emit('tabSelect',[m1.url,m1])
 				}
 			}
+		}
+		get loginState(){
+			let v = LoginModule.loginState
+			if(!v){
+				let value = uni.getStorageSync('isLogin');
+				if(value){
+					LoginModule.setState(true)
+					let user = JSON.parse(uni.getStorageSync('user'))
+					LoginModule.setUser(user)
+					let ms = JSON.parse(uni.getStorageSync('menus'))
+					LoginModule.setMenus(ms)
+					let snkey = uni.getStorageSync('snkey')
+					LoginModule.setSnKey(snkey)
+					return true;
+				}
+			}
+			return v;
 		}
 	}
 </script>

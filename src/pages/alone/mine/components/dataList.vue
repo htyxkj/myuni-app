@@ -510,7 +510,7 @@
 		transform: none;
 	}
 	.listImg1{
-		width: 280upx;
+		width: 240upx;
 		height: 164upx;
 	}
 	.my-search-form{
