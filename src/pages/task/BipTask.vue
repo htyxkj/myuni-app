@@ -21,8 +21,8 @@
 		</template>
 		<template >
 			<view v-if="!spList">
-				<scroll-view style="height:90vh;" scroll-y="true" >
-					<appdetailsp ref="appdetailsp" @back="back"  @gorow="goRow"></appdetailsp>
+				<scroll-view style="height:100vh;"  scroll-y="true" >
+					<appdetailsp ref="appdetailsp" class="padding-top-xl margin-top-xl" @back="back"  @gorow="goRow"></appdetailsp>
 				</scroll-view>
 			</view>
 		</template>

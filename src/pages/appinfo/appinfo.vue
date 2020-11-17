@@ -7,7 +7,8 @@
 		<view class="margin-lr-sm margin-tb-sm">
 			<bip-lay v-if="lay.binit" :layout="lay" :key="'-1'"></bip-lay>
 			<bip-work-approver-set v-if="bcust" :dsm="dsm" class="margin-tb-sm" @custSelUserOk="custSelUserOk"></bip-work-approver-set>
-			<view class="padding-bottom-xl margin-bottom-xl"></view>
+			<view class="padding-xl margin-xl"></view>
+			<view class="padding-xs margin-xs"></view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
 		</view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>

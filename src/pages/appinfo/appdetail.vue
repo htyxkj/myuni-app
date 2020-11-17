@@ -10,7 +10,8 @@
 			<view class="margin-lr-sm margin-tb-sm">
 				<bip-lay v-if="lay.binit" :layout="lay"></bip-lay>
 				<bip-work-approver-set v-if="bcust" :dsm="dsm" class="margin-tb-sm"  @custSelUserOk="custSelUserOk"></bip-work-approver-set>
-				<view class="padding-bottom-xl margin-bottom-xl"></view>
+				<view class="padding-xl margin-xl"></view>
+				<view class="padding-xs margin-xs"></view>
 			</view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
 			<bip-work-process ref="workProcess"></bip-work-process>
