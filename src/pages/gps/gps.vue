@@ -182,6 +182,8 @@ export default class MAP extends Vue {
 	}
 	MapMousemove(e:any) {
 		if(this.markerPoint && this.isZoom){
+			let cen = this.tMap.getCenter();
+			this.lnglat = cen.lng+";"+cen.lat
 			this.markerPoint.setLngLat(this.tMap.getCenter())
 			let geocode = new T.Geocoder();
 			geocode.getLocation(this.tMap.getCenter(),this.searchResult);

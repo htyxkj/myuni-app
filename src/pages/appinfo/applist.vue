@@ -256,6 +256,7 @@ export default class appList extends Vue {
 			this.qe.cont = '';
 		}
 		this.pdList = [];
+		this.refresh()
 	}
 }
 </script>

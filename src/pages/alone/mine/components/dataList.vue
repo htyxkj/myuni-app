@@ -1,26 +1,18 @@
 <template>
 	<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" 
 			:heightReduce="275" :pageNo="page_num" :totalPageNo="total_page" @loadMore="getNextPage" @refresh="refresh">
-		<view class="bg-white my-data-list" v-if="articleData" slot="content-list">
-			<swiper v-if="type == 0 && 1==isrecommend" class="screen-swiper square-dot "  :indicator-dots="true" :circular="true"
-				:autoplay="true" interval="5000" duration="500">
+		<view class="bg-white" v-if="articleData" slot="content-list">
+			<template v-if="type == 0 && 1==isrecommend" >
+			<swiper class="screen-swiper my-search-form" :circular="true" @change="swiperItemChange" :autoplay="true" interval="5000" duration="500">
 				<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
-					<!-- <image :src="item.url" mode="aspectFit" class="screen-swiper-img"></image>
-					<view class="sw-title padding">
-						<h3>{{item.title}}</h3>
-					</view> -->
-					<view class="cu-card case">
-						<view class="shadow">
-							<view class="image" style="background-color: #E7271A;">
-								<image :src="item.url" class="my-image"  mode="aspectFit"></image> 
-								<view class="cu-bar bg-shadeBottom"> 
-									<text class="text-cut">{{item.title}}</text>
-								</view>
-							</view> 
-						</view>
-					</view>
+					<image :src="item.url" class="my-image"  mode="aspectFit"></image> 
 				</swiper-item>
 			</swiper>
+			<view class="padding-right padding-left margin-bottom-sm my-swiper">
+				<view class="swiper-title">{{swiperTitle}}</view>
+				<view class="swiper-index padding-right">{{swiperIndexShow}}</view>
+			</view>
+			</template>
 			<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom bg-white ">
 				<template v-if="item.img.length>0 || (item.img.length == 0 && item.video.length == 0 )">
 					<template v-if="item.img.length>=3">
@@ -174,6 +166,9 @@
 		payVideo:any = null;//当前正在播放的视频
 		articleData:Array<any> = [];//数据集
 		qe:QueryEntity = new QueryEntity('','');//查询对象
+		swiperTitle:any ="";
+		swiperIndex:any =[];
+		swiperIndexShow:any="";
 		mounted(){
 			this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
 			if(this.type_sid){
@@ -184,6 +179,27 @@
 		get snkey(){
 			return LoginModule.snkey
 		}
+
+		/**
+		 * 轮播图发生变化
+		 */
+		swiperItemChange(res:any){
+			let current = res.detail.current
+			if(current>0){
+				this.swiperIndex[current-1] = "-";
+			}else{
+				this.swiperIndex[this.swiperList.length-1] = "-";
+			}
+			if(current<this.swiperList.length-1){
+				this.swiperIndex[current+1] = "-";
+			}else{
+				this.swiperIndex[0] = "-";
+			}
+			this.swiperIndex[current] = (current+1)
+			this.swiperIndexShow = this.swiperIndex.join("");
+			this.swiperTitle = this.swiperList[current].title
+		}
+
 		/**
 		 * 下拉刷新
 		 */
@@ -377,6 +393,7 @@
 		async initSwiperData(){
 			let qe:QueryEntity = new QueryEntity('','');
 			this.swiperList = [];
+			this.swiperIndex = [];
 			qe.page = new PageInfo(1,100);
 			let oneCont = []; 
 			let userType = uni.getStorageSync('userType');
@@ -399,7 +416,13 @@
 						let url = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+sw.fj_root+"/"+nameArr[j];
 						vl.url = url;
 						this.swiperList.push(vl);
+						this.swiperIndex.push("-")
 					}
+				}
+				if(this.swiperList.length>0){			
+					this.swiperTitle = this.swiperList[0].title
+					this.swiperIndex[0] = "1"
+					this.swiperIndexShow = this.swiperIndex.join("");
 				}
 			}
 		}
@@ -516,6 +539,7 @@
 	.my-search-form{
 		background-color: #F4494F;
 		color: white;
+		min-height: 450rpx !important;
 	}
 	.my-top{
 		background-color: #E7271A;
@@ -535,9 +559,6 @@
 	.cu-bar.btn-group uni-button {
 		padding: 11px 1px;
 	}
-	.my-data-list{
-		height:300px;
-	}
 	.my-image{
 		height: 450upx !important;
 	}
@@ -545,5 +566,23 @@
 		color: #1A1A22;
 		font-weight: 500;
 		font-size: 16px;
+	}
+	.my-swiper{
+		position:relative;
+    	min-height: 100rpx;
+		padding-top: 4px;
+	}
+	.swiper-title{
+		font-size: 18px;
+		font-weight: bolder;
+		color: #000000;
+	}
+	.swiper-index{
+		font-size: 14px;
+		padding-bottom: 10rpx;
+		position: absolute;
+    	right: 0px;
+    	bottom: 0px;
+		color: red;
 	}
 </style>

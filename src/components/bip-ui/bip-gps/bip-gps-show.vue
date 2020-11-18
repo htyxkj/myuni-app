@@ -72,7 +72,7 @@ export default class MAP extends Vue {
 					points.push(lgt);
 					let msg = "<div>";
 					for(var j=0;j<this.cels.length;j++){
-						if((this.cels[j].attr & 0x400 ) == 0){
+						if((this.cels[j].attr & 0x400 ) == 0 && (this.cels[j].attr & 0x200 )>0){
 							let val = data[this.cels[j].id];
 							val = val ==null?"":val;
 							if(val != "" && this.cels[j].refValue){
@@ -96,8 +96,10 @@ export default class MAP extends Vue {
                 	this.tMap.addOverLay(marker);
 				}
 			}
-			let cc = this.tMap.getViewport(points);
-			this.tMap.centerAndZoom(cc.center,cc.zoom)
+			if(points.length>0){
+				let cc = this.tMap.getViewport(points);
+				this.tMap.centerAndZoom(cc.center,cc.zoom)
+			}
 			//海量点
 			// if(points.length>0){
 			// 	this.CloudMarkerCollection = new T.CloudMarkerCollection(points,{

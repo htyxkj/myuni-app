@@ -20,6 +20,10 @@
 		<template v-else-if="isMap">
 			<bip-gps-show v-if="dsm&&dsm.ccells" :cels="dsm.ccells.cels" :pdList="pdList"></bip-gps-show>
 		</template>
+		<view v-if="_isMap" class="solid-bottom text-xsl padding-xl map-conv" @click="isMapConv">
+			<text v-if="isMap" class="cuIcon-wenzi text-green"></text>
+			<text v-if="!isMap" class="cuIcon-global text-green"></text>
+		</view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 	</view>
 </template>
@@ -78,6 +82,7 @@ export default class appReport extends Vue {
 	pageSize:number = 15;
 
 	isMap:boolean = false;//是否是地图展示页面
+	_isMap:boolean = false;//是否是地图展示页面
  
 	get showCells(){
 		if(this.dsm_cont.ccells){
@@ -138,6 +143,7 @@ export default class appReport extends Vue {
 			this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
 			if(this.uriParam.pbds.ismap){
 				this.isMap = true;
+				this._isMap = true;
 			}
 			if(this.uriParam){
 				this.loading = true;
@@ -239,9 +245,22 @@ export default class appReport extends Vue {
 			this.qe.cont = ''
 		}
 		this.pdList = [];
+		this.refresh()
+	}
+	//右下角 地图  列表切换
+	isMapConv(){
+		this.isMap = !this.isMap;
+		this.pageSize = 10;
+		this.refresh()
 	}
 }
 </script>
 
 <style lang="scss">
+	.map-conv{
+		position: absolute;
+		bottom: 0px;
+		right: 0px;
+		z-index: 9999;
+	}
 </style>

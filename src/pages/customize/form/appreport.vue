@@ -37,8 +37,9 @@ import { icl } from '@/classes/tools/CommICL';
 
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
+import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 @Component({
-	components: { mLoad,bipSearchCon,bipListUnit2,bipCustomizeListUnitType1}
+	components: { mLoad,bipSearchCon,bipListUnit2,bipCustomizeListUnitType1,loadRefresh}
 })
 //报表
 export default class appReport extends Vue {
