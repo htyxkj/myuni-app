@@ -18,7 +18,8 @@
 							<view class="padding-left-xl">{{articleData.mkdate}}</view>
 						</view>
 					</view>
-					<view v-html="articleData.content" @click="previewImage"></view>
+					<!-- <view v-html="articleData.content" @click="previewImage"></view>@navigate="navigate" -->
+					<u-parse :content="articleData.content" @navigate="navigate"></u-parse>
 					<view class="padding text-center">
 						<button class="cu-btn round lines-blue" :class="[my_like ==0?'lines-gray':'lines-blue']" @click="doLike">
 							<text class="cuIcon-appreciate"></text>{{like_num}}&nbsp;&nbsp;&nbsp;赞
@@ -103,8 +104,9 @@
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import {BipMenuBtn} from '@/classes/BipMenuBtn'
 	import loadRefresh from '@/components/load-refresh/load-refresh.vue';
+	import uParse from '@/components/uni-ui/uni-parse/u-parse.vue'
 	@Component({
-		components:{loadRefresh}
+		components:{loadRefresh,uParse}
 	})
 	export default class Details extends Vue {
 		sid:any = "";
@@ -237,24 +239,14 @@
 						this.like_num=0;
 				}
 		}
-
-		/**
-		 * 文章内容点击
-		 */
-		previewImage (e:any) {
-			if (e.target.nodeName == 'IMG') {
-				let url = e.target.currentSrc;
-				let item = {
-					src: url
-				};
-				this.imgList.length = 0;
-				this.imgList.push(item);
-				// this.$refs.previewer.show(0);
-			} else {
-				return;
-			}
+		navigate(res:any){
+			//#ifdef H5
+				window.open(res)
+			//#endif
+			//#ifdef APP-PLUS
+				plus.runtime.openURL(res)
+			//#endif
 		}
-
 		/**
 		 * 点赞当前文章
 		 */
@@ -488,6 +480,7 @@
 	}
 </script>
 <style scoped>
+	@import url("@/components/uni-ui/uni-parse/u-parse.css");
 	uni-page-body{
 		background-color: #FFFFFF
 	}
