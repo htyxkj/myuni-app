@@ -1,5 +1,5 @@
 <template>
-	<view class="flex-sub bg-white margin-sm padding-sm radius text-cut solid-bottom">
+	<view class="flex-sub bg-white margin-sm padding-left-sm padding-right-sm padding-bottom-sm radius text-cut solid-bottom">
 		<template v-if="cell.type==3">
 			<bip-show-number :cell="cell" :record="record" :rowId="rowId" :obj_id="obj_id"></bip-show-number>
 		</template>
