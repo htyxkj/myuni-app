@@ -438,7 +438,7 @@
 			// }
 		}
 		audioTime(src:any){
-			// let audioContext = uni.createInnerAudioContext();
+			// let audioContext:any = uni.createInnerAudioContext();
 			// audioContext.volume=0;
 			// audioContext.autoplay = true;
 			// audioContext.src = src;

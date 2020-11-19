@@ -45,6 +45,7 @@
 	import comm from '@/static/js/comm.js';
 	let commURL: any = comm;
 	import {singIn} from '@/pages/index/singIn/singIn'
+import { values } from 'xe-utils/methods';
 	@Component({
 		components:{home,my,message,menuPage,mIndexBar,customize,BipTask}
 	})
@@ -151,6 +152,7 @@
 					}
 					let snkey = uni.getStorageSync('snkey')
 					LoginModule.setSnKey(snkey)
+					v = true;
 				}
 			}
 			return v;

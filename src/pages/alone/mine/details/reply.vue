@@ -162,12 +162,15 @@
             }
             let v = JSON.stringify(prarm);
 			let res:any = await tools.getDlgRunClass(v,b);
-			let data = res.data.data;
-			this.total_size = parseInt(data.total_size);
-			this.comment = data.data;
-			if(this.page_num == 1) 
-				this.comment_list = [];
-			this.comment_list = this.comment_list.concat(this.comment.childComment); //追加新数据
+			console.log(res);
+			if(res.data.id ==0){
+				let data = res.data.data;
+				this.total_size = parseInt(data.total_size);
+				this.comment = data.data;
+				if(this.page_num == 1) 
+					this.comment_list = [];
+				this.comment_list = this.comment_list.concat(this.comment.childComment); //追加新数据
+			}
 		}
 	}
 </script>

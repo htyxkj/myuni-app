@@ -165,13 +165,15 @@
             let v = JSON.stringify(prarm);
 			let res:any = await tools.getDlgRunClass(v,b);
 			let data = res.data.data;
-			this.comment_num = data.comment_num;
-			this.like_num = data.like_num;
-			this.my_like = data.my_like;
-			this.total_page = data.total_page;
 			if(this.page_num == 1) 
 				this.comment_list = [];
-			this.comment_list = this.comment_list.concat(data.data); //追加新数据
+			if(data){
+				this.comment_num = data.comment_num;
+				this.like_num = data.like_num;
+				this.my_like = data.my_like;
+				this.total_page = data.total_page;
+				this.comment_list = this.comment_list.concat(data.data); //追加新数据
+			}
 		}
 		/**
 		 * 打开回复页面
