@@ -261,7 +261,9 @@ export default class bipFileInfo extends Vue {
 	}
 	//拼接图像地址
 	makeImgUrl(fj_root:any,fj_name:any){
-		return commURL.BaseUri+'/sysupd?updid=36&snkey='+uni.getStorageSync('snkey')+"&fjroot="+fj_root+"&fjname="+fj_name;
+		let snkey = uni.getStorageSync('snkey');
+		snkey = encodeURIComponent(snkey);
+		return commURL.BaseUri+'/sysupd?updid=36&snkey='+snkey+"&fjroot="+fj_root+"&fjname="+fj_name;
 	}
 }
 </script>
