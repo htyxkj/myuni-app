@@ -328,6 +328,8 @@ export default class appDetail extends Vue {
 				infos.data.forEach((cr:any)=>{
 					cds.addRecord(cr);
 				})
+				//处理二次初值
+				this.secondAssignment(cds);
 				let crd = cds.currRecord;
 				if(crd != null && cds.opera){
 					let params = {
@@ -346,9 +348,22 @@ export default class appDetail extends Vue {
 			this.loading = false;
 		});
 		console.log('findData');
-
 	}
 	
+	//处理二次初值
+	secondAssignment(cds:any){
+		if(cds){
+			let cr = DataUtil.createRecord(this.dsm,this.env);
+			let cels = cds.ccells.cels;
+			for(let i=0;i<cels.length;i++){
+				let cel = cels[i];
+				let cc = Tools.bitOperation(cel.attr,0x100000000);
+            	if(cc >0 && !cds.currRecord.data[cel.id]){//二次初值
+					cds.currRecord.data[cel.id] = cr.data[cel.id];
+				}
+			}
+		}
+	}
 	mounted(){
 		this.loading = false;
 	}
