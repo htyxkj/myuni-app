@@ -263,6 +263,7 @@ export default class bipFileInfo extends Vue {
 	makeImgUrl(fj_root:any,fj_name:any){
 		let snkey = uni.getStorageSync('snkey');
 		snkey = encodeURIComponent(snkey);
+		fj_name = encodeURIComponent(fj_name);
 		return commURL.BaseUri+'/sysupd?updid=36&snkey='+snkey+"&fjroot="+fj_root+"&fjname="+fj_name;
 	}
 }
