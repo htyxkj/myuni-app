@@ -3,15 +3,15 @@
 			:heightReduce="275" :pageNo="page_num" :totalPageNo="total_page" @loadMore="getNextPage" @refresh="refresh">
 		<view class="bg-white" v-if="articleData" slot="content-list">
 			<template v-if="type == 0 && 1==isrecommend" >
-			<swiper class="screen-swiper my-search-form" :circular="true" @change="swiperItemChange" :autoplay="true" interval="5000" duration="500">
-				<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
-					<image :src="item.url" class="my-image"  mode="aspectFit"></image> 
-				</swiper-item>
-			</swiper>
-			<view class="padding-right padding-left margin-bottom-sm my-swiper">
-				<view class="swiper-title">{{swiperTitle}}</view>
-				<view class="swiper-index padding-right">{{swiperIndexShow}}</view>
-			</view>
+				<swiper class="screen-swiper my-search-form" :circular="true" @change="swiperItemChange" :autoplay="true" interval="5000" duration="500">
+					<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
+						<image :src="item.url" class="my-image"  mode="aspectFit"></image> 
+					</swiper-item>
+				</swiper>
+				<view class="padding-right padding-left margin-bottom-sm my-swiper">
+					<view class="swiper-title">{{swiperTitle}}</view>
+					<view class="swiper-index padding-right">{{swiperIndexShow}}</view>
+				</view>
 			</template>
 			<view v-for="(item) in articleData" :key="item.sid" class="solid-bottom bg-white ">
 				<template v-if="item.img.length>0 || (item.img.length == 0 && item.video.length == 0 )">
@@ -44,7 +44,7 @@
 					<template v-if="item.img.length<3">
 						<view class="flex justify-start" @tap="gotoarticle(item)">
 							<view class="padding-sm margin-xs">
-								<view>
+								<view class="data-left">
 									<view class="my-text-black">{{item.title}}</view>
 									<view style="height: 40upx;"></view>
 									<view class="text-gray text-sm">
@@ -97,7 +97,7 @@
 					<view v-else>	
 						<view class="flex justify-start" @tap="gotoarticle(item)">
 							<view class="padding-sm margin-xs">
-								<view>
+								<view class="data-left">
 									<view class="my-text-black">{{item.title}}</view>
 									<view style="height: 40upx;"></view>
 									<view class="text-gray text-sm">
@@ -491,6 +491,9 @@
 	uni-page-body{
 		background-color: #FFFFFF
 	}
+	.data-left{
+		min-width: 396upx;
+	}
 	.page {
 		height: 79vh;
 	}
@@ -535,6 +538,7 @@
 	.listImg1{
 		width: 240upx;
 		height: 164upx;
+		padding: 5upx;
 	}
 	.my-search-form{
 		background-color: #F4494F;

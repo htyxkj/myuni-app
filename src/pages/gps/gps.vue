@@ -43,15 +43,16 @@ export default class MAP extends Vue {
 	loading:any = false;
 	methordName:any = "";
 	title:any="位置选择";
-	tMap:any= null;
+	tMap:any= null;//地图对象
 	tMapDiv:any = "MAP"+new Date().getTime();
-	tZoom:number=12;
-	address:any = "";
-	lnglat:any ="";
+	tZoom:number=12;//地图缩放级别
+	address:any = "";//地址
+	lnglat:any ="";//经纬度
 	disabled:boolean = false // 非编辑
-	gps:any="";
-	markerPoint:any = null;
-	isZoom:boolean =false;
+	gps:any="";//上一页面传过来的经纬度
+	markerPoint:any = null;//地图上当前点对象
+	isZoom:boolean =false;//是否是缩放状态
+	refValue:any = []//参照
 	async onLoad(option: any) {
 		await singIn.ServApi.initDDJSTicket();
 		this.methordName = option.methordName;
@@ -60,6 +61,15 @@ export default class MAP extends Vue {
 			this.disabled = true; 
 		if(option.gps && option.gps != "undefined")
 			this.gps = option.gps;
+		if(option.refValue && option.refValue.length>1){
+			try {
+				let cc = JSON.parse(option.refValue);
+				this.refValue = Object.keys(cc);	
+			} catch (error) {
+				this.refValue = [];
+				console.log("参照转换失败！！")				
+			}
+		}
 		this.$nextTick(function(){
 			this.createdMap();
 			// this.checkOpenGps();
@@ -181,7 +191,7 @@ export default class MAP extends Vue {
 		this.tMap.removeEventListener("move", this.MapMousemove);
 	}
 	MapMousemove(e:any) {
-		if(this.markerPoint && this.isZoom){
+		if(this.markerPoint && this.isZoom && this.refValue.indexOf("0")>-1){
 			let cen = this.tMap.getCenter();
 			this.lnglat = cen.lng+";"+cen.lat
 			this.markerPoint.setLngLat(this.tMap.getCenter())
@@ -203,7 +213,9 @@ export default class MAP extends Vue {
 		}
 		this.isZoom = false;
 		setTimeout(() => {
-			this.addMapMousemove();
+			if(!this.disabled){
+				this.addMapMousemove();
+			}
 			this.isZoom = true;
 		}, 1000);
 	}
