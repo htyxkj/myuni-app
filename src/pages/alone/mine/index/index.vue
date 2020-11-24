@@ -229,10 +229,18 @@
 								var dtask = plus.downloader.createDownload( downloadApkUrl, {}, function ( d, status ) {  
 										// 下载完成 
 										if ( status == 200 ) {   
+											uni.showToast({
+												icon:"none",
+												mask: true,
+												// title: '有新的版本发布，检测到您目前为Wifi连接，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
+												title: '安装程序下载完成，安装中...',  
+												duration: 3000,  
+											}); 
 											plus.runtime.install(plus.io.convertLocalFileSystemURL(d.filename),{force:true},function(error){ 
 												// uni.showToast({  
 												// 	title: '安装失败', 
 												// 	icon:"none",
+												// 	mask: true,
 												// 	duration: 5000  
 												// });  
 											})

@@ -18,7 +18,7 @@
 							<view class="padding-left-xl">{{articleData.mkdate}}</view>
 						</view>
 					</view>
-					<view v-html="articleData.content" @click="previewImage"></view>
+					<view v-html="articleData.content"></view>
 					<!-- <u-parse :content="articleData.content" @navigate="navigate"></u-parse> -->
 					<view class="padding text-center">
 						<button class="cu-btn round lines-blue" :class="[my_like ==0?'lines-gray':'lines-blue']" @click="doLike">
