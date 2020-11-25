@@ -1,5 +1,5 @@
 <template>
-	<view >
+	<view>
 		<text>{{modes}}</text>
 	</view>
 </template>
@@ -13,10 +13,11 @@
 	import BipInsAidNew from '@/classes/BipInsAidNew';
 	@Component({})
 	export default class bipShowRefFz extends Vue{
-		@Prop({type:String}) myStyle!:string;
 		@Prop({type:Object}) cell!:Cell;
 		@Prop() record!:any;
 		@Inject('bipInsAid') bipInsAid!:BipInsAidNew;
+		@Prop({type:Number,default:0}) rowId!:number;
+		@Prop({type:String}) obj_id!:string;
 		mode:string = '';
 		showValue:string = '';
 		aidKey:string = '';
@@ -36,7 +37,18 @@
 						this.makeRefshow();
 				}
 			}
+			
+			// let mid = this.obj_id+"_row_"+this.rowId;
+			// uni.$on(mid,()=>{this.cellRowChange()});
 		}
+		// beforDestory(){
+		// 	let mid = this.obj_id+"_row_"+this.rowId;
+		// 	uni.$off(mid,()=>{this.cellRowChange()});
+		// }
+		// @Watch('record',{deep:true})
+		// cellRowChange(){
+		// 	this.recordChange();
+		// }
 		
 		get aidValues(){
 			return InsAidModule.aidValues;
@@ -51,6 +63,7 @@
 			if(this.mode !==''){
 				let key = this.aidKey+"_"+this.mode;
 				let rr = this.aidValues.get(key);
+				// console.log(rr,'aidValues')
 				if(rr){
 					this.bipInsAid.values[0] = rr;
 					this.bipInsAid.makeShow();
@@ -60,10 +73,12 @@
 			}
 		}
 		
-		@Watch('record')
+		@Watch('record',{deep:true})
 		recordChange(){
 			let rr = this.record.data[this.cell.id];
 			if(rr !== this.mode){
+				this.mode = this.record.data[this.cell.id]||''
+				this.showValue = this.mode;
 				this.makeRefshow()
 			}
 		}

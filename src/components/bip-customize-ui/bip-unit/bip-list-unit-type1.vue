@@ -3,7 +3,10 @@
 		<view class="padding bg-white padding-left-xl" @tap.stop="openlist">
 			<view class="flex">
 				<view class="basis-lg name">{{record.data[myStyle.ref.name]}}</view>
-				<view class="basis-sm nup" style="text-align: end;">{{record.data[myStyle.ref.nup]}}</view>
+				<view class="basis-sm nup" style="text-align: end;">
+					<!-- {{record.data[myStyle.ref.nup]}} -->
+					<bip-comm-show :obj_id="obj_id" :cell="getCel(myStyle.ref.nup)" :rowId="rowId" :record="record"></bip-comm-show>
+				</view>
 			</view>
 			<view class="flex">
 				<view class="basis-xl">
@@ -25,13 +28,12 @@ import { Vue, Prop, Component, Inject,Watch } from 'vue-property-decorator';
 import CCliEnv from '@/classes/cenv/CCliEnv'
 import CDataSet from '@/classes/pub/CDataSet';
 import { GlobalVariable } from '@/classes/tools/ICL';
-import bipShowRef from '../bip-show/bip-show-ref.vue';
-
 import CRecord from '@/classes/pub/CRecord';
 import comm from '@/static/js/comm.js';
 let commURL: any = comm;
+import bipCommShow from '@/components/bip-customize-ui/bip-comm/bip-comm-show.vue';
 @Component({
-	components: {bipShowRef}
+	components: {bipCommShow}
 })
 export default class bipListUnitType1 extends Vue {
 	@Prop({type:String}) obj_id!:string;
@@ -66,22 +68,11 @@ export default class bipListUnitType1 extends Vue {
 		}
 	}
 
-	getSorgCel(){
+	getCel(celId:any){
 		let cel = null
 		if(this.cels){
 			for(var i=0;i<this.cels.length;i++){
-				if(this.cels[i].id == this.myStyle.ref.company){
-					cel = this.cels[i];
-				}
-			}
-		}
-		return cel;
-	}
-	getTypeCel(){
-		let cel = null
-		if(this.cels){
-			for(var i=0;i<this.cels.length;i++){
-				if(this.cels[i].id == this.myStyle.ref.type){
+				if(this.cels[i].id == celId){
 					cel = this.cels[i];
 				}
 			}

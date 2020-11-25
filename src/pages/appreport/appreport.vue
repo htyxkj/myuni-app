@@ -20,7 +20,7 @@
 		<template v-else-if="isMap">
 			<bip-gps-show v-if="dsm&&dsm.ccells" :cels="dsm.ccells.cels" :pdList="pdList"></bip-gps-show>
 		</template>
-		<view v-if="_isMap" class="solid-bottom text-xsl padding-xl map-conv" @click="isMapConv">
+		<view v-if="i_isMap" class="solid-bottom text-xsl padding-xl map-conv" @click="isMapConv">
 			<text v-if="isMap" class="cuIcon-wenzi text-green"></text>
 			<text v-if="!isMap" class="cuIcon-global text-green"></text>
 		</view>
@@ -82,7 +82,7 @@ export default class appReport extends Vue {
 	pageSize:number = 15;
 
 	isMap:boolean = false;//是否是地图展示页面
-	_isMap:boolean = false;//是否是地图展示页面
+	i_isMap:boolean = false;//是否是地图展示页面
  
 	get showCells(){
 		if(this.dsm_cont.ccells){
@@ -143,7 +143,7 @@ export default class appReport extends Vue {
 			this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
 			if(this.uriParam.pbds.ismap){
 				this.isMap = true;
-				this._isMap = true;
+				this.i_isMap = true;
 			}
 			if(this.uriParam){
 				this.loading = true;
