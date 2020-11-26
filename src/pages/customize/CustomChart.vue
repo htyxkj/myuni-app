@@ -77,8 +77,8 @@
 					let data = res.data.data.data.data;
 					let chartData = data[0].data;
 					let cont = JSON.parse(chartData.cont) 
-       				let rech = JSON.parse(chartData.rech)
-					this.stat = {selGroup:"",selValue:"",chartTypeValue:'',showChart:false,width:24,title:''};
+					let rech = JSON.parse(chartData.rech)
+					this.stat = {selGroup:"",selValue:"",chartTypeValue:'',showChart:false,width:24,title:'',rech:rech};
 					this.stat.selGroup = cont.spbds.split(",");
 					this.stat.selValue = cont.spflds.split(",");
 					this.stat.title = chartData.sname;
@@ -102,7 +102,7 @@
 			let qe: QueryEntity = new QueryEntity("","");
 			qe.pcell = this.dsm.ccells.obj_id
 			qe.tcell = this.dsm_cont.ccells.obj_id
-			qe.cont = JSON.stringify(this.dsm_cont.currRecord.data,this.testReplacer);
+			qe.cont = JSON.stringify(this.stat.rech);
 			param = paramTools.getBipStatisticsParams(JSON.stringify(qe),groupfilds,groupdatafilds);
 			let chartData:any = await tools.getFromServer(param); 
 			if(chartData.data.id == 0){
@@ -142,7 +142,10 @@
 				yAxis: {
 					gridType:'dash',
 					splitNumber:10,
-					format:(val:any)=>{return val.toFixed(0)}
+					format:(val:any)=>{
+						// return val.toFixed(0)
+						return val;
+					}
 				},
 				width: this.cWidth ,
 				height: this.cHeight ,
@@ -484,12 +487,6 @@
 					})
 				})
 			}
-		}
-		testReplacer(key:any,value:any){//key为对象属性名，value为对象属性值，会遍历testObj或testArr来执行该函数
-			if(value== null){
-				value = "";
-			}
-			return value;
 		}
 		//获取参照
     	async getGroupFldName(item:any,index:any){
