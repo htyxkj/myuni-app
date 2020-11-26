@@ -95,7 +95,11 @@
 			if(dd.length == 0){
 				_sid = sid;
 			}else{
-				_sid = dd[0].sid;
+				if(sid == 'LX20080014'){
+					_sid = dd[dd.length-1].sid;
+				}else{
+					_sid = dd[0].sid;
+				}
 			}
 			this.type_sid = _sid;
 		}

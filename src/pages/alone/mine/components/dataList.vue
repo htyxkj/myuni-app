@@ -5,7 +5,7 @@
 			<template v-if="type == 0 && 1==isrecommend" >
 				<swiper class="screen-swiper my-search-form" :circular="true" @change="swiperItemChange" :autoplay="true" interval="5000" duration="500">
 					<swiper-item v-for="(item,index) in swiperList" :key="index" @tap.stop="gotoarticle(item)">
-						<image :src="item.url" class="my-image"  mode="aspectFit"></image> 
+						<image :src="item.url" class="my-carousel-image"  mode="aspectFit"></image> 
 					</swiper-item>
 				</swiper>
 				<view class="padding-right padding-left margin-bottom-sm my-swiper">
@@ -50,8 +50,8 @@
 									<view class="text-gray text-sm">
 										<view class="flex justify-start">
 											<view>{{item.smakename}}</view>
-											<view class="padding-left-xl">{{item.mkdate}}</view>
-											<view class="padding-left-xl">
+											<view class="padding-left-lg">{{item.mkdate}}</view>
+											<view class="padding-left-lg">
 												<text class="cuIcon-attentionfill"></text>
 												{{item.pageviews}}
 											</view>
@@ -83,8 +83,8 @@
 									<view class="text-gray text-sm">
 										<view class="flex justify-start">
 											<view>{{item.smakename}}</view>
-											<view class="padding-left-xl">{{item.mkdate}}</view>
-											<view class="padding-left-xl">
+											<view class="padding-left-lg">{{item.mkdate}}</view>
+											<view class="padding-left-lg">
 												<text class="cuIcon-attentionfill"></text>
 												{{item.pageviews}}
 											</view>
@@ -103,8 +103,8 @@
 									<view class="text-gray text-sm">
 										<view class="flex justify-start">
 											<view>{{item.smakename}}</view>
-											<view class="padding-left-xl">{{item.mkdate}}</view>
-											<view class="padding-left-xl">
+											<view class="padding-left-lg">{{item.mkdate}}</view>
+											<view class="padding-left-lg">
 												<text class="cuIcon-attentionfill"></text>
 												{{item.pageviews}}
 											</view>
@@ -197,7 +197,12 @@
 			}
 			this.swiperIndex[current] = (current+1)
 			this.swiperIndexShow = this.swiperIndex.join("");
-			this.swiperTitle = this.swiperList[current].title
+			let title =  this.swiperList[current].title;
+			if(title.length >25){
+				title = title.substring(0,25)+"…"
+			}
+			this.swiperTitle = title;
+			
 		}
 
 		/**
@@ -563,8 +568,11 @@
 	.cu-bar.btn-group uni-button {
 		padding: 11px 1px;
 	}
-	.my-image{
+	.my-carousel-image{
 		height: 450upx !important;
+	}
+	.my-image{
+		height: 420upx !important;
 	}
 	.my-text-black{
 		color: #1A1A22;
@@ -577,13 +585,12 @@
 		padding-top: 4px;
 	}
 	.swiper-title{
-		font-size: 18px;
+		font-size: 16px;
 		font-weight: bolder;
 		color: #000000;
 	}
 	.swiper-index{
 		font-size: 14px;
-		padding-bottom: 10rpx;
 		position: absolute;
     	right: 0px;
     	bottom: 0px;
