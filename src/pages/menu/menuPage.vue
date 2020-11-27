@@ -3,6 +3,8 @@
 		<view >
 			<mMenu v-for="(m,index) in groupMenus" :key="index" :m="m" @openM="openMenu" ></mMenu>
 		</view>
+		<view class="padding-xl margin-xl"></view>
+		<view class="padding-xs margin-xs"></view>
 	</scroll-view>	
 </template>
 
