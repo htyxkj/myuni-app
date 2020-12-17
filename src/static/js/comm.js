@@ -25,7 +25,18 @@
 // export const BaseDBID = "01";
 
 // 征信管理平台  工单管控
-export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
+// export const BaseDBID = "01";
+// export const ItemType = null;
+
+
+// 人力资源管理系统
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-hr/";
+// export const BaseDBID = "01";
+// export const ItemType = null;
+
+// 飞防管控
+export const BaseUri =  "http://211.144.37.205/air-super/";
 export const BaseDBID = "01";
 export const ItemType = null;
 
