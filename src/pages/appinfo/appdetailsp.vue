@@ -79,6 +79,7 @@ export default class appDetailSp extends Vue {
 	uriParam: URIParams = new URIParams();
 	@Provide('env') env: CCliEnv = new CCliEnv();
 	@Provide('mbs') mbs: BipMenuBar = new BipMenuBar();
+	@Provide('isApprove') isApprove: boolean = true;
 	//主对象数据集
 	dsm: CDataSet = new CDataSet(null);
 	//条件对象数据集

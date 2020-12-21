@@ -24,6 +24,22 @@
 			</template>
 			<mIndexBar v-if="ifDefaultIndex" v-show="!isSpDeatilPage" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 		</view>
+		<view class="cu-modal" :class="showpp?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">服务协议和隐私政策</view>
+				</view>
+				<view class="padding-xl">
+					请你务必审慎阅读、充分理解“服务协议”和隐私政策各条款，包括但不限于：为了向你提供内容分享等服务，我们需要收集你的设备信息、操作日志等个人信息。你可以阅读《服务协议》和《隐私政策》了解详细信息。如你同意，请点击“同意”开始接受我们的服务。
+				</view>
+				<view class="cu-bar bg-white justify-end">
+					<view class="action">
+						<button class="cu-btn line-blue text-blue" @tap="showpp = false">暂不使用</button>
+						<button class="cu-btn bg-blue margin-left" @tap="AgreeToTerms">同意</button>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -61,8 +77,23 @@ import { values } from 'xe-utils/methods';
 		ifDefaultIndex:boolean = false;//是否显示首页
 
 		isSpDeatilPage:boolean = false;
+		showpp:boolean = false;//显示隐私政策 服务协议
 
+		options:any = null;
+		
 		onLoad(options:any) {
+			//#ifdef APP-PLUS
+				let value = uni.getStorageSync('AgreeToTerms');
+				if(!value){
+					this.showpp=true;
+					return;
+				}
+			//#endif
+			this.options = options
+			this._onLoad();
+		}
+		_onLoad(){
+			let options:any = this.options;
 			if(commURL && commURL.ItemType && commURL.ItemType == 'mine'){
 				uni.reLaunch({
 					'url': '/pages/alone/mine/index/index'
@@ -76,6 +107,13 @@ import { values } from 'xe-utils/methods';
 				this.ifDefaultIndex = true;
 			}
 		}
+
+		//同意隐私条款
+		AgreeToTerms(){
+			uni.setStorageSync('AgreeToTerms',true);
+			this._onLoad();
+		}
+
 		//登录成功
 		loginOk(){
 			if(commURL.ItemType == 'mine'){

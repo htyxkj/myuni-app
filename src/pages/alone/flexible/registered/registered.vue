@@ -149,6 +149,9 @@
 				</view>
 			</template>
 		</template>
+		<template v-if="regType ==1 || regType ==2">
+			<bip-protocol @plChange="plChange"></bip-protocol>
+		</template>
 		<mLoad :png="'/static/gs.png'" :msg="'注册中...'" v-if="loadModal"></mLoad>
 	</view>
 </template>
@@ -156,6 +159,7 @@
 <script lang="ts">
 	import {Vue,Provide,Component} from 'vue-property-decorator';
 	import mLoad from '@/components/mLoad.vue';
+	import bipProtocol from '@/components/bip-ui/bip-protocol/bip-protocol.vue'
 	import {Tools} from '@/classes/tools/Tools';
 	import User from '@/classes/User';
 	import {BIPUtil} from '@/classes/api/request';
@@ -175,7 +179,8 @@
 	@Component({
 		components: {
 			mLoad,
-			bipComm
+			bipComm,
+			bipProtocol
 		},
 		name: 'Login'
 	})
@@ -205,6 +210,9 @@
 		enterpriseDsm: CDataSet = new CDataSet(null);//企业
 		enterpriseCell:string  = "ZC0004";
 		
+		protocol:boolean = false;//是否同意协议
+		plName:any = "";//协议名称
+
 		async onLoad(){
 			this.regType =0;
 			this.companyTypeIndex = 0;
@@ -239,10 +247,9 @@
 				this.regType = type;
 				this.env.initInfo(this.uriParam,[this.personalDsm.ccells] , this.mbs, this.personalDsm, this.ds_ext);
 			}else{
+				this.enterpriseDsm = await this.initCell(this.enterpriseCell);
 				this.regType = type;
 				this.companyTypeIndex = 0;
-				
-				this.enterpriseDsm = await this.initCell(this.enterpriseCell);
 				this.enterpriseDsm.removeRecord(this.enterpriseDsm.currRecord);
 				let cr:any = DataUtil.createRecord(this.enterpriseDsm,this.env); 
 				this.enterpriseDsm.addRecord(cr); 
@@ -259,6 +266,10 @@
 /**************************************个人注册START****************************************/
 		//进行注册
 		async savePersonal(saveImg:boolean){
+			if(!this.protocol){
+				uni.showModal({title:"提示",content:"请先阅读并同意"+this.plName,showCancel:false,}) 
+				return;
+			}
 			this.saveData(this.personalDsm,this.personalCell,saveImg)
 		}
 /**************************************个人注册END****************************************/
@@ -296,6 +307,10 @@
 		}
 		//企业注册
 		async saveEnterprise(saveImg:boolean){
+			if(!this.protocol){
+				uni.showModal({title:"提示",content:"请先阅读并同意"+this.plName,showCancel:false,}) 
+				return;
+			}
 			this.saveData(this.enterpriseDsm,this.enterpriseCell,saveImg)
 		}
 		//家庭注册
@@ -464,6 +479,10 @@
 				}
 			}); 
 			return bok;
+		}
+		plChange(vl:any){
+			this.protocol = vl[0];
+			this.plName = vl[1]
 		}
 	}
 </script>

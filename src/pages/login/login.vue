@@ -23,15 +23,19 @@
 					<view></view>
 					<view></view>
 					<view></view>
-					<!-- <view class="registered" @tap="registered('flexible')">注册</view> --><!-- 灵活用工注册 -->
-					<!-- <view class="registered" @tap="registered('credit')">注册</view>  --><!-- 征信管理注册 -->
-					<view class="registered" @tap="touristLogin">游客登陆</view> <!-- 张矿微平台 -->
+					<view v-if="_comm && _comm.ItemType =='flexible'" class="registered" @tap="registered('flexible')">注册</view><!-- 灵活用工注册 -->
+					<view v-if="_comm && _comm.ItemType =='credit'" class="registered" @tap="registered('credit')">注册</view><!-- 征信管理注册 -->
+					<view v-if="_comm && _comm.ItemType == 'mine'" class="registered" @tap="touristLogin">游客登陆</view> <!-- 张矿微平台 -->
 				</view>
 			</view>
 			<view class="padding flex flex-direction">
 				<button form-type="submit" :disabled="canLogin" class="cu-btn margin-tb-sm loginbtn lg shadow " @tap="loginSys(null)">登录</button>
 			</view>
 		</form>
+		<!-- <view class="flex justify-center privacy_protocol" >
+			<view class="padding-sm">服务协议</view>
+			<view class="padding-sm">隐私政策</view>
+		</view> -->
 		<mLoad :png="'/static/gs.png'" :msg="'登录中...'" v-if="loadModal"></mLoad>
 	</view>
 </template>
@@ -69,8 +73,10 @@
 		vueId: string = Tools.guid()
 		// user: User = new User('13051424475', '', '')
 		user: User = new User('', '', '')
+		_comm:any = null;
 		onLoad() {
 			uni.clearStorage();
+			this._comm = commURL;
 		}
 		/**
 		 * 登录系统
@@ -111,18 +117,18 @@
 						LoginModule.setState(true)
 						LoginModule.setMenus(ms);
 						LoginModule.setSnKey(data.data.snkey)
-						if(!commURL.ItemType){
-							setTimeout(()=>{
-								uni.redirectTo({
-									'url': '/pages/index/index'
-								})
-							},200);
-						}else if(commURL.ItemType == 'mine'){	
+						if(commURL.ItemType == 'mine'){	
 							setTimeout(() => {
 								uni.redirectTo({
 									'url': '/pages/alone/mine/index/index'
 								}) 							
 							}, 300);
+						}else{
+							setTimeout(()=>{
+								uni.redirectTo({
+									'url': '/pages/index/index'
+								})
+							},200);
 						}
 					} else {
 						uni.showToast({
@@ -218,5 +224,12 @@
 		border-radius: 50upx;
 		background-color: red !important;
 		color: #FFFFFF !important;
+	}
+	.privacy_protocol{
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translate(-50%, 0%);
+		color: #2079fff2;
 	}
 </style>

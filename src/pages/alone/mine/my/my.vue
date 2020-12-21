@@ -188,6 +188,11 @@
 		</view>
 
 		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="url" :fixed="false" :maxWidth="500" :minHeight="300"></kps-image-cutter>
+
+		<view class="flex justify-center privacy_protocol" >
+			<view class="padding-sm">服务协议</view>
+			<view class="padding-sm">隐私政策</view>
+		</view>
 	</view>
 </template>
 
@@ -530,5 +535,12 @@
 	.cu-form-group .title {
 		min-width: calc(4em + 15px);
 		
+	}
+	.privacy_protocol{
+		position: absolute;
+		bottom: 0;
+		left: 50%;
+		transform: translate(-50%, 0%);
+		color: #2079fff2;
 	}
 </style>
