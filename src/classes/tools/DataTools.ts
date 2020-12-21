@@ -540,7 +540,7 @@ export namespace dataTool {
 							statestr="0";
 						}
 						let state: number = parseInt(statestr);
-						return state == 0;
+						return state == 0 || state == 1;
 					} else {
 						return true;
 					}
