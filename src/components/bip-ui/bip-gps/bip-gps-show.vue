@@ -15,8 +15,14 @@ import BipInsAidNew from '@/classes/BipInsAidNew';
 import {T} from "@/pages/gps/js/TMap"
 import {icl} from '@/classes/tools/CommICL';
 const ICL = icl; 
+import comm from '@/static/js/comm.js';
+let commURL: any = comm;
+import { GlobalVariable } from '@/classes/tools/ICL';
+import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 @Component({components:{mLoad}})
 export default class MAP extends Vue {
+	uri:any ="";//
+	snkey:any = "";// 
 	loading:any = false;
 	tMap:any= null;
 	tMapDiv:any = "MAP"+new Date().getTime();
@@ -24,18 +30,27 @@ export default class MAP extends Vue {
 	@Prop({type:String}) title!:string
 	@Prop() cels:any;
 	@Prop() pdList:any;
-	map_name_cell:any=null;
-	map_root_cell:any=null;
+	map_name_cell:any = null;
+	map_root_cell:any = null;
+	map_icon_cell:any = null;
+	fj_root_cell:any = null;
+	fj_name_cell:any = null;
+
 	CloudMarkerCollection:any = null; //天地图海量点对象
 	pointMsg:any={};//每个点的提示信息
 	mounted(){
+		this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
+		this.snkey = LoginModule.snkey
 		for(var i=0;i<this.cels.length;i++){
 			if(this.cels[i].editType==12){//地图
 				this.map_name_cell = this.cels[i];
 				if(this.cels[i+1]){
 					this.map_root_cell = this.cels[i+1];
+					this.map_icon_cell = this.cels[i+2];
 				}
-				break;
+			}else if(this.cels[i].editName == "UPDOWN"){
+				this.fj_root_cell = this.cels[i-1];
+				this.fj_name_cell = this.cels[i];
 			}
 		}
 		this.$nextTick(function(){
@@ -81,8 +96,46 @@ export default class MAP extends Vue {
 							msg+= (this.cels[j].labelString + "："+val+"<br/>");
 						}
 					}
+					if(this.fj_root_cell && this.fj_name_cell &&((this.fj_root_cell.attr &  0x200) >0 || (this.fj_name_cell.attr &  0x200)>0) ){
+						let fj_root = data[this.fj_root_cell.id];
+						let fj_name = data[this.fj_name_cell.id];
+						if(fj_root && fj_name){
+							let nameArr = fj_name.split(";");
+							for(var j=0;j<nameArr.length;j++){
+								let name = nameArr[j];
+								name = encodeURI(name)
+								let url = this.uri+'?snkey='+this.snkey+'&fjroot='+fj_root+'&updid=36&fjname='+name;
+								var imgReg = /\.(png|jpg|gif|jpeg|webp|tiff|psd)$/; //图片名为汉字的也可以匹配到
+								let isImg:boolean = imgReg.test(name); //返回true ,false
+								if(isImg){
+									// console.log(url)
+									let img = "<img style='width: 200px;' src='"+url+"'>";
+									msg+= (img+"<br/>");
+								}
+								j = nameArr.length;
+							}
+						}
+					}
 					this.pointMsg[key]= msg;
-					var marker = new T.Marker(lgt);// 创建标注
+					var marker = null;
+					if(this.map_icon_cell){
+						let url = data[this.map_icon_cell.id];
+						if(url){
+							if(!url.startsWith("http")){
+								url = commURL.BaseUri+url;
+							}
+							var icon = new T.Icon({
+								iconUrl: url,
+								iconSize: new T.Point(19, 27),
+								iconAnchor: new T.Point(10, 25)
+							});
+							marker = new T.Marker(lgt,{icon:icon});// 创建标注
+						}else{
+							marker = new T.Marker(lgt);// 创建标注
+						}
+					}else{
+						marker = new T.Marker(lgt);// 创建标注
+					}
 					let _this = this;
 					marker.addEventListener("click", function (e:any) {
 						var lnglat = e.lnglat;
