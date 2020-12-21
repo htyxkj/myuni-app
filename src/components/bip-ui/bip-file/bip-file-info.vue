@@ -55,6 +55,7 @@ export default class bipFileInfo extends Vue {
 	@Prop({type:Object}) cell!:Cell;
 	@Prop({type:String}) obj_id!:string;
 	@Prop({ type: Boolean, default: false }) show!: boolean;
+	@Prop({ type: Boolean, default: false }) isSPShow!: boolean;
 	imgList:any = [];
 	imgList2:any = [];
 	count: number = 9;
@@ -213,7 +214,9 @@ export default class bipFileInfo extends Vue {
 				let cel = cels[i];
 				if(cel.id == this.cell.id){
 					this.fjrootCell = cels[i-1];
-					break;
+				}
+				if(cel.id == 'fj_root'){
+					this.fjrootCell = cel;
 				}
 			}
 		}
@@ -235,6 +238,9 @@ export default class bipFileInfo extends Vue {
 			}
 		}
 		this.mdisabled = this.disabled;
+		if(this.isSPShow){
+			this.mdisabled = true;
+		}
 	}
 	get disabled(){
 		if(this.cds.ccells!=null){

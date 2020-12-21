@@ -6,6 +6,9 @@
 		<template v-else-if="cell.type==91||cell.type==93">
 			<bip-show-date :cell="cell" :record="record" :rowId="rowId" :obj_id="obj_id"></bip-show-date>
 		</template>
+		<template v-else-if="cell.editName && cell.editName=='UPDOWN'">
+			<bip-show-file :cell="cell" :record="record" :rowId="rowId" :obj_id="obj_id"></bip-show-file>
+		</template>
 		<template v-else-if="cell.refValue ||cell.editName">
 			<bip-show-ref :cell="cell" :obj_id="obj_id" :record="record" :rowId="rowId"></bip-show-ref>
 		</template>
@@ -32,8 +35,9 @@ import bipShowComm from '../bip-show/bip-show-comm.vue';
 import bipShowNumber from '../bip-show/bip-show-number.vue';
 import bipShowDate from '../bip-show/bip-show-date.vue';
 import bipShowRef from '../bip-show/bip-show-ref.vue';
+import bipShowFile from '../bip-show/bip-show-file.vue';
 @Component({
-	components: {bipShowComm,bipShowNumber,bipShowDate,bipShowRef}
+	components: {bipShowComm,bipShowNumber,bipShowDate,bipShowRef,bipShowFile}
 })
 export default class bipCommShow extends Vue{
 	// @Inject('env') env!:CCliEnv;
