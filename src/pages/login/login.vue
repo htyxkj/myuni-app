@@ -23,9 +23,9 @@
 					<view></view>
 					<view></view>
 					<view></view>
-					<view v-if="_comm && _comm.ItemType =='flexible'" class="registered" @tap="registered('flexible')">注册</view><!-- 灵活用工注册 -->
-					<view v-if="_comm && _comm.ItemType =='credit'" class="registered" @tap="registered('credit')">注册</view><!-- 征信管理注册 -->
-					<view v-if="_comm && _comm.ItemType == 'mine'" class="registered" @tap="touristLogin">游客登陆</view> <!-- 张矿微平台 -->
+					<view v-if="_comm.ItemType =='flexible'" class="registered" @tap="registered('flexible')">注册</view><!-- 灵活用工注册 -->
+					<view v-if="_comm.ItemType =='credit'" class="registered" @tap="registered('credit')">注册</view><!-- 征信管理注册 -->
+					<view v-if="_comm.ItemType == 'mine'" class="registered" @tap="touristLogin">游客登陆</view> <!-- 张矿微平台 -->
 				</view>
 			</view>
 			<view class="padding flex flex-direction">
@@ -77,6 +77,7 @@
 		onLoad() {
 			uni.clearStorage();
 			this._comm = commURL;
+			this.$forceUpdate();
 		}
 		/**
 		 * 登录系统

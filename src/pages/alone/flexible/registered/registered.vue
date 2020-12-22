@@ -159,7 +159,6 @@
 <script lang="ts">
 	import {Vue,Provide,Component} from 'vue-property-decorator';
 	import mLoad from '@/components/mLoad.vue';
-	import bipProtocol from '@/components/bip-ui/bip-protocol/bip-protocol.vue'
 	import {Tools} from '@/classes/tools/Tools';
 	import User from '@/classes/User';
 	import {BIPUtil} from '@/classes/api/request';
@@ -175,6 +174,7 @@
 	import {dataTool} from '@/classes/tools/DataTools';
 	const DataUtil = dataTool.utils;
 	
+	import bipProtocol from '@/components/bip-ui/bip-protocol/bip-protocol.vue';
 	import bipComm from '@/components/bip-ui/bip-comm/bip-comm.vue';
 	@Component({
 		components: {
@@ -216,7 +216,7 @@
 		async onLoad(){
 			this.regType =0;
 			this.companyTypeIndex = 0;
-			let user: User = new User('admin', '', 'Flexible@2020')
+			let user: User = new User('portal', '', '')
 			await tools.login(user).then((res: any) => { 
 				let data = res.data
 				if (data.id != -1) { 

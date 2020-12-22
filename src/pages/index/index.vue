@@ -83,16 +83,17 @@ import { values } from 'xe-utils/methods';
 		
 		onLoad(options:any) {
 			//#ifdef APP-PLUS
-				let value = uni.getStorageSync('AgreeToTerms');
-				if(!value){
-					this.showpp=true;
-					return;
-				}
+				// let value = uni.getStorageSync('AgreeToTerms');
+				// if(!value){
+				// 	this.showpp=true;
+				// 	return;
+				// }
 			//#endif
 			this.options = options
 			this._onLoad();
 		}
 		_onLoad(){
+			this.showpp=false;
 			let options:any = this.options;
 			if(commURL && commURL.ItemType && commURL.ItemType == 'mine'){
 				uni.reLaunch({

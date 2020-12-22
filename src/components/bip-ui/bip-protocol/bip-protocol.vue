@@ -6,7 +6,6 @@
 			</checkbox-group>
 			<view class="padding-sm text-black" style="padding-right:0px;padding-left:0px">同意</view>
 			<view class="padding-sm" v-for="(item,index) in protocol" :key="index" @click="showPl(item)">{{item.name}}</view>
-
 		</view>
 		<view class="cu-modal" :class="modal.show?'show':''">
 			<view class="cu-dialog">
@@ -17,7 +16,7 @@
 					</view>
 				</view>
 				<view class="padding-xl">
-					<scroll-view style="max-height: 900rpx;" scroll-y="true" class="scroll-Y" >
+					<scroll-view style="max-height: 850rpx;" scroll-y="true" class="scroll-Y" >
 						<view v-html="modal.content"></view>
 	                </scroll-view>
 				</view>
@@ -26,19 +25,11 @@
 	</view>
 </template>
 <script lang="ts">
-let dd = require( 'dingtalk-jsapi');
 import { Vue, Prop, Component,Inject,Watch } from 'vue-property-decorator';
-import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
-import { GlobalVariable } from '@/classes/tools/ICL';
-import { dataTool } from '@/classes/tools/DataTools';
-const DataUtil = dataTool.utils;
-
 import {BIPUtil} from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
 import QueryEntity from '@/classes/search/QueryEntity';
-@Component({
-	components: {}
-})
+@Component({})
 export default class bipProtocol extends Vue{
 
 	agree_protocol:any =[{ value: 'T', checked: false }];

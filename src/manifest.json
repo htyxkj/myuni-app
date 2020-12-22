@@ -69,12 +69,15 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : true,
-        "appid" : "wxc44ad3c8a989baba",
+        "appid" : "wx907ae24a046ffc45",
         "setting" : {
-            "urlCheck" : true,
+            "urlCheck" : false,
             "minified" : true,
             "es6" : true
-        }
+        },
+		"optimization":{
+			"subPackages":true
+		}
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -93,10 +96,10 @@
             "https" : false
         },
         "router" : {
-            "base" : "/bip-mine/webMobile/",
+            "base" : "/bip-flexible/webMobile/",
             "mode" : "history"
         },
-        "title" : "幸福张矿",
-        "domain" : "http://47.104.211.216:8089/bip-mine/webMobile/"
+        "title" : "自立熊灵活用工平台",
+        "domain" : "https://www.bip-soft.com/bip-flexible/webMobile/"
     }
 }

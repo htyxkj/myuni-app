@@ -4,19 +4,21 @@
 			"path": "pages/index/index",
 			"style": {
 				"disableScroll": true,
-				"navigationBarTitleText": "幸福张矿"
+				"navigationBarTitleText": "自立熊灵活用工平台"
 			}
 		}, {
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "Login"
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/my/my",
 			"style": {
 				"navigationBarTitleText": "My"
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/menu/menuPage",
 			"style": {
 				"navigationBarTitleText": "Menu"
@@ -101,10 +103,10 @@
             "path" : "pages/editunit/editunit",
             "style" : {}
         }
-        ,{
-            "path" : "pages/gps/gps",
-            "style" : {}
-        }
+        // ,{
+        //     "path" : "pages/gps/gps",
+        //     "style" : {}
+        // }
 		/***********************************灵活用工平台START*************************************/
         ,{
             "path" : "pages/alone/flexible/registered/registered",//灵活用工平台
@@ -117,75 +119,149 @@
             "style" : {}
         }
 		/***********************************张矿微平台START*************************************/
-        ,{
-            "path" : "pages/alone/mine/index/index",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/details/details",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/details/comment",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/learning/learningList",
-            "style" : {}
-		}
-        ,{
-            "path" : "pages/alone/mine/askAnswer/askAnswerList",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/askAnswer/askAnswerAdd",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/askAnswer/myAskAnswerList",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/my/my",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/scoreRank/scoreRank",
-            "style" : {}
-		}
-        ,{
-            "path" : "pages/alone/mine/scoreRank/scoreDetail",
-            "style" : {}
-		}
-        ,{
-            "path" : "pages/alone/mine/details/allComment",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/details/reply",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/askAnswer/askAnswerDetails",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/my/favoritesOrHistoryList",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/exam/dayAnswer",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/exam/doExam",
-            "style" : {}
-		}
+        // ,{
+        //     "path" : "pages/alone/mine/index/index",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/details/details",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/details/comment",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/learning/learningList",
+        //     "style" : {}
+		// }
+        // ,{
+        //     "path" : "pages/alone/mine/askAnswer/askAnswerList",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/askAnswer/askAnswerAdd",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/askAnswer/myAskAnswerList",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/my/my",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/scoreRank/scoreRank",
+        //     "style" : {}
+		// }
+        // ,{
+        //     "path" : "pages/alone/mine/scoreRank/scoreDetail",
+        //     "style" : {}
+		// }
+        // ,{
+        //     "path" : "pages/alone/mine/details/allComment",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/details/reply",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/askAnswer/askAnswerDetails",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/my/favoritesOrHistoryList",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/exam/dayAnswer",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/exam/doExam",
+        //     "style" : {}
+		// }
 		/***********************************张矿微平台START*************************************/
-    ],
+	],
+	"subPackages": [
+		{	
+		"root": "",
+		"pages": [
+			{
+				"path" : "pages/gps/gps",
+				"style" : {}
+			},
+			{
+				"path" : "pages/alone/mine/index/index",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/details/details",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/details/comment",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/learning/learningList",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/askAnswer/askAnswerList",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/askAnswer/askAnswerAdd",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/askAnswer/myAskAnswerList",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/my/my",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/scoreRank/scoreRank",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/scoreRank/scoreDetail",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/details/allComment",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/details/reply",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/askAnswer/askAnswerDetails",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/my/favoritesOrHistoryList",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/exam/dayAnswer",
+				"style" : {}
+			}
+			,{
+				"path" : "pages/alone/mine/exam/doExam",
+				"style" : {}
+			}]
+		}
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "幸福张矿",
+		"navigationBarTitleText": "自立熊灵活用工平台",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"navigationStyle": "custom"

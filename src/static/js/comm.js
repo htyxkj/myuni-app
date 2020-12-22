@@ -38,7 +38,7 @@
 // 飞防管控
 export const BaseUri =  "http://211.144.37.205/air-super/";
 export const BaseDBID = "01";
-export const ItemType = "credit";
+export const ItemType = "super";
 
 // 灵活用工
 // export const BaseUri =  "https://www.bip-soft.com/bip-flexible/";
