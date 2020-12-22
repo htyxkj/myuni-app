@@ -18,7 +18,7 @@
 			</template>
 		</template>
 		<template v-else-if="isMap">
-			<bip-gps-show v-if="dsm&&dsm.ccells" :cels="dsm.ccells.cels" :pdList="pdList"></bip-gps-show>
+			<!-- <bip-gps-show v-if="dsm&&dsm.ccells" :cels="dsm.ccells.cels" :pdList="pdList"></bip-gps-show> -->
 		</template>
 		<view v-if="i_isMap" class="solid-bottom text-xsl padding-xl map-conv" @click="isMapConv">
 			<text v-if="isMap" class="cuIcon-wenzi text-green"></text>
@@ -34,7 +34,7 @@ import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
 import mLoad from '@/components/mLoad.vue';
 import bipSearchCon from '@/components/bip-ui/bip-search/bip-search-con.vue'
 import bipListUnit2 from '@/components/bip-ui/bip-unit/bip-list-unit2.vue';
-import bipGpsShow from '@/components/bip-ui/bip-gps/bip-gps-show.vue';
+// import bipGpsShow from '@/components/bip-ui/bip-gps/bip-gps-show.vue';
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
 
@@ -52,7 +52,7 @@ import { icl } from '../../classes/tools/CommICL';
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
 @Component({
-	components: { mLoad,bipSearchCon,bipListUnit2,bipGpsShow}
+	components: { mLoad,bipSearchCon,bipListUnit2}//bipGpsShow
 })
 export default class appReport extends Vue {
 	vueId: string = Tools.guid();
@@ -118,20 +118,23 @@ export default class appReport extends Vue {
 	makeQueryCont(cr0:any,cels:Array<any>){
 		let qs = '';
 		if(cels.length>0){
-			cels.forEach((item:any)=>{
+			for(var i=0;i<cels.length;i++){
+				let item = cels[i];
 				let vr = cr0.data[item.id];
 				let type = item.type;
 				if(type==12){
 					if(vr){
-						qs+=item.id+"='"+vr+"' and";
+						qs+=item.id+"='"+vr+"'";
 					}
 				}else{
 					if(vr !== undefined &&vr != null &&vr !==''){
-						qs+=item.id+"="+vr+" and";
+						qs+=item.id+"="+vr;
 					}
 				}
-			})
-			qs = qs.substring(0,qs.length-3);
+				if(i<cels.length-1){
+					qs+=" and ";
+				}
+			}
 		}
 		return qs;
 	}
