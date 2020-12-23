@@ -63,7 +63,12 @@
 		//初始化首页布局
 		async initLayout(gwCode:any,id:any){
 			let qe:QueryEntity = new QueryEntity("SS09007","SS09007");//查询实体
-			qe.cont = JSON.stringify( {gwcode:gwCode,menuid:id});
+			let user = LoginModule.user;
+			if(user.attr == 0){
+				qe.cont = JSON.stringify( {menuid:id});
+			}else{
+				qe.cont = JSON.stringify( {gwcode:gwCode,menuid:id});
+			}
 			qe.oprid = 13;
 			qe.type = 0;
 			qe.page.pageSize = 10000
