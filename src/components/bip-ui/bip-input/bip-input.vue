@@ -93,7 +93,6 @@
 		}
 		
 		cellDataChange(){
-			console.log('监听值变化');
 			this.$nextTick(()=>{
 				this.recordChange();
 			})
@@ -102,7 +101,7 @@
 		
 		
 		
-		@Watch('record')
+		@Watch('record',{deep:true})
 		recordChange(){
 			this.$nextTick(()=>{
 				let rr = this.record.data[this.cell.id];

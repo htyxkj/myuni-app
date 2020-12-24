@@ -1,10 +1,12 @@
 <template>
 	<view>
 		<view class="flex justify-center privacy_protocol" >
-			<checkbox-group class="block" style="line-height: 38px;" @change="CheckboxChange">
-				<checkbox class="round blue protocol_check" :class="agree_protocol[0].checked?'checked':''" :checked="agree_protocol[0].checked?true:false" value="T"></checkbox>
-			</checkbox-group>
-			<view class="padding-sm text-black" style="padding-right:0px;padding-left:0px">同意</view>
+			<template v-if="showTY==1">
+				<checkbox-group class="block" style="line-height: 38px;" @change="CheckboxChange">
+					<checkbox class="round blue protocol_check" :class="agree_protocol[0].checked?'checked':''" :checked="agree_protocol[0].checked?true:false" value="T"></checkbox>
+				</checkbox-group>
+				<view class="padding-sm text-black" style="padding-right:0px;padding-left:0px">同意</view>
+			</template>
 			<view class="padding-sm" v-for="(item,index) in protocol" :key="index" @click="showPl(item)">{{item.name}}</view>
 		</view>
 		<view class="cu-modal" :class="modal.show?'show':''">
@@ -32,6 +34,7 @@ import QueryEntity from '@/classes/search/QueryEntity';
 @Component({})
 export default class bipProtocol extends Vue{
 
+	@Prop({ type: Object }) showTY!: any;
 	agree_protocol:any =[{ value: 'T', checked: false }];
 	plName:any = "";
 	protocol:any = [];

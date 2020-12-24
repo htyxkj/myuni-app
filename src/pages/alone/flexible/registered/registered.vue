@@ -150,7 +150,7 @@
 			</template>
 		</template>
 		<template v-if="regType ==1 || regType ==2">
-			<bip-protocol @plChange="plChange"></bip-protocol>
+			<bip-protocol @plChange="plChange" :showTY="1"></bip-protocol>
 		</template>
 		<mLoad :png="'/static/gs.png'" :msg="'注册中...'" v-if="loadModal"></mLoad>
 	</view>

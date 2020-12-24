@@ -1,6 +1,8 @@
 <template>
 	<view class="myBody">
+		// #ifdef  H5
 		<div :id="tMapDiv" class="TMap"></div>
+		// #endif
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'定位中...'"></mLoad>
 		<message ref="msg"></message>
 	</view>
@@ -53,10 +55,14 @@ export default class MAP extends Vue {
 				this.fj_name_cell = this.cels[i];
 			}
 		}
-		this.$nextTick(function(){
-			this.createdMap();
-		})
+		// #ifdef  H5
+			this.$nextTick(function(){
+				this.createdMap();
+			})
+		// #endif
 	}
+	
+	// #ifdef  H5
 	// 创建地图
   	createdMap(){
 		//初始化地图对象
@@ -180,6 +186,7 @@ export default class MAP extends Vue {
 			// }
 		}
 	}
+	// #endif
 	async makeRef(val:any,cell:Cell){
 		let ref = cell.refValue ||cell.editName
 		let bipInsAid:BipInsAidNew = new BipInsAidNew("");

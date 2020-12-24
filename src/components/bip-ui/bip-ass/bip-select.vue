@@ -38,8 +38,13 @@ export default class bipSelect extends Vue {
 	refInsAid:BipInsAidNew = new BipInsAidNew("")
 	aidKey = ''
 	cds:CDataSet = new CDataSet(null)
+
+	mulcols: boolean = false;//是否是多列
+    othCols: Array<string> = [];//字段名称
+    othColsIndex: Array<number> = [];//对应数据下标
 	
 	created() {
+        this.mulcols = (this.cell.attr & 0x100000) > 0;//判断是否是多列
 		this.cds = this.env.getDataSet(this.obj_id);
 		this.index = this.cds.index;
 		this.editName = this.bipInsAid.id;
@@ -59,6 +64,9 @@ export default class bipSelect extends Vue {
 			}
 		}
 		this.getRefVal();
+		if(this.mulcols){
+			this.initMulColInfo();
+		}
 	}
 	open() {
 		let groupV = "";
@@ -122,6 +130,15 @@ export default class bipSelect extends Vue {
 					let v0= param[this.bipInsAid.cells.cels[0].id];
 					this.refInsAid.realV = v0;
 					this.refInsAid.makeShow();
+					this.othCols.forEach((fld, index) => {
+						let idx = this.othColsIndex[index];
+						let layC = this.bipInsAid.cells.cels[idx];
+						if (layC) {
+							let val = param[layC.id]||"";
+							let cel:any = this.cds.getCell(fld)
+							this.cds.cellChange(val,cel.id);
+						}
+					});
 				}
 				this.makeSv();
 				this.cds.cellChange(this.modekey,this.cell.id);
@@ -136,6 +153,33 @@ export default class bipSelect extends Vue {
 			this.mode = this.refInsAid.showV;
 		}
 	}
+
+
+	/**初始化多列参照 */
+    initMulColInfo() {
+        let script = this.cell ? this.cell.script : "";
+        if (script) {
+            let vals = script.split("&");
+            if (vals.length < 2) {
+				this.showErr("多列定义错误" + script)
+            } else {
+                let flds = vals[0].split(",");
+                let flds_index: Array<number> = vals[1]
+                    .split(",")
+                    .map(value => {
+                        return parseInt(value);
+                    });
+                if (flds.length != flds_index.length) {
+					this.showErr("多列参照定义的字段和下标的个数不对" + script);
+                } else {
+                    this.othCols = flds;
+                    this.othColsIndex = flds_index;
+                }
+            }
+        }
+	}
+	
+
 	
 	get aidmaps(){
 		return InsAidModule.aidInfos;

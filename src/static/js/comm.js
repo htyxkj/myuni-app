@@ -36,9 +36,14 @@
 // export const ItemType = null;
 
 // 飞防管控
-export const BaseUri =  "http://211.144.37.205/air-super/";
-export const BaseDBID = "01";
-export const ItemType = "super";
+// export const BaseUri =  "http://211.144.37.205/air-super/";
+// export const BaseDBID = "01";
+// export const ItemType = "super";
+
+//力创模具
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-production/";
+// export const BaseDBID = "01";
+// export const ItemType = "production";
 
 // 灵活用工
 // export const BaseUri =  "https://www.bip-soft.com/bip-flexible/";
@@ -47,9 +52,9 @@ export const ItemType = "super";
 
 
 // 搅拌站
-// export const BaseUri =  "http://8.129.40.31/bip-erp/";
-// export const BaseDBID = "01";
-// export const ItemType = null;
+export const BaseUri =  "http://8.129.40.31/bip-erp/";
+export const BaseDBID = "01";
+export const ItemType = null;
 
 // 张矿微平台
 // export const BaseUri =  "https://test.juminfuwu.cn/bip-mine/";

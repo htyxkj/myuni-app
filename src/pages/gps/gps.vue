@@ -5,25 +5,21 @@
 				<view class="header-title">{{ title }}</view>
 			</block>
 		</cu-custom>
-		<div :id="tMapDiv" class="TMap"></div>
-		<view>
-			<!-- <view class="padding-lr">
-				<view class="cu-form-group" style="border: 1px solid #c7c7c7">
-					<input placeholder="查询位置" name="input"></input>
-					<text class='cuIcon-search text-orange'></text>
+		// #ifdef  H5
+			<div :id="tMapDiv" class="TMap"></div>
+			<view>
+				<view class="padding-lr">
+					<view class="solid-bottom padding">
+						<text >当前位置</text>
+					</view>
+					<view class="padding">{{address}}</view>
 				</view>
-			</view> -->
-			<view class="padding-lr">
-				<view class="solid-bottom padding">
-					<text >当前位置</text>
-				</view>
-				<view class="padding">{{address}}</view>
 			</view>
-		</view>
-		<view class="padding-xl">
-			<button class="cu-btn block line-green lg" :disabled="disabled" @tap="refreshH5Gps"> <text class="cuIcon-locationfill"></text> 重新定位</button>
-			<button class="cu-btn block bg-blue margin-tb-sm lg" :disabled="disabled" @tap="select"> <text class="cuIcon-roundcheck"></text> 确定</button>
-		</view>
+			<view class="padding-xl">
+				<button class="cu-btn block line-green lg" :disabled="disabled" @tap="refreshH5Gps"> <text class="cuIcon-locationfill"></text> 重新定位</button>
+				<button class="cu-btn block bg-blue margin-tb-sm lg" :disabled="disabled" @tap="select"> <text class="cuIcon-roundcheck"></text> 确定</button>
+			</view>
+		// #endif
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'定位中...'"></mLoad>
 		<message ref="msg"></message>
 	</view>
@@ -70,12 +66,14 @@ export default class MAP extends Vue {
 				console.log("参照转换失败！！")				
 			}
 		}
-		this.$nextTick(function(){
-			this.createdMap();
-			// this.checkOpenGps();
-		})
-	} 
+		// #ifdef H5
+			this.$nextTick(function(){
+				this.createdMap();
+			})
+		// #endif
+} 
 	// 创建地图
+	// #ifdef H5
   	createdMap(){
 		//初始化地图对象
         this.tMap = new T.Map(this.tMapDiv,{projection:"EPSG:4326"});
@@ -231,7 +229,7 @@ export default class MAP extends Vue {
 		this.isZoom = true;
 		this.removeMapMousemove();
 	}
-
+	// #endif
 	// checkOpenGps(){
 	// 	let system = uni.getSystemInfoSync();// 获取系统信息
 	// 	if (system.platform === 'android') { // 判断平台

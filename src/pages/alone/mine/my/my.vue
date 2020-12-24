@@ -188,16 +188,13 @@
 		</view>
 
 		<kps-image-cutter @ok="onok" @cancel="oncancle" :url="url" :fixed="false" :maxWidth="500" :minHeight="300"></kps-image-cutter>
-
-		<view class="flex justify-center privacy_protocol" >
-			<view class="padding-sm">服务协议</view>
-			<view class="padding-sm">隐私政策</view>
-		</view>
+		<bip-protocol :showTY="0"></bip-protocol>
 	</view>
 </template>
 
 <script lang="ts">
 	import {Vue,Component} from 'vue-property-decorator';
+	import bipProtocol from '@/components/bip-ui/bip-protocol/bip-protocol.vue';
 	import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
 	import {BIPUtil} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
@@ -214,7 +211,7 @@
 	import comm from '@/static/js/comm.js';
 	let commURL: any = comm;
 	@Component({
-		components:{kpsImageCutter,bipComm}
+		components:{kpsImageCutter,bipComm,bipProtocol}
 	})
 	export default class My extends Vue{
 		my_integral:number = 0;

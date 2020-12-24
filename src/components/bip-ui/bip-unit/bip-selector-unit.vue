@@ -1,10 +1,10 @@
 <template>
 	<view class="cu-form-group flex align-center margin-bottom-sm" @click="selectOK">
 		<view>
-			<view v-for="itm in sindex" :key="itm">
-				<template v-if="itm<2">
+			<view v-for="(itm,index) in labers" :key="index">
+				<template>
 					<view class="">
-						<text>{{labers[itm]}}：</text>{{item[cells[itm].id]}}
+						<text>{{labers[index]}}：</text>{{item[cells[sindex[index]].id]}}
 					</view>
 				</template>
 			</view>

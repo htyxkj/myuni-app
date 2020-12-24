@@ -100,7 +100,6 @@ export default class selecteditor extends Vue {
 	}
 	
 	select(item:any,index:number){
-		console.log(item,index)
 		if(this.methordName){
 			uni.$emit(this.methordName,item)
 		}

@@ -96,10 +96,10 @@
             "https" : false
         },
         "router" : {
-            "base" : "/bip-flexible/webMobile/",
+            "base" : "/bip-production/webMobile/",
             "mode" : "history"
         },
-        "title" : "自立熊灵活用工平台",
-        "domain" : "https://www.bip-soft.com/bip-flexible/webMobile/"
+        "title" : "自立熊自由职业服务平台",
+        "domain" : "https://test.juminfuwu.cn/bip-production/webMobile/"
     }
 }

@@ -152,7 +152,7 @@ export namespace singIn {
 							}); 
 						},
 						onFail : function(err:any) {
-							alert('dd error: ' +JSON.stringify(err));
+							alert('dd onFail error: ' +JSON.stringify(err));
 						}
 					});
 					dd.error(function(error:any){ 

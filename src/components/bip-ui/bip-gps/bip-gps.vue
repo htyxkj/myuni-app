@@ -8,7 +8,6 @@
 	</view>
 </template>
 <script lang="ts">
-let dd = require( 'dingtalk-jsapi');
 import Cell from '@/classes/pub/coob/Cell';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import CDataSet from '@/classes/pub/CDataSet';
