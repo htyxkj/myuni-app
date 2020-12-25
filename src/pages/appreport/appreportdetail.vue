@@ -14,7 +14,7 @@
 			</view>
 		</template>
 		<template v-if="mbs.initOK">
-			<bip-bill-bar @tabSelect="execCmd" :attr="0"></bip-bill-bar>
+			<bip-bill-bar @tabSelect="execCmd" :attr="0" :bmore="true"></bip-bill-bar>
 		</template>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 		<bip-menu-btn-dlg ref="bip_dlg" @Recheck="Recheck"></bip-menu-btn-dlg>
@@ -177,7 +177,6 @@ export default class appReportDetail extends Vue {
         if(this.uriParam){
             let name = "DLG."+this.uriParam.pbuid;
             let aidKey = name
-            // let dlg = await pubMethod.getConstant(str);
 			aidKey = icl.AID_KEYCL+aidKey;
 			if(this.inProcess.get(aidKey)){
 				let rnt:any = this.aidmaps.get(aidKey);
@@ -197,6 +196,7 @@ export default class appReportDetail extends Vue {
                     let bname = cc.substring(2,item.indexOf(","));  
                     let btn1 = new BipMenuBtn("DLG",bname)
                     btn1.setDlgType(type)
+                    btn1.setDlgSname(name);
                     btn1.setDlgCont(item.substring(item.indexOf(";")+1))
                     this.mbs.menuList.push(btn1)
                 });

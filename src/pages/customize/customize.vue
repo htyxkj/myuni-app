@@ -1,22 +1,27 @@
 <template>
 	<view>
-		<view class="padding-bottom-xs" v-for="(item,index) in layout" :key="index">
-			<template v-if="item.comid == '001' || item.comid == '005'">
-				<Jiugongge :layoutdata="item"></Jiugongge>
-			</template>
-			<template v-if="item.comid == '002'">
-				<Carousel :layoutdata="item"></Carousel>
-			</template>
-			<template v-if="item.comid == '003'">
-				<Tabs :layoutdata="item"></Tabs>
-			</template>
-			<template v-if="item.comid == '006'">
-				<CustomChart :layoutdata="item"></CustomChart>
-			</template>
-			<template v-if="item.comid == '007'">
-				<MyTop :layoutdata="item"></MyTop>
-			</template>
-		</view>
+		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" 
+			:heightReduce="210" :pageNo="1" :totalPageNo="1" @refresh="refresh" :isShowGoToTop="false">
+			<view  slot="content-list">
+				<view class="padding-bottom-xs" v-for="(item,index) in layout" :key="index" >
+					<template v-if="item.comid == '001' || item.comid == '005'">
+						<Jiugongge :layoutdata="item"></Jiugongge>
+					</template>
+					<template v-if="item.comid == '002'">
+						<Carousel :layoutdata="item"></Carousel>
+					</template>
+					<template v-if="item.comid == '003'">
+						<Tabs :layoutdata="item"></Tabs>
+					</template>
+					<template v-if="item.comid == '006'">
+						<CustomChart :layoutdata="item"></CustomChart>
+					</template>
+					<template v-if="item.comid == '007'">
+						<MyTop :layoutdata="item"></MyTop>
+					</template>
+				</view>
+			</view>
+		</load-refresh>
 	</view>
 </template>
 <script lang="ts">
@@ -34,37 +39,34 @@
 	import Carousel from './Carousel.vue';
 	import CustomChart from './CustomChart.vue';
 	import MyTop from './MyTop.vue';
+	import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 	@Component({
-		components:{Jiugongge,Carousel,Tabs,CustomChart,MyTop}
+		components:{Jiugongge,Carousel,Tabs,CustomChart,MyTop,loadRefresh}
 	})
 	export default class customize extends Vue {
 		@Prop({default:null}) menu?:any;
 		layout:any=[];
 		async mounted() {
-			this.layout = [];
 			let user = LoginModule.user;
 			let gwCode:any = [];
 			if(user.gwCode){
 				gwCode = user.gwCode.split(";");
 			}
 			gwCode.push("-1")
-			let key = "coustomizeLayout"+this.menu.id;
-			let la = uni.getStorageSync(key);
-			if(la){
-				this.layout = JSON.parse(la)
-			}
-			if(this.layout.length == 0){
+			this.layout = [];
+			if(this.layout.length == 0 && user.attr > 0){
 				for(var i=0;i<gwCode.length;i++){
 					await this.initLayout(gwCode[i],this.menu.id)	
-					uni.setStorageSync(key,JSON.stringify(this.layout))
 				}
+			}
+			if(this.layout.length == 0  && user.attr == 0){
+				await this.initLayout(null,this.menu.id)
 			}
 		}
 		//初始化首页布局
 		async initLayout(gwCode:any,id:any){
 			let qe:QueryEntity = new QueryEntity("SS09007","SS09007");//查询实体
-			let user = LoginModule.user;
-			if(user.attr == 0){
+			if(!gwCode){
 				qe.cont = JSON.stringify( {menuid:id});
 			}else{
 				qe.cont = JSON.stringify( {gwcode:gwCode,menuid:id});
@@ -83,6 +85,10 @@
 			});
 		}
 
+		refresh(){
+
+		}
+
 		@Watch('menu')
 		async menuChange() {
 			this.layout = [];
@@ -92,16 +98,13 @@
 				gwCode = user.gwCode.split(";");
 			}
 			gwCode.push("-1")
-			let key = "coustomizeLayout"+this.menu.id;
-			let la = uni.getStorageSync(key);
-			if(la){
-				this.layout = JSON.parse(la)
-			}
-			if(this.layout.length == 0){
+			if(this.layout.length == 0 && user.attr > 0){
 				for(var i=0;i<gwCode.length;i++){
 					await this.initLayout(gwCode[i],this.menu.id)	
-					uni.setStorageSync(key,JSON.stringify(this.layout))
 				}
+			}
+			if(this.layout.length == 0  && user.attr == 0){
+				await this.initLayout(null,this.menu.id)
 			}
 		}
 	}

@@ -138,6 +138,7 @@
 					scrollAlign:'left',
 					scrollBackgroundColor:'#F7F7FF',
 					scrollColor:'#DEE7F7',
+					boundaryGap:'justify'
 				},
 				yAxis: {
 					gridType:'dash',
@@ -390,7 +391,7 @@
 									return "";
 								}
 								let vl = (item._proportion_*100).toFixed(2)+'%'
-								vl = item.name +"："+ vl;
+								// vl = item.name +"："+ vl;
 								return vl
 							}
 						}
