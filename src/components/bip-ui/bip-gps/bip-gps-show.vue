@@ -1,8 +1,6 @@
 <template>
 	<view class="myBody">
-		// #ifdef  H5
 		<div :id="tMapDiv" class="TMap"></div>
-		// #endif
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'定位中...'"></mLoad>
 		<message ref="msg"></message>
 	</view>

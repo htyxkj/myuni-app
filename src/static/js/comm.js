@@ -45,21 +45,18 @@
 // export const BaseDBID = "01";
 // export const ItemType = "production";
 
-// 灵活用工
-// export const BaseUri =  "https://www.bip-soft.com/bip-flexible/";
-// export const BaseDBID = "01";
-// export const ItemType = "flexible";
+// 自立熊自由职业服务平台
+export const BaseUri =  "https://www.bip-soft.com/bip-flexible/";
+export const BaseDBID = "01";
+export const ItemType = "flexible";
 
 
 // 搅拌站
-export const BaseUri =  "http://8.129.40.31/bip-erp/";
-export const BaseDBID = "01";
-export const ItemType = null;
+// export const BaseUri =  "http://8.129.40.31/bip-erp/";
+// export const BaseDBID = "01";
+// export const ItemType = null;
 
 // 张矿微平台
-// export const BaseUri =  "https://test.juminfuwu.cn/bip-mine/";
-// export const BaseDBID = "01";
-
 // export const BaseUri =  "http://127.0.0.1:801/bip-mine";
 // export const BaseUri =  "http://47.104.211.216:8089/bip-mine/";
 // export const BaseDBID = "01";
@@ -67,10 +64,10 @@ export const ItemType = null;
 
 
 // export const BaseUri =  "http://127.0.0.1:9999/jd";
-// export const BaseDBID = "158";
+// export const BaseDBID = "148";
 // export const ItemType = "";
 
 
-export const version = 116;
+export const version = 110;
 export const SMSURL = "https://www.bip-soft.com/ssms/";
 export default {BaseUri, BaseDBID,SMSURL,ItemType,version}

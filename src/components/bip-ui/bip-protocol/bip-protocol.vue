@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="flex justify-center privacy_protocol" >
+		<view  v-if="showTY >= 0" class="flex justify-center privacy_protocol" >
 			<template v-if="showTY==1">
 				<checkbox-group class="block" style="line-height: 38px;" @change="CheckboxChange">
 					<checkbox class="round blue protocol_check" :class="agree_protocol[0].checked?'checked':''" :checked="agree_protocol[0].checked?true:false" value="T"></checkbox>
@@ -24,6 +24,28 @@
 				</view>
 			</view>
 		</view>
+
+		<view class="cu-modal" :class="showpp?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">服务协议和隐私政策</view>
+				</view>
+				<view class="padding-xl">
+					请你务必审慎阅读、充分理解
+					<view class="padding-sm" v-for="(item,index) in protocol" :key="index" @click="showPl(item)">{{item.name}}</view>
+					各条款，包括但不限于：为了向你提供服务，我们需要收集你的设备信息、
+					操作日志等个人信息。你可以阅读
+					<view class="padding-sm" v-for="(item,index) in protocol" :key="index" @click="showPl(item)">{{item.name}}</view>
+					了解详细信息。如你同意，请点击“同意”开始接受我们的服务。
+				</view>
+				<view class="cu-bar bg-white justify-end">
+					<view class="action">
+						<button class="cu-btn line-blue text-blue" @tap="closeApp">暂不使用</button>
+						<button class="cu-btn bg-blue margin-left" @tap="AgreeToTerms">同意</button>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 <script lang="ts">
@@ -34,7 +56,9 @@ import QueryEntity from '@/classes/search/QueryEntity';
 @Component({})
 export default class bipProtocol extends Vue{
 
-	@Prop({ type: Object }) showTY!: any;
+
+	@Prop({ type: Boolean,default:false }) showpp!: any;
+	@Prop({ type: Number,default:0 }) showTY!: any;
 	agree_protocol:any =[{ value: 'T', checked: false }];
 	plName:any = "";
 	protocol:any = [];
@@ -72,6 +96,19 @@ export default class bipProtocol extends Vue{
 		let vl =[this.agree_protocol[0].checked,this.plName]
 		this.$emit("plChange",vl)
 	}
+
+	//同意隐私条款
+	AgreeToTerms(){
+		uni.setStorageSync('AgreeToTerms',true);
+		this.$emit("AgreeToTerms")
+	}
+	//不同意
+	closeApp(){
+		// #ifdef APP-PLUS  
+		plus.runtime.quit();  
+		// #endif
+	}
+
 	showPl(item:any){
 		this.modal.name = item.name;
 		this.modal.content = item.content;

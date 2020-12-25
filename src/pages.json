@@ -43,59 +43,59 @@
 		}, {
 			"path": "pages/appinfo/appinfo",
 			"style": {
-				"disableScroll": false, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"disableScroll": false,
 				"app-plus": {
-					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+					"bounce": "none"
 				}
 			}
 		}, {
 			"path": "pages/appinfo/appdetail",
 			"style": {
-				"disableScroll": false, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"disableScroll": false,
 				"app-plus": {
-					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+					"bounce": "none"
 				}
 			}
 		}, {
 			"path": "pages/appinfo/appdetailsp",
 			"style": {
-				"disableScroll": false, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"disableScroll": false,
 				"app-plus": {
-					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+					"bounce": "none"
 				}
 			}
 		}
 		, {
 			"path": "pages/appinfo/applist",
 			"style": {
-				"disableScroll": true, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"disableScroll": true,
 				"app-plus": {
-					"bounce": "none" ,// 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+					"bounce": "none" ,
 					"scrollIndicator": "none"
 				}
 			}
 		}, {
 			"path": "pages/appreport/appreport",
 			"style": {
-				"disableScroll": true, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"disableScroll": true,
 				"app-plus": {
-					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+					"bounce": "none"
 				}
 			}
 		}, {
 			"path": "pages/appreport/appreportdetail",
 			"style": {
-				"disableScroll": true, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"disableScroll": true,
 				"app-plus": {
-					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+					"bounce": "none"
 				}
 			}
 		}, {
 			"path": "pages/selecteditor/selecteditor",
 			"style": {
-				"disableScroll": true, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
+				"disableScroll": true,
 				"app-plus": {
-					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
+					"bounce": "none"
 				}
 			}
 		}
@@ -103,10 +103,10 @@
             "path" : "pages/editunit/editunit",
             "style" : {}
         }
-        ,{
-            "path" : "pages/gps/gps",
-            "style" : {}
-        }
+        // ,{
+        //     "path" : "pages/gps/gps",
+        //     "style" : {}
+        // }
 		/***********************************灵活用工平台START*************************************/
         ,{
             "path" : "pages/alone/flexible/registered/registered",//灵活用工平台
@@ -119,70 +119,70 @@
             "style" : {}
         }
 		/***********************************张矿微平台START*************************************/
-        ,{
-            "path" : "pages/alone/mine/index/index",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/details/details",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/details/comment",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/learning/learningList",
-            "style" : {}
-		}
-        ,{
-            "path" : "pages/alone/mine/askAnswer/askAnswerList",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/askAnswer/askAnswerAdd",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/askAnswer/myAskAnswerList",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/my/my",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/scoreRank/scoreRank",
-            "style" : {}
-		}
-        ,{
-            "path" : "pages/alone/mine/scoreRank/scoreDetail",
-            "style" : {}
-		}
-        ,{
-            "path" : "pages/alone/mine/details/allComment",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/details/reply",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/askAnswer/askAnswerDetails",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/my/favoritesOrHistoryList",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/exam/dayAnswer",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/exam/doExam",
-            "style" : {}
-		}
+        // ,{
+        //     "path" : "pages/alone/mine/index/index",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/details/details",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/details/comment",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/learning/learningList",
+        //     "style" : {}
+		// }
+        // ,{
+        //     "path" : "pages/alone/mine/askAnswer/askAnswerList",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/askAnswer/askAnswerAdd",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/askAnswer/myAskAnswerList",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/my/my",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/scoreRank/scoreRank",
+        //     "style" : {}
+		// }
+        // ,{
+        //     "path" : "pages/alone/mine/scoreRank/scoreDetail",
+        //     "style" : {}
+		// }
+        // ,{
+        //     "path" : "pages/alone/mine/details/allComment",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/details/reply",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/askAnswer/askAnswerDetails",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/my/favoritesOrHistoryList",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/exam/dayAnswer",
+        //     "style" : {}
+        // }
+        // ,{
+        //     "path" : "pages/alone/mine/exam/doExam",
+        //     "style" : {}
+		// }
 		/***********************************张矿微平台START*************************************/
 	],
 	"subPackages": [
@@ -301,7 +301,7 @@
 			{
 				"name": "辅助",
 				"path": "pages/selecteditor/selecteditor",
-				"query": "editName=CDIC" //启动参数
+				"query": "editName=CDIC"
 			},
 			{
 				"name":"灵活用工注册页面",

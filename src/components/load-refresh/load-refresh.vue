@@ -24,7 +24,7 @@
 				<view class="load-more">{{loadText}}</view>
 			</scroll-view>
 			<!-- 回到顶部按钮 (fixed元素,需写在scroll-view外面,防止滚动的时候抖动)-->
-			<image v-if="showtop" class="bip-totop" src="@/static/totop.png" mode="widthFix" @click="toTopClick"></image>
+			<image v-if="isShowGoToTop && showtop" class="bip-totop" src="@/static/totop.png" mode="widthFix" @click="toTopClick"></image>
 		</view>
 	</view>
 </template>
@@ -34,6 +34,10 @@
 		name: 'loadRefresh',
 		props: {
 			isRefresh: {
+				type: Boolean,
+				defaule: true
+			},
+			isShowGoToTop: {
 				type: Boolean,
 				defaule: true
 			},

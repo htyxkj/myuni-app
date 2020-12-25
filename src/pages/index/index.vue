@@ -24,22 +24,7 @@
 			</template>
 			<mIndexBar v-if="ifDefaultIndex" v-show="!isSpDeatilPage" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 		</view>
-		<view class="cu-modal" :class="showpp?'show':''">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white justify-end">
-					<view class="content">服务协议和隐私政策</view>
-				</view>
-				<view class="padding-xl">
-					请你务必审慎阅读、充分理解“服务协议”和隐私政策各条款，包括但不限于：为了向你提供内容分享等服务，我们需要收集你的设备信息、操作日志等个人信息。你可以阅读《服务协议》和《隐私政策》了解详细信息。如你同意，请点击“同意”开始接受我们的服务。
-				</view>
-				<view class="cu-bar bg-white justify-end">
-					<view class="action">
-						<button class="cu-btn line-blue text-blue" @tap="showpp = false">暂不使用</button>
-						<button class="cu-btn bg-blue margin-left" @tap="AgreeToTerms">同意</button>
-					</view>
-				</view>
-			</view>
-		</view>
+		<bip-protocol :showTY="-1" :showpp="showpp" @AgreeToTerms="AgreeToTerms"></bip-protocol>
 	</view>
 </template>
 
@@ -61,9 +46,13 @@
 	import comm from '@/static/js/comm.js';
 	let commURL: any = comm;
 	import {singIn} from '@/pages/index/singIn/singIn'
+	import bipProtocol from '@/components/bip-ui/bip-protocol/bip-protocol.vue';
+	import QueryEntity from '@/classes/search/QueryEntity';
+	import {BIPUtil} from '@/classes/api/request';
+	let tools = BIPUtil.ServApi;
 import { values } from 'xe-utils/methods';
 	@Component({
-		components:{home,my,message,menuPage,mIndexBar,customize,BipTask}
+		components:{home,my,message,menuPage,mIndexBar,customize,BipTask,bipProtocol}
 	})
 	export default class Index extends Vue{
 		title:string = '首页'
@@ -80,14 +69,16 @@ import { values } from 'xe-utils/methods';
 		showpp:boolean = false;//显示隐私政策 服务协议
 
 		options:any = null;
+
+		server_version:any=null;
 		
 		onLoad(options:any) {
 			//#ifdef APP-PLUS
-				// let value = uni.getStorageSync('AgreeToTerms');
-				// if(!value){
-				// 	this.showpp=true;
-				// 	return;
-				// }
+				let value = uni.getStorageSync('AgreeToTerms');
+				if(!value){
+					this.showpp=true;
+					return;
+				}
 			//#endif
 			this.options = options
 			this._onLoad();
@@ -111,9 +102,153 @@ import { values } from 'xe-utils/methods';
 
 		//同意隐私条款
 		AgreeToTerms(){
-			uni.setStorageSync('AgreeToTerms',true);
 			this._onLoad();
 		}
+		/**
+		 * 页面显示
+		 */
+		async onShow(){
+			//#ifdef APP-PLUS
+			if(this.loginState){
+				uni.getSystemInfo({
+					success:(res) => {
+						//检测当前平台，如果是安卓则启动安卓更新  
+						if(res.platform=="android"){  
+							this.AndroidCheckUpdate();  
+						}  
+					}  
+				})
+			}
+			//#endif
+		}
+		/**
+		 * 安卓应用的检测更新实现
+		 */
+		async AndroidCheckUpdate(){ 
+			let reminderInterval = 3600
+			let qe:QueryEntity = new QueryEntity('','');
+			let vv:any = await tools.getBipInsAidInfo('UNIAPPVERSION',300,qe);
+			if( vv && vv.data.id ==0){
+				let val = vv.data.data.data.values;
+				for(var i=0;i<val.length;i++){
+					if(val[i].code == "version"){
+						this.server_version  = val[i].name
+					}else if(val[i].code == "reminderInterval"){
+						reminderInterval  = parseInt(val[i].name)
+					}
+				}
+			}
+			if(this.server_version == commURL.version){
+				return;
+			}
+			let _this = this;
+
+			let currTimeStamp = new Date().getTime()/1000
+			// 判断缓存时间
+			uni.getStorage({
+				key: 'tip_version_update_time',
+				success: function (res) {
+					var lastTimeStamp = res.data;
+					//定义提醒的时间间隔，避免烦人的一直提示，一个小时：3600；一天：86400
+					if((currTimeStamp - lastTimeStamp) < reminderInterval){
+						//避免多次提醒，不要更新
+					}else{
+						//重新设置时间戳
+						_this.setStorageForAppVersion(currTimeStamp);
+						//进行版本型号的比对 以及下载更新请求
+						_this.checkVersionToLoadUpdate();
+					}
+				},
+				fail:function(res){
+					_this.setStorageForAppVersion(currTimeStamp);
+				}
+			});
+		}
+		/**
+		 * //设置应用版本号对应的缓存信息
+		 * @param {Object} currTimeStamp 当前获取的时间戳
+		 */
+		setStorageForAppVersion(currTimeStamp:any){
+			uni.setStorage({
+				key: 'tip_version_update_time',
+				data: currTimeStamp,
+				success: function () {
+					console.log('setStorage-success');
+				}
+			});
+		}
+		/**
+		 * 进行版本型号的比对 以及下载更新请求
+		 * @param {Object} server_version 服务器最新 应用版本号
+		 * @param {Object} curr_version 当前应用版本号
+		 */
+		checkVersionToLoadUpdate(){
+			let server_version = this.server_version;
+			let curr_version = commURL.version;
+			if(server_version > curr_version){
+				//TODO 此处判断是否为 WIFI连接状态
+				// if(plus.networkinfo.getCurrentType()!=3){
+				// 	uni.showToast({  
+				// 		title: '有新的版本发布，检测到您目前非Wifi连接，为节约您的流量，程序已停止自动更新，将在您连接WIFI之后重新检测更新',  
+				// 		mask: true,  
+				// 		duration: 5000,
+				// 		icon:"none"
+				// 	});  
+				// 	return;  
+				// }else{
+					uni.showModal({
+						title: "版本更新",
+						// content: '有新的版本发布，检测到您当前为Wifi连接，是否立即进行新版本下载？',
+						content: '有新的版本发布，是否立即进行新版本下载？',
+						confirmText:'立即更新',
+						cancelText:'稍后进行',
+						success: function (res) {
+							if (res.confirm) {
+								uni.showToast({
+									icon:"none",
+									mask: true,
+									// title: '有新的版本发布，检测到您目前为Wifi连接，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
+									title: '有新的版本发布，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
+									duration: 5000,  
+								}); 
+								//设置 最新版本apk的下载链接
+								var downloadApkUrl = commURL.BaseUri+"/apk/android.apk";
+								var dtask = plus.downloader.createDownload( downloadApkUrl, {}, function ( d, status ) {  
+										// 下载完成 
+										if ( status == 200 ) {   
+											uni.showToast({
+												icon:"none",
+												mask: true,
+												// title: '有新的版本发布，检测到您目前为Wifi连接，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
+												title: '安装程序下载完成，安装中...',  
+												duration: 3000,  
+											}); 
+											plus.runtime.install(plus.io.convertLocalFileSystemURL(d.filename),{force:true},function(error){ 
+												// uni.showToast({  
+												// 	title: '安装失败', 
+												// 	icon:"none",
+												// 	mask: true,
+												// 	duration: 5000  
+												// });  
+											})
+										} else {  
+											uni.showToast({  
+												title: '更新失败',
+												icon:"none",
+												duration: 1500  
+											});  
+										}    
+									});  
+								dtask.start();
+							} else if (res.cancel) {
+								console.log('稍后更新');
+							}
+						}
+					});
+				// }
+			}
+		}
+
 
 		//登录成功
 		loginOk(){

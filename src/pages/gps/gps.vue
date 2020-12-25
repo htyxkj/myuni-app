@@ -5,21 +5,19 @@
 				<view class="header-title">{{ title }}</view>
 			</block>
 		</cu-custom>
-		// #ifdef  H5
-			<div :id="tMapDiv" class="TMap"></div>
-			<view>
-				<view class="padding-lr">
-					<view class="solid-bottom padding">
-						<text >当前位置</text>
-					</view>
-					<view class="padding">{{address}}</view>
+		<div :id="tMapDiv" class="TMap"></div>
+		<view>
+			<view class="padding-lr">
+				<view class="solid-bottom padding">
+					<text >当前位置</text>
 				</view>
+				<view class="padding">{{address}}</view>
 			</view>
-			<view class="padding-xl">
-				<button class="cu-btn block line-green lg" :disabled="disabled" @tap="refreshH5Gps"> <text class="cuIcon-locationfill"></text> 重新定位</button>
-				<button class="cu-btn block bg-blue margin-tb-sm lg" :disabled="disabled" @tap="select"> <text class="cuIcon-roundcheck"></text> 确定</button>
-			</view>
-		// #endif
+		</view>
+		<view class="padding-xl">
+			<button class="cu-btn block line-green lg" :disabled="disabled" @tap="refreshH5Gps"> <text class="cuIcon-locationfill"></text> 重新定位</button>
+			<button class="cu-btn block bg-blue margin-tb-sm lg" :disabled="disabled" @tap="select"> <text class="cuIcon-roundcheck"></text> 确定</button>
+		</view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'定位中...'"></mLoad>
 		<message ref="msg"></message>
 	</view>
