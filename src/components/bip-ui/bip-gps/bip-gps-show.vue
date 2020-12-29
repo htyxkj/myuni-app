@@ -41,6 +41,7 @@ export default class MAP extends Vue {
 	mounted(){
 		this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
 		this.snkey = LoginModule.snkey
+		this.snkey = encodeURIComponent(this.snkey);
 		for(var i=0;i<this.cels.length;i++){
 			if(this.cels[i].editType==12){//地图
 				this.map_name_cell = this.cels[i];
