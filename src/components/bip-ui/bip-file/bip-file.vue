@@ -1,8 +1,6 @@
 <template>
 	<view class="cu-form-group solid-bottom">
-		<template v-if="label" :class="[cell.isReq?'text-red':'']">
-			<view class="title">{{ cell.labelString }}</view>
-		</template>
+		<view v-if="label" :class="[cell.isReq?'text-red':'']" class="title">{{ cell.labelString }}</view>
 		<input type="text" v-model="mode" disabled="true"/>
 		<text class="text-progress text-bold cuIcon-upload" @tap.stop="open()"></text>
 		<bip-file-info :cell="cell" :obj_id="obj_id"  :show="showFda" @hide="hide" @success="success"></bip-file-info>

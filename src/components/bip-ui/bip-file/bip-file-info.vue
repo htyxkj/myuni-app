@@ -129,7 +129,8 @@ export default class bipFileInfo extends Vue {
 			updid:37,
 			snkey:uni.getStorageSync('snkey'),
 			fjid:'',
-			fjroot:this.fj_root
+			fjroot:this.fj_root,
+			fileName:""
 		}
 		let num =0;
 		for(var i=0;i<this.imgList.length;i++){
@@ -139,6 +140,12 @@ export default class bipFileInfo extends Vue {
 				num++;
 				params.fjid = fileP.fjid;
 				params.fname = file.name;
+				if(!params.fname){
+					let path = file.path;
+					path = path.substring(path.lastIndexOf("."),path.length);
+					params.fname = new Date().getTime()+path;
+				}
+				params.fileName = params.fname
 				await tools.uniAppUploadFile(fileP.path,params,this.fileSuccess,this.fileFail); 
 			}
 		}
@@ -167,6 +174,7 @@ export default class bipFileInfo extends Vue {
 			this.cds.cellChange(fj_root,this.fjrootCell.id);
 			this.makeData();
 		} else{
+			console.log(data)
 			uni.showToast({title:"文件上传失败！！！",icon:'none'})
 		}
 	}
@@ -212,11 +220,12 @@ export default class bipFileInfo extends Vue {
 			let cels = this.cds.ccells.cels;
 			for(var i=0;i<cels.length;i++){
 				let cel = cels[i];
-				if(cel.id == this.cell.id){
-					this.fjrootCell = cels[i-1];
-				}
 				if(cel.id == 'fj_root'){
 					this.fjrootCell = cel;
+					break;
+				}
+				if(cel.id == this.cell.id){
+					this.fjrootCell = cels[i-1];
 				}
 			}
 		}
