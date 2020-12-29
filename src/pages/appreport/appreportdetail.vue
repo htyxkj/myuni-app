@@ -76,7 +76,7 @@ export default class appReportDetail extends Vue {
             if(cc.length>2){
                 setTimeout(() => {
                     let dia: any = this.$refs.bip_dlg;
-                    dia.open(btn,this.env); 
+                    dia.open(btn,this.cr); 
                 }, 100);
             }
         }

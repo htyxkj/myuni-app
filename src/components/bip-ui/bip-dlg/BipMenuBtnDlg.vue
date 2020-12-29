@@ -1,5 +1,6 @@
 <template>
 	<view style="z-index: 999999;">
+		<!-- dlg 执行完成后弹框提示 -->
 		<view class="cu-modal" :class="showMsg==true?'show':''">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-white justify-end">
@@ -52,6 +53,7 @@
 				</view>
 			</view>
 		</view>
+
 	</view>
 </template>
 
@@ -79,8 +81,7 @@ export default class bipMenuBtnDlg extends Vue {
 	/**
      * DLG入口
      */
-    async open(btn:any,env:CCliEnv){
-        console.log(btn)
+    async open(btn:any,color:any){
         this.btn = btn; 
         this.Title = btn.name;
         if(btn.dlgType == 'A'){ // 执行SQL
@@ -98,6 +99,13 @@ export default class bipMenuBtnDlg extends Vue {
             });
             //请确认，是否注销该读者?_style:color:red|font-size:12px,请确认，是否注销该读者?_style:color:red|font-size:12px,;update insuser set  usrattr='9'  where  usrcode=@usrcode;0:注销失败;1:注销成功
             this.sqlDlg0 = true;
+		}else if(btn.dlgType == 'B'){//弹出对象
+            let cellId = btn.dlgCont.split(";")[0];
+            let key = btn.dlgCont.split(";")[1];
+			let vl = this.env.dsm.currRecord.data[key]
+			uni.navigateTo({
+				url: '/pages/dlg/dlg?cellId=' + cellId + '&color=' + color + '&title=' + this.Title +'&key='+key+'&vl='+vl,
+			});
 		}
 	}
 
