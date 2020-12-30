@@ -247,12 +247,11 @@ export default class appList extends Vue {
 				this.loading = false;
 			});
 	}
-	queryCont(cellId: string, mo: any) {
+	queryCont(vl:any) {
 		this.loading = true;
-		let cont: any = {};
-		cont[cellId] = mo;
-		if (mo && mo.length > 0) this.qe.cont = cont;
-		else {
+		if(Object.keys(vl).length>0){
+			this.qe.cont = vl;
+		}else {
 			this.qe.cont = '';
 		}
 		this.pdList = [];

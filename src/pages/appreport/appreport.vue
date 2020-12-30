@@ -49,10 +49,11 @@ import QueryEntity from '@/classes/search/QueryEntity';
 import { Tools } from '../../classes/tools/Tools';
 import { icl } from '../../classes/tools/CommICL';
 
+import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
 @Component({
-	components: { mLoad,bipSearchCon,bipListUnit2,bipGpsShow}
+	components: { mLoad,bipSearchCon,bipListUnit2,bipGpsShow,loadRefresh}
 })
 export default class appReport extends Vue {
 	vueId: string = Tools.guid();
@@ -238,14 +239,12 @@ export default class appReport extends Vue {
 		
 	}
 
-	queryCont(cellId:string,mo:any){
-		this.loading = true
-		let cont:any = {};
-		cont[cellId] = mo;
-		if(mo&&mo.length>0)
-			this.qe.cont = cont;
-		else{
-			this.qe.cont = ''
+	queryCont(vl:any) {
+		this.loading = true;
+		if(Object.keys(vl).length>0){
+			this.qe.cont = vl;
+		}else {
+			this.qe.cont = '';
 		}
 		this.pdList = [];
 		this.refresh()

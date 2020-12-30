@@ -217,16 +217,15 @@ export default class appReport extends Vue {
 		}
 		return qs;
 	}
-	queryCont(cellId:string,mo:any){
-		this.loading = true
-		let cont:any = {};
-		cont[cellId] = mo;
-		if(mo&&mo.length>0)
-			this.qe.cont = cont;
-		else{
-			this.qe.cont = ''
+	queryCont(vl:any) {
+		this.loading = true;
+		if(Object.keys(vl).length>0){
+			this.qe.cont = vl;
+		}else {
+			this.qe.cont = '';
 		}
 		this.pdList = [];
+		this.refresh();
 	}
 	@Watch('pbuid')
 	aidMapChange() {

@@ -1,91 +1,117 @@
 <template>
 	<view>
-		<view class="cu-bar search bg-white flex">
-			<view class="action" @tap="openList">
-				<text>{{title}}</text>
-				<text class="cuIcon-triangledownfill"></text>
-			</view>
-			<view class="search-form radius">
-				<text class="cuIcon-search"></text>
-				<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @blur="query" v-model="mode" @focus="isShow = false" />
-			</view>
-		</view>
+		<uni-collapse accordion="true">
+			<uni-collapse-item :customize="true">
+				<view slot="title"  style="width:100%">
+					<view class="cu-bar search bg-white flex" v-if="tjAll.length>0">
+						<view class="action" @tap="openList(0)">
+							<text>{{tjAll[0].name}}</text>
+							<text class="cuIcon-triangledownfill"></text>
+						</view>
+						<view class="search-form radius">
+							<text class="cuIcon-search"></text>
+							<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @blur="query" v-model="tjAll[0].value" @focus="isShow = false" />
+						</view>
+					</view>
+				</view>
+				<view slot="content">
+					<view v-for="(item,index) in tjAll" :key="index" style="width:100%">
+						<template v-if="index>0">
+							<view class="cu-bar search bg-white flex">
+								<view class="action" @tap="openList(index)">
+									<text>{{item.name}}</text>
+									<text class="cuIcon-triangledownfill"></text>
+								</view>
+								<view class="search-form radius">
+									<text class="cuIcon-search"></text>
+									<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @blur="query" v-model="item.value" @focus="isShow = false" />
+									
+								</view>
+								<uni-icons style="margin-right: 5px;" color="#bbb" size="20" type="close" @click="delTj(index)"/>
+							</view>
+						</template>
+					</view>
+					<view class="flex justify-center padding-bottom">
+						<button class="cu-btn lines-blue round sm shadow" @click="addTj">
+							添加一个
+						</button>
+					</view>
+				</view>
+			</uni-collapse-item>
+		</uni-collapse>
+
 		<bip-select :arr="cels" :show="isShow" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="'labelString'" :isStr="false"></bip-select>
 	</view>
 </template>
 <script lang="ts">
 import { Vue,Prop, Component,Watch} from 'vue-property-decorator';
 import bipSelect from '@/components/bip-ui/bip-select/bip-select.vue'
+import uniCollapse from "@/components/uni-ui/uni-collapse/uni-collapse.vue";
+import uniCollapseItem from "@/components/uni-ui/uni-collapse-item/uni-collapse-item.vue";
+import uniIcons from '@/components/uni-ui/uni-icons/uni-icons.vue';
 @Component({
-	components: {bipSelect}
+	components: {bipSelect,uniCollapse,uniCollapseItem,uniIcons}
 })
 export default class bipSearchCon extends Vue{
 	@Prop({type:Array,default:[]}) cels!:Array<any>;
-	cellid:string = '';
-	mode:string = '';
-	mode1:string = '';
 	isShow:boolean = false;
+
+	tjIndex:any=0;
+	tjAll:Array<any>=new Array<any>();//全部条件
+	oneTj:any = {name:"",cellId:"",value:""};
+
 	mounted(){
-		// console.log(this.cels)
-		if(this.cels&&this.cels.length>0){
-			this.cellid = this.cels[0].id;
+		this.initOneTj();
+	}
+	initOneTj(){
+		this.tjAll=new Array<any>();
+		if(this.cels && this.cels.length>0){
+			this.oneTj.name = this.cels[0].labelString
+			this.oneTj.cellId = this.cels[0].id
+			this.tjAll.push(this.oneTj);
 		}
 	}
-	
-	@Watch('cels')
-	celsChange(){
-		if(this.cels&&this.cels.length>0){
-			this.cellid = this.cels[0].id;
-		}
-	}
-	openList(){
+	openList(tjIndex:any){
+		this.tjIndex = tjIndex;
 		this.isShow = !this.isShow;
 	}
-	
+	selectChange(e:any){
+		if(e !== undefined){
+			this.tjAll[this.tjIndex].cellId = e.id;
+			this.tjAll[this.tjIndex].name = e.labelString;
+		}
+		this.hideModal();
+	}
 	hideModal(){
 		this.isShow = false;
 	}
-	
 	cancel(){
 		this.hideModal();
 	}
-	
-	selectChange(e:any){
-		if(e !== undefined){
-			this.cellid = e.id;
-			this.mode = this.mode1 = ''
-		}
-		this.hideModal();
-	}
-	
 	selectOK(e:any){
-		if(e !== undefined){
-			this.cellid = e.id;
-		}
-		this.hideModal();
-		console.log(e);
+		this.selectChange(e)
 	}
-		
-	get title(){
-		if(this.cels.length>0){
-			let index = this.cels.findIndex((item:any)=>{
-				return item.id == this.cellid
-			});
-			index = index?index:0;
-			if(index>-1){
-				return this.cels[index].labelString
-			}
-		}
-		
-		return '点我选择';
+	addTj(){
+		let tj = Object.assign({},this.oneTj)
+		tj.name = this.cels[0].labelString
+		tj.cellId = this.cels[0].id
+		this.tjAll.push(tj);
+	}
+	delTj(index:any){
+		this.tjAll.splice(index,1)
+	}
+
+	@Watch('cels')
+	celsChange(){
+		this.initOneTj();
 	}
 	query(){
-		// console.log('query')
-		if(this.mode != this.mode1){
-			this.$emit('query',this.cellid,this.mode);
-			this.mode1 = this.mode
+		let vl:any = {};
+		for(var i=0;i<this.tjAll.length;i++){
+			let tj = this.tjAll[i];
+			vl[tj.cellId] = tj.value
 		}
-		
+		this.$emit('query',vl);
 	}
 }
 </script>

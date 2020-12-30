@@ -1,20 +1,29 @@
 <template>
-	<view :class="['uni-collapse-cell', { 'uni-collapse-cell--disabled': disabled, 'uni-collapse-cell--open': isOpen }]" :hover-class="disabled ? '' : 'uni-collapse-cell--hover'">
-		<view class="uni-collapse-cell__title header" @click="onClick">
-			<view v-if="thumb" class="uni-collapse-cell__title-extra"><image :src="thumb" class="uni-collapse-cell__title-img" /></view>
-			<view class="uni-collapse-cell__title-inner">
-				<view class="uni-collapse-cell__title-text">{{ title }}</view>
+	<view :class="['uni-collapse-cell', { 'uni-collapse-cell--disabled': disabled, 'uni-collapse-cell--open': isOpen,'background-color':bgColor }]" :hover-class="disabled ? '' : 'uni-collapse-cell--hover'">
+		<template v-if="!customize">
+			<view class="uni-collapse-cell__title header" @click="onClick">
+				<view v-if="thumb" class="uni-collapse-cell__title-extra"><image :src="thumb" class="uni-collapse-cell__title-img" /></view>		
+				<view class="uni-collapse-cell__title-inner">
+					<view class="uni-collapse-cell__title-text">{{ title }}</view>
+				</view>
+				<view :class="{ 'uni-active': isOpen, 'uni-collapse-cell--animation': showAnimation === true }" class="uni-collapse-cell__title-arrow">
+					<uni-icons color="#bbb" size="20" type="arrowdown" />
+				</view>
 			</view>
-			<view :class="{ 'uni-active': isOpen, 'uni-collapse-cell--animation': showAnimation === true }" class="uni-collapse-cell__title-arrow">
-				<uni-icons color="#bbb" size="20" type="arrowdown" />
+		</template>
+		<template v-else>
+			<view class="uni-collapse-cell__customize-title">
+				<slot name="title"></slot>
+				<view :class="{ 'uni-active': isOpen, 'uni-collapse-cell--animation': showAnimation === true }" class="uni-collapse-cell__customize-title-arrow" @click="onClick">
+					<uni-icons color="#bbb" size="20" type="arrowdown" />
+				</view>
 			</view>
-		</view>
+		</template>
 		<view :style="{ height: isOpen ? 'auto' : '0px' }" class="uni-collapse-cell__content">
 			<view
 				:class="{ 'uni-collapse-cell--animation': showAnimation === true }"
-				:style="{ transform: isOpen ? 'translateY(0px)' : 'translateY(-50%)', '-webkit-transform': isOpen ? 'translateY(0px)' : 'translateY(-50%)' }"
-			>
-				<slot />
+				:style="{ transform: isOpen ? 'translateY(0px)' : 'translateY(-50%)', '-webkit-transform': isOpen ? 'translateY(0px)' : 'translateY(-50%)' }">
+				<slot name="content"></slot>
 			</view>
 		</view>
 	</view>
@@ -29,7 +38,9 @@ import uniIcons from '../uni-icons/uni-icons.vue';
 	}
 })
 export default class UniCollapseItem extends Vue {
+	@Prop({ type:Boolean,default:false}) customize!:boolean;
 	@Prop({ type: String, default: '' }) title!: string;
+	@Prop({ type: String, default: 'bg-white' }) bgColor!: string;
 	@Prop({ type: [Number, String], default: 0 }) name!: number;
 	@Prop({ type: [Boolean, String], default: false }) disabled!: boolean;
 	@Prop({ type: Boolean, default: false }) showAnimation!: boolean;
@@ -82,12 +93,12 @@ $collapse-title-pd: $uni-spacing-col-lg $uni-spacing-row-lg;
 	position: relative;
 	&--hover {
 		// @include collapse-hover;
-		background-color: #f5f5f5;
+		background-color: #ffffff;
 	}
 
 	&--open {
 		// @include collapse-hover;
-		background-color: #f5f5f5;
+		background-color: #ffffff;
 	}
 
 	&--disabled {
@@ -171,6 +182,58 @@ $collapse-title-pd: $uni-spacing-col-lg $uni-spacing-row-lg;
 
 		.view {
 			font-size: $uni-font-size-base;
+		}
+	}
+
+	&__customize-title {
+		width: 100%;
+		box-sizing: border-box;
+		flex: 1;
+		position: relative;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+
+		&-extra {
+			margin-right: 18upx;
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+		}
+
+		&-img {
+			height: $uni-img-size-base;
+			width: $uni-img-size-base;
+		}
+
+		&-arrow {
+			width: 20px;
+			height: 20px;
+			margin-right: 5px;
+			transform: rotate(0deg);
+			transform-origin: center center;
+
+			&.uni-active {
+				transform: rotate(180deg);
+			}
+		}
+
+		&-inner {
+			flex: 1;
+			overflow: hidden;
+			display: flex;
+			flex-direction: column;
+		}
+
+		&-text {
+			font-size: $uni-font-size-lg;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			color: inherit;
+			line-height: 1.5;
+			overflow: hidden;
 		}
 	}
 }

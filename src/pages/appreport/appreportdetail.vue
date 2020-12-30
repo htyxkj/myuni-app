@@ -26,7 +26,6 @@ import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
 import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
 import mLoad from '@/components/mLoad.vue';
 import BipMenuBtnDlg from '@/components/bip-ui/bip-dlg/BipMenuBtnDlg.vue';
-import bipSearchCon from '@/components/bip-ui/bip-search/bip-search-con.vue'
 import bipListUnit2 from '@/components/bip-ui/bip-unit/bip-list-unit2.vue';
 import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue';
 import { BIPUtil } from '@/classes/api/request';
@@ -46,7 +45,7 @@ import { icl } from '../../classes/tools/CommICL';
 import {dataTool} from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils
 @Component({
-	components: { mLoad,bipSearchCon,bipListUnit2,bipBillBar,BipMenuBtnDlg}
+	components: { mLoad,bipListUnit2,bipBillBar,BipMenuBtnDlg}
 })
 export default class appReportDetail extends Vue {
 	vueId: string = Tools.guid();
