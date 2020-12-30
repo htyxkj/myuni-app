@@ -34,9 +34,11 @@
 					请你务必审慎阅读、充分理解
 					<view class="padding-sm" v-for="(item,index) in protocol" :key="index" @click="showPl(item)">{{item.name}}</view>
 					各条款，包括但不限于：为了向你提供服务，我们需要收集你的设备信息、
-					操作日志等个人信息。你可以阅读
-					<view class="padding-sm" v-for="(item,index) in protocol" :key="index" @click="showPl(item)">{{item.name}}</view>
-					了解详细信息。如你同意，请点击“同意”开始接受我们的服务。
+					操作日志等个人信息。
+					你可以阅读
+					<view class="padding-sm" v-for="(item,index) in protocol" :key="item.sid" @click="showPl(item)">{{item.name}}</view>
+					了解详细信息。
+					如你同意，请点击“同意”开始接受我们的服务。
 				</view>
 				<view class="cu-bar bg-white justify-end">
 					<view class="action">
