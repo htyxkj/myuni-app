@@ -93,12 +93,20 @@ export default class bipSearchCon extends Vue{
 	}
 	addTj(){
 		let tj = Object.assign({},this.oneTj)
-		tj.name = this.cels[0].labelString
-		tj.cellId = this.cels[0].id
+		let tj_len = this.tjAll.length;
+		if(tj_len==this.cels.length)
+			return;
+		tj.name = this.cels[tj_len].labelString
+		tj.cellId = this.cels[tj_len].id
 		this.tjAll.push(tj);
 	}
 	delTj(index:any){
-		this.tjAll.splice(index,1)
+		if(this.tjAll[index].value){
+			this.tjAll.splice(index,1)
+			this.query();
+		}else{
+			this.tjAll.splice(index,1)
+		}
 	}
 
 	@Watch('cels')
