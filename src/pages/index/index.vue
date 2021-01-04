@@ -24,7 +24,7 @@
 			</template>
 			<mIndexBar v-if="ifDefaultIndex" v-show="!isSpDeatilPage" :tbI="tabcur" @tabSelect="tabSelect"></mIndexBar>
 		</view>
-		<bip-protocol :showTY="-1" :showpp="showpp" @AgreeToTerms="AgreeToTerms"></bip-protocol>
+		<bip-protocol v-if="showpp" :showTY="-1" :showpp="showpp" @AgreeToTerms="AgreeToTerms"></bip-protocol>
 	</view>
 </template>
 
@@ -74,11 +74,11 @@ import { values } from 'xe-utils/methods';
 		
 		onLoad(options:any) {
 			//#ifdef APP-PLUS
-				let value = uni.getStorageSync('AgreeToTerms');
-				if(!value){
-					this.showpp=true;
-					return;
-				}
+				// let value = uni.getStorageSync('AgreeToTerms');
+				// if(!value){
+				// 	this.showpp=true;
+				// 	return;
+				// }
 			//#endif
 			this.options = options
 			this._onLoad();
