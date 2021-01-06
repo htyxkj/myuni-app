@@ -25,9 +25,9 @@
 // export const BaseDBID = "01";
 
 // 征信管理平台  工单管控
-// export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
-// export const BaseDBID = "01";
-// export const ItemType = null;
+export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
+export const BaseDBID = "01";
+export const ItemType = "credit";
 
 
 // 人力资源管理系统
@@ -46,9 +46,9 @@
 // export const ItemType = "production";
 
 // 自立熊自由职业服务平台
-export const BaseUri =  "https://www.bip-soft.com/bip-flexible/";
-export const BaseDBID = "01";
-export const ItemType = "flexible";
+// export const BaseUri =  "https://www.bip-soft.com/bip-flexible/";
+// export const BaseDBID = "01";
+// export const ItemType = "flexible";
 
 
 // 搅拌站

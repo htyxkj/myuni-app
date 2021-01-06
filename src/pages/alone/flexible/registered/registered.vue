@@ -227,6 +227,8 @@
 					user.deptInfo = _u.deptInfo 
 					LoginModule.setUser(user) 
 					LoginModule.setSnKey(data.data.snkey)  
+				}else{
+					console.log(res)
 				}
 			});
 		}
@@ -419,7 +421,10 @@
 		async planReportSave(file:any,fjkey:any){
 			let params = {
 				fname : new Date().getTime()+".png",
-				fjkey : fjkey
+				fjkey : fjkey,
+				updid:37,
+				fileName:new Date().getTime()+".png",
+				snkey:uni.getStorageSync('snkey'),
 			} 
 			tools.uniAppUploadFile(file,params,this.fileSuccess,this.fileFail); 
 		} 
@@ -444,12 +449,14 @@
 					}
 				}
 			} else{
+				console.log(data)	
 				this.loadModal = false;
 				uni.showToast({title:"照片上传失败！",icon:'none'})
 			}
 		}
 		//文件上传失败
 		fileFail(error:any){
+			console.log(error)
 			this.loadModal = false;
 			uni.showToast({title:"照片上传失败！",icon:'none'})
 		}

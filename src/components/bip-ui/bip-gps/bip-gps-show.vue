@@ -1,9 +1,8 @@
 <template>
 	<view class="myBody">
-		<web-view src="http://lbs.tianditu.gov.cn/api/js4.0/examples.html"></web-view>
-		<!-- <div :id="tMapDiv" class="TMap"></div>
+		<div :id="tMapDiv" class="TMap"></div>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'定位中...'"></mLoad>
-		<message ref="msg"></message> -->
+		<message ref="msg"></message>
 	</view>
 </template>
 
@@ -40,28 +39,29 @@ export default class MAP extends Vue {
 	CloudMarkerCollection:any = null; //天地图海量点对象
 	pointMsg:any={};//每个点的提示信息
 	mounted(){
-		// this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
-		// this.snkey = LoginModule.snkey
-		// this.snkey = encodeURIComponent(this.snkey);
-		// for(var i=0;i<this.cels.length;i++){
-		// 	if(this.cels[i].editType==12){//地图
-		// 		this.map_name_cell = this.cels[i];
-		// 		if(this.cels[i+1]){
-		// 			this.map_root_cell = this.cels[i+1];
-		// 			this.map_icon_cell = this.cels[i+2];
-		// 		}
-		// 	}else if(this.cels[i].editName == "UPDOWN"){
-		// 		this.fj_root_cell = this.cels[i-1];
-		// 		this.fj_name_cell = this.cels[i];
-		// 	}
-		// }
-		// // #ifdef  H5
-		// 	this.$nextTick(function(){
-		// 		this.createdMap();
-		// 	})
-		// 	let wd:any = window;
-		// 	wd.showOrHeiding = this.showOrHeiding;    // 方法赋值给window
-		// // #endif
+		this.uri = commURL.BaseUri+''+GlobalVariable.API_UPD
+		this.snkey = LoginModule.snkey
+		this.snkey = encodeURIComponent(this.snkey);
+		for(var i=0;i<this.cels.length;i++){
+			if(this.cels[i].editType==12){//地图
+				this.map_name_cell = this.cels[i];
+				if(this.cels[i+1]){
+					this.map_root_cell = this.cels[i+1];
+					this.map_icon_cell = this.cels[i+2];
+				}
+			}else if(this.cels[i].editName == "UPDOWN"){
+				this.fj_root_cell = this.cels[i-1];
+				this.fj_name_cell = this.cels[i];
+			}
+		}
+		// #ifdef  H5
+			this.$nextTick(function(){
+				this.createdMap();
+			})
+			let wd:any = window;
+			wd.showOrHeiding = this.showOrHeiding;    // 方法赋值给window
+			wd.showImgById = this.showImgById;
+		// #endif
 	}
 	
 	// #ifdef  H5
@@ -95,7 +95,7 @@ export default class MAP extends Vue {
 					let key = lng+"_"+lat
 					lgt.kid = key
 					points.push(lgt);
-					let msg = "<div>";
+					let msg = "<div style='touch-action:none'>";
 					for(var j=0;j<this.cels.length;j++){
 						if((this.cels[j].attr & 0x400 ) == 0 && (this.cels[j].attr & 0x200 )>0){
 							let val = data[this.cels[j].id];
@@ -115,7 +115,7 @@ export default class MAP extends Vue {
 								let text = '<a onClick="showOrHeiding('+"'"+fj_name+"'"+')">显示/隐藏图片('+nameArr.length+')</a>';
 								msg+= (text+"<br/>");
 							}
-							msg +="<div style='width:200px;height:260px;overflow:auto;' id='"+fj_name+"' >"
+							msg +="<div style='width:200px;overflow:auto;touch-action:none;display:none' id='"+fj_name+"' >"
 							for(var j=0;j<nameArr.length;j++){
 								let name = nameArr[j];
 								name = encodeURI(name)
@@ -123,9 +123,22 @@ export default class MAP extends Vue {
 								var imgReg = /\.(png|jpg|gif|jpeg|webp|tiff|psd)$/; //图片名为汉字的也可以匹配到
 								let isImg:boolean = imgReg.test(name); //返回true ,false
 								if(isImg){
-									let img = "<img style='width: 200px;' src='"+url+"'>";
-									msg+= (img+"<br/>");
+									let img = "";
+									if(j==0){
+										img = "<img id='mapImg"+j+"' style='width: 200px;' src='"+url+"'>";
+									}else{
+										img = "<img id='mapImg"+j+"' style='width: 200px;display:none' src='"+url+"'>";
+									}
+									msg += img;
+									if(j<nameArr.length-1){
+										msg += "<br/>"
+									}
 								}
+							}
+							if(nameArr.length>1){
+								let btn = "<input style='width: 80px;height: 24px; text-align: center; background: #5596de;color: #FFF;border: none;' type='button' value='上一张'  onClick=\"showImgById('"+fj_name+"')\">";
+								btn += "<input style='width: 80px;height: 24px; text-align: center; background: #5596de;color: #FFF;border: none;' type='button' value='下一张'  onClick=\"showImgById('"+fj_name+"')\">";
+								msg += btn;
 							}
 							msg+="</div>"
 						}
@@ -194,12 +207,26 @@ export default class MAP extends Vue {
 			// }
 		}
 	}
+	//地图弹出显示隐藏图片
 	showOrHeiding(id:any){
 		var elem:any=document.getElementById(id);
 		if(elem.style.display!='none'){
 			elem.style.display='none'
 		}else{
 			elem.style.display='-webkit-box'
+		}
+	}
+	//图片切换
+	showImgById(id:any){
+		var elem:any=document.getElementById(id);
+		var childImg:any = elem.getElementsByTagName("img");
+		for(var i=0;i<childImg.length;i++){
+			var img = childImg[i]
+			if(img.style.display!='none'){
+				img.style.display='none'
+			}else{
+				img.style.display='inline'
+			}
 		}
 	}
 	// #endif
@@ -311,9 +338,11 @@ export default class MAP extends Vue {
 .myBody{
 	height: calc(100vh - 100upx - 90upx );
 	background-color: white;
+	touch-action:none
 }
 .TMap{
     height: calc(100%);
     width: 100% !important;
+	touch-action:none;
 }
 </style>

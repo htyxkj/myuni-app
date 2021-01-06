@@ -47,7 +47,9 @@
             },
             "ios" : {},
             /* ios打包配置 */
-            "sdkConfigs" : {},
+            "sdkConfigs" : {
+                "oauth" : {}
+            },
             "splashscreen" : {
                 "androidStyle" : "default",
                 "android" : {
@@ -75,9 +77,9 @@
             "minified" : true,
             "es6" : true
         },
-		"optimization":{
-			"subPackages":true
-		}
+        "optimization" : {
+            "subPackages" : true
+        }
     },
     "mp-alipay" : {
         "usingComponents" : true
@@ -96,10 +98,10 @@
             "https" : false
         },
         "router" : {
-            "base" : "/bip-production/webMobile/",
+            "base" : "/bip-credit/webMobile/",
             "mode" : "history"
         },
-        "title" : "自立熊自由职业服务平台",
-        "domain" : "https://test.juminfuwu.cn/bip-production/webMobile/"
+        "title" : "业务工单",
+        "domain" : "https://test.juminfuwu.cn/bip-credit/webMobile/"
     }
 }
