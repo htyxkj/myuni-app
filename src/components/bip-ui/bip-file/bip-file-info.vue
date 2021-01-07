@@ -129,7 +129,7 @@ export default class bipFileInfo extends Vue {
 			updid:37,
 			snkey:uni.getStorageSync('snkey'),
 			fjid:'',
-			fjroot:this.fj_root,
+			fj_root:this.fj_root,
 			fileName:""
 		}
 		let num =0;

@@ -130,14 +130,11 @@ export default class MAP extends Vue {
 										img = "<img id='mapImg"+j+"' style='width: 200px;display:none' src='"+url+"'>";
 									}
 									msg += img;
-									if(j<nameArr.length-1){
-										msg += "<br/>"
-									}
 								}
 							}
 							if(nameArr.length>1){
-								let btn = "<input style='width: 80px;height: 24px; text-align: center; background: #5596de;color: #FFF;border: none;' type='button' value='上一张'  onClick=\"showImgById('"+fj_name+"')\">";
-								btn += "<input style='width: 80px;height: 24px; text-align: center; background: #5596de;color: #FFF;border: none;' type='button' value='下一张'  onClick=\"showImgById('"+fj_name+"')\">";
+								let btn = "<input style='width: 80px;height: 24px; text-align: center; background: #5596de;color: #FFF;border: none;' type='button' value='上一张'  onClick=\"showImgById('"+fj_name+"',0)\">";
+								btn += "<input style='margin-left: 35px;width: 80px;height: 24px; text-align: center; background: #5596de;color: #FFF;border: none;' type='button' value='下一张'  onClick=\"showImgById('"+fj_name+"',1)\">";
 								msg += btn;
 							}
 							msg+="</div>"
@@ -217,15 +214,29 @@ export default class MAP extends Vue {
 		}
 	}
 	//图片切换
-	showImgById(id:any){
+	showImgById(id:any,state:any){;//state 0:上一张 1：下一张
 		var elem:any=document.getElementById(id);
 		var childImg:any = elem.getElementsByTagName("img");
 		for(var i=0;i<childImg.length;i++){
 			var img = childImg[i]
 			if(img.style.display!='none'){
 				img.style.display='none'
-			}else{
-				img.style.display='inline'
+				if(state == 0){
+					if(i==0){
+						i=childImg.length-1;
+					}else{
+						i--;
+					}
+					childImg[i].style.display='inline'
+				}else if(state ==1){
+					if(i==childImg.length-1){
+						i=0;
+					}else{
+						i++;
+					}
+					childImg[i].style.display='inline'
+				}
+				break;
 			}
 		}
 	}
