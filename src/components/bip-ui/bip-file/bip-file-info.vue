@@ -106,7 +106,7 @@ export default class bipFileInfo extends Vue {
 							fname:file2.name,
 							updid:34,
 							snkey:uni.getStorageSync('snkey'),
-							fjroot:file1.fj_root,
+							fjroot:this.fj_root,
 							fjname:file1.fj_name
 						}
 						tools.uniAppUploadFile(file1.path,params,null,null); 

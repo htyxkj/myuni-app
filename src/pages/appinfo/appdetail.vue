@@ -53,6 +53,7 @@ import QueryEntity from '@/classes/search/QueryEntity';
 import { dataTool } from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils;
 
+import CData from '@/classes/pub/CData';
 import CeaPars from "@/classes/cenv/CeaPars";
 @Component({
 	components: { mLoad, bipLay, bipMenuBar, bipBillBar , BipWork, BipWorkProcess,BipWorkApproverSet}
@@ -345,11 +346,68 @@ export default class appDetail extends Vue {
 					this.initCea();
 				}
 			}
+			this.getChildData();
 			this.loading = false;
 		});
 		console.log('findData');
 	}
-	
+	    /**
+     * 获取当前主表对应的子表信息
+     */
+    async getChildData(){
+        if(this.dsm.ds_sub && this.dsm.ds_sub.length>0){
+			let qq =JSON.parse(JSON.stringify(Object.assign({},this.qe)));
+			qq.cont = this.dsm.currRecord.data;
+			let res:any = await tools.queryChild(qq);
+			if(res.data.id == 0){
+				let data = res.data;
+				let vv:CData = data.data.data;
+				let child = vv.data[0].subs;
+				for(var z=0;z<child.length;z++){
+					let cd :CData = this.initCData(child[z])
+					cd.page.currPage =1;
+					cd.page.total = cd.data.length
+					for(var j=0;j<this.dsm.ds_sub.length;j++){
+						if(this.dsm.ds_sub[j].cdata.obj_id == cd.obj_id){
+							this.dsm.currRecord.subs[j] = cd;
+						}
+					}
+				}
+			}
+			this.setSubData();
+        }
+	}
+	setSubData(){
+        let n = this.dsm.ds_sub.length
+        for(let i=0;i<n;i++){
+            let cds1 = this.dsm.ds_sub[i]
+            for(let j=0;this.dsm.currRecord.subs&&j<this.dsm.currRecord.subs.length;j++){
+                let oneSubs:any = this.dsm.currRecord.subs[j]
+                if(oneSubs.obj_id == cds1.ccells.obj_id){
+                    let vals = oneSubs.data;
+                    if(oneSubs){
+                        cds1.clear();
+                        cds1.setCData(oneSubs)
+                    }
+                }
+            }
+        }
+    }
+	initCData(vv:CData){
+        let cd :CData = new CData('');
+        cd.data = vv.data
+        cd.page = vv.page
+        cd.obj_id = vv.obj_id
+        vv.data.forEach((item,index)=>{
+            if(item.subs.length>0){
+                item.subs.forEach((icd,index)=>{
+                    let cc:CData = this.initCData(icd)
+                    item.subs[index] = cc;
+                })
+            }
+        })
+        return cd;
+	}
 	//处理二次初值
 	secondAssignment(cds:any){
 		if(cds){

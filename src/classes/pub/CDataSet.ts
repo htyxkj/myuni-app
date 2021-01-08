@@ -356,4 +356,33 @@ export default class CDataSet {
 			return id === item.id;
 		});
 	}
+	clear() {
+		this.cdata.clearValues();
+		this.currRecord = new CRecord();
+		this.index = -1;
+		this._total = 0;
+		if (this.ds_sub.length > 0) {
+		  this.ds_sub.forEach(cds => {
+			cds.clear();
+		  });
+		}
+	}
+	async setCData(data: CData) {
+		this.clear();
+		this.cdata = data; 
+		this.page = data.page;
+		this.currRecord = data.getDataAtIndex(0);
+		if (this.currRecord) {
+			if (this.currRecord.subs.length > 0) {
+				await this.ds_sub.forEach(cd0 => {
+					let _i = this.currRecord.subs.findIndex(item => {
+						return (item.obj_id = cd0.cdata.obj_id);
+					});
+					if (_i > -1) {
+						cd0.currRecord = cd0.getRecordAtIndex(0);
+					}
+				});
+			}
+		}
+	}
 }

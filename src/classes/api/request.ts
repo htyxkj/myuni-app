@@ -122,6 +122,14 @@ export namespace BIPUtil {
 			let param = tools.getQueryParams(JSON.stringify(qe));
 			return this.getFromServer(param);
 		}
+		/**
+		 * @description 根据主对象查询子对象数据
+		 * @param qe QueryEntity对象
+		 */
+		queryChild(qe:QueryEntity){
+			let param = tools.getQueryChildParams(JSON.stringify(qe));
+			return this.getFromServer(param);
+		}
 
 		/**
 		 * @description 执行RPT查询

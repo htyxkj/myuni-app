@@ -69,6 +69,19 @@ export namespace baseUtils {
 				qe: qe
 			});
 		}
+		/**
+		 * @description 根据主对象查询子对象
+		 * @param qe 查询对象字符串（经过JSON.stringfy()）
+		 * @returns 返回的是一个Object{xxx:xxx}
+		 */
+		getQueryChildParams(qe: string) {
+			return Object.assign({
+				apiId: GlobalVariable.APIID_FINDCHILDDATA,
+				dbid: commURL.BaseDBID,
+				usercode: JSON.parse(uni.getStorageSync('user')).userCode,
+				qe: qe
+			});
+		}
 		
 		/**
 		 * @description 获取辅助/常量元素对象

@@ -16,7 +16,13 @@ export default class CData{
         this.obj_id = _obj_id
         this.sumData = new Array<any>();
     }
-	
+    public clearValues():void{
+        this.data.length = 0
+        this.rmdata.length = 0
+        this.data = []
+        this.index = 0
+        this.attr &= ~(0x20000|0x80000)
+    }
 	size(){
 		return this.data.length;
     }

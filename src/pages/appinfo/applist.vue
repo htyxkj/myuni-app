@@ -114,20 +114,23 @@ export default class appList extends Vue {
 	makeQueryCont(cr0:any,cels:Array<any>){
 		let qs = '';
 		if(cels.length>0){
-			cels.forEach((item:any)=>{
+			for(var i=0;i<cels.length;i++){
+				let item = cels[i];
 				let vr = cr0.data[item.id];
 				let type = item.type;
 				if(type==12){
 					if(vr){
-						qs+=item.id+"='"+vr+"' and";
+						qs+=item.id+"='"+vr+"'";
 					}
 				}else{
 					if(vr !== undefined &&vr != null &&vr !==''){
-						qs+=item.id+"="+vr+" and";
+						qs+=item.id+"="+vr;
 					}
 				}
-			})
-			qs = qs.substring(0,qs.length-3);
+				if(i<cels.length-1){
+					qs+=" and ";
+				}
+			}
 		}
 		return qs;
 	}
