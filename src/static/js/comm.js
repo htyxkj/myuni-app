@@ -25,9 +25,9 @@
 // export const BaseDBID = "01";
 
 // 征信管理平台  工单管控
-export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
-export const BaseDBID = "01";
-export const ItemType = "credit";
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
+// export const BaseDBID = "01";
+// export const ItemType = "credit";
 
 
 // 人力资源管理系统
@@ -58,16 +58,16 @@ export const ItemType = "credit";
 
 // 张矿微平台
 // export const BaseUri =  "http://127.0.0.1:801/bip-mine";
-// export const BaseUri =  "http://47.104.211.216:8089/bip-mine/";
-// export const BaseDBID = "01";
-// export const ItemType = "mine";
+export const BaseUri =  "http://47.104.211.216:8089/bip-mine/";
+export const BaseDBID = "01";
+export const ItemType = "mine";
 
 
 // export const BaseUri =  "http://127.0.0.1:9999/jd";
-// export const BaseDBID = "148";
+// export const BaseDBID = "115";
 // export const ItemType = "";
 
 
-export const version = 110;
+export const version = 117;
 export const SMSURL = "https://www.bip-soft.com/ssms/";
 export default {BaseUri, BaseDBID,SMSURL,ItemType,version}

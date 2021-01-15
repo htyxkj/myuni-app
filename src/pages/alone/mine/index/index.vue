@@ -26,6 +26,7 @@
 	import comm from '@/static/js/comm.js';
 	let commURL: any = comm;
 	import {BipMenuBtn} from '@/classes/BipMenuBtn'
+	import QueryCont from '@/classes/search/QueryCont';
 	@Component({
 		components:{learning,mIndexBar,newsVideo,askAnswer,exam}
 	})
@@ -59,6 +60,7 @@
 			    }  
 			})
 			//#endif
+			this.initGray();
 		}
 		async tabSelect(e:any){
 			this.tabcur = e[0];
@@ -276,6 +278,30 @@
 				await this.touristLogin();
 				if(bl)
 				this.loginIntegral(false)
+			}
+		}
+
+
+		/**
+		 * 查询是否是置灰效果
+		 */
+		async initGray(){
+			let qe:QueryEntity = new QueryEntity('','');
+			let qcont:QueryCont = new QueryCont("type",'gray',12);//查询条件
+			qcont.setContrast(0)
+			qe.cont = '~[['+JSON.stringify(qcont)+']]';
+			let vv:any = await tools.getBipInsAidInfo('GETPF',210,qe);
+			if(vv.data.id ==0){
+				let vl = vv.data.data.data.values;
+				if(vl.length>0){
+					var elem:any=document.getElementsByTagName("body")[0];
+					if(vl[0].state == '1'){
+						elem.style.overflow = 'hidden';
+						elem.style.filter = 'grayscale(100%)';
+					}else{
+						elem.style.filter = 'grayscale(0%)';
+					}
+				}
 			}
 		}
 	}

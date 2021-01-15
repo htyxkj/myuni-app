@@ -29,7 +29,7 @@
 								{{oneTopic.tit_content}}
 							</view>
 							<view v-for="(item,index) in oneTopic.child" :key="index">
-								<!-- <template v-if="isok">
+								<template v-if="isok">
 									<view class=" padding-sm radius margin-xs" 
 									:class="[
 										(item.check ==1 && item.isno ==1) ?'ans-bg-ok':'',
@@ -40,8 +40,7 @@
 										{{letter[index]}}.{{item.solution}}
 									</view>
 								</template>
-								<template v-else> -->
-								<template>
+								<template v-else>
 									<template v-if="oneTopic.tit_type == '2'">
 										<view class=" padding-sm radius margin-xs" :class="item.check ==1 ?'ans-bg-sel':'ans-bg'"  @tap="selAns(item)">
 											{{item.solution}}
@@ -65,7 +64,7 @@
 							<button class="cu-btn block line-orange lg" style="width:60%" @tap="next" v-if="isok" >下一题</button>
 						</view>
 					</view>
-					<!-- <view class="content" v-if="isok && !istrue">
+					<view class="content" v-if="isok && !istrue">
 						<view class="desc">
 							<view class="title">
 								<view class="">
@@ -80,7 +79,7 @@
 								</template> 
 							</view>
 						</view>
-					</view> -->
+					</view>
 				</view>
 			</view>
 			<view v-if="isEnd">
@@ -179,6 +178,9 @@
 		async initTopicType(){
 			this.topicType = [];
 			let qe:QueryEntity = new QueryEntity('','');
+			let qcont:QueryCont = new QueryCont("exam_show",'1',12);//查询条件
+			qcont.setContrast(0)
+			qe.cont = '~[['+JSON.stringify(qcont)+']]';
 			let vv:any = await tools.getBipInsAidInfo('PROBLEM_TYPE',210,qe);
 			if(vv.data.id ==0){
 				let vl = vv.data.data.data.values;

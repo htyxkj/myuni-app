@@ -178,6 +178,9 @@
 		async initTopicType(){
 			this.topicType = [];
 			let qe:QueryEntity = new QueryEntity('','');
+			let qcont:QueryCont = new QueryCont("exercise_show",'1',12);//查询条件
+			qcont.setContrast(0)
+			qe.cont = '~[['+JSON.stringify(qcont)+']]';
 			let vv:any = await tools.getBipInsAidInfo('PROBLEM_TYPE',210,qe);
 			if(vv.data.id ==0){
 				let vl = vv.data.data.data.values;
