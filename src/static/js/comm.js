@@ -5,7 +5,7 @@
 // BIP-OA
 // export const BaseUri =  "http://115.28.191.203:89/oa/";
 // export const BaseDBID = "01";
-// export const ItemType = "";
+// export const ItemType = "bip-oa";
 
 // BIP-ERP
 // export const BaseUri =  "https://test.juminfuwu.cn/bip-erp/";

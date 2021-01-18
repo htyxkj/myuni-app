@@ -4,12 +4,25 @@
 			<block slot="backText">返回</block>
 			<block slot="content"><view class="header-title">{{title}}</view></block>
 		</cu-custom>
-		<template v-if="isShowType && topicType.length>0">
+		
+			<!-- 试卷类别集合 -->
+			<!--<template v-if="isShowType && topicType.length>0">
+					<view class="cu-list menu-avatar padding">				
+						<view class="cu-item bg-white margin-top-xs" v-for="(item,index) in topicType" :key="index">
+							<image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/askAnswer/'+(index+1)+'.png'" ></image>
+							<view class="content"  @tap="initData(item)" >
+								<view class="name">{{item.name}}</view>
+							</view>
+						</view> 
+					</view> 
+				</template>-->
+			<!-- 试卷集合 -->
+		<template v-if="isShowType && TestPaperArr.length>0">
 			<view class="cu-list menu-avatar padding">				
-				<view class="cu-item bg-white margin-top-xs" v-for="(item,index) in topicType" :key="index">
-					<image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/askAnswer/'+(index+1)+'.png'" ></image>
+				<view class="cu-item bg-white margin-top-xs" v-for="(item,index) in TestPaperArr" :key="index">
+					<image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/askAnswer/1.png'" ></image>
 					<view class="content"  @tap="initData(item)" >
-						<view class="name">{{item.name}}</view>
+						<view class="name">{{item.title}}</view>
 					</view>
 				</view> 
 			</view>
@@ -156,11 +169,14 @@
 		isEnd:boolean = false;//答题结束
 		
 		selTopicType:any = null;
-		topicType:any=[];
+		topicType:any=[]; //题目类别
 		isShowType:boolean = true;
 		startTime:any=null;
 		title:any = "考试";
 		makeUp:any = false;//是否是补考
+
+		TestPaperArr:any =[];//试卷
+
 		async onLoad(options:any) {
 			if(options.makeUp == "1"){
 				this.makeUp = true;
@@ -170,11 +186,14 @@
 
 		async mounted(){
 			//初始化题目类别，通用题目，专业题目
-			await this.initTopicType();
+			// await this.initTopicType();
+			await this.initTestPaper();
 			this.initTitType();
 			this.topicData = [];
 			this.startTime = new Date();
 		}
+
+		//查询试卷类别
 		async initTopicType(){
 			this.topicType = [];
 			let qe:QueryEntity = new QueryEntity('','');
@@ -184,13 +203,22 @@
 			let vv:any = await tools.getBipInsAidInfo('PROBLEM_TYPE',210,qe);
 			if(vv.data.id ==0){
 				let vl = vv.data.data.data.values;
-				// if(vl.length ==1){
-				// 	this.initData(vl[0]);
-				// }else{
-					this.topicType = vl;
-				// }
+				this.topicType = vl;
 			}
 		}
+
+		//查询当前时间的试卷
+		async initTestPaper(){
+			//辅助名称 ：GETTESTPAPER
+			let qe:QueryEntity = new QueryEntity('','');
+			qe.page.pageSize = 50;
+			let vv:any = await tools.getBipInsAidInfo('GETTESTPAPER',210,qe);
+			if(vv.data.id ==0){
+				let vl = vv.data.data.data.values;
+				this.TestPaperArr = vl;
+			}
+		}
+
 		/**
 		 * 查询试卷题目
 		 */
