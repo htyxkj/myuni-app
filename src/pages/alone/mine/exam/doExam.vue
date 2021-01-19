@@ -17,15 +17,26 @@
 					</view> 
 				</template>-->
 			<!-- 试卷集合 -->
-		<template v-if="isShowType && TestPaperArr.length>0">
-			<view class="cu-list menu-avatar padding">				
-				<view class="cu-item bg-white margin-top-xs" v-for="(item,index) in TestPaperArr" :key="index">
-					<image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/askAnswer/1.png'" ></image>
-					<view class="content"  @tap="initData(item)" >
-						<view class="name">{{item.title}}</view>
+		<template v-if="isShowType">
+			<template v-if="TestPaperArr.length>0">
+				<view class="cu-list menu-avatar padding">				
+					<view class="cu-item bg-white margin-top-xs" v-for="(item,index) in TestPaperArr" :key="index">
+						<image class ="cu-avatar bg-white myimg" mode="aspectFill" :src="'../../../../static/mine/askAnswer/1.png'" ></image>
+						<view class="content"  @tap="initData(item)" >
+							<view class="name">{{item.title}}</view>
+						</view>
+					</view> 
+				</view>
+			</template>
+			<template v-else>
+				<view class="padding text-center">
+					<view class="padding-lr bg-white">
+						<view class="padding">
+							<text class="text">当前时间暂无试卷</text>
+						</view>
 					</view>
-				</view> 
-			</view>
+				</view>
+			</template>
 		</template>
 		<template v-else>
 			<view class="cu-card article" v-if="oneTopic && !isEnd">
@@ -212,10 +223,16 @@
 			//辅助名称 ：GETTESTPAPER
 			let qe:QueryEntity = new QueryEntity('','');
 			qe.page.pageSize = 50;
-			let vv:any = await tools.getBipInsAidInfo('GETTESTPAPER',210,qe);
+			let ref_name = 'GETTESTPAPER';
+			if(this.makeUp){
+				ref_name = 'GETMAKEUP';
+			}
+			let vv:any = await tools.getBipInsAidInfo(ref_name,210,qe);
 			if(vv.data.id ==0){
 				let vl = vv.data.data.data.values;
 				this.TestPaperArr = vl;
+			}else{
+				console.log(vv)
 			}
 		}
 
@@ -234,7 +251,7 @@
 				btn1.setDlgCont("mine.serv.ExamServlet*205;0;0");//查询试卷题目
 			}
 			let b = JSON.stringify(btn1)
-            let prarm = {type:item.sid}
+            let prarm = {paper_id:item.sid}//试卷编码
             let v = JSON.stringify(prarm);
 			let res:any = await tools.getDlgRunClass(v,b);
 			if(res.data.id ==0){
