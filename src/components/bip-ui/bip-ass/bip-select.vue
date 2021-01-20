@@ -43,7 +43,7 @@ export default class bipSelect extends Vue {
     othCols: Array<string> = [];//字段名称
     othColsIndex: Array<number> = [];//对应数据下标
 	
-	created() {
+	async created() {
         this.mulcols = (this.cell.attr & 0x100000) > 0;//判断是否是多列
 		this.cds = this.env.getDataSet(this.obj_id);
 		this.index = this.cds.index;
@@ -60,7 +60,8 @@ export default class bipSelect extends Vue {
 			if(this.editName == this.refKey){
 				this.refInsAid = this.refInsAid.clone(this.bipInsAid);
 			}else{
-				InsAidModule.fetchInsAid({ id: 200, aid: this.refKey });
+				let cc =  await InsAidModule.fetchInsAid({ id: 200, aid: this.refKey });
+				this.refInsAid = this.refInsAid.clone(cc);
 			}
 		}
 		this.getRefVal();
@@ -121,11 +122,10 @@ export default class bipSelect extends Vue {
 		}
 	}
 	selectBack(param:any){
-		// console.log(param)
 		if(param){
 			// 如果可以编辑 更改值，并更新状态
 			this.$nextTick(()=>{
-				if(this.refKey == this.editName){
+				// if(this.refKey == this.editName){
 					this.refInsAid.values[0] = param;
 					let v0= param[this.bipInsAid.cells.cels[0].id];
 					this.refInsAid.realV = v0;
@@ -139,7 +139,7 @@ export default class bipSelect extends Vue {
 							this.cds.cellChange(val,cel.id);
 						}
 					});
-				}
+				// }
 				this.makeSv();
 				this.cds.cellChange(this.modekey,this.cell.id);
 			})

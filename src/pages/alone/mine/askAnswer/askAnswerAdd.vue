@@ -27,7 +27,6 @@
 	import QueryCont from '@/classes/search/QueryCont';
 	import {Vue,Provide,Prop,Component,Watch} from 'vue-property-decorator';
 	import moment from 'moment'
-	import { GlobalVariable } from '@/classes/tools/ICL';
 	import comm from '@/static/js/comm.js';
 	let commURL: any = comm;
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入

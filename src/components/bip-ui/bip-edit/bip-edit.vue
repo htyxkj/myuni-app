@@ -62,7 +62,7 @@
 
 							<view class="editor-wrapper">
 								<editor id="editor" class="ql-container" placeholder="开始输入..." showImgSize showImgToolbar showImgResize
-								@statuschange="onStatusChange" :read-only="read_only" @ready="onEditorReady" @input="dataChange">
+								@statuschange="onStatusChange" :read-only="this.disabled" @ready="onEditorReady" @input="dataChange">
 								</editor>
 							</view>
 						</view>
@@ -80,6 +80,12 @@
 	import CCliEnv from '@/classes/cenv/CCliEnv';
 	import { dataTool } from '@/classes/tools/DataTools';
 	const DataUtil = dataTool.utils;
+	import { BIPUtil } from '@/classes/api/request';
+	let tools = BIPUtil.ServApi;
+	import { Tools } from '@/classes/tools/Tools';
+	import comm from '@/static/js/comm.js';
+	let commURL: any = comm;
+	import { GlobalVariable } from '@/classes/tools/ICL';
 	@Component({})
 	export default class bipEdit extends Vue{
 		@Inject('env') env!:CCliEnv;
@@ -87,11 +93,19 @@
 		@Prop({type:String}) obj_id!:string;
 		cds:CDataSet = new CDataSet(null)
 		mode:string = ''
+		
 
 		editorCtx:any=null;
 		formats:any={};//操作条
-		read_only:boolean = false;
+		fj_root:any = 'UEDITRO/IMG';
+
+		snkey:any=null;
+		uri:any = null;
 		mounted(){
+			let sk = window.sessionStorage.getItem('snkey')
+			if(sk)
+				this.snkey = JSON.parse(sk);
+			this.uri = commURL.BaseUri+GlobalVariable.API_UPD
 			let mkey = this.obj_id+"_"+this.cell.id
 			uni.$on(mkey,this.cellDataChange)
 			this.$nextTick(()=>{
@@ -136,32 +150,37 @@
 		@Watch('mode',{deep:true})
 		modeChange(){
 			if(this.editorCtx && this.mode){
+				let model1 = this.mode;
+ 				model1 = model1.replace(/snkey={BIPSNKEY}/g,'snkey='+this.snkey);
+                model1 = model1.replace(/{BIPURI}/g,this.uri)
 				this.editorCtx.setContents({
-					html: this.mode
+					html: model1
 				})
 			}
 		}
 
 		dataChange(e:any){
+			let html = e.target.html;
+			let cc = 'snkey='+this.snkey;
+			html= html.replace(new RegExp(cc,'gm'),'snkey={BIPSNKEY}')
+			html= html.replace(new RegExp(this.uri,'gm'),'{BIPURI}')
 			this.$nextTick(()=>{
-				if(e.target.html != this.record.data[this.cell.id])
-					this.cds.cellChange(e.target.html,this.cell.id);
+				if(html != this.record.data[this.cell.id])
+					this.cds.cellChange(html,this.cell.id);
 			})
 		}
 
 		/*************************************** 富文本 工具栏方法 ******************************************/
 		onEditorReady() {
-			this.read_only = false;
 			uni.createSelectorQuery().select('#editor').context((res) => {
 				this.editorCtx = res.context
-				
+				// this.clear();
 			}).exec()
-			this.editorCtx.setContents({
-				html: this.mode
-			})
-			setTimeout(() => {
-				this.read_only = this.disabled	
-			}, 1000);
+			if(this.mode){
+				this.editorCtx.setContents({
+					html: this.mode
+				})
+			}
 		}
 		undo() {
 			this.editorCtx.undo()
@@ -211,15 +230,68 @@
 			uni.chooseImage({
 				count: 1,
 				success: (res:any) => {
-					this.editorCtx.insertImage({
-						src: res.tempFilePaths[0],
-						alt: '图像',
-						success: function() {
-							console.log('insert image success')
-						}
-					})
+					this.upFile(res);
 				}
 			})
+		}
+
+		/**
+		 * 上传文件
+		 */
+		async upFile(res:any){
+			let params = {
+				fjkey : this.obj_id,
+				fname:"",
+				updid:37,
+				snkey:uni.getStorageSync('snkey'),
+				fjid:'',
+				fj_root:this.fj_root,
+				fileName:""
+			}
+			let num =0;
+			res.tempFiles
+			let fileP = {path:res.tempFilePaths[0],fjid:Tools.guid(),fj_name:'',fj_root:'',upstate:0}
+			let file:any = res.tempFiles[0];
+			if(fileP.upstate == 0 ){
+				num++;
+				params.fjid = fileP.fjid;
+				params.fname = file.name;
+				if(!params.fname){
+					let path = file.path;
+					path = path.substring(path.lastIndexOf("."),path.length);
+					params.fname = new Date().getTime()+path;
+				}
+				params.fileName = params.fname
+				await tools.uniAppUploadFile(fileP.path,params,this.fileSuccess,this.fileFail); 
+			}
+		}
+		//文件上传成功
+		fileSuccess(uploadFileRes:any){
+			let data = uploadFileRes.data;
+			data = JSON.parse(data)
+			if(data.id ==0){
+				let url = this.makeImgUrl(data.data.fj_root,data.data.fname);
+				this.editorCtx.insertImage({
+					src: url,
+					alt: data.data.fname,
+					success: function() {
+						console.log('insert image success')
+					}
+				})
+			} else{
+				uni.showToast({title:"文件上传失败！！！",icon:'none'})
+			}
+		}
+		//文件上传失败
+		fileFail(e:any){
+			uni.showToast({title:"图片上传失败！",icon:'none'})
+		}
+		//拼接图像地址
+		makeImgUrl(fj_root:any,fj_name:any){
+			let snkey = uni.getStorageSync('snkey');
+			snkey = encodeURIComponent(snkey);
+			fj_name = encodeURIComponent(fj_name);
+			return commURL.BaseUri+'/sysupd?updid=36&snkey='+snkey+"&fjroot="+fj_root+"&fjname="+fj_name;
 		}
 	}
 </script>
