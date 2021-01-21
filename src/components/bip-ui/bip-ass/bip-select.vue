@@ -61,7 +61,9 @@ export default class bipSelect extends Vue {
 				this.refInsAid = this.refInsAid.clone(this.bipInsAid);
 			}else{
 				let cc =  await InsAidModule.fetchInsAid({ id: 200, aid: this.refKey });
+				console.log(cc)
 				this.refInsAid = this.refInsAid.clone(cc);
+				console.log(this.refInsAid)
 			}
 		}
 		this.getRefVal();

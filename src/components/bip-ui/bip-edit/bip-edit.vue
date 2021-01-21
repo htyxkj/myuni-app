@@ -1,10 +1,12 @@
 <template>
 	<view>
 		<template v-if="cell">
+			<view class="solid-bottom edit_title">
+				<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
 				<view class="container">
 					<view class="page-body">
 						<view class='wrapper'>
-							<view class='toolbar' @tap="format" style="height: 110px;overflow-y: auto;">
+							<view class='toolbar solid-bottom bg-white' @tap="format" style="height: 110px;overflow-y: auto;">
 								<view :class="formats.bold ? 'ql-active' : ''" class="iconfont icon-zitijiacu" data-name="bold"></view>
 								<view :class="formats.italic ? 'ql-active' : ''" class="iconfont icon-zitixieti" data-name="italic"></view>
 								<view :class="formats.underline ? 'ql-active' : ''" class="iconfont icon-zitixiahuaxian" data-name="underline"></view>
@@ -59,7 +61,6 @@
 								data-value="rtl"></view>
 
 							</view>
-
 							<view class="editor-wrapper">
 								<editor id="editor" class="ql-container" placeholder="开始输入..." showImgSize showImgToolbar showImgResize
 								@statuschange="onStatusChange" :read-only="this.disabled" @ready="onEditorReady" @input="dataChange">
@@ -68,6 +69,7 @@
 						</view>
 					</view>
 				</view>
+			</view>
 		</template>
 	</view>
 </template>
@@ -145,18 +147,44 @@
 				if(rr !== this.mode){
 					this.mode = rr||''
 				}
+				if(this.mode == undefined)
+					this.mode = '';
+				let _editorCtx = this.editorCtx;
+				if(_editorCtx){
+					let model1 = this.mode;
+					model1 = model1.replace(/snkey={BIPSNKEY}/g,'snkey='+this.snkey);
+					model1 = model1.replace(/{BIPURI}/g,this.uri)
+					_editorCtx.getContents({
+						success: function(res:any) {
+							if(res.html != model1){
+								_editorCtx.setContents({
+									html: model1
+								})
+							}
+						}
+					})
+				}
 			});
 		}
-		@Watch('mode',{deep:true})
+		@Watch('mode')
 		modeChange(){
-			if(this.editorCtx && this.mode){
-				let model1 = this.mode;
- 				model1 = model1.replace(/snkey={BIPSNKEY}/g,'snkey='+this.snkey);
-                model1 = model1.replace(/{BIPURI}/g,this.uri)
-				this.editorCtx.setContents({
-					html: model1
-				})
-			}
+			// if(this.editorCtx && this.mode){
+				// let _editorCtx = this.editorCtx;
+				// let model1 = this.mode;
+ 				// model1 = model1.replace(/snkey={BIPSNKEY}/g,'snkey='+this.snkey);
+				// model1 = model1.replace(/{BIPURI}/g,this.uri)
+				// _editorCtx.getContents({
+				// 	success: function(res:any) {
+				// 		if(res.html != model1){
+				// 			_editorCtx.setContents({
+				// 				html: model1
+				// 			})
+				// 		}
+				// 	}
+				// })
+			// }else if(this.editorCtx && !this.mode){
+			// 	this.clear();
+			// }
 		}
 
 		dataChange(e:any){
@@ -298,7 +326,19 @@
 
 <style scoped>
 	@import "./editor-icon.css";
-
+	.edit_title{
+		background-color: #fff;
+		min-height: 100upx;
+		padding: 1upx 30upx;
+	}
+	.title{
+		text-align: justify;
+		padding-right: 16px;
+		font-size: 16px;
+		position: relative;
+		height: 32px;
+		line-height: 32px;
+	}
 	.page-body {
 		height: calc(100vh - var(--window-top) - var(--status-bar-height));
 	}
