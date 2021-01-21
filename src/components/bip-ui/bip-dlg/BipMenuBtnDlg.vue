@@ -109,7 +109,7 @@ export default class bipMenuBtnDlg extends Vue {
 				url: '/pages/dlg/dlg?cellId=' + cellId + '&color=' + color + '&title=' + this.Title +'&key='+key+'&vl='+vl,
 			});
 		}else if(btn.dlgType == 'C'){
-            let cont = btn.dlgCont.split(";");
+			let cont = btn.dlgCont.split(";");
             let cont0 = cont[0]; //打开的菜单
             let cont1 = cont[1]; //数据值
             let cont2 = "";
@@ -125,7 +125,7 @@ export default class bipMenuBtnDlg extends Vue {
 			let data = this.finCellData(this.env.dsm,cell[0])
             if(data.length ==0){
                 return;
-            }
+			}
             let cont1arr = cont1.split(",")
             let jsoncont:any = [];//传递的内容
             for(var j=0;j<data.length;j++){
@@ -146,7 +146,7 @@ export default class bipMenuBtnDlg extends Vue {
                         vl = zd[1]
                     jsontj[zd[0]] = vl
                 }  
-            }
+			}
             //打开的菜单
 			let me = Tools.findMenu(cont0);
 			me.color = 'blue';
@@ -155,7 +155,7 @@ export default class bipMenuBtnDlg extends Vue {
 				msg.error({background: true,content:"没有" + cont0 + "菜单权限!" })
                 return false;
             }else{
-                this.openMenu(me);
+                this.openMenu(me,jsontj,jsoncont);
             }
 		}
 	}
@@ -173,7 +173,6 @@ export default class bipMenuBtnDlg extends Vue {
                 let b = JSON.stringify(this.btn);
                 let v = JSON.stringify(this.env.dsm.currRecord.data);
                 let cc:any = await tools.getDlgRunSql(v,b)
-				console.log(cc)
 				this.showMsg = true;
 				this.msg = cc.data.message
                 this.sqlDlg0 = false;
@@ -215,7 +214,7 @@ export default class bipMenuBtnDlg extends Vue {
 	/**
 	 * DLG C 打开菜单
 	 */
-	async openMenu(param:any){
+	async openMenu(param:any,tjJson:any,contJson:any){
 		let msg:any = this.$refs['msg'];
 		let cc = param.command;
 		let dd = cc.split("&");
@@ -235,12 +234,15 @@ export default class bipMenuBtnDlg extends Vue {
 				if(data.id>=0){
 					let uriParams = data.data.mparams
 					uni.setStorageSync(pbuid,JSON.stringify(uriParams))
-					if(uriParams.beBill){
-						let item = encodeURIComponent(JSON.stringify(uriParams))
-						let uri = '/pages/appinfo/applist?color='+param.color+'&title='+param.menuName+"&pbuid="+pbuid;
+					if(uriParams.beBill){//单据页面
+						let tj = encodeURIComponent(JSON.stringify(tjJson))
+						let cont = encodeURIComponent(JSON.stringify(contJson));
+						let uri = '/pages/appinfo/appdetail?color='+param.color+'&title='+param.menuName+"&pbuid="+pbuid;
+						uri += "&method=dlg";
+						uri += "&tran_value="+cont;
+						uri += "&tran_tj="+tj;
 						this.pageJump(uri)
 					}else{
-						let item = encodeURIComponent(JSON.stringify(uriParams))
 						let uri = '/pages/appreport/appreport?color='+param.color+'&title='+param.menuName+"&pbuid="+pbuid;
 						this.pageJump(uri);
 					}

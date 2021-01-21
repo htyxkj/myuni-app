@@ -85,6 +85,10 @@ export default class appDetail extends Vue {
 	bcustSPUser:any =[];//自定义审批流审批人员
 	bcustCSUser:any = [];//自定义审批流审批结束抄送人员
 	
+
+	method:any = null;//从其他页面跳转过来后 执行的方法或从什么地方过来的  dlg 代表从DLG定义按钮跳转过来的
+	tran_value:any = null//传递过来的值 key : value
+
 	execCmd(btn: any) {
 		let cmd = btn.cmd;
 		console.log(cmd);
@@ -316,7 +320,6 @@ export default class appDetail extends Vue {
 		if(objid){
 			this.qe.tcell = objid
 			this.qe.oprid = this.qe.tcell === this.dsm.ccells.obj_id?13:16;
-
 		}else{
 			this.qe.tcell = this.dsm.ccells.obj_id;
 			this.qe.oprid = 13;
@@ -324,6 +327,23 @@ export default class appDetail extends Vue {
 		tools.query(this.qe).then((res:any)=>{
 			let rr = res.data;
 			if(rr.id==0){
+				if(this.method == 'dlg'){//DLG 按钮过来的
+					let value_size = rr.data.data.data;
+					if(value_size == 0){
+						this.addNewCRecord();
+						if(this.tran_value){
+							this.tran_value = JSON.parse(this.tran_value);
+							for(var i=0;i<this.tran_value.length;i++){
+								let one_vl = this.tran_value[i];
+							　　for(var key in one_vl){
+									this.dsm.currRecord.data[key] = one_vl[key]
+							　　}
+							}
+						}
+						this.loading = false;
+						return;
+					}
+				}
 				let infos = rr.data.data;
 				let cds = this.env.getDataSet(objid);
 				infos.data.forEach((cr:any)=>{
@@ -432,18 +452,19 @@ export default class appDetail extends Vue {
 			this.title = option.title ? option.title : 'billPage';
 			this.pbuid = option.pbuid;
 			this.uriParam = JSON.parse(uni.getStorageSync(this.pbuid));
-			// console.log(this.uriParam,'999999')
-			// console.log(option.qcont)
 			if(option.qcont){
 				this.qcont = decodeURIComponent(option.qcont);
 			}
-			// console.log(this.qcont)
+			if(option.tran_tj){
+				this.qe.cont = decodeURIComponent(option.tran_tj);
+			}
+			this.method = option.method;
+			if(option.tran_value){
+				this.tran_value = decodeURIComponent(option.tran_value);
+			}
 			this.loading = true;
 			if (this.uriParam) {
-				tools
-					.getCCellsParams(this.uriParam.pcell)
-					.then((res: any) => {
-						// console.log(res);
+				tools.getCCellsParams(this.uriParam.pcell).then((res: any) => {
 						this.loading = false;
 						let rtn = res.data;
 						if (rtn.id == 0) {
@@ -464,6 +485,7 @@ export default class appDetail extends Vue {
 	}
 
 	async initUIData(layCels: any) {
+		this.initUIOK = false;
 		this.cells = layCels;
 		this.dsm = new CDataSet(this.cells[0]);
 		this.dsm_cont = new CDataSet(this.cells[0]);
@@ -484,7 +506,28 @@ export default class appDetail extends Vue {
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
 		this.initUIOK = true;
-		console.log(this.uriParam.playout,this.qcont,'99999999')
+		if(this.qe.mcont || this.qcont){
+			this.qe.mcont = this.qe.mcont || this.qcont;
+			this.$nextTick(()=>{
+				this.findData();
+			})
+		}
+		if(this.method == 'dlg' && this.qe.cont && this.qe.cont != '{}'){
+			this.findData();
+			return;
+		}
+		if(this.method == 'dlg'){
+			this.addNewCRecord();
+			if(this.tran_value){
+				this.tran_value = JSON.parse(this.tran_value);
+				for(var i=0;i<this.tran_value.length;i++){
+					let one_vl = this.tran_value[i];
+				　　for(var key in one_vl){
+						this.dsm.currRecord.data[key] = one_vl[key]
+				　　}
+				}
+			}
+		}
 	}
 	//初始化审批流信息 查询是否是自定义审批流
 	initCea(){
@@ -543,15 +586,15 @@ export default class appDetail extends Vue {
 	}
 
 
-	@Watch('initUIOK')
-	initUIOKChange(){
-		if(this.initUIOK&&this.qcont){
-			this.qe.mcont = ''+this.qcont;
-			this.$nextTick(()=>{
-				this.findData();
-			})
-		}
-	}
+	// @Watch('initUIOK')
+	// initUIOKChange(){
+	// 	if(this.initUIOK&&this.qcont){
+	// 		this.qe.mcont = ''+this.qcont;
+	// 		this.$nextTick(()=>{
+	// 			this.findData();
+	// 		})
+	// 	}
+	// }
 }
 </script>
 
