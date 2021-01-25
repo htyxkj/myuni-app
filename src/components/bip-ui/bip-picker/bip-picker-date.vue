@@ -22,6 +22,20 @@
 					</picker-view-column>
 				</picker-view>
 			</view>
+			<!-- 时分秒-->
+			<view class="w-picker-view" v-if="mode == 'time'">
+				<picker-view :indicator-style="itemHeight" :value="pickVal" @change="bindChange">
+					<picker-view-column>
+						<view class="w-picker-item" v-for="(item, index) in data.hours" :key="index">{{ item }}时</view>
+					</picker-view-column>
+					<picker-view-column>
+						<view class="w-picker-item" v-for="(item, index) in data.minutes" :key="index">{{ item }}分</view>
+					</picker-view-column>
+					<picker-view-column>
+						<view class="w-picker-item" v-for="(item, index) in data.seconds" :key="index">{{ item }}秒</view>
+					</picker-view-column>
+				</picker-view>
+			</view>
 			<!-- 年月日时分秒-->
 			<view class="w-picker-view" v-if="mode == 'datetime'">
 				<picker-view :indicator-style="itemHeight" :value="pickVal" @change="bindChange">
@@ -45,7 +59,16 @@
 					</picker-view-column>
 				</picker-view>
 			</view>
-		
+			<view class="w-picker-view" v-if="mode == 'ym'">
+				<picker-view :indicator-style="itemHeight" :value="pickVal" @change="bindChange">
+					<picker-view-column>
+						<view class="w-picker-item" v-for="(item, index) in data.years" :key="index">{{ item }}年</view>
+					</picker-view-column>
+					<picker-view-column>
+						<view class="w-picker-item" v-for="(item, index) in data.months" :key="index">{{ item }}月</view>
+					</picker-view-column>
+				</picker-view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -102,6 +125,7 @@ export default class bipPickerDate extends Vue {
 	bindChange(val: any) {
 		// console.log('bindChange', val);
 		let arr: Array<any> = val.detail.value;
+		console.log(arr)
 		if (this.mode === 'date' || this.mode == 'datetime') {
 			let year = this.data.years[arr[0]] || this.data.years[this.data.years.length - 1];
 			let month = this.data.months[arr[1]] || this.data.months[this.data.months.length - 1];
@@ -148,6 +172,11 @@ export default class bipPickerDate extends Vue {
 			}
 			this.resultStr = rr;
 			console.log(rr, this.checkArr);
+		}else if(this.mode ==='ym'){
+			let year = this.data.years[arr[0]] || this.data.years[this.data.years.length - 1];
+			let month = this.data.months[arr[1]] || this.data.months[this.data.months.length - 1];
+			this.checkArr = [year, month];
+			this.resultStr = year+"-"+month;
 		}
 		this.$nextTick(() => {
 			this.pickVal = arr;
@@ -162,6 +191,12 @@ export default class bipPickerDate extends Vue {
 			case 'datetime':
 				this.initYMDData();
 				this.initHms();
+				break;
+			case 'time':
+				this.initHms();
+				break;
+			case 'ym':
+				this.initYMData();
 				break;
 			default:
 				break;
@@ -185,7 +220,18 @@ export default class bipPickerDate extends Vue {
 		}
 		this.data = { years: years, months: mm, days: dd };
 	}
-	
+	initYMData (){
+		let years = [];
+		let r0 = moment().year();
+		// console.log(r0);
+		years = this.makeYears(r0);
+		let mm = [];
+		for (let i = 1; i <= 12; i++) {
+			mm.push(this.formatNum(i));
+		}
+		let dd:any = [];
+		this.data = { years: years, months: mm, days: dd };
+	}
 	makeYears(start:number){
 		let years = [];
 		let y1 = start - 30;
@@ -259,6 +305,18 @@ export default class bipPickerDate extends Vue {
 				this.checkArr[5] = this.formatNum(se);
 			}
 			this.resultStr = rr.format(this.mode === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss');
+		}else if(this.mode ==='ym'){
+			let rr = this.mode1 ? moment(this.mode1) : moment();
+			let y = rr.year();
+			let m = rr.month();
+			this.checkArr = [y + '', m + 1 + ''];
+			this.resultStr = y + '-'+ m+1 ;
+			let idx = this.data.years.findIndex((item: any) => {
+				return item == y;
+			});
+			this.$nextTick(() => {
+				this.pickVal = [idx, m];
+			});
 		}
 	}
 }
