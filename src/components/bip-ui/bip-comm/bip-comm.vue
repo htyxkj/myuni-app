@@ -10,8 +10,8 @@
 			<template v-else-if="bipInsAid.bType === 'CSelectEditor' || bipInsAid.bType === 'CGroupEditor'">
 				<bip-select :label="cell.labelString" :cell="cell" :bipInsAid="bipInsAid" :obj_id="obj_id"></bip-select>
 			</template>
-			<template v-else-if="bipInsAid.bType === 'CDateEditor'">
-				<bip-date :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-date>
+			<template v-else-if="bipInsAid.bType === 'CDateEditor' || bipInsAid.bType === 'CYMEditor'">
+				<bip-date :label="cell.labelString" :cell="cell" :obj_id="obj_id" :bType="bipInsAid.bType"></bip-date>
 			</template>
 			<template v-else-if="bipInsAid.bType === 'CUpDownEditor'">
 				<bip-file :label="cell.labelString !='' " :cell="cell" :obj_id="obj_id"></bip-file>
