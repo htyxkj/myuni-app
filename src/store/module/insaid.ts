@@ -93,7 +93,7 @@ class InsAid extends VuexModule implements IInsAid {
 			let qe = new QueryEntity("","");
 			qe.cont = cont
 			return await tools.getBipInsAidInfo(aid,210,qe).then((res:any)=>{
-				console.log(res)
+				// console.log(res)
 				let rtn = res.data;
 				if(rtn.id==0){
 					let d = rtn.data.data;

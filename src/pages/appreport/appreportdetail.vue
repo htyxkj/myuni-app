@@ -186,7 +186,7 @@ export default class appReportDetail extends Vue {
 				await InsAidModule.fetchInsAid({ id: 300, aid: name });
 			} 
 			let dlg = this.aidmaps.get(aidKey);
-			console.log(dlg)
+			// console.log(dlg)
             if(dlg && dlg.slink){ 
                 let dlgBtn = dlg.slink.split("&")
                 dlgBtn.forEach((item:any) => {

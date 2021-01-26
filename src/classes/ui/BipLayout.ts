@@ -10,9 +10,9 @@ export default class BipLayout{
     compconfs:Array<BipLayConf>//布局拆解，可能是直接对象，也有可能还是布局
     ccells:Cells[] = []//对象cell集合
     constructor(_laystr:string,_cells?:Cells[]){
-        console.log("BipLayout")
+        // console.log("BipLayout")
         this.laystr = _laystr
-        console.log(_laystr)
+        // console.log(_laystr)
         this.compconfs = new Array<BipLayConf>();
         if(this.laystr){
             //初始化界面组成

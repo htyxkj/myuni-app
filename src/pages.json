@@ -1,10 +1,13 @@
 {
+	"easycom": {
+			"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+		},
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/index/index",
 			"style": {
-				"disableScroll": true,
-				"navigationBarTitleText": "BIP-OA"
+				// "disableScroll": true,
+				"navigationBarTitleText": "幸福张矿"
 			}
 		}, {
 			"path": "pages/login/login",
@@ -77,7 +80,7 @@
 		}, {
 			"path": "pages/appreport/appreport",
 			"style": {
-				"disableScroll": true,
+				// "disableScroll": true,
 				"app-plus": {
 					"bounce": "none"
 				}
@@ -266,7 +269,7 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "BIP-OA",
+		"navigationBarTitleText": "幸福张矿",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"navigationStyle": "custom"

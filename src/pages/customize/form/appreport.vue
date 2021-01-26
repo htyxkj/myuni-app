@@ -1,15 +1,38 @@
 <template>
 	<view>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
-		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
-			@loadMore="loadMore" @refresh="refresh">
-			<view slot="content-list">
-				<view v-for="(item,index) in pdList" :key="index">
-					<bip-list-unit2 v-if="myStyle == null" :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
-					<bip-customize-list-unit-type1 v-else-if="myStyle.type == 1" :myStyle="myStyle" :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-customize-list-unit-type1>
-				</view>
+		<template v-if="myStyle.type == 2&&dsm.ccells">
+			
+			<bip-table :ccells="dsm.ccells" :tableData="pdList2" @rowClick="rowClick"></bip-table>
+			<view style="padding-top: 8upx;padding-bottom: 30upx;">
+				<u-row gutter="0" justify="between" style="background-color: #FFFFFF; padding: 10rpx 0rpx 10rpx 0;">
+					<u-col span="3" text-align="center">
+						<u-button type="primary" size="mini" @click="firstPage()" ripple plain>首页</u-button>
+					</u-col>
+					<u-col span="3" text-align="center">
+						<u-button type="primary" size="mini" :disabled="currPage<=1" @click="upPageDatas()" ripple plain>上一页</u-button>
+					</u-col>
+					<u-col span="3" text-align="center">
+						<u-button type="primary" size="mini" :disabled="currPage>=totalPage" @click="nextPageDatas()" ripple plain>下一页</u-button>
+					</u-col>
+					<u-col span="3" text-align="center">
+						<u-button type="primary" size="mini" :disabled="currPage==totalPage" @click="lastPageDatas()" ripple plain>末页</u-button>
+					</u-col>
+				</u-row>
 			</view>
-		</load-refresh>
+		</template>
+		<template v-else>
+			<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
+				@loadMore="loadMore" @refresh="refresh">
+				<view slot="content-list">
+					<view v-for="(item,index) in pdList" :key="index">
+						<bip-list-unit2 v-if="myStyle == null" :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+						<bip-customize-list-unit-type1 v-else-if="myStyle.type == 1" :myStyle="myStyle" :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-customize-list-unit-type1>
+					</view>
+				</view>
+			</load-refresh>
+		</template>
+		
 	</view>
 </template>
 
@@ -36,10 +59,13 @@ import { Tools } from '@/classes/tools/Tools';
 import { icl } from '@/classes/tools/CommICL';
 
 import {dataTool} from '@/classes/tools/DataTools';
+
 const DataUtil = dataTool.utils
 import loadRefresh from '@/components/load-refresh/load-refresh.vue';
+import bipTable from "@/components/bip-ui/bip-table/bip-table.vue";
+let _ = require('lodash');
 @Component({
-	components: { mLoad,bipSearchCon,bipListUnit2,bipCustomizeListUnitType1,loadRefresh}
+	components: { mLoad,bipSearchCon,bipListUnit2,bipCustomizeListUnitType1,loadRefresh,bipTable}
 })
 //报表
 export default class appReport extends Vue {
@@ -61,6 +87,7 @@ export default class appReport extends Vue {
 	cells: Array<Cells> = new Array<Cells>();
 	lay: BipLayout = new BipLayout('');
 	pdList:Array<any> = []
+	pdList2:Array<any> = []
 	qe:QueryEntity = new QueryEntity('','');
 
 	isjump:boolean = false;
@@ -77,6 +104,10 @@ export default class appReport extends Vue {
 			return vr;
 		}
 		return [];
+	}
+	
+	rowClick(cellId:any,rowId:number,data:any){
+		this.openList(rowId);
 	}
 	
 	openList(rid:number){
@@ -161,13 +192,22 @@ export default class appReport extends Vue {
 	// 下拉刷新数据列表
 	refresh() {
 		this.currPage = 1;
-		this.getListDataFromNet(this.currPage,this.pageSize)
+		if(this.myStyle.type == 2){
+			this.getListDataFromNet2(this.currPage,this.pageSize)
+		}else{
+			this.getListDataFromNet(this.currPage,this.pageSize)
+		}
+		// this.getListDataFromNet(this.currPage,this.pageSize)
 	}
 	//加载下一页
 	loadMore() {
 		if(this.totalPage>=this.currPage){
 			this.currPage++;
-			this.getListDataFromNet(this.currPage,this.pageSize)
+			if(this.myStyle.type == 2){
+				this.getListDataFromNet2(this.currPage,this.pageSize)
+			}else{
+				this.getListDataFromNet(this.currPage,this.pageSize)
+			}
 		}
 	}
 	//查询数据
@@ -188,6 +228,7 @@ export default class appReport extends Vue {
 				this.pdList = []; //如果是第一页需手动制空列表
 			this.pdList = this.pdList.concat(listData); //追加新数据
 			// 数据渲染完毕再隐藏加载状态
+			this.pdList2 = listData;
 			this.$nextTick(() => {
 				this.loading = false;
 			});
@@ -227,6 +268,63 @@ export default class appReport extends Vue {
 		this.pdList = [];
 		this.refresh();
 	}
+	
+	firstPage(){
+		this.refresh();
+	}
+	upPageDatas(){
+		if(this.currPage>1){
+			this.currPage--;
+			this.getListDataFromNet2(this.currPage,this.pageSize);
+			
+		}
+	}
+	
+	nextPageDatas(){
+		if(this.currPage<this.totalPage){
+			this.currPage++;
+			this.getListDataFromNet2(this.currPage,this.pageSize);
+		}
+	}
+	
+	lastPageDatas(){
+		if(this.currPage<this.totalPage){
+			this.currPage=this.totalPage;
+			this.getListDataFromNet2(this.currPage,this.pageSize);
+		}
+	}
+	
+	getListDataFromNet2(pageNum: number, pageSize: number) {
+		this.qe.page.currPage = pageNum
+		this.qe.page.pageSize = pageSize
+		this.loading = true;
+		tools.query(this.qe).then((res:any)=>{
+			let listData:Array<any> = [];
+			let rtn = res.data;
+			if(rtn.id==0){
+				let vvr = rtn.data.data.data;
+				this.qe.page = rtn.data.data.page;
+				this.currPage = this.qe.page.currPage;
+				this.pageSize = this.qe.page.pageSize;
+				this.totalPage = Math.ceil(this.qe.page.total/this.pageSize);
+				listData = vvr;
+			}
+			this.pdList = []; //如果是第一页需手动制空列表
+			this.pdList = listData; //追加新数据
+			this.pdList2 = []; //如果是第一页需手动制空列表
+			_.forEach(listData,(row:any)=>{
+				this.pdList2.push(row);
+			})
+			this.$nextTick(() => {
+				this.loading = false;
+			});
+			this.dsm.cdata.data = this.pdList;
+		}).catch((e:any)=>{
+			console.log(e);
+			this.loading = false;
+		})
+	}
+	
 	@Watch('pbuid')
 	aidMapChange() {
 		console.log("watch")

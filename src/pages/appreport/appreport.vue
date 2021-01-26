@@ -5,17 +5,42 @@
 			<block slot="content"><view class="header-title">{{ title }}</view></block>
 		</cu-custom>
 		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
+<!-- 		<u-toast ref="uToast" /> -->
 		<template v-if="!isMap">
-			<template v-if="dsm&&dsm.ccells">
-				<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
-					@loadMore="loadMore" @refresh="refresh">
-					<view slot="content-list">
-						<view v-for="(item,index) in pdList" :key="index">
-							<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
-						</view>
+			<template v-if="isTable">
+				<template v-if="dsm.ccells">
+					<bip-table :ccells="dsm.ccells" :tableData="pdList2" @rowClick="rowClick"></bip-table>
+					<view style="padding-top: 8upx;padding-bottom: 30upx;">
+						<u-row gutter="0" justify="between" style="background-color: #FFFFFF; padding: 10rpx 0rpx 10rpx 0;">
+							<u-col span="3" text-align="center">
+								<u-button type="primary" size="mini" @click="firstPage()" ripple plain>首页</u-button>
+							</u-col>
+							<u-col span="3" text-align="center">
+								<u-button type="primary" size="mini" :disabled="currPage<=1" @click="upPageDatas()" ripple plain>上一页</u-button>
+							</u-col>
+							<u-col span="3" text-align="center">
+								<u-button type="primary" size="mini" :disabled="currPage>=totalPage" @click="nextPageDatas()" ripple plain>下一页</u-button>
+							</u-col>
+							<u-col span="3" text-align="center">
+								<u-button type="primary" size="mini" :disabled="currPage==totalPage" @click="lastPageDatas()" ripple plain>末页</u-button>
+							</u-col>
+						</u-row>
 					</view>
-				</load-refresh>
+				</template>
 			</template>
+			<template v-else>
+				<template v-if="dsm&&dsm.ccells">
+					<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
+						@loadMore="loadMore" @refresh="refresh">
+						<view slot="content-list">
+							<view v-for="(item,index) in pdList" :key="index">
+								<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+							</view>
+						</view>
+					</load-refresh>
+				</template>
+			</template>
+
 		</template>
 		<template v-else-if="isMap">
 			<bip-gps-show v-if="dsm&&dsm.ccells" :cels="dsm.ccells.cels" :pdList="pdList"></bip-gps-show>
@@ -51,9 +76,11 @@ import { icl } from '../../classes/tools/CommICL';
 
 import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 import {dataTool} from '@/classes/tools/DataTools';
+import bipTable from "@/components/bip-ui/bip-table/bip-table.vue";
+let _ = require('lodash');
 const DataUtil = dataTool.utils
 @Component({
-	components: { mLoad,bipSearchCon,bipListUnit2,bipGpsShow,loadRefresh}
+	components: { mLoad,bipSearchCon,bipListUnit2,bipGpsShow,loadRefresh,bipTable}
 })
 export default class appReport extends Vue {
 	vueId: string = Tools.guid();
@@ -74,17 +101,20 @@ export default class appReport extends Vue {
 	//界面组成对象信息
 	cells: Array<Cells> = new Array<Cells>();
 	lay: BipLayout = new BipLayout('');
-	pdList:Array<any> = []
+	pdList:any = []
+	pdList2:any = []
 	qe:QueryEntity = new QueryEntity('','');
 	isjump:boolean = false;//
 
 	currPage: number = 1;
 	totalPage: number = 0;
-	pageSize:number = 15;
+	pageSize:number = 10;
 
 	isMap:boolean = false;//是否是地图展示页面
 	i_isMap:boolean = false;//是否是地图展示页面
- 
+	isTable:boolean = true;//是否是地图展示页面
+	
+	baseColumns:Array<any> = []
 	get showCells(){
 		if(this.dsm_cont.ccells){
 			let vr = this.dsm_cont.ccells.cels.filter((item:any)=>{
@@ -93,6 +123,20 @@ export default class appReport extends Vue {
 			return vr;
 		}
 		return [];
+	}
+	
+	showText(val:any){
+		let _refs:any = this.$refs;
+		if(val){
+			_refs.uToast.show({
+					title: val+'',
+					// type: 'success'
+				})
+		}
+	}
+	
+	rowClick(cellId:any,rowId:number,data:any){
+		this.openList(rowId);
 	}
 	
 	openList(rid:number){
@@ -114,6 +158,7 @@ export default class appReport extends Vue {
 					this.isjump = false;
 				}
 			});
+			
 		}
 	}
 	makeQueryCont(cr0:any,cels:Array<any>){
@@ -148,6 +193,18 @@ export default class appReport extends Vue {
 			if(this.uriParam.pbds.ismap){
 				this.isMap = true;
 				this.i_isMap = true;
+				this.isTable = false;
+			}
+			
+			if(this.uriParam.pbds.layout){
+				if(this.uriParam.pbds.layout !== 'card'){
+					this.isTable = true;
+				}else{
+					this.isTable = false;
+				}
+				this.isMap = false;
+				this.i_isMap = false;
+				
 			}
 			if(this.uriParam){
 				this.loading = true;
@@ -173,14 +230,14 @@ export default class appReport extends Vue {
 		}
 		
 	}
-
+	
 	// 初始化界面参数
 	// 后台获取的cell信息
 	async initUIData(layCels: any) {
 		this.cells = layCels;
 		this.dsm_cont = new CDataSet(this.cells[0]);
 		this.dsm = new CDataSet(this.cells[1]);
-		console.log(this.dsm)
+		// console.log(this.dsm)
 		this.qe.pcell = this.dsm.ccells.obj_id;
 		this.qe.tcell = this.dsm_cont.ccells.obj_id;
 		this.qe.oprid = 13;
@@ -197,13 +254,46 @@ export default class appReport extends Vue {
 	// 下拉刷新数据列表
 	refresh() {
 		this.currPage = 1;
-		this.getListDataFromNet(this.currPage,this.pageSize)
+		if(this.isTable){
+			this.getListDataFromNet2(this.currPage,this.pageSize)
+		}else{
+			this.getListDataFromNet(this.currPage,this.pageSize)
+		}
+	}
+	
+	firstPage(){
+		this.refresh();
+	}
+	upPageDatas(){
+		if(this.currPage>1){
+			this.currPage--;
+			this.getListDataFromNet2(this.currPage,this.pageSize);
+			
+		}
+	}
+	
+	nextPageDatas(){
+		if(this.currPage<this.totalPage){
+			this.currPage++;
+			this.getListDataFromNet2(this.currPage,this.pageSize);
+		}
+	}
+	
+	lastPageDatas(){
+		if(this.currPage<this.totalPage){
+			this.currPage=this.totalPage;
+			this.getListDataFromNet2(this.currPage,this.pageSize);
+		}
 	}
 	//加载下一页
 	loadMore() {
 		if(this.totalPage>=this.currPage){
 			this.currPage++;
-			this.getListDataFromNet(this.currPage,this.pageSize)
+			if(this.isTable){
+				this.getListDataFromNet2(this.currPage,this.pageSize)
+			}else{
+				this.getListDataFromNet(this.currPage,this.pageSize)
+			}
 		}
 	}
 	getListDataFromNet(pageNum: number, pageSize: number) {
@@ -236,7 +326,34 @@ export default class appReport extends Vue {
 			console.log(e);
 			this.loading = false;
 		})
-		
+	}
+	
+	getListDataFromNet2(pageNum: number, pageSize: number) {
+		this.qe.page.currPage = pageNum
+		this.qe.page.pageSize = pageSize
+		this.loading = true;
+		tools.query(this.qe).then((res:any)=>{
+			let listData:Array<any> = [];
+			let rtn = res.data;
+			if(rtn.id==0){
+				let vvr = rtn.data.data.data;
+				this.qe.page = rtn.data.data.page;
+				this.currPage = this.qe.page.currPage;
+				this.pageSize = this.qe.page.pageSize;
+				this.totalPage = Math.ceil(this.qe.page.total/this.pageSize);
+				listData = vvr;
+			}
+			this.pdList = []; //如果是第一页需手动制空列表
+			this.pdList = listData; //追加新数据
+			this.pdList2 = listData; //如果是第一页需手动制空列表
+			this.$nextTick(() => {
+				this.loading = false;
+			});
+			this.dsm.cdata.data = this.pdList;
+		}).catch((e:any)=>{
+			console.log(e);
+			this.loading = false;
+		})
 	}
 
 	queryCont(vl:any) {
@@ -265,4 +382,8 @@ export default class appReport extends Vue {
 		right: 0px;
 		z-index: 9999;
 	}
+	
+	.table {
+			text-align: center;
+		}
 </style>

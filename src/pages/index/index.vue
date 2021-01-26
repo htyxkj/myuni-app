@@ -213,7 +213,7 @@ import { values } from 'xe-utils/methods';
 								}); 
 								//设置 最新版本apk的下载链接
 								var downloadApkUrl = commURL.BaseUri+"/apk/android.apk";
-								var dtask = plus.downloader.createDownload( downloadApkUrl, {}, function ( d, status ) {  
+								var dtask = plus.downloader.createDownload( downloadApkUrl, {}, function ( d:any, status ) {  
 										// 下载完成 
 										if ( status == 200 ) {   
 											uni.showToast({
@@ -223,7 +223,8 @@ import { values } from 'xe-utils/methods';
 												title: '安装程序下载完成，安装中...',  
 												duration: 3000,  
 											}); 
-											plus.runtime.install(plus.io.convertLocalFileSystemURL(d.filename),{force:true},function(error){ 
+											let dir: any = plus.io.convertLocalFileSystemURL(d.filename);
+											plus.runtime.install(dir,{force:true},function(error){ 
 												// uni.showToast({  
 												// 	title: '安装失败', 
 												// 	icon:"none",

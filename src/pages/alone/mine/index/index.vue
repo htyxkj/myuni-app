@@ -230,7 +230,7 @@
 								}); 
 								//设置 最新版本apk的下载链接
 								var downloadApkUrl = commURL.BaseUri+"/apk/apk.apk";
-								var dtask = plus.downloader.createDownload( downloadApkUrl, {}, function ( d, status ) {  
+								var dtask = plus.downloader.createDownload( downloadApkUrl, {}, function ( d:any, status ) {  
 										// 下载完成 
 										if ( status == 200 ) {   
 											uni.showToast({
@@ -238,9 +238,10 @@
 												mask: true,
 												// title: '有新的版本发布，检测到您目前为Wifi连接，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
 												title: '安装程序下载完成，安装中...',  
-												duration: 3000,  
+												duration: 3000
 											}); 
-											plus.runtime.install(plus.io.convertLocalFileSystemURL(d.filename),{force:true},function(error){ 
+											let dir:any = plus.io.convertLocalFileSystemURL(d.filename);
+											plus.runtime.install(dir,{force:true},function(error){ 
 												// uni.showToast({  
 												// 	title: '安装失败', 
 												// 	icon:"none",
@@ -296,10 +297,10 @@
 				if(vl.length>0){
 					var elem:any=document.getElementsByTagName("body")[0];
 					if(vl[0].state == '1'){
-						elem.style.overflow = 'hidden';
-						elem.style.filter = 'grayscale(100%)';
+						// elem.style.overflow = 'hidden';
+						// elem.style.filter = 'grayscale(100%)';
 					}else{
-						elem.style.filter = 'grayscale(0%)';
+						// elem.style.filter = 'grayscale(0%)';
 					}
 				}
 			}
