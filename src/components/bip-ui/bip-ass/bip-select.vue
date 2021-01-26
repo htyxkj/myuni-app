@@ -152,7 +152,13 @@ export default class bipSelect extends Vue {
 	makeSv(){
 		if(this.refInsAid.id){
 			this.modekey = this.refInsAid.realV;
+			if(this.modekey == undefined){
+				this.modekey = "";
+			}
 			this.mode = this.refInsAid.showV;
+			if(this.mode == undefined){
+				this.mode = "";
+			}
 		}
 	}
 

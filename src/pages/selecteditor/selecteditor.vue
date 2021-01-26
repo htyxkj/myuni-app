@@ -17,6 +17,11 @@
 			<text class="cuIcon-search" @tap="refresh"></text>
 		</view>
 		<bip-select :arr="array" :show="isShow" @cancel="cancel" :index="index" @selectChange="selectChange" @select="selectOK" :showKey="'name'" :isStr="false"></bip-select>
+		<view class="cu-form-group clear" @tap.stop="clear">
+			<view class="content">
+				<text class="cuIcon-delete"></text><text class="margin-left-xs">清空选择</text>
+			</view>
+		</view>
 		<view class="margin-top-xs"></view>
 		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
 		 @loadMore="loadMore" @refresh="refresh">
@@ -105,7 +110,13 @@ export default class selecteditor extends Vue {
 		}
 		uni.navigateBack({delta:1});
 	}
-	
+	clear(){
+		let item = {};
+		if(this.methordName){
+			uni.$emit(this.methordName,item)
+		}
+		uni.navigateBack({delta:1});
+	}
 	loadMore() {
 		// console.log('loadMore')
 		// 请求新数据完成后调用 组件内loadOver()方法
@@ -196,5 +207,10 @@ export default class selecteditor extends Vue {
 	height: 60rpx;
 	line-height: 60rpx;
 	margin-top: -40rpx;
+}
+.clear{
+	max-height: 60upx;
+	min-height: 60upx;
+	color: #ff6666;
 }
 </style>
