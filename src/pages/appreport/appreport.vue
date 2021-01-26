@@ -9,7 +9,7 @@
 		<template v-if="!isMap">
 			<template v-if="isTable">
 				<template v-if="dsm.ccells">
-					<bip-table :ccells="dsm.ccells" :tableData="pdList2" @rowClick="rowClick"></bip-table>
+					<bip-table :ccells="dsm.ccells"  :tableData="pdList2" @rowClick="rowClick" @onSort="onSort"></bip-table>
 					<view style="padding-top: 8upx;padding-bottom: 30upx;">
 						<u-row gutter="0" justify="between" style="background-color: #FFFFFF; padding: 10rpx 0rpx 10rpx 0;">
 							<u-col span="3" text-align="center">
@@ -133,6 +133,14 @@ export default class appReport extends Vue {
 					// type: 'success'
 				})
 		}
+	}
+	
+	onSort(param:any){
+		// this.$emit('onSort', {
+		// 	key: this.nowSortKey,
+		// 	type: this.sortType
+		// })
+		console.log(param);
 	}
 	
 	rowClick(cellId:any,rowId:number,data:any){
