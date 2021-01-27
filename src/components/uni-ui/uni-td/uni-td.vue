@@ -63,7 +63,7 @@
 		border-bottom: 1px #ddd solid;
 		// min-width: 150px;
 		color: #666;
-		font-size: 14px;
+		font-size: 12px;
         box-sizing: border-box;
 	}
 

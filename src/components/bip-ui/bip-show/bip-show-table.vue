@@ -1,5 +1,5 @@
 <template>
-	<view class="flex text-cut" @tap.stop="rowClick">
+	<view @tap.stop="rowClick">
 		<template v-if="cell.refValue ||cell.editName">
 			<bip-show-ref2 :cell="cell" :record="record" :rowId="rowId" :obj_id="obj_id"></bip-show-ref2>
 		</template>

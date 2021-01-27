@@ -1,5 +1,5 @@
 /*
- * uCharts v1.9.4.20200331
+ * uCharts v1.9.5.20201214
  * uni-app平台高性能跨全端图表，支持H5、APP、小程序（微信/支付宝/百度/头条/QQ/360）
  * Copyright (c) 2019 QIUN秋云 https://www.ucharts.cn All rights reserved.
  * Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
@@ -31,7 +31,7 @@ var config = {
   fontSize: 13,
   //dataPointShape: ['diamond', 'circle', 'triangle', 'rect'],
   dataPointShape: ['circle', 'circle', 'circle', 'circle'],
-  colors: ['#1890ff', '#2fc25b', '#facc14', '#f04864', '#8543e0', '#90ed7d','#E3D161','#5122D9','#4D8647','#6750A6','#FFB6C1','#DC143C','#696969','#FF0000' , '#CD5C5C','#FF4500','#FFA500',	'#DAA520','#7FFF00','#008000',	'#90EE90','#3CB371','#00FFFF',	'#00BFFF','#1E90FF','#6495ED'	,'#6A5ACD','#FF00FF','#FF1493'],
+  colors: ['#1890ff', '#2fc25b', '#facc14', '#f04864', '#8543e0', '#90ed7d'],
   pieChartLinePadding: 15,
   pieChartTextPadding: 5,
   xAxisTextPadding: 3,
@@ -454,12 +454,10 @@ function getTouches(touches, opts, e) {
   if (touches.clientX) {
     if (opts.rotate) {
       y = opts.height - touches.clientX * opts.pixelRatio;
-      x = (touches.pageY - e.currentTarget.offsetTop - (opts.height / opts.pixelRatio / 2) * (opts.pixelRatio - 1)) *
-        opts.pixelRatio;
+      x = (touches.pageY - e.currentTarget.offsetTop - (opts.height / opts.pixelRatio / 2) * (opts.pixelRatio - 1)) * opts.pixelRatio;
     } else {
       x = touches.clientX * opts.pixelRatio;
-      y = (touches.pageY - e.currentTarget.offsetTop - (opts.height / opts.pixelRatio / 2) * (opts.pixelRatio - 1)) *
-        opts.pixelRatio;
+      y = (touches.pageY - e.currentTarget.offsetTop - (opts.height / opts.pixelRatio / 2) * (opts.pixelRatio - 1)) * opts.pixelRatio;
     }
   } else {
     if (opts.rotate) {
@@ -675,14 +673,8 @@ function findCurrentIndex(currentPoints, calPoints, opts, config) {
   var spacing = opts.chartData.eachSpacing/2;
 	let xAxisPoints=[];
 	if(calPoints.length>0){
-		if(opts.type=='candle'){
-			for(let i=0;i<calPoints[0].length;i++){
-				xAxisPoints.push(calPoints[0][i][0].x)
-			}
-		}else{
-			for(let i=0;i<calPoints[0].length;i++){
-				xAxisPoints.push(calPoints[0][i].x)
-			}
+		for(let i=1;i<opts.chartData.xAxisPoints.length;i++){
+				xAxisPoints.push(opts.chartData.xAxisPoints[i]-spacing)
 		}
 		if((opts.type=='line' || opts.type=='area') && opts.xAxis.boundaryGap=='justify'){
 		  spacing = opts.chartData.eachSpacing/2;
@@ -1024,7 +1016,7 @@ function getXAxisTextList(series, opts, config) {
   data = data.filter(function(item) {
     //return item !== null;
     if (typeof item === 'object' && item !== null) {
-      if (item.constructor == Array) {
+      if (item.constructor.toString().indexOf('Array')>-1) {
         return item !== null;
       } else {
         return item.value !== null;
@@ -1035,7 +1027,7 @@ function getXAxisTextList(series, opts, config) {
   });
   data.map(function(item) {
     if (typeof item === 'object') {
-      if (item.constructor == Array) {
+      if (item.constructor.toString().indexOf('Array')>-1) {
 				if(opts.type=='candle'){
 					item.map(function(subitem) {
 					  sorted.push(subitem);
@@ -1324,7 +1316,7 @@ function getPieTextMaxLength(series) {
   let maxLength = 0;
   for (let i = 0; i < series.length; i++) {
     let item = series[i];
-    let text = item.format ? item.format(item) : util.toFixed(item._proportion_ * 100) + '%';
+    let text = item.format ? item.format(+item._proportion_.toFixed(2)) : util.toFixed(item._proportion_ * 100) + '%';
     maxLength = Math.max(maxLength, measureText(text));
   }
 
@@ -1455,7 +1447,7 @@ function getDataPoints(data, minRange, maxRange, xAxisPoints, eachSpacing, opts,
       point.x = xAxisPoints[index];
       var value = item;
       if (typeof item === 'object' && item !== null) {
-				if (item.constructor == Array) {
+				if (item.constructor.toString().indexOf('Array')>-1) {
 					let xranges,xminRange,xmaxRange;
 					xranges = [].concat(opts.chartData.xAxisData.ranges);
 					xminRange = xranges.shift();
@@ -1530,7 +1522,7 @@ function getYAxisTextList(series, opts, config, stack) {
   data = data.filter(function(item) {
     //return item !== null;
     if (typeof item === 'object' && item !== null) {
-      if (item.constructor == Array) {
+      if (item.constructor.toString().indexOf('Array')>-1) {
         return item !== null;
       } else {
         return item.value !== null;
@@ -1541,7 +1533,7 @@ function getYAxisTextList(series, opts, config, stack) {
   });
   data.map(function(item) {
     if (typeof item === 'object') {
-      if (item.constructor == Array) {
+      if (item.constructor.toString().indexOf('Array')>-1) {
 				if(opts.type=='candle'){
 					item.map(function(subitem) {
 					  sorted.push(subitem);
@@ -1898,7 +1890,7 @@ function drawPieText(series, opts, config, context, radius, center) {
   var lastTextObject = null;
 
   var seriesConvert = series.map(function(item) {
-    var text = item.format ? item.format(item) : util.toFixed(item._proportion_.toFixed(4) * 100) +'%';
+    var text = item.format ? item.format(+item._proportion_.toFixed(2)) : util.toFixed(item._proportion_.toFixed(4) * 100) +'%';
     if(item._rose_proportion_) item._proportion_=item._rose_proportion_;
     var arc = 2 * Math.PI - (item._start_ + 2 * Math.PI * item._proportion_ / 2);
     var color = item.color;
@@ -2502,7 +2494,7 @@ function drawCandleDataPoints(series, seriesMA, opts, config, context) {
   }
 
   //画均线
-  if (candleOption.average.show) {
+  if (candleOption.average.show || seriesMA) { //Merge pull request !12 from 邱贵翔
     seriesMA.forEach(function(eachSeries, seriesIndex) {
       let ranges,minRange,maxRange;
       ranges = [].concat(opts.chartData.yAxisData.ranges[eachSeries.index]);
@@ -4509,7 +4501,7 @@ function drawFunnelText(series, opts, context, eachSpacing, labelAlign,activeWid
   for(let i=0;i<series.length;i++){
     let item = series[i];
     let startX,endX,startY,fontSize;
-    let text = item.format ? item.format(item) : util.toFixed(item._proportion_ * 100) +'%';
+    let text = item.format ? item.format(+item._proportion_.toFixed(2)) : util.toFixed(item._proportion_ * 100) +'%';
     if(labelAlign == 'right'){
       if(i==0){
         startX=(item.funnelArea[2]+centerPosition.x)/2;
@@ -5178,6 +5170,7 @@ var Charts = function Charts(opts) {
   opts.rotate = opts.rotate ? true : false;
   opts.animation = opts.animation ? true : false;
 	opts.rotate = opts.rotate ? true : false;
+	opts.canvas2d = opts.canvas2d ? true : false;
 
   let config$$1 = JSON.parse(JSON.stringify(config));
   config$$1.colors = opts.colors ? opts.colors : config$$1.colors;
@@ -5219,7 +5212,16 @@ var Charts = function Charts(opts) {
   config$$1.columePadding = config.columePadding * opts.pixelRatio;
   opts.$this = opts.$this ? opts.$this : this;
   
-  this.context = uni.createCanvasContext(opts.canvasId, opts.$this);
+  this.context = opts.context ? opts.context : uni.createCanvasContext(opts.canvasId, opts.$this);
+	
+	if(opts.canvas2d){
+		this.context.setStrokeStyle = function(e){ return this.strokeStyle=e; }
+		this.context.setLineWidth = function(e){ return this.lineWidth=e; }
+		this.context.setLineCap = function(e){ return this.lineCap=e; }
+		this.context.setFontSize = function(e){ return this.font=e+"px sans-serif"; }
+		this.context.setFillStyle = function(e){ return this.fillStyle=e; }
+		this.context.draw = function(){ }
+	}
   /* 兼容原生H5
   this.context = document.getElementById(opts.canvasId).getContext("2d");
   this.context.setStrokeStyle = function(e){ return this.strokeStyle=e; }

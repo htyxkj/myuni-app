@@ -7,7 +7,7 @@
 			"path": "pages/index/index",
 			"style": {
 				// "disableScroll": true,
-				"navigationBarTitleText": "幸福张矿"
+				"navigationBarTitleText": "业务工单"
 			}
 		}, {
 			"path": "pages/login/login",
@@ -269,7 +269,7 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "幸福张矿",
+		"navigationBarTitleText": "业务工单",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"navigationStyle": "custom"

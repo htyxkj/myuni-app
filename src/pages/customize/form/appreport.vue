@@ -1,8 +1,6 @@
 <template>
 	<view>
-		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
 		<template v-if="myStyle.type == 2&&dsm.ccells">
-			
 			<bip-table :ccells="dsm.ccells" :tableData="pdList2" @rowClick="rowClick"></bip-table>
 			<view style="padding-top: 8upx;padding-bottom: 30upx;">
 				<u-row gutter="0" justify="between" style="background-color: #FFFFFF; padding: 10rpx 0rpx 10rpx 0;">
@@ -22,6 +20,7 @@
 			</view>
 		</template>
 		<template v-else>
+			<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
 			<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
 				@loadMore="loadMore" @refresh="refresh">
 				<view slot="content-list">

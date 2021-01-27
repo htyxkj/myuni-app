@@ -7,7 +7,7 @@
 		<!-- 主体表单 -->
 		<form>
 			<view class="header">
-				<image src="../../static/gs.png" mode="aspectFit"></image>
+				<image :src="'../../static/'+_comm.ItemType+'.png'" mode="aspectFit"></image>
 			</view>
 			<view class="cu-form-group margin-top input">
 				<view class="title">账 号</view>
@@ -36,7 +36,7 @@
 			<view class="padding-sm">服务协议</view>
 			<view class="padding-sm">隐私政策</view>
 		</view> -->
-		<mLoad :png="'/static/gs.png'" :msg="'登录中...'" v-if="loadModal"></mLoad>
+		<mLoad :png="'/static/'+_comm.ItemType+'.png'" :msg="'登录中...'" v-if="loadModal"></mLoad>
 	</view>
 </template>
 

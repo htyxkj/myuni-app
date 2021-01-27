@@ -1,7 +1,7 @@
 <template>
 	<uni-table stripe emptyText="暂无更多数据">
 		<uni-tr>
-			<uni-th align="center" v-for="(itm,index) in showCells" :key="index">
+			<uni-th align="center" v-for="(itm,index) in showCells" :key="index"><!-- :width="itm.ccLeng*9" -->
 				<view class="z-table-col-text text-center" @click="sort(itm.id, index)">
 					<view>{{itm.labelString}}</view>
 					<view v-if='(itm.attr&ODATTR)>0' class="sort">
@@ -14,7 +14,7 @@
 		</uni-tr>
 		<template v-if="tableData">
 			<uni-tr v-for="(row,_rowId) in tableData" :key="_rowId">
-				<uni-td align="center" v-for="(itm,index1) in showCells" :key="index1">
+				<uni-td align="center" v-for="(itm,index1) in showCells" :key="index1"><!-- :width="itm.ccLeng*9" -->
 					<bip-show-table :cell="itm" :record="row" :rowId="_rowId" :obj_id="ccells.obj_id"  @cellClick="rowClick"></bip-show-table>
 				</uni-td>
 			</uni-tr>
@@ -25,10 +25,6 @@
 
 <script lang="ts">
 	import {Vue, Component,Prop,Watch,Inject} from 'vue-property-decorator';
-	import Cell from '@/classes/pub/coob/Cell';
-	import CDataSet from '@/classes/pub/CDataSet';
-	import CRecord from '@/classes/pub/CRecord';
-	import CCliEnv from '@/classes/cenv/CCliEnv'
 	import uniTable from "@/components/uni-ui/uni-table/uni-table.vue";
 	import uniTh from "@/components/uni-ui/uni-th/uni-th.vue";
 	import uniTr from "@/components/uni-ui/uni-tr/uni-tr.vue";
@@ -44,7 +40,7 @@
 		get showCells(){
 			if(this.ccells){
 				let vr = this.ccells.cels.filter((item:any)=>{
-					return item.isShow == true;
+					return item.isShow == true && ( item.attr & (0x200) )>0;
 				});
 				return vr;
 			}

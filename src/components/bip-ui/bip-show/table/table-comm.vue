@@ -1,6 +1,6 @@
 <template>
-	<view class="flex text-cut">
-		<text >{{mode}}</text>
+	<view class="text-cut">
+		<text class="bip-font-12">{{mode}}</text>
 	</view>
 </template>
 

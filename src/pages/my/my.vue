@@ -3,7 +3,7 @@
 		<view class=" bg-white header">
 			<view>
 				<!-- <view class="cu-avatar xl round my-margin-top bg-white" style="background-image:url(../../static/gs.png);"></view> -->
-				<image class="cu-avatar xl round my-margin-top bg-white"  src="../../static/gs.png" mode="aspectFit"></image>
+				<image v-if="mycomm" class="cu-avatar xl round my-margin-top bg-white"  :src="'../../static/'+mycomm.ItemType+'.png'" mode="aspectFit"></image>
 			</view>
 			<view class="my-info my-margin-top">
 				<view style="font-weight: 600;">{{AttrTitle}}</view>
@@ -105,6 +105,8 @@
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
+	import comm from '@/static/js/comm.js';
+	let commURL: any = comm;
 	@Component({
 		components:{}
 	})
@@ -120,8 +122,13 @@
 		gwName:any = '';//岗位名称
 		editName:any ='MULGW';//岗位辅助
 
+		mycomm:any = null;
+		onLoad() {
+			this.mycomm = commURL;
+		}
 		async mounted() {
-			this.getGWName(this.user.gwCode);
+			await this.getGWName(this.user.gwCode);
+			this.mycomm = commURL;
 		}
 		get user(){
 			return LoginModule.user

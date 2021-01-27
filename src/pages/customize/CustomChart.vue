@@ -15,8 +15,7 @@
 	</view>
 </template>
 <script lang="ts">
-	import comm from '@/static/js/comm.js';
-	let commURL: any = comm;
+	// 组件地址  https://www.ucharts.cn/
 	import {Vue,Prop,Component} from 'vue-property-decorator';
 	import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
 	import {BIPUtil} from '@/classes/api/request';
@@ -30,8 +29,6 @@
 	} from '../../classes/tools/Tools';
 	import Menu from '@/classes/Menu';
 	import QueryEntity from '@/classes/search/QueryEntity';
-	import QueryCont from '@/classes/search/QueryCont';
-	import mMenu from '@/components/mMenu.vue'
 	import URIParams from '@/classes/URIParams'
 	import uCharts from '@/lib/u-chars/u-charts.js';
 	import Cells from '@/classes/pub/coob/Cells';
@@ -183,7 +180,7 @@
 						dashLength:5,//虚线单段长度
 						gridColor:'#1890ff',//辅助线颜色
 						fontColor:'#FFFFFF',//主体文字颜色
-						horizentalLine:true,//是否显示横向辅助线
+						horizentalLine:false,//是否显示横向辅助线
 						xAxisLabel:true,//是否显示X轴辅助标签
 						yAxisLabel:true,//是否显示Y轴辅助标签
 						labelBgColor:'#DFE8FF',//标签背景颜色
@@ -294,12 +291,11 @@
 			option.type = 'column'
 			if(type ==1 || type ==3 || type ==5){//条形
 				option.rotate = true;
-				option.width = uni.upx2px(750);
-				option.height = uni.upx2px(500);
 			} 
 			if(type == 4 || type ==5){
 				option.extra.column.type='stack'
 			}
+			option.extra.column.width = 35 //柱状图 每柱 宽度 px
 			let chartD = chartData.data.data.tjpages.celData; 
 		 	var categories:any = [];
 			var series0:any = []; 
@@ -387,10 +383,10 @@
 				var name = await this.getGroupFldName(item,0);
 				let d1 = { name: name, data: item[this.selValue[0]] ,
 							format:(item:any)=>{
-								if(item._proportion_ == 0){
+								if(item == 0){
 									return "";
 								}
-								let vl = (item._proportion_*100).toFixed(2)+'%'
+								let vl = (item*100).toFixed(2)+'%'
 								// vl = item.name +"："+ vl;
 								return vl
 							}

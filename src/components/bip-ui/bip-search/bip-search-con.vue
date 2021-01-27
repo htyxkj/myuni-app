@@ -25,7 +25,6 @@
 								<view class="search-form radius">
 									<text class="cuIcon-search"></text>
 									<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @blur="query" v-model="item.value" @focus="isShow = false" />
-									
 								</view>
 								<uni-icons style="margin-right: 5px;" color="#bbb" size="20" type="close" @click="delTj(index)"/>
 							</view>
@@ -49,8 +48,9 @@ import bipSelect from '@/components/bip-ui/bip-select/bip-select.vue'
 import uniCollapse from "@/components/uni-ui/uni-collapse/uni-collapse.vue";
 import uniCollapseItem from "@/components/uni-ui/uni-collapse-item/uni-collapse-item.vue";
 import uniIcons from '@/components/uni-ui/uni-icons/uni-icons.vue';
+import bipComm from '../bip-comm/bip-comm.vue';
 @Component({
-	components: {bipSelect,uniCollapse,uniCollapseItem,uniIcons}
+	components: {bipSelect,uniCollapse,uniCollapseItem,uniIcons,bipComm}
 })
 export default class bipSearchCon extends Vue{
 	@Prop({type:Array,default:[]}) cels!:Array<any>;

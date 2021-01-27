@@ -66,13 +66,11 @@ let tools = BIPUtil.ServApi;
 import URIParams from '@/classes/URIParams';
 import Cells from '@/classes/pub/coob/Cells';
 import CDataSet from '@/classes/pub/CDataSet';
-import CRecord from '@/classes/pub/CRecord';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
 import BipLayout from '@/classes/ui/BipLayout';
 import QueryEntity from '@/classes/search/QueryEntity';
 import { Tools } from '../../classes/tools/Tools';
-import { icl } from '../../classes/tools/CommICL';
 
 import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 import {dataTool} from '@/classes/tools/DataTools';
@@ -136,11 +134,9 @@ export default class appReport extends Vue {
 	}
 	
 	onSort(param:any){
-		// this.$emit('onSort', {
-		// 	key: this.nowSortKey,
-		// 	type: this.sortType
-		// })
-		console.log(param);
+		let orderby = param.key+" "+param.type;
+		this.qe.orderBy=orderby;
+        this.getListDataFromNet2(this.currPage,this.pageSize)
 	}
 	
 	rowClick(cellId:any,rowId:number,data:any){
