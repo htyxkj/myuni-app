@@ -20,6 +20,8 @@
 	import Menu from '@/classes/Menu';
 	import mMenu from '@/components/mMenu.vue'
 	import URIParams from '@/classes/URIParams'
+	import comm from '@/static/js/comm.js';
+	let commURL: any = comm;
 	@Component({
 		components:{mMenu}
 	})
@@ -40,11 +42,15 @@
 			let cc = param.command;
 			let dd = cc.split("&");
 			let pbuid = ''
+			let pmenu ='';
 			dd.forEach((aa:any)=>{
 				// console.log(aa)
 				let pbuids = aa.split('=')
 				if(pbuids[0] == 'pbuid'){
 					pbuid = pbuids[1]
+				}
+				if(pbuids[0] == 'pmenu'){
+					pmenu = pbuids[1]
 				}
 			})
 			let mid = param.menuId;
@@ -77,6 +83,21 @@
 							title:'没有权限!'
 						})
 				})
+			}else if(pmenu){
+				let type = commURL.ItemType;
+				let url = "";
+				if(type =='air-super'){
+					if(pmenu == 'RealTimeTrack'){//实时轨迹
+						pmenu = "airMap?type=realTime";
+					}else if(pmenu =='PlayBack'){//轨迹回放
+						pmenu = "airMap?type=playBack";
+					}else if(pmenu == 'TrackShow'){//航带航迹查询
+						pmenu = "airMap?type=trackShow";
+					}
+					url = '/pages/alone/air-super/'+pmenu;
+				}
+				let uri = url+'&color='+param.color+'&title='+param.menuName;
+				this.pageJump(uri);
 			}
 		}
 		

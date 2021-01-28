@@ -47,7 +47,18 @@ export default class MAP extends Vue {
 	markerPoint:any = null;//地图上当前点对象
 	isZoom:boolean =false;//是否是缩放状态
 	refValue:any = []//参照
+
+	item_type = "H5";
+
 	async onLoad(option: any) {
+		// #ifdef H5
+		
+		// #endif
+
+		// #ifdef APP-PLUS
+
+		// #endif
+
 		await singIn.ServApi.initDDJSTicket();
 		this.methordName = option.methordName;
 		let ds = option.ds;

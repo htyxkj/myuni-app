@@ -7,7 +7,7 @@
 			"path": "pages/index/index",
 			"style": {
 				// "disableScroll": true,
-				"navigationBarTitleText": "业务工单"
+				"navigationBarTitleText": "立创模具"
 			}
 		}, {
 			"path": "pages/login/login",
@@ -189,8 +189,13 @@
         ,{
             "path" : "pages/alone/mine/exam/doExam",
             "style" : {}
+		},
+		/***********************************张矿微平台*************************************/
+		
+		/***********************************飞防管控*************************************/
+		{
+			"path": "pages/alone/air-super/airMap"
 		}
-		/***********************************张矿微平台START*************************************/
 	],
 	"subPackages": [
 		{	
@@ -269,7 +274,7 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "业务工单",
+		"navigationBarTitleText": "立创模具",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"navigationStyle": "custom"

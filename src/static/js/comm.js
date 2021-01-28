@@ -25,9 +25,9 @@
 // export const BaseDBID = "01";
 
 // 征信管理平台  工单管控
-export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
-export const BaseDBID = "01";
-export const ItemType = "credit";
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
+// export const BaseDBID = "01";
+// export const ItemType = "credit";
 
 
 // 人力资源管理系统
@@ -36,9 +36,9 @@ export const ItemType = "credit";
 // export const ItemType = null;
 
 // 飞防管控
-// export const BaseUri =  "http://211.144.37.205/air-super/";
-// export const BaseDBID = "01";
-// export const ItemType = "super";
+export const BaseUri =  "http://211.144.37.205/air-super/";
+export const BaseDBID = "01";
+export const ItemType = "air-super";
 
 //力创模具
 // export const BaseUri =  "https://test.juminfuwu.cn/bip-production/";

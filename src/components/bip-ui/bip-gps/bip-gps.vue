@@ -13,9 +13,6 @@ import CCliEnv from '@/classes/cenv/CCliEnv';
 import CDataSet from '@/classes/pub/CDataSet';
 import CRecord from '@/classes/pub/CRecord';
 import { Vue, Prop, Component,Inject,Watch } from 'vue-property-decorator';
-import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
-import { GlobalVariable } from '@/classes/tools/ICL';
-import { BIPUtil } from '@/classes/api/request';
 import { dataTool } from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils;
 @Component({

@@ -6,23 +6,18 @@
 			</view>
 		</view>
 		<view class="cu-list grid col-4 no-border">
-			<view v-if="item.menuattr<4" class="cu-item" v-for="(item,index) in m.childMenu" :key="index" @tap.stop="openMenu(item,index)">
-				<!-- <view :class="['cuIcon-' + cuIconList[index%10].cuIcon,'text-' + cuIconList[index%10].color]" >
-					<view class="cu-tag badge" v-if="badge!=0">
-						<block v-if="badge!=1">{{badge>99?'99+':badge}}</block>
-					</view>
-				</view>
-				<text>{{item.menuName}}</text> -->
-				<!-- 子菜单不显示 -->
-				<view>
-					<view class='cu-avatar xs radius bg-white' :style="[{backgroundImage:'url('+BaseUri+item.menuIcon+')'}]">
-						<view class="cu-tag badge" v-if="badge!=0">
-							<block v-if="badge!=1">{{badge>99?'99+':badge}}</block>
+			<template v-for="(item,index) in m.childMenu">
+				<view v-if="item.menuattr<4" class="cu-item" :key="index" @tap.stop="openMenu(item,index)">
+					<view>
+						<view class='cu-avatar xs radius bg-white' :style="[{backgroundImage:'url('+BaseUri+item.menuIcon+')'}]">
+							<view class="cu-tag badge" v-if="badge!=0">
+								<block v-if="badge!=1">{{badge>99?'99+':badge}}</block>
+							</view>
 						</view>
 					</view>
+					<view><text>{{item.menuName}}</text></view>
 				</view>
-				<view><text>{{item.menuName}}</text></view>
-			</view>
+			</template>
 		</view>	
 	</view>
 </template>

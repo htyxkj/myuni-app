@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport"content="width=device-width,  initial-scale=1.0,user-scalable=0, minimum-scale=1.0, maximum-scale=1.0" />
+<title></title>
+<script src="https://api.tianditu.gov.cn/api?v=4.0&tk=c1133c92592db1048c47d381be567f4a" type="text/javascript"></script>
+<script type="text/javascript" src="./js/uni.webview.1.5.2.js"></script>
+<script type="text/javascript" src="./js/tools.js"></script>
+<style>
+    body{
+        margin: 0px;
+        width: 100%;
+    }
+    #airMapDiv{
+        width: 100% !important;
+    }
+    #top1{
+        text-align: center;
+        color: white;
+    }
+    #top4{
+        font-size: 15px;
+    }
+    .cu-custom{
+        display: block;
+        position: relative;
+    }
+    .content{
+        position: absolute;
+        text-align: center;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        height: 28px;
+        font-size: 15px;
+        line-height: 28px;
+    }
+    .back{
+        margin-left: 14px;
+        text-align:left;
+        font-size: 14px;
+        z-index: 999999;
+    }
+</style>
+</head>
+<body>
+    <div id="top1" class="cu-custom">
+        <div id="top2" class="cu-bar">
+            <div class="">
+                <div id="top3" class="content back" onclick="back()">返回 </div>
+            </div>
+            <div >
+                <div id="top4" class="content"></div>
+            </div>
+        </div>
+    </div>
+    <div id="airMapDiv"></div>
+    <script type="text/javascript">
+        window.onload=function(){
+            initPage();//初始化页面
+            let pageType =  getQueryVariable("pageType");//页面类型
+            if(pageType =='realTime'){//实时轨迹
+
+            }else if(pageType =='playBack'){//轨迹回放
+
+            }else if(pageType =='trackShow'){//航带航迹查询
+
+            }
+            let map = new T.Map('airMapDiv', {
+                projection: 'EPSG:4326'
+            });
+            var lc = new T.LocalCity();
+            lc.location(function (e) {
+                map.centerAndZoom(e.lnglat, 12);
+            });
+            map.checkResize();
+        }
+        //返回
+        function back(){
+            uni.postMessage({data:'back'});
+        }
+    </script>
+</body>
+<style>
+
+</style>
+</html>
