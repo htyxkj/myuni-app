@@ -9,8 +9,8 @@
 							<text class="cuIcon-triangledownfill"></text>
 						</view>
 						<view class="search-form radius">
-							<text class="cuIcon-search"></text>
-							<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @blur="query" v-model="tjAll[0].value" @focus="isShow = false" />
+							<text class="cuIcon-search text-blue text-bold"></text>
+							<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @confirm="query" v-model="tjAll[0].value" @focus="isShow = false" />
 						</view>
 					</view>
 				</view>
@@ -23,8 +23,8 @@
 									<text class="cuIcon-triangledownfill"></text>
 								</view>
 								<view class="search-form radius">
-									<text class="cuIcon-search"></text>
-									<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @blur="query" v-model="item.value" @focus="isShow = false" />
+									<text class="cuIcon-search text-blue text-bold"></text>
+									<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search"  @confirm="query" v-model="item.value" @focus="isShow = false" />
 								</view>
 								<uni-icons style="margin-right: 5px;" color="#bbb" size="20" type="close" @click="delTj(index)"/>
 							</view>
@@ -114,6 +114,7 @@ export default class bipSearchCon extends Vue{
 		this.initOneTj();
 	}
 	query(){
+		uni.hideKeyboard();
 		let vl:any = {};
 		for(var i=0;i<this.tjAll.length;i++){
 			let tj = this.tjAll[i];
