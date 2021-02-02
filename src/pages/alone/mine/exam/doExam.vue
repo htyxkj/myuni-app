@@ -40,6 +40,7 @@
 		</template>
 		<template v-else>
 			<view class="cu-card article" v-if="oneTopic && !isEnd">
+				<view class="text-black countDownMsg">{{countdownMsg}}</view>
 				<view class="cu-item shadow">
 					<view class="title">
 						<view class="">
@@ -188,6 +189,9 @@
 
 		TestPaperArr:any =[];//试卷
 
+		examTime:any = 0;//考试时长(秒)
+		timer:any=null;//计时器
+		countdownMsg:any = null;//倒计时文字
 		async onLoad(options:any) {
 			if(options.makeUp == "1"){
 				this.makeUp = true;
@@ -260,8 +264,15 @@
 					this.title = res.data.data.title;
 				}
 				this.record.test_paper_id = res.data.data.test_paper_id
+				this.examTime = res.data.data.time
 				this.oneTopic = this.topicData[0]
 				this.isShowType = false;
+				if(this.examTime  && this.examTime >0){
+					if(typeof this.examTime === 'number' && !isNaN(this.examTime)){
+					this.examTime = this.examTime*60
+					  this.timer = setInterval(this.countDown, 1000);
+					}
+				}
 			}else if(res.data.id == -2){
 				uni.clearStorage()
 				uni.reLaunch({'url':'/pages/login/login'})
@@ -370,6 +381,7 @@
 		 * 统计积分
 		 */
 		async statisticsIntegral(){
+			clearInterval(this.timer);
 			let btn1 = new BipMenuBtn("DLG","每日答题")
             btn1.setDlgType("D")
             btn1.setDlgCont("mine.serv.ExamServlet*202;0;0");//查询随机题目
@@ -405,7 +417,32 @@
 				}
 			})
 		}
-		
+		/**
+		 * 倒计时
+		 */
+		countDown() {
+			if (this.examTime >= 0) {
+				let minutes = Math.floor(this.examTime / 60);
+				let seconds = Math.floor(this.examTime % 60);
+				this.countdownMsg = "距离考试结束还有" + minutes + "分" + seconds + "秒";
+				--this.examTime;
+			} else{
+				if(this.isEnd == false){
+					uni.showModal({
+						title: '提示',
+						content: '考试结束',
+						confirmText: '确定',
+						showCancel:false,
+						success: res => {
+							if (res.confirm) {
+								this.isEnd = true;
+								this.statisticsIntegral()
+							}
+						}
+					})
+				}
+			}  
+		}
 		/**
 		 * 再来一组
 		 */
@@ -471,5 +508,9 @@
 .succ-num{
 	font-size: 56upx;
 }
-
+.countDownMsg{
+	text-align: center;
+	padding-top: 6px;
+	font-size: 16px;
+}
 </style>
