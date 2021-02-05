@@ -227,7 +227,7 @@ export default class bipSelect extends Vue {
 		return this.cds.getRecord(this.cds.index)
 	}
 	
-	@Watch('record')
+	@Watch('record',{deep:true})
 	recordChange(){
 		// console.log('recordchang')
 		this.$nextTick(()=>{

@@ -89,7 +89,7 @@ export default class bipDate extends Vue {
 			return false;
 		}
 	}
-	@Watch('record')
+	@Watch('record',{deep:true})
 	recordChange(){
 		// console.log('recordchang')
 		let rr = this.record.data[this.cell.id];

@@ -180,7 +180,7 @@ export default class bipList extends Vue{
 		}
 	}
 
-	@Watch('record')
+	@Watch('record',{deep:true})
 	recordChange(){
 		let rr = this.record.data[this.cell.id];
 		if(rr !== this.mode1){

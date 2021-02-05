@@ -91,7 +91,7 @@ export default class bipRefsFz extends Vue{
 		
 	}
 	
-	@Watch('record')
+	@Watch('record',{deep:true})
 	recordChange(){
 		this.$nextTick(()=>{
 			let rr = this.record.data[this.cell.id];
