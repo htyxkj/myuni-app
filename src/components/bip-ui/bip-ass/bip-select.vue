@@ -98,7 +98,7 @@ export default class bipSelect extends Vue {
 			uni.showLoading({
 				title:'跳转中...'
 			})
-			uni.navigateTo({url:'/pages/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.editName+"&methordname="+this.methordName,complete: () => {
+			uni.navigateTo({url:'/pages/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.editName+"&methordname="+this.methordName+"&cellAttr="+this.cell.attr,complete: () => {
 				uni.hideLoading();
 			}});
 		}else{
@@ -128,8 +128,18 @@ export default class bipSelect extends Vue {
 			// 如果可以编辑 更改值，并更新状态
 			this.$nextTick(()=>{
 				// if(this.refKey == this.editName){
-					this.refInsAid.values[0] = param;
-					let v0= param[this.bipInsAid.cells.cels[0].id];
+					this.refInsAid.values = param;
+					let v0 = "";
+					if(param.length ==1){//单选
+						v0= param[0][this.bipInsAid.cells.cels[0].id];
+					}else if(param.length>1){//多选
+						for(var i=0;i<param.length;i++){
+							v0 += param[i][this.bipInsAid.cells.cels[0].id];
+							if(i<param.length-1){
+								v0+=";"
+							}
+						}
+					}
 					this.refInsAid.realV = v0;
 					this.refInsAid.makeShow();
 					this.othCols.forEach((fld, index) => {
@@ -145,7 +155,6 @@ export default class bipSelect extends Vue {
 				this.makeSv();
 				this.cds.cellChange(this.modekey,this.cell.id);
 			})
-			
 		}
 	}
 	

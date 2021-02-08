@@ -26,9 +26,13 @@
 		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
 		 @loadMore="loadMore" @refresh="refresh">
 		 <view slot="content-list">
-		 	<bip-selector-unit v-for="(item,index) in pdList" :key='index' :item="item" :index="index" @select="select"></bip-selector-unit>
+		 	<bip-selector-unit v-for="(item,index) in pdList" :key='index' :item="item" :index="index" @select="select" :isMultiple="isMultiple"></bip-selector-unit>
 		 </view>
 		</load-refresh>
+		<view class="cu-bar tabbar bg-white shadow foot my-b-menu" v-if="isMultiple">
+			<view class="submit bg-red margin-sm" @click="celCancel"><text>取消</text></view>
+			<view class="submit bg-blue margin-sm" @click="celOk"><text>确定</text></view>
+		</view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
 	</view>
 </template>
@@ -67,11 +71,16 @@ export default class selecteditor extends Vue {
 	totalPage: number = 0;
 	pageSize:number = 15;
 	groupV:any = '';
+	cellAttr:any =0;
+	isMultiple:boolean = false;
+	checkAll:any =[];
 	async onLoad(option: any) {
 		this.groupV = option.groupV;
 		this.editName = option.editName;
 		this.methordName = option.methordname||''
 		this.aidKey = ICL.AID_KEY + this.editName;
+		this.cellAttr = option.cellAttr;
+		this.isMultiple = (this.cellAttr & (0x200000))>0
 		let rr:any = await this.getAidByKey();
 		if (rr) {
 			this.bipInsAid.id = rr.id;
@@ -104,10 +113,29 @@ export default class selecteditor extends Vue {
 		return this.aidmaps.get(this.aidKey) || JSON.parse(uni.getStorageSync(this.aidKey));
 	}
 	
-	select(item:any,index:number){
-		if(this.methordName){
-			uni.$emit(this.methordName,item)
+	select(item:any,index:number,ischeck:any){
+		if(!this.isMultiple){
+			this.checkAll = [];
 		}
+		if(ischeck){
+			this.checkAll.push(item);
+		}else{
+			for(var i=0;i<this.checkAll.length;i++){
+				let element = this.checkAll[i];
+				if(element == item){
+					this.checkAll.splice(i,1)
+				}
+			}
+		}
+		if(this.methordName){
+			uni.$emit(this.methordName,this.checkAll)
+		}
+		if(!this.isMultiple){
+			uni.navigateBack({delta:1});
+		}
+	}
+	celOk(){
+		uni.$emit(this.methordName,this.checkAll)
 		uni.navigateBack({delta:1});
 	}
 	clear(){
@@ -115,6 +143,9 @@ export default class selecteditor extends Vue {
 		if(this.methordName){
 			uni.$emit(this.methordName,item)
 		}
+		uni.navigateBack({delta:1});
+	}
+	celCancel(){
 		uni.navigateBack({delta:1});
 	}
 	loadMore() {

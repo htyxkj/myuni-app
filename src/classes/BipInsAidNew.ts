@@ -47,10 +47,17 @@ export default class BipInsAidNew{
 	makeShow(){
 		this.showV = this.realV;
 		if(this.cells&&this.cells.cels.length>1){
-			let rr = this.values[0];
-			if(rr){
-				this.showV = rr[this.cells.cels[1].id]||this.realV;
+			let vv = "";
+			for(var i=0;i<this.values.length;i++){
+				let rr = this.values[i];
+				if(rr){
+					vv += rr[this.cells.cels[1].id];
+					if(i<this.values.length-1)
+						vv += ";"
+				}
 			}
+			if(vv)
+				this.showV = vv;
 		}
 	}
 }
