@@ -111,6 +111,9 @@ export namespace dataTool {
 					if ((iniVl == '[Y-M-D]' || iniVl === '0') && item.type === 93) {
 						iniVl = DateUtils.DateTool.now();
 					}
+					if(iniVl.indexOf('[Y-M-D]') !=-1  && (item.type === 93 || item.type ===91) ){
+						iniVl = iniVl.replace('[Y-M-D]',DateUtils.DateTool.now(GlobalVariable.DATE_FMT_YMD));
+					}
 					if (iniVl == '[Y-M-D]') {
 						iniVl = DateUtils.DateTool.now(GlobalVariable.DATE_FMT_YMD);
 					}
