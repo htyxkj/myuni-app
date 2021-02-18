@@ -70,10 +70,18 @@ export default class bipFileInfo extends Vue {
 		this.$emit('hide')
 	}
 	ChooseImage() {
+		let sourceType = [];
+		if(this.cell.refValue){
+			if(this.cell.refValue =='{0}'){
+				sourceType.push('album');
+			}else if(this.cell.refValue =='{1}'){
+				sourceType.push('camera');
+			}
+		}
 		uni.chooseImage({
 			count: this.count, //默认9
 			sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-			sourceType: ['album'], //从相册选择 //camera 相机拍照
+			sourceType: sourceType, //album 从相册选择 //camera 相机拍照
 			success: (res: any) => {
 				let filePath:any = [];
 				for(var i=0;i<res.tempFilePaths.length;i++){
