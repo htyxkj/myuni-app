@@ -1,0 +1,103 @@
+/************************************************************航带航迹查询***********************************************************/
+/*右下角按钮组*/
+.track_show_btn{
+	width: 45px;
+	bottom: 15px;
+	right: 10px;
+	position: fixed;
+	z-index: 450;
+}
+/*右下角单个按钮*/
+.track_show_btn1{
+	margin-top: 5px;
+	width: 45px;
+	height: 45px;
+	border-radius: 45px;
+	background-color: white;
+	text-align: center;
+    line-height: 45px;
+}
+.track_show_btn_icon{
+	font-size: 18px !important;
+	color: #007AFF;
+}
+.weather_module{
+    left: 50px;
+    position: fixed;
+    z-index: 450;
+    width: 200px;
+    margin-top:10px ;
+    border: 1px solid #b6b6b6;
+    background-color: rgba(209, 209, 209, 0.68);
+    font-size: 13px;
+}
+.f_cockpit{
+    position: fixed;
+    z-index: 440;
+    margin-top:10px ;
+    border: 1px solid #b6b6b6;
+    background-color: rgba(209, 209, 209, 0.68);
+    font-size: 13px;
+    width: 100%;
+}
+
+
+/************************************************************顶部***********************************************************/
+.cu-custom{
+	display: block;
+	position: relative;
+}
+.cu-bar{
+	min-height: 0px;
+	box-shadow: 0px 0px 0px;
+	z-index: 9999;
+}
+.action {
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    height: 100%;
+    -webkit-box-pack: center;
+    justify-content: center;
+    max-width: 100%;
+}
+.content {
+    position: absolute;
+    text-align: center;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    height: 28px;
+    font-size: 15px;
+    line-height: 28px;
+    cursor: none;
+    pointer-events: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.bg-blue {
+    background-color: #0081ff;
+    color: #ffffff;
+}
+.back{
+	padding-left: 14px;
+	font-size: 14px;
+    justify-content: left;
+	z-index: 9999;    
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    margin: auto;
+    height: 28px;
+    line-height: 28px;
+    cursor: none;
+}
+.my_form{
+	max-height: 450px;
+    overflow-y: auto;
+    padding: 15px 1px;
+    border-bottom: 1px solid #dedede;
+    border-radius: 2px 2px 0 0;
+}

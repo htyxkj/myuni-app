@@ -49,6 +49,8 @@
             _src += "&cc="+uni.upx2px(60);          //标题栏高度
             _src += "&title="+this.title;           //标题
             _src += "&servUrl="+commURL.BaseUri;    //服务端URL
+            _src += "&dbid="+commURL.BaseDBID;      //数据库连接标识
+            _src += "&vs="+new Date().getTime();      //数据库连接标识
             // _src += "&servUrl=";
             this.src = _src;
             

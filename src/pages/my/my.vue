@@ -2,7 +2,6 @@
 	<view class="mine-info">
 		<view class=" bg-white header">
 			<view>
-				<!-- <view class="cu-avatar xl round my-margin-top bg-white" style="background-image:url(../../static/gs.png);"></view> -->
 				<image v-if="mycomm" class="cu-avatar xl round my-margin-top bg-white"  :src="'../../static/'+mycomm.ItemType+'.png'" mode="aspectFit"></image>
 			</view>
 			<view class="my-info my-margin-top">
@@ -41,7 +40,6 @@
 		</view> -->
 		<!-- <button class="bg-blue margin-tb-sm lg" >退出登录</button> -->
 		<!--修改密码-->
-		<!-- <mLoad :png="'/static/gs.png'" :msg="'处理中...'" v-if="canExec"></mLoad> -->
 		<view class="cu-modal" style="z-index: 100;" :class="mdPass?'show':''">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-red justify-end">

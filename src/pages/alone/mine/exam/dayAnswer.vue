@@ -131,7 +131,6 @@
 	import QueryCont from '@/classes/search/QueryCont';
 	import {Vue,Provide,Prop,Component} from 'vue-property-decorator';
 	import {BipMenuBtn} from '@/classes/BipMenuBtn'
-	import { values } from 'xe-utils/methods';
 	@Component({
 	})
 	export default class dayAnswer extends Vue {

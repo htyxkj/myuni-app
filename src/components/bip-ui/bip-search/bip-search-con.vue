@@ -30,6 +30,7 @@
 							</view>
 						</template>
 					</view>
+					<!-- <bip-comm v-for="(item,index) in cels" :obj_id="'ass'" :cell="item" :key="index"></bip-comm> -->
 					<view class="flex justify-center padding-bottom">
 						<button class="cu-btn lines-blue round sm shadow" @click="addTj">
 							添加一个

@@ -71,7 +71,7 @@
 		canLogin: boolean = false
 		loadModal: boolean = false
 		vueId: string = Tools.guid()
-		user: User = new User('admin', '', 'Kong6511')
+		user: User = new User('', '', '')
 		// user: User = new User('', '', '')
 		_comm:any = null;
 		onLoad() {

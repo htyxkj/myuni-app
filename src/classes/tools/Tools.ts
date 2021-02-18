@@ -1,4 +1,8 @@
 import Menu from '@/classes/Menu';
+import { BIPUtil } from '@/classes/api/request';
+let tools = BIPUtil.ServApi;
+import Cells from '@/classes/pub/coob/Cells';
+import CDataSet from '@/classes/pub/CDataSet';
 export class Tools{
 	static S4() {
 		return (((1+Math.random())*0x10000)|0).toString(16).substring(1)+'';
@@ -74,6 +78,22 @@ export class Tools{
 				}
 			}
 			return null;
+		}
+	}
+
+	/**
+	 * 更具对象编码获取对象信息
+	 * @param cellid 对象号
+	 */
+	static async getCell(cellid: string) {
+		let res = await tools.getCCellsParams(cellid);
+		let rtn: any = res.data;
+		if (rtn.id == 0) {
+			let kn: Array<Cells> = rtn.data.layCels;
+			let cells = kn;
+			return new CDataSet(cells[0]);
+		} else {
+			return new CDataSet("");
 		}
 	}
 }

@@ -7,7 +7,7 @@
 			"path": "pages/index/index",
 			"style": {
 				// "disableScroll": true,
-				"navigationBarTitleText": "立创模具"
+				"navigationBarTitleText": "幸福张矿"
 			}
 		}, {
 			"path": "pages/login/login",
@@ -195,6 +195,12 @@
 		/***********************************飞防管控*************************************/
 		{
 			"path": "pages/alone/air-super/airMap"
+		},
+		{
+			"path": "pages/alone/air-super/airSortiesInvoke"
+		},
+		{
+			"path": "pages/alone/air-super/airSortiesQuery"
 		}
 	],
 	"subPackages": [
@@ -274,7 +280,7 @@
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "立创模具",
+		"navigationBarTitleText": "幸福张矿",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"navigationStyle": "custom"

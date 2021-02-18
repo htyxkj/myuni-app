@@ -93,6 +93,10 @@
 						pmenu = "airMap?type=playBack";
 					}else if(pmenu == 'TrackShow'){//航带航迹查询
 						pmenu = "airMap?type=trackShow";
+					}else if(pmenu =='SortiesInvoke'){//架次统计
+						pmenu = "airSortiesInvoke?1=1";
+					}else if(pmenu =='SortiesQuery'){//架次查询
+						pmenu = "airSortiesQuery?1=1";
 					}
 					url = '/pages/alone/air-super/'+pmenu;
 				}

@@ -73,7 +73,7 @@ export default class bipFileInfo extends Vue {
 		uni.chooseImage({
 			count: this.count, //默认9
 			sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-			sourceType: ['album'], //从相册选择
+			sourceType: ['album'], //从相册选择 //camera 相机拍照
 			success: (res: any) => {
 				let filePath:any = [];
 				for(var i=0;i<res.tempFilePaths.length;i++){

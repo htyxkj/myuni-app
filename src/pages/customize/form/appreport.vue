@@ -49,13 +49,11 @@ let tools = BIPUtil.ServApi;
 import URIParams from '@/classes/URIParams';
 import Cells from '@/classes/pub/coob/Cells';
 import CDataSet from '@/classes/pub/CDataSet';
-import CRecord from '@/classes/pub/CRecord';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
 import BipLayout from '@/classes/ui/BipLayout';
 import QueryEntity from '@/classes/search/QueryEntity';
 import { Tools } from '@/classes/tools/Tools';
-import { icl } from '@/classes/tools/CommICL';
 
 import {dataTool} from '@/classes/tools/DataTools';
 
@@ -162,6 +160,8 @@ export default class appReport extends Vue {
 	async initUIData(layCels: any) {
 		this.cells = layCels;
 		this.dsm_cont = new CDataSet(this.cells[0]);
+		let curr = DataUtil.createRecord(this.dsm_cont,this.env);
+		this.dsm_cont.addRecord(curr);
 		this.dsm = new CDataSet(this.cells[1]);
 		
 		this.qe.pcell = this.dsm.ccells.obj_id;
