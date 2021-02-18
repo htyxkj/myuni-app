@@ -20,7 +20,7 @@
 			</view>
 		</template>
 		<template v-else>
-			<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
+			<bip-search-con :cels="showCells" :dsm_cont="dsm_cont"  @query="queryCont"></bip-search-con>
 			<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
 				@loadMore="loadMore" @refresh="refresh">
 				<view slot="content-list">

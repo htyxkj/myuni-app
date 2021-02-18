@@ -1,7 +1,7 @@
 <template>
 	<view class="cu-form-group solid-bottom">
 		<template v-if="cell">
-			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
+			<view v-if="!noLable" class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
 			<input :placeholder="cell.labelString" type="text" v-model="showMode" @tap.stop="open()" disabled="true"/>
 			<text :class="['cuIcon-triangledownfill', 'text-grey']" @tap.stop="open()"></text>
 			<bip-select :arr="bipInsAid.values" :show="isShow" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="showk" :isStr="false"></bip-select>
@@ -29,6 +29,7 @@ import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自�
 })
 export default class bipList extends Vue{
 	@Inject('env') env!:CCliEnv;
+	@Inject('noLable') noLable!:boolean;
 	@Prop({ type: Object }) cell!: Cell;
 	bipInsAid:BipInsAidNew = new BipInsAidNew("");
 	@Prop({type:String}) obj_id!:string;

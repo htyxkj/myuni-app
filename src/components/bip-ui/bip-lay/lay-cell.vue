@@ -21,6 +21,7 @@
 	})
 	export default class layCell extends Vue{
 		@Inject('env') env!:CCliEnv;
+		@Provide('noLable') noLable: boolean = false;
 		@Prop({type:Object}) laycell!:BipLayCells
 		id:string = Tools.guid()
 	}

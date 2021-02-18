@@ -1,6 +1,6 @@
 <template>
 	<view class="cu-form-group solid-bottom">
-		<template v-if="cell">
+		<template v-if="cell && !noLable">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
 		</template>
 		<input class="text-right" :placeholder="cell.labelString || title " type="text" v-model="mode" disabled="true"/>
@@ -23,6 +23,7 @@ import BipInsAidNew from '@/classes/BipInsAidNew';
 })
 export default class bipDate extends Vue {
 	@Inject('env') env!:CCliEnv;
+	@Inject('noLable') noLable!:boolean;
 	@Prop({ default: '', type: String }) title!: string;
 	@Prop({ type: Object }) cell!: Cell;
 	@Prop({type:String}) obj_id!:string;

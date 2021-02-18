@@ -6,7 +6,7 @@
 				<view class="container">
 					<view class="page-body">
 						<view class='wrapper'>
-							<view class='toolbar solid-bottom bg-white' @tap="format" style="height: 110px;overflow-y: auto;">
+							<view class='toolbar solid-bottom bg-white' @tap="format" style="height: 260rpx;overflow-y: auto;">
 								<view :class="formats.bold ? 'ql-active' : ''" class="iconfont icon-zitijiacu" data-name="bold"></view>
 								<view :class="formats.italic ? 'ql-active' : ''" class="iconfont icon-zitixieti" data-name="italic"></view>
 								<view :class="formats.underline ? 'ql-active' : ''" class="iconfont icon-zitixiahuaxian" data-name="underline"></view>

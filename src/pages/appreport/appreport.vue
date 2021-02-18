@@ -4,7 +4,7 @@
 			<block slot="backText">返回</block>
 			<block slot="content"><view class="header-title">{{ title }}</view></block>
 		</cu-custom>
-		<bip-search-con :cels="showCells" @query="queryCont"></bip-search-con>
+		<bip-search-con :cels="showCells" :dsm_cont="dsm_cont" @query="queryCont"></bip-search-con>
 <!-- 		<u-toast ref="uToast" /> -->
 		<template v-if="!isMap">
 			<template v-if="isTable">
@@ -110,12 +110,13 @@ export default class appReport extends Vue {
 
 	isMap:boolean = false;//是否是地图展示页面
 	i_isMap:boolean = false;//是否是地图展示页面
-	isTable:boolean = true;//是否是地图展示页面
+	isTable:boolean = true;//是否是表格展示页面
 	
 	baseColumns:Array<any> = []
 	get showCells(){
 		if(this.dsm_cont.ccells){
 			let vr = this.dsm_cont.ccells.cels.filter((item:any)=>{
+				item.isReq = false;
 				return item.isShow == true;
 			});
 			return vr;
@@ -252,6 +253,7 @@ export default class appReport extends Vue {
 		
 		this.mbs.init(this.uriParam.pattr, this.dsm);
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
+		this.env.ds_cont = this.dsm_cont
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
 	} 
 	

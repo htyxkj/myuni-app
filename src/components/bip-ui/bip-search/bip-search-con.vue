@@ -9,8 +9,9 @@
 							<text class="cuIcon-triangledownfill"></text>
 						</view>
 						<view class="search-form radius">
-							<text class="cuIcon-search text-blue text-bold"></text>
-							<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @confirm="query" v-model="tjAll[0].value" @focus="isShow = false" />
+							<!-- <text class="cuIcon-search text-blue text-bold"></text>
+							<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @confirm="query" v-model="tjAll[0].value" @focus="isShow = false" /> -->
+							<bip-comm :obj_id="dsm_cont.ccells.obj_id" :cell="tjAll[0].cels"></bip-comm>
 						</view>
 					</view>
 				</view>
@@ -23,17 +24,20 @@
 									<text class="cuIcon-triangledownfill"></text>
 								</view>
 								<view class="search-form radius">
-									<text class="cuIcon-search text-blue text-bold"></text>
-									<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search"  @confirm="query" v-model="item.value" @focus="isShow = false" />
+									<!-- <text class="cuIcon-search text-blue text-bold"></text> -->
+									<!-- <input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search"  @confirm="query" v-model="item.value" @focus="isShow = false" /> -->
+									<bip-comm :obj_id="dsm_cont.ccells.obj_id" :cell="item.cels"></bip-comm>
 								</view>
 								<uni-icons style="margin-right: 5px;" color="#bbb" size="20" type="close" @click="delTj(index)"/>
 							</view>
 						</template>
 					</view>
-					<!-- <bip-comm v-for="(item,index) in cels" :obj_id="'ass'" :cell="item" :key="index"></bip-comm> -->
 					<view class="flex justify-center padding-bottom">
-						<button class="cu-btn lines-blue round sm shadow" @click="addTj">
+						<button class="cu-btn lines-blue round sm shadow margin-right" @click="addTj">
 							添加一个
+						</button>
+						<button class="cu-btn lines-blue round sm shadow margin-left" @click="query">
+							查询
 						</button>
 					</view>
 				</view>
@@ -44,22 +48,26 @@
 	</view>
 </template>
 <script lang="ts">
-import { Vue,Prop, Component,Watch} from 'vue-property-decorator';
+import { Vue,Provide,Prop, Component,Watch} from 'vue-property-decorator';
 import bipSelect from '@/components/bip-ui/bip-select/bip-select.vue'
 import uniCollapse from "@/components/uni-ui/uni-collapse/uni-collapse.vue";
 import uniCollapseItem from "@/components/uni-ui/uni-collapse-item/uni-collapse-item.vue";
 import uniIcons from '@/components/uni-ui/uni-icons/uni-icons.vue';
 import bipComm from '../bip-comm/bip-comm.vue';
+import CDataSet from '@/classes/pub/CDataSet';
 @Component({
 	components: {bipSelect,uniCollapse,uniCollapseItem,uniIcons,bipComm}
 })
 export default class bipSearchCon extends Vue{
+	@Provide('noLable') noLable: boolean = true;
+
 	@Prop({type:Array,default:[]}) cels!:Array<any>;
+	@Prop({type:CDataSet}) dsm_cont!:CDataSet;
 	isShow:boolean = false;
 
 	tjIndex:any=0;
 	tjAll:Array<any>=new Array<any>();//全部条件
-	oneTj:any = {name:"",cellId:"",value:""};
+	oneTj:any = {name:"",cellId:"",value:"",cels:null};
 
 	mounted(){
 		this.initOneTj();
@@ -67,8 +75,9 @@ export default class bipSearchCon extends Vue{
 	initOneTj(){
 		this.tjAll=new Array<any>();
 		if(this.cels && this.cels.length>0){
-			this.oneTj.name = this.cels[0].labelString
-			this.oneTj.cellId = this.cels[0].id
+			this.oneTj.name = this.cels[0].labelString;
+			this.oneTj.cellId = this.cels[0].id;
+			this.oneTj.cels = this.cels[0];
 			this.tjAll.push(this.oneTj);
 		}
 	}
@@ -80,6 +89,7 @@ export default class bipSearchCon extends Vue{
 		if(e !== undefined){
 			this.tjAll[this.tjIndex].cellId = e.id;
 			this.tjAll[this.tjIndex].name = e.labelString;
+			this.tjAll[this.tjIndex].cels = e;
 		}
 		this.hideModal();
 	}
@@ -99,6 +109,7 @@ export default class bipSearchCon extends Vue{
 			return;
 		tj.name = this.cels[tj_len].labelString
 		tj.cellId = this.cels[tj_len].id
+		tj.cels = this.cels[tj_len];
 		this.tjAll.push(tj);
 	}
 	delTj(index:any){
@@ -119,7 +130,9 @@ export default class bipSearchCon extends Vue{
 		let vl:any = {};
 		for(var i=0;i<this.tjAll.length;i++){
 			let tj = this.tjAll[i];
-			vl[tj.cellId] = tj.value
+			let value = this.dsm_cont.currRecord.data[tj.cellId]
+			value = !value?"":value
+			vl[tj.cellId] = value;
 		}
 		this.$emit('query',vl);
 	}

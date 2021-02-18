@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view style="width:100%">
 		<template v-if="cell.type==91||cell.type==93">
 			<bip-date :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-date>
 		</template>

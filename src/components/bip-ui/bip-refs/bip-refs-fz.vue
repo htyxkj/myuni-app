@@ -1,6 +1,6 @@
 <template>
 	<view class="cu-form-group solid-bottom">
-		<template v-if="label">
+		<template v-if="label && !noLable">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString }}</view>
 		</template>
 		<input type="text" v-model="modes" disabled="true"/>
@@ -25,6 +25,7 @@ import CDataSet from '@/classes/pub/CDataSet';
 })
 export default class bipRefsFz extends Vue{
 	@Inject('env') env!:CCliEnv;
+	@Inject('noLable') noLable!:boolean;
 	@Prop({ type: Object }) cell!: Cell;
 	@Prop({type:String}) obj_id!:string;
 	@Prop({type:Boolean,default:false}) label!:boolean;

@@ -1,6 +1,6 @@
 <template>
 	<view class="cu-form-group solid-bottom">
-		<template v-if="cell">
+		<template v-if="cell && !noLable">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString }}</view>
 		</template>
 		<input :placeholder="cell.labelString" type="text" v-model="mode" disabled="true" @tap.stop="open()"/>
@@ -26,6 +26,7 @@ const DataUtil = dataTool.utils;
 @Component({})
 export default class bipSelect extends Vue {
 	@Inject('env') env!:CCliEnv;
+	@Inject('noLable') noLable!:boolean;
 	@Prop({ type: Object }) cell!: Cell;
 	@Prop({ type: Object }) bipInsAid!:BipInsAidNew;
 	@Prop({type:String}) obj_id!:string;

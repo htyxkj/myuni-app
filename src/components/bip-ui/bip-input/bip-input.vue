@@ -2,7 +2,7 @@
 <view>
 	<view class="cu-form-group solid-bottom">
 		<template v-if="cell">
-			<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
+			<view v-if="!noLable" class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
 			<template v-if="type=='text'">
 				<input name="input" :placeholder="cell.labelString" type="text" v-model="mode" @blur="dataChange" :disabled="disabled"/>
 				<template v-if="clearable">
@@ -34,6 +34,7 @@
 	@Component({})
 	export default class bipInput extends Vue{
 		@Inject('env') env!:CCliEnv;
+		@Inject('noLable') noLable!:boolean;
 		@Prop({default:'text',type:String}) type!:string
 		@Prop({default:false,type:Boolean}) clearable!:boolean
 		@Prop({type:Object}) cell!:Cell;
