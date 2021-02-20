@@ -128,7 +128,7 @@ export default class appReport extends Vue {
 		let _refs:any = this.$refs;
 		if(val){
 			_refs.uToast.show({
-					title: val+'',
+					title: val+''
 					// type: 'success'
 				})
 		}
@@ -140,9 +140,98 @@ export default class appReport extends Vue {
         this.getListDataFromNet2(this.currPage,this.pageSize)
 	}
 	
-	rowClick(cellId:any,rowId:number,data:any){
-		this.openList(rowId);
+	async rowClick(cellId:any,rowId:number,data:any){
+		let _cellIndex = _.findIndex(this.dsm.ccells.cels,(itm:any)=>{
+			return itm.id == cellId;
+		})
+		let cell = this.dsm.ccells.cels[_cellIndex];
+		let cr0 = this.pdList[rowId];
+		if( (cell.attr & 1) >0 || (cell.attr & (0x80000)) >0 ) { // 0主键   0x80000关联
+			console.log(111,cr0);
+			let row = cr0.data;
+			let slkid = row[cell.id];
+			if ((cell.attr & 0x80000) > 0) {//关联
+				let allCels = this.dsm.ccells.cels;
+				let slkbuidCell = null;
+				for(var i=0;i<allCels.length;i++){
+					let oneCel = allCels[i];
+					if(oneCel.id == cell.id){
+						slkbuidCell = allCels[i+1];
+						break;
+					}
+				} 
+				let slkbuid = ''
+				if(slkbuidCell)
+					slkbuid = row[slkbuidCell.id];
+				let data = null;//获取常量定义的 BL_菜单参数_字段ID 进行菜单打开
+				let name = "BL_"+this.pbuid+"_"+cell.id;
+				let qe = new QueryEntity('','');
+				let vv:any = await tools.getBipInsAidInfo(name,300,qe);
+				// console.log(vv)
+				if(vv.data.id==-1){
+					//没有定义BL_xxx
+					// console.log(slkid,slkbuid);
+					if (slkid && slkbuid) { 
+						//获取业务定义
+						let param = await tools.getBULinks(slkbuid);
+						// console.log(param);
+						if(param.data.id ==0){
+							let opera = param.data.data.opt;
+							if (opera&&!opera.pmenuid) {
+								uni.showToast({title:"业务" + slkbuid + "没有绑定菜单!"}); 
+								return false;
+							}
+							let me = Tools.findMenu(opera.pmenuid);
+							if (!me) {
+								uni.showToast({title: "没有" + opera.pmenuid + "菜单权限!" });
+								return false;
+							}else{
+
+								let command = me.command.split("&");
+								let pbuid = command[0].split("=");
+								let pmenuid = command[1].split("="); 
+								// console.log(pbuid,pmenuid);
+								await tools.getMenuParams(pbuid[1],pmenuid[1]).then((res:any)=>{
+									let data = res.data
+									console.log(data);
+									if(data.id>=0){
+										let _uriParams = data.data.mparams
+										uni.setStorageSync(pbuid[1],JSON.stringify(_uriParams));
+										let rr = ""+opera['pkfld']+"='"+slkid+"'"
+										let qcont:any =rr;
+										if(_uriParams.beBill){
+											let uri = '/pages/appinfo/appdetail?color='+this.cr+'&title='+opera.pname+"&pbuid="+pbuid[1]+'&qcont='+encodeURIComponent(qcont);
+											uni.navigateTo({
+												url: uri,
+												complete: () => {
+													uni.hideLoading();
+													this.isjump = false;
+												}
+											});
+										}else{
+											this.openList(rowId);
+										}
+									}else{
+										uni.showToast({
+											title:'没有权限!'
+										})
+									}
+								}).catch((err:any)=>{
+										uni.showToast({
+											title:'没有权限!'
+										})
+								})
+							}
+						}  
+					}
+				}else{
+					//有定义XXX
+				}
+			}
+		}
+		//this.openList(rowId);
 	}
+	
 	
 	openList(rid:number){
 		if (!this.isjump) {
