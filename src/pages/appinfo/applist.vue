@@ -6,7 +6,7 @@
 				<view class="header-title">{{ title }}</view>
 			</block>
 		</cu-custom>
-		<bip-search-con :cels="showCells" :dsm_cont="dsm_cont" @query="queryCont"></bip-search-con>
+		<bip-search-con v-if="env.dsm && env.dsm.ccells" :cels="showCells" :dsm_cont="dsm" @query="queryCont"></bip-search-con>
 		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
 		 	@loadMore="loadMore" @refresh="refresh">
 		 	<view slot="content-list">
