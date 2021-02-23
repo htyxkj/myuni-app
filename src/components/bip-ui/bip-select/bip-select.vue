@@ -77,7 +77,7 @@ export default class bipSelect extends Vue{
 	*/
 	right: 0;
 	left: 0;
-	z-index: 1110;
+	z-index: 99999;
 	opacity: 0;
 	outline: 0;
 	text-align: center;
@@ -88,7 +88,7 @@ export default class bipSelect extends Vue{
 	background: rgba(255, 255, 255, 0.6);
 	transition: all 0.3s ease-in-out 0s;
 	pointer-events: none;
-	margin-top: 10rpx;
+	margin-top: 10upx;
 	width: 100%;
 }
 .bip-selector.show{
@@ -100,11 +100,14 @@ export default class bipSelect extends Vue{
 	overflow-y: auto;
 	pointer-events: auto;
 }
-
+.bip-selector .action{
+	max-height: 30upx;
+	min-height: 12upx;
+}
 .bip-selector .cu-list{
 	max-height: 300upx;
 	min-height: 120upx;
-	margin-bottom: 100upx;
+	margin-bottom: -10upx;
 }
 .bip-bar {
     display: -webkit-box;
