@@ -19,6 +19,9 @@
 					<template v-if="item.comid == '007'">
 						<MyTop :layoutdata="item"></MyTop>
 					</template>
+					<template v-if="item.comid == '009'">
+						<codeModule :layoutdata="item"></codeModule>
+					</template>
 				</view>
 			</view>
 		</load-refresh>
@@ -39,9 +42,10 @@
 	import Carousel from './Carousel.vue';
 	import CustomChart from './CustomChart.vue';
 	import MyTop from './MyTop.vue';
+	import codeModule from './CodeModule.vue';
 	import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 	@Component({
-		components:{Jiugongge,Carousel,Tabs,CustomChart,MyTop,loadRefresh}
+		components:{Jiugongge,Carousel,Tabs,CustomChart,MyTop,loadRefresh,codeModule}
 	})
 	export default class customize extends Vue {
 		@Prop({default:null}) menu?:any;
