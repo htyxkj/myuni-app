@@ -254,7 +254,6 @@ export default class MAP extends Vue {
 					ref = ref.substring(1);
 				}
 			}
-			// console.log(ref)
 			let editName = ref;
 			let aidKey = bipInsAid.cl?(ICL.AID_KEYCL+ref):(ICL.AID_KEY+ref);
 			let rr = this.aidmaps.get(aidKey);
@@ -306,7 +305,11 @@ export default class MAP extends Vue {
 										cont = cel.id+"='"+val+"'"
 									}
 									let vvs = {id:bipInsAid.id,key:key,cont:cont}
-									InsAidModule.fetchInsDataByCont(vvs);
+									await InsAidModule.fetchInsDataByCont(vvs);
+									let rtn:any = this.aidValues.get(key);
+									if(rtn){
+										val = rtn[bipInsAid.cells.cels[1].id];
+									}
 								}
 							}
 						}else{
