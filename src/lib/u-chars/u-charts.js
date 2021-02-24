@@ -475,6 +475,7 @@ function getTouches(touches, opts, e) {
 }
 
 function getSeriesDataItem(series, index) {
+  console.log(series, index)
   var data = [];
   for (let i = 0; i < series.length; i++) {
     let item = series[i];
@@ -1098,10 +1099,13 @@ function calXAxisData(series, opts, config){
     });
 		
     var xAxisScaleValues = result.ranges.map(function (item) {
-        // 如果刻度值是浮点数,则保留两位小数
-        item = util.toFixed(item, 2);
-        // 若有自定义格式则调用自定义的格式化函数
-        item = opts.xAxis.format ? opts.xAxis.format(Number(item)) : item;
+        if(opts.xAxis.format){
+          // 若有自定义格式则调用自定义的格式化函数
+          item = opts.xAxis.format ? opts.xAxis.format(Number(item)) : item;
+        }else{
+          // 如果刻度值是浮点数,则保留两位小数
+          item = util.toFixed(item, 2);
+        }
         return item;
     });
 
@@ -1316,7 +1320,7 @@ function getPieTextMaxLength(series) {
   let maxLength = 0;
   for (let i = 0; i < series.length; i++) {
     let item = series[i];
-    let text = item.format ? item.format(+item._proportion_.toFixed(2)) : util.toFixed(item._proportion_ * 100) + '%';
+    let text = item.format ? item.format(+item._proportion_.toFixed(4)) : util.toFixed(item._proportion_ * 100) + '%';
     maxLength = Math.max(maxLength, measureText(text));
   }
 
@@ -1890,7 +1894,7 @@ function drawPieText(series, opts, config, context, radius, center) {
   var lastTextObject = null;
 
   var seriesConvert = series.map(function(item) {
-    var text = item.format ? item.format(+item._proportion_.toFixed(2)) : util.toFixed(item._proportion_.toFixed(4) * 100) +'%';
+    var text = item.format ? item.format(+item._proportion_.toFixed(4)) : util.toFixed(item._proportion_.toFixed(4) * 100) +'%';
     if(item._rose_proportion_) item._proportion_=item._rose_proportion_;
     var arc = 2 * Math.PI - (item._start_ + 2 * Math.PI * item._proportion_ / 2);
     var color = item.color;
