@@ -48,7 +48,7 @@ export default class layGrid extends Vue {
 	@Inject('env') env!: CCliEnv;
 	@Prop({ type: Object }) laycell!: BipLayCells;
 	id: string = Tools.guid();
-	isCard: boolean = false;
+	isCard: boolean = true;
 	cds: CDataSet = new CDataSet(null);
 	created() {
 		this.cds = this.env.getDataSet(this.laycell.obj_id);
