@@ -79,9 +79,9 @@ function initRealTime(map){
 /**
  * 根据用户查询 可见设备
  */
-function initAllDev(data,res){
-    if(res == null && data){
-        alert(data)
+function initAllDev(msg,res){
+    if(res == null && msg){
+        alert(msg)
 		return;
     }
     if(res.id ==0){
@@ -97,7 +97,7 @@ function initAllDev(data,res){
 			let longitude = one.longitude;//经度
 			let latitude = one.latitude;//纬度
 			if(longitude == 0 || latitude ==0){
-				break;
+				continue;
 			}
 			let offline = one.offline;//是否离线 0：否；1：是
 			let time = one.time;//时间
@@ -134,7 +134,7 @@ function initAllDev(data,res){
 				msg += "<br/>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span style='color:green;'>在线</span>";
 			}
 			msg +="</div>";
-			let key = one.taskid+"_"+sbid+"_"+one.sbtype//任务编码_设备编码_设备类型
+			let key = one.taskid+"_"+sbid+"_"+one.sbtype+"_"+offline//任务编码_设备编码_设备类型
 			tmap_marker(this.map,key,lngLat,icon,airPointClick,msg);
 			point.push(lngLat);
         }
@@ -152,6 +152,9 @@ function airPointClick(data){
 	let taskId = keyArr[0];
 	let sbid = keyArr[1];
 	let sbType = keyArr[2];
+	let offline = keyArr[3];
+	if(offline ==1)
+		return;
 	if(taskId && taskId.length>1){
 		initTaskById(taskId);
 		let takeoffID = task.takeoff;//起降点
@@ -163,7 +166,7 @@ function airPointClick(data){
 	}
 	if(sbType=='0'){
 		maxTime = parseInt(((maxTime - sleepTime)/1000)+"");
-		this.maxTime = 1566599591;
+		// this.maxTime = 1566599591;
 	}else{
 		maxTime = maxTime -5000;
 	}
