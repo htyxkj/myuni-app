@@ -13,8 +13,6 @@
 import { Vue, Component, Prop, Watch,Inject } from 'vue-property-decorator';
 import Cell from '@/classes/pub/coob/Cell';
 import CRecord from '@/classes/pub/CRecord';
-import { BIPUtil } from '@/classes/api/request';
-let tools = BIPUtil.ServApi;
 import {icl} from '@/classes/tools/CommICL';
 const ICL = icl; 
 import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
@@ -62,9 +60,7 @@ export default class bipSelect extends Vue {
 				this.refInsAid = this.refInsAid.clone(this.bipInsAid);
 			}else{
 				let cc =  await InsAidModule.fetchInsAid({ id: 200, aid: this.refKey });
-				console.log(cc)
 				this.refInsAid = this.refInsAid.clone(cc);
-				console.log(this.refInsAid)
 			}
 		}
 		this.getRefVal();
@@ -147,14 +143,16 @@ export default class bipSelect extends Vue {
 						let idx = this.othColsIndex[index];
 						let layC = this.bipInsAid.cells.cels[idx];
 						if (layC) {
-							let val = param[layC.id]||"";
+							let val = param[0][layC.id]||"";
 							let cel:any = this.cds.getCell(fld)
 							this.cds.cellChange(val,cel.id);
+							DataUtil.checkGS(this.cds,this.env,cel)
 						}
 					});
 				// }
 				this.makeSv();
 				this.cds.cellChange(this.modekey,this.cell.id);
+				DataUtil.checkGS(this.cds,this.env,this.cell)
 			})
 		}
 	}

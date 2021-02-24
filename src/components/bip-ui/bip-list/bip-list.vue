@@ -1,12 +1,15 @@
 <template>
-	<view class="cu-form-group solid-bottom">
-		<template v-if="cell">
-			<view v-if="!noLable" class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
-			<input :placeholder="cell.labelString" type="text" v-model="showMode" @tap.stop="open()" disabled="true"/>
-			<text :class="['cuIcon-triangledownfill', 'text-grey']" @tap.stop="open()"></text>
+	<view>
+		<view class="cu-form-group solid-bottom">
+			<template v-if="cell">
+				<view v-if="!noLable" class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
+				<input :placeholder="cell.labelString" type="text" v-model="showMode" @tap.stop="open()" disabled="true"/>
+				<text :class="['cuIcon-triangledownfill', 'text-grey']" @tap.stop="open()"></text>
+			</template>
+		</view>
+		<view>
 			<bip-select :arr="bipInsAid.values" :show="isShow" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="showk" :isStr="false"></bip-select>
-		</template>
-		
+		</view>
 	</view>
 </template>
 <script lang="ts">
@@ -24,6 +27,7 @@ let bstools = baseUtils.tools;
 import { dataTool } from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils;
 import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
+import View from '../../../../../hello-uniapp-master/pages/component/view/view.vue';
 @Component({
 	components: {bipSelect}
 })
@@ -141,6 +145,7 @@ export default class bipList extends Vue{
 			this.mode = this.selectItem[this.showk]
 			this.mode1 = this.selectItem[this.showv]
 			this.cds.cellChange(this.mode1,this.cell.id);
+			DataUtil.checkGS(this.cds,this.env,this.cell)
 		})
 	}
 	selectOK(e:any){
@@ -151,6 +156,7 @@ export default class bipList extends Vue{
 				this.mode = this.selectItem[this.showk]
 				this.mode1 = this.selectItem[this.showv]
 				this.cds.cellChange(this.mode1,this.cell.id);
+				DataUtil.checkGS(this.cds,this.env,this.cell)
 			})
 		}
 		this.cancel();

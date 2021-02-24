@@ -41,7 +41,11 @@ export namespace dataTool {
 		createRecord(cds: CDataSet, env: CCliEnv): CRecord {
 			this._cds = cds;
 			this._env = env;
-			return this.initModal(this._cds);
+			let modal = this.initModal(this._cds);
+			this._cds.currRecord = modal;
+			this.checkGS(this._cds,env);
+			modal = this._cds.currRecord;
+			return modal;
 		}
 
 		copyRecord(cds: CDataSet, env: CCliEnv){

@@ -193,8 +193,10 @@
 			html= html.replace(new RegExp(cc,'gm'),'snkey={BIPSNKEY}')
 			html= html.replace(new RegExp(this.uri,'gm'),'{BIPURI}')
 			this.$nextTick(()=>{
-				if(html != this.record.data[this.cell.id])
+				if(html != this.record.data[this.cell.id]){
 					this.cds.cellChange(html,this.cell.id);
+					DataUtil.checkGS(this.cds,this.env,this.cell)
+				}
 			})
 		}
 

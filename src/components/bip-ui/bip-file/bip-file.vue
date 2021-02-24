@@ -15,6 +15,8 @@ import CRecord from '@/classes/pub/CRecord';
 import CCliEnv from '@/classes/cenv/CCliEnv'
 import CDataSet from '@/classes/pub/CDataSet';
 import bipFileInfo from './bip-file-info.vue';
+import { dataTool } from '@/classes/tools/DataTools';
+const DataUtil = dataTool.utils;
 @Component({
 	components: {bipFileInfo}
 })
@@ -60,6 +62,7 @@ export default class bipFile extends Vue{
 		console.log(fjName);
 		this.mode = fjName;
 		this.cds.cellChange(this.mode,this.cell.id);
+		DataUtil.checkGS(this.cds,this.env,this.cell)
 	}
 		
 	@Watch('record')

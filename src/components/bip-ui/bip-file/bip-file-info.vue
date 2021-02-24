@@ -180,6 +180,7 @@ export default class bipFileInfo extends Vue {
 			}
 			uni.showToast({title:"文件上传成功！",icon:'none'})
 			this.cds.cellChange(fj_root,this.fjrootCell.id);
+			DataUtil.checkGS(this.cds,this.env,this.fjrootCell)
 			this.makeData();
 		} else{
 			console.log(data)
@@ -192,7 +193,10 @@ export default class bipFileInfo extends Vue {
 		uni.showToast({title:"文件上传失败！",icon:'none'})
 	}
 	ViewImage(e:any) {
-		let urls = [e.currentTarget.dataset.url]
+		let urls = []
+		for(var i=0;i<this.imgList.length;i++){
+			urls.push(this.imgList[i].path)
+		}
 		uni.previewImage({
 			urls: urls,
 			current: e.currentTarget.dataset.url

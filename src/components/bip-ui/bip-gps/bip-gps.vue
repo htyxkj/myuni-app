@@ -69,6 +69,8 @@ export default class bipGps extends Vue{
 			this.mode1 = address;
 			this.cds.cellChange(address,this.cell.id);
 			this.cds.cellChange(lgt,this.mapRootCel.id);
+			DataUtil.checkGS(this.cds,this.env,this.cell)
+			DataUtil.checkGS(this.cds,this.env,this.mapRootCel)
 			uni.$emit(this.obj_id+"_"+this.mapRootCel.id)
 		}
 	}

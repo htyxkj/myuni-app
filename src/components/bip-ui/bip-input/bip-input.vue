@@ -67,6 +67,7 @@
 			this.$nextTick(()=>{
 				if(this.mode != this.record.data[this.cell.id])
 					this.cds.cellChange(this.mode,this.cell.id);
+					DataUtil.checkGS(this.cds,this.env,this.cell)
 			})
 			
 		}
