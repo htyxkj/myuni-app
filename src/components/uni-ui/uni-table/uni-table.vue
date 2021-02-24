@@ -152,11 +152,11 @@
 		overflow-x: auto;
 		background-color: #fff;
 
-		::v-deep .uni-table-tr:nth-child(n+2) {
-			&:hover {
-				background-color: #f5f7fa;
-			}
-		}
+		// ::v-deep .uni-table-tr:nth-child(n+2) {
+			// &:hover {
+				// background-color: #c3dbff;
+			// }
+		// }
 	}
 
 	.table--border {

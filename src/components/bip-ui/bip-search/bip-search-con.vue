@@ -9,42 +9,43 @@
 							<text class="cuIcon-triangledownfill"></text>
 						</view>
 						<view class="search-form radius">
-							<!-- <text class="cuIcon-search text-blue text-bold"></text>
-							<input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search" @confirm="query" v-model="tjAll[0].value" @focus="isShow = false" /> -->
 							<bip-comm :obj_id="dsm_cont.ccells.obj_id" :cell="tjAll[0].cels"></bip-comm>
 						</view>
 					</view>
+					<bip-select :arr="cels" :show="isShow[0]" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="'labelString'" :isStr="false"></bip-select>
 				</view>
 				<view slot="content">
-					<view v-for="(item,index) in tjAll" :key="index" style="width:100%">
-						<template v-if="index>0">
-							<view class="cu-bar search bg-white flex">
-								<view class="action" @tap="openList(index)">
-									<text>{{item.name}}</text>
-									<text class="cuIcon-triangledownfill"></text>
+					<view style="min-height:500rpx">
+						<view v-for="(item,index) in tjAll" :key="index" style="width:100%">
+							<template v-if="index>0 && item">
+								<view class="cu-bar search bg-white flex">
+									<view class="action" @tap="openList(index)">
+										<text>{{item.name}}</text>
+										<text class="cuIcon-triangledownfill"></text>
+									</view>
+									<view class="search-form radius">
+										<bip-comm :obj_id="dsm_cont.ccells.obj_id" :cell="item.cels"></bip-comm>
+									</view>
+									<uni-icons style="margin-right: 5px;" color="#bbb" size="20" type="close" @click="delTj(index)"/>
 								</view>
-								<view class="search-form radius">
-									<!-- <text class="cuIcon-search text-blue text-bold"></text> -->
-									<!-- <input :adjust-position="false" type="text" placeholder="查询什么呢" confirm-type="search"  @confirm="query" v-model="item.value" @focus="isShow = false" /> -->
-									<bip-comm :obj_id="dsm_cont.ccells.obj_id" :cell="item.cels"></bip-comm>
-								</view>
-								<uni-icons style="margin-right: 5px;" color="#bbb" size="20" type="close" @click="delTj(index)"/>
-							</view>
-						</template>
-					</view>
-					<view class="flex justify-center padding-bottom">
-						<button class="cu-btn lines-blue round sm shadow margin-right" @click="addTj">
-							添加一个
-						</button>
-						<button class="cu-btn lines-blue round sm shadow margin-left" @click="query">
-							查询
-						</button>
+								<bip-select :style="index>=(tjAll.length-3)?'bottom:0':''" :arr="cels" :show="isShow[index]" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="'labelString'" :isStr="false"></bip-select>
+							</template>
+						</view>
+						<view class="margin-xs padding-xs"></view>
+						<view class="flex justify-center padding-bottom">
+							<button class="cu-btn lines-blue round sm shadow margin padding" @click="addTj">
+								添加一个
+							</button>
+							<button class="cu-btn lines-blue round sm shadow margin padding " @click="query">
+								查询
+							</button>
+						</view>
+						<view class="margin-xs padding-xs"></view>
 					</view>
 				</view>
 			</uni-collapse-item>
 		</uni-collapse>
-
-		<bip-select :arr="cels" :show="isShow" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="'labelString'" :isStr="false"></bip-select>
+		
 	</view>
 </template>
 <script lang="ts">
@@ -55,15 +56,16 @@ import uniCollapseItem from "@/components/uni-ui/uni-collapse-item/uni-collapse-
 import uniIcons from '@/components/uni-ui/uni-icons/uni-icons.vue';
 import bipComm from '../bip-comm/bip-comm.vue';
 import CDataSet from '@/classes/pub/CDataSet';
+import View from '../../../../../hello-uniapp-master/pages/component/view/view.vue';
 @Component({
-	components: {bipSelect,uniCollapse,uniCollapseItem,uniIcons,bipComm}
+	components: {bipSelect,uniCollapse,uniCollapseItem,uniIcons,bipComm, View}
 })
 export default class bipSearchCon extends Vue{
 	@Provide('noLable') noLable: boolean = true;
 
 	@Prop({type:Array,default:[]}) cels!:Array<any>;
 	@Prop({type:CDataSet}) dsm_cont!:CDataSet;
-	isShow:boolean = false;
+	isShow:any = [false,false,false];
 
 	tjIndex:any=0;
 	tjAll:Array<any>=new Array<any>();//全部条件
@@ -83,7 +85,10 @@ export default class bipSearchCon extends Vue{
 	}
 	openList(tjIndex:any){
 		this.tjIndex = tjIndex;
-		this.isShow = !this.isShow;
+		if(this.isShow.length<tjIndex){
+			this.isShow.push(false)
+		}
+		this.$set( this.isShow, tjIndex, !this.isShow[tjIndex])
 	}
 	selectChange(e:any){
 		if(e !== undefined){
@@ -94,7 +99,7 @@ export default class bipSearchCon extends Vue{
 		this.hideModal();
 	}
 	hideModal(){
-		this.isShow = false;
+		this.$set( this.isShow, this.tjIndex, false)
 	}
 	cancel(){
 		this.hideModal();
@@ -104,7 +109,11 @@ export default class bipSearchCon extends Vue{
 	}
 	addTj(){
 		let tj = Object.assign({},this.oneTj)
-		let tj_len = this.tjAll.length;
+		let tj_len = 0;
+		for(var i=0;i<this.tjAll.length;i++){
+			if(this.tjAll[i] !=null)
+				tj_len ++;
+		}
 		if(tj_len==this.cels.length)
 			return;
 		tj.name = this.cels[tj_len].labelString
@@ -113,11 +122,14 @@ export default class bipSearchCon extends Vue{
 		this.tjAll.push(tj);
 	}
 	delTj(index:any){
-		if(this.tjAll[index].value){
-			this.tjAll.splice(index,1)
-			this.query();
-		}else{
-			this.tjAll.splice(index,1)
+		if(this.tjAll[index]){
+			this.dsm_cont.currRecord.data[this.tjAll[index].cellId] = null;
+			if(this.tjAll[index].value){
+				this.$set( this.tjAll, index, null)
+				this.query();
+			}else{
+				this.$set( this.tjAll, index, null)
+			}
 		}
 	}
 
@@ -130,9 +142,11 @@ export default class bipSearchCon extends Vue{
 		let vl:any = {};
 		for(var i=0;i<this.tjAll.length;i++){
 			let tj = this.tjAll[i];
-			let value = this.dsm_cont.currRecord.data[tj.cellId]
-			value = !value?"":value
-			vl[tj.cellId] = value;
+			if(tj){
+				let value = this.dsm_cont.currRecord.data[tj.cellId]
+				value = !value?"":value
+				vl[tj.cellId] = value;
+			}
 		}
 		this.$emit('query',vl);
 	}

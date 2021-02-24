@@ -193,10 +193,12 @@ export default class appReportDetail extends Vue {
                     let cc = item.substring(0,item.indexOf(";")); 
                     let type = cc.substring(0,1);
                     let bname = cc.substring(2,item.indexOf(","));  
+					let icon = cc.substring(item.indexOf(",")+1);
                     let btn1 = new BipMenuBtn("DLG",bname)
                     btn1.setDlgType(type)
                     btn1.setDlgSname(name);
                     btn1.setDlgCont(item.substring(item.indexOf(";")+1))
+					btn1.setIconFontIcon(icon);
                     this.mbs.menuList.push(btn1)
                 });
             }

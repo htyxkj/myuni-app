@@ -25,7 +25,6 @@
 	import CCliEnv from '@/classes/cenv/CCliEnv';
 	import bipComm from '@/components/bip-ui/bip-comm/bip-comm.vue';
 	import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue';
-	import { Tools } from '@/classes/tools/Tools';
 	@Component({
 		components: {bipComm,bipMenuBar}
 	})
@@ -33,6 +32,7 @@
 		@Provide('env') env:CCliEnv = new CCliEnv();
 		cds: CDataSet = new CDataSet(null);
 		@Provide('mbs') mbs: BipMenuBar = new BipMenuBar();
+		@Provide('noLable') noLable: boolean = false;
 		initOK:boolean = false;
 		onLoad(option: any) {
 			setTimeout(() => {

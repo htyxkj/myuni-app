@@ -11,7 +11,7 @@
 					<view class="cu-list grid col-4">
 						<template v-for="(item,index) in bottomData">
 							<template v-if="item.cmd !== 'ADD' && item.cmd !== 'SAVE'">
-								<view class="cu-item" :key="index" @click="tabSelect(item)"  :data-id="item.cmd" :data-btn="item" :class="[item.cmd=='DEL'?'text-red':'',item.cmd=='COPY'?'text-green':'',item.cmd=='SUBMIT'?'text-blue':'',item.cmd=='CHECK'?'text-purple':'',item.cmd=='CHECKPROCESS'?'text-mauve':'']">
+								<view class="cu-item" :key="index" @click="tabSelect(item)"  :data-id="item.cmd" :data-btn="item" :class="[item.cmd=='DEL'?'text-red':'',item.cmd=='COPY'?'text-green':'',item.cmd=='SUBMIT'?'text-blue':'',item.cmd=='CHECK'?'text-purple':'',item.cmd=='CHECKPROCESS'?'text-mauve':getTextClor()]">
 									<view :class="['cuIcon-' + item.icon]"></view>
 									<text class="text-lg">{{ item.name }}</text>
 								</view>
@@ -82,6 +82,11 @@ export default class bipBillBar extends Vue {
 	change(e: any) {
 		this.showP = e.show;
 	}
+	getTextClor(){
+		let color = ['text-red','text-green','text-blue','text-purple','text-mauve'];
+		let num = Math.ceil(Math.random()*color.length);
+		return color[num];
+	}
 
 	@Watch('mbs', { deep: true })
 	mbsChange() {
@@ -111,6 +116,6 @@ export default class bipBillBar extends Vue {
     color: black;
 }
 .my-b-menu{
-	z-index: 999999 !important;
+	z-index: 99999 !important;
 }
 </style>

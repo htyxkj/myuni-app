@@ -10,8 +10,10 @@
 			<template v-if="isTable">
 				<template v-if="dsm.ccells">
 					<bip-table :ccells="dsm.ccells"  :tableData="pdList2" @rowClick="rowClick" @onSort="onSort"></bip-table>
-					<view style="padding-top: 8upx;padding-bottom: 30upx;">
-						<u-row gutter="0" justify="between" style="background-color: #FFFFFF; padding: 10rpx 0rpx 10rpx 0;">
+					<view class="padding-xs margin-xs"></view>
+					<view class="padding-xs margin"></view>
+					<view class="cu-bar foot bg-white" :style="mbs.menuList.length>0?'bottom:100rpx':''">
+						<u-row gutter="0" justify="between" style="width:100%;padding: 10rpx 0rpx 10rpx 0;">
 							<u-col span="3" text-align="center">
 								<u-button type="primary" size="mini" @click="firstPage()" ripple plain>首页</u-button>
 							</u-col>
@@ -26,6 +28,10 @@
 							</u-col>
 						</u-row>
 					</view>
+					<template v-if="mbs && mbs.menuList.length>0">
+						<bip-bill-bar @tabSelect="execCmd" :attr="0" :bmore="true"></bip-bill-bar>
+						<bip-menu-btn-dlg ref="bip_dlg" @Recheck="Recheck"></bip-menu-btn-dlg>
+					</template>
 				</template>
 			</template>
 			<template v-else>
@@ -55,11 +61,14 @@
 
 <script lang="ts">
 import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
-// import { UriPModule } from '@/store/module/uripm'; //导入vuex模块，自动注入
+import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
 import mLoad from '@/components/mLoad.vue';
 import bipSearchCon from '@/components/bip-ui/bip-search/bip-search-con.vue'
 import bipListUnit2 from '@/components/bip-ui/bip-unit/bip-list-unit2.vue';
 import bipGpsShow from '@/components/bip-ui/bip-gps/bip-gps-show.vue';
+import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue';
+import BipMenuBtnDlg from '@/components/bip-ui/bip-dlg/BipMenuBtnDlg.vue';
+import {BipMenuBtn} from '@/classes/BipMenuBtn'
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
 
@@ -71,14 +80,14 @@ import BipMenuBar from '@/classes/pub/BipMenuBar';
 import BipLayout from '@/classes/ui/BipLayout';
 import QueryEntity from '@/classes/search/QueryEntity';
 import { Tools } from '../../classes/tools/Tools';
-
+import { icl } from '../../classes/tools/CommICL';
 import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 import {dataTool} from '@/classes/tools/DataTools';
 import bipTable from "@/components/bip-ui/bip-table/bip-table.vue";
 let _ = require('lodash');
 const DataUtil = dataTool.utils
 @Component({
-	components: { mLoad,bipSearchCon,bipListUnit2,bipGpsShow,loadRefresh,bipTable}
+	components: { mLoad,bipSearchCon,bipListUnit2,bipGpsShow,loadRefresh,bipTable,bipBillBar,BipMenuBtnDlg}
 })
 export default class appReport extends Vue {
 	vueId: string = Tools.guid();
@@ -115,10 +124,15 @@ export default class appReport extends Vue {
 	baseColumns:Array<any> = []
 	get showCells(){
 		if(this.dsm_cont.ccells){
-			let vr = this.dsm_cont.ccells.cels.filter((item:any)=>{
-				item.isReq = false;
-				return item.isShow == true;
-			});
+			let vr = []
+			for(var i=0;i<this.dsm_cont.ccells.cels.length;i++){
+				let cel = this.dsm_cont.ccells.cels[i]
+				if(cel.isShow){
+					if((cel.attr &(0x40))>0)
+            			cel.attr = cel.attr ^ (0x40)
+					vr.push(cel)
+				}
+			}
 			return vr;
 		}
 		return [];
@@ -141,6 +155,7 @@ export default class appReport extends Vue {
 	}
 	
 	async rowClick(cellId:any,rowId:number,data:any){
+		this.dsm.currRecord = data
 		let _cellIndex = _.findIndex(this.dsm.ccells.cels,(itm:any)=>{
 			return itm.id == cellId;
 		})
@@ -231,8 +246,73 @@ export default class appReport extends Vue {
 		}
 		//this.openList(rowId);
 	}
-	
-	
+	//底部按钮条 按钮点击
+	execCmd(btn: any) {
+		let cmd = btn.cmd;
+		console.log(cmd);
+		if(cmd == 'DLG'){
+            if(!this.dsm.currRecord || !this.dsm.currRecord.data)
+                return;
+            let cc = JSON.stringify(this.dsm.currRecord.data);
+            if(cc.length>2){
+                setTimeout(() => {
+                    let dia: any = this.$refs.bip_dlg;
+                    dia.open(btn,this.cr); 
+                }, 100);
+            }
+        }
+	}
+	/**
+     * DLG 弹出框后重新查询
+     */
+    Recheck(){
+		// this.getListDataFromNet(1,1,null,null)
+    }
+	/**
+     * 获取自定义按钮
+     */
+    async initDlgBtn(){
+        if(this.uriParam){
+            let name = "DLG."+this.uriParam.pbuid;
+            let aidKey = name
+			aidKey = icl.AID_KEYCL+aidKey;
+			if(this.inProcess.get(aidKey)){
+				let rnt:any = this.aidmaps.get(aidKey);
+				if(!rnt){ 
+					await InsAidModule.fetchInsAid({ id: 300, aid: name });
+				}
+			}else{
+				await InsAidModule.fetchInsAid({ id: 300, aid: name });
+			} 
+			let dlg = this.aidmaps.get(aidKey);
+			// console.log(dlg)
+            if(dlg && dlg.slink){ 
+                let dlgBtn = dlg.slink.split("&")
+                dlgBtn.forEach((item:any) => {
+                    let cc = item.substring(0,item.indexOf(";")); 
+                    let type = cc.substring(0,1);
+                    let bname = cc.substring(2,item.indexOf(","));  
+					let icon = cc.substring(item.indexOf(",")+1);
+                    let btn1 = new BipMenuBtn("DLG",bname)
+                    btn1.setDlgType(type)
+                    btn1.setDlgSname(name);
+                    btn1.setDlgCont(item.substring(item.indexOf(";")+1))
+					btn1.setIconFontIcon(icon);
+                    this.mbs.menuList.push(btn1)
+                });
+            }
+        }
+	} 
+	get aidmaps(){
+		return InsAidModule.aidInfos;
+	}
+	get aidValues(){
+		return InsAidModule.aidValues;
+	}
+	get inProcess(){
+		return InsAidModule.inProcess;
+	}
+	//跳转到详情页面
 	openList(rid:number){
 		if (!this.isjump) {
 			this.isjump = true;
@@ -255,6 +335,7 @@ export default class appReport extends Vue {
 			
 		}
 	}
+	//组成条件项
 	makeQueryCont(cr0:any,cels:Array<any>){
 		let qs = '';
 		if(cels.length>0){
@@ -278,6 +359,7 @@ export default class appReport extends Vue {
 		}
 		return qs;
 	}
+	//页面初始化
 	async onLoad(option: any) {
 		if (option.pbuid) {
 			this.cr = option.color ? option.color : 'blue';
@@ -289,7 +371,6 @@ export default class appReport extends Vue {
 				this.i_isMap = true;
 				this.isTable = false;
 			}
-			
 			if(this.uriParam.pbds.layout){
 				if(this.uriParam.pbds.layout !== 'card'){
 					this.isTable = true;
@@ -310,7 +391,7 @@ export default class appReport extends Vue {
 						let rtn = res.data;
 						if (rtn.id == 0) {
 							this.initUIData(rtn.data.layCels);
-							this.refresh();
+							this.queryCont({});
 						}else{
 							uni.showToast({title:'没有获取到对象定义'+this.uriParam})
 						}
@@ -339,11 +420,12 @@ export default class appReport extends Vue {
 		for (let i = 2; i < this.cells.length; i++) {
 			this.ds_ext[i - 1] = new CDataSet(this.cells[i]);
 		}
-		
-		this.mbs.init(this.uriParam.pattr, this.dsm);
+		this.mbs.init(this.uriParam.pattr, this.dsm,true);
+		this.initDlgBtn();
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.env.ds_cont = this.dsm_cont
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
+		this.$forceUpdate()
 	} 
 	
 	// 下拉刷新数据列表
@@ -453,6 +535,14 @@ export default class appReport extends Vue {
 
 	queryCont(vl:any) {
 		this.loading = true;
+		if(this.uriParam.pbds.ptran){
+			let ptran = this.uriParam.pbds.ptran;
+			ptran = ptran.split("&")
+			for(var i=0 ; i< ptran.length;i++){
+				let cc = ptran[i].split("=");
+				vl[cc[0]] = cc[1];
+			}
+		}
 		if(Object.keys(vl).length>0){
 			this.qe.cont = vl;
 		}else {
