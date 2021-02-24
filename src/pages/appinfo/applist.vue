@@ -23,7 +23,6 @@
 
 <script lang="ts">
 import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
-// import { UriPModule } from '@/store/module/uripm'; //导入vuex模块，自动注入
 import mLoad from '@/components/mLoad.vue';
 import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue';
 import bipSearchCon from '@/components/bip-ui/bip-search/bip-search-con.vue';
@@ -38,16 +37,11 @@ let tools = BIPUtil.ServApi;
 import URIParams from '@/classes/URIParams';
 import Cells from '@/classes/pub/coob/Cells';
 import CDataSet from '@/classes/pub/CDataSet';
-import CRecord from '@/classes/pub/CRecord';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
 import BipLayout from '@/classes/ui/BipLayout';
 import QueryEntity from '@/classes/search/QueryEntity';
 import { Tools } from '../../classes/tools/Tools';
-import { icl } from '../../classes/tools/CommICL';
-
-import { dataTool } from '@/classes/tools/DataTools';
-const DataUtil = dataTool.utils;
 @Component({
 	components: { mLoad, bipLay, bipSearchCon, uniFab, bipListUnit, bipListUnit2, bipBillBar }
 })
@@ -80,9 +74,15 @@ export default class appList extends Vue {
 	
 	get showCells() {
 		if (this.dsm.ccells) {
-			let vr = this.dsm.ccells.cels.filter((item: any) => {
-				return item.isShow == true;
-			});
+			let vr = []
+			for(var i=0;i<this.dsm_cont.ccells.cels.length;i++){
+				let cel = this.dsm_cont.ccells.cels[i]
+				if(cel.isShow){
+					if((cel.attr &(0x40))>0)
+            			cel.attr = cel.attr ^ (0x40)
+					vr.push(cel)
+				}
+			}
 			return vr;
 		}
 		return [];
@@ -259,6 +259,9 @@ export default class appList extends Vue {
 		}
 		this.pdList = [];
 		this.refresh()
+	}
+	onShow() {
+        this.refresh();
 	}
 }
 </script>

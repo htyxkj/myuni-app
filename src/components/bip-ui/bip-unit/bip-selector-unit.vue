@@ -1,6 +1,6 @@
 <template>
 	<view class="cu-form-group flex align-center margin-bottom-sm" @click="selectOK">
-		<u-row gutter="16">
+		<u-row gutter="16" style="width: -webkit-fill-available;">
 			<u-col span="1" v-if="isMultiple">
 				<u-checkbox v-model="ischeck"></u-checkbox>
 			</u-col>

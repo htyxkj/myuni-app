@@ -79,13 +79,13 @@ export default class bipRefsFz extends Vue{
 	aidValuesChange(){
 		this.$nextTick(()=>{
 			if(this.mode !==''){
-			let key = this.aidKey+"_"+this.mode;
-			let rr = this.aidValues.get(key);
-			// console.log(rr,'aidValues')
-			if(rr){
-				this.bipInsAid.values[0] = rr;
-				this.bipInsAid.makeShow();
-				this.showValue = this.bipInsAid.showV;
+				let key = this.aidKey+"_"+this.mode;
+				let rr = this.aidValues.get(key);
+				// console.log(rr,'aidValues')
+				if(rr){
+					this.bipInsAid.values[0] = rr;
+					this.bipInsAid.makeShow();
+					this.showValue = this.bipInsAid.showV;
 				}
 			}
 		})
@@ -97,6 +97,7 @@ export default class bipRefsFz extends Vue{
 		this.$nextTick(()=>{
 			let rr = this.record.data[this.cell.id];
 			if(rr !== this.mode){
+				this.mode = rr;
 				this.makeRefshow()
 			}
 		})

@@ -1,8 +1,8 @@
 <template>
 	<uni-table stripe emptyText="暂无更多数据">
 		<uni-tr>
-			<uni-th align="center" v-for="(itm,index) in showCells" :key="index"><!-- :width="itm.ccLeng*9" -->
-				<view class="z-table-col-text text-center" @click="sort(itm.id, index)">
+			<uni-th align="center" v-for="(itm,index) in showCells" :key="index" :width="itm.width">
+				<view class="z-table-col-text text-center" @click="sort(itm.id, index)" :style="{width:itm.width + 'px'}">
 					<view>{{itm.labelString}}</view>
 					<view v-if='(itm.attr&ODATTR)>0' class="sort">
 						<view class="up-arrow" :class="{ action: nowSortKey == itm.id && sortType == 'asc'}"></view>
@@ -13,8 +13,8 @@
 			</uni-th>
 		</uni-tr>
 		<template v-if="tableData">
-			<uni-tr v-for="(row,_rowId) in tableData" :key="_rowId">
-				<uni-td align="center" v-for="(itm,index1) in showCells" :key="index1"><!-- :width="itm.ccLeng*9" -->
+			<uni-tr v-for="(row,_rowId) in tableData" :key="_rowId" :style="checkRowId==_rowId?'background-color: #c3dbff;':''">
+				<uni-td align="center" v-for="(itm,index1) in showCells" :key="index1" :width="itm.width">
 					<bip-show-table :cell="itm" :record="row" :rowId="_rowId" :obj_id="ccells.obj_id"  @cellClick="rowClick"></bip-show-table>
 				</uni-td>
 			</uni-tr>
@@ -37,11 +37,19 @@
 		sortType:String = '';
 		nowSortKey:String = '';
 		ODATTR:number = 4194304;
+		checkRowId:any = null;
 		get showCells(){
 			if(this.ccells){
 				let vr = this.ccells.cels.filter((item:any)=>{
+					item['width'] = ((item.ccCharleng<4?4:item.ccCharleng)<100?(item.ccCharleng<4?4:item.ccCharleng):100)*9;
 					return item.isShow == true && ( item.attr & (0x200) )>0;
 				});
+				if(vr.length ==0){
+					vr = this.ccells.cels.filter((item:any)=>{
+						item['width'] = ((item.ccCharleng<4?4:item.ccCharleng)<100?(item.ccCharleng<4?4:item.ccCharleng):100)*9;
+						return item.isShow == true
+					});
+				}
 				return vr;
 			}
 			return [];
@@ -51,6 +59,7 @@
 			// console.log(cellId,'cellId');
 			// console.log(rowId,'rowId');
 			// console.log(data,'data');
+			this.checkRowId = rowId;
 			this.$emit('rowClick',cellId,rowId,data);
 		}
 		

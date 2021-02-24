@@ -112,7 +112,8 @@
 				if(mt.childMenu){
 					this.groupMenus.push(mt)
 				}else{
-					m0.addChild(mt);
+					if(mt.menuAttr<4)//4是子菜单
+						m0.addChild(mt);
 				}
 			}
 			if(m0.childMenu.length>0){
