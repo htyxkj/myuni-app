@@ -5549,6 +5549,16 @@ Charts.prototype.showToolTip = function(e) {
         text: option.format ? option.format(seriesData) : seriesData.properties.name ,
         color: seriesData.color
       }];
+      if(seriesData.data instanceof Array){
+        textList = [];
+        seriesData.data.forEach(item=>{
+          let txt = {
+            text: item,
+            color: seriesData.color
+          }
+          textList.push(txt)
+        })
+      }
       var offset = {
         x: _touches$.x,
         y: _touches$.y
