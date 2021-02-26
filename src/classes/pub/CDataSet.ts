@@ -330,6 +330,13 @@ export default class CDataSet {
 			} else {
 				return true;
 			}
+		}else{
+			uni.showToast({
+				icon:"none",
+				mask: true,
+				title: '当前单据只有制单人可删除，当前用户非制单人！',  
+				duration: 2500,  
+			}); 
 		}
 		return false;
 	}

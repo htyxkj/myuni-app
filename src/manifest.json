@@ -2,8 +2,8 @@
     "name" : "bipuni",
     "appid" : "__UNI__B396B57",
     "description" : "Demo项目",
-    "versionName" : "1.0.0",
-    "versionCode" : "100",
+    "versionName" : "1.0.6",
+    "versionCode" : 106,
     "transformPx" : false,
     "app-plus" : {
         "compatible" : {
@@ -98,10 +98,10 @@
             "https" : false
         },
         "router" : {
-            "base" : "/bip-mine/webMobile/",
+            "base" : "/bip-credit/webMobile/",
             "mode" : "history"
         },
-        "title" : "幸福张矿",
-        "domain" : "http://47.104.211.216:8089/bip-mine/webMobile/"
+        "title" : "业务工单",
+        "domain" : "https://test.juminfuwu.cn/bip-credit/webMobile/"
     }
 }

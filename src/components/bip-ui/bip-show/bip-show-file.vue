@@ -9,16 +9,13 @@
 		<view>
 			<text class="text-progress text-bold cuIcon-upload" @tap.stop="open()"></text>
 		</view>
-		<bip-file-info :cell="cell" :obj_id="obj_id"  :show="showFda" @hide="hide" :isSPShow="true"></bip-file-info>
+		<bip-file-info :cell="cell" :obj_id="obj_id"  :show="showFda" @hide="hide" :isSPShow="true" :record="record"></bip-file-info>
 	</view>
 </template>
 
 <script lang="ts">
 	import {Vue, Component,Prop,Watch,Inject} from 'vue-property-decorator';
 	import Cell from '@/classes/pub/coob/Cell';
-	import CDataSet from '@/classes/pub/CDataSet';
-	import CRecord from '@/classes/pub/CRecord';
-	import CCliEnv from '@/classes/cenv/CCliEnv'
 	import bipFileInfo from '../bip-file/bip-file-info.vue';
 	@Component({
 		components: {bipFileInfo}

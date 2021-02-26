@@ -50,7 +50,6 @@
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import {BIPUtil} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
-import { values } from 'xe-utils/methods';
 	@Component({
 		components:{home,my,message,menuPage,mIndexBar,customize,BipTask,bipProtocol}
 	})
@@ -70,7 +69,8 @@ import { values } from 'xe-utils/methods';
 
 		options:any = null;
 
-		server_version:any=null;
+		server_version:any=null;//版本号
+		upd_type:any=null;//更新类型
 		
 		onLoad(options:any) {
 			//#ifdef APP-PLUS
@@ -113,7 +113,8 @@ import { values } from 'xe-utils/methods';
 				uni.getSystemInfo({
 					success:(res) => {
 						//检测当前平台，如果是安卓则启动安卓更新  
-						if(res.platform=="android"){  
+						if(res.platform=="android"){
+							console.log(res.platform)
 							this.AndroidCheckUpdate();  
 						}  
 					}  
@@ -135,6 +136,8 @@ import { values } from 'xe-utils/methods';
 						this.server_version  = val[i].name
 					}else if(val[i].code == "reminderInterval"){
 						reminderInterval  = parseInt(val[i].name)
+					}else if(val[i].code == "type"){
+						this.upd_type = val[i].name
 					}
 				}
 			}
@@ -184,34 +187,26 @@ import { values } from 'xe-utils/methods';
 		 */
 		checkVersionToLoadUpdate(){
 			let server_version = this.server_version;
+			let _this = this;
 			let curr_version = commURL.version;
 			if(server_version > curr_version){
-				//TODO 此处判断是否为 WIFI连接状态
-				// if(plus.networkinfo.getCurrentType()!=3){
-				// 	uni.showToast({  
-				// 		title: '有新的版本发布，检测到您目前非Wifi连接，为节约您的流量，程序已停止自动更新，将在您连接WIFI之后重新检测更新',  
-				// 		mask: true,  
-				// 		duration: 5000,
-				// 		icon:"none"
-				// 	});  
-				// 	return;  
-				// }else{
-					uni.showModal({
-						title: "版本更新",
-						// content: '有新的版本发布，检测到您当前为Wifi连接，是否立即进行新版本下载？',
-						content: '有新的版本发布，是否立即进行新版本下载？',
-						confirmText:'立即更新',
-						cancelText:'稍后进行',
-						success: function (res) {
-							if (res.confirm) {
-								uni.showToast({
-									icon:"none",
-									mask: true,
-									// title: '有新的版本发布，检测到您目前为Wifi连接，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
-									title: '有新的版本发布，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
-									duration: 5000,  
-								}); 
-								//设置 最新版本apk的下载链接
+				uni.showModal({
+					title: "版本更新",
+					// content: '有新的版本发布，检测到您当前为Wifi连接，是否立即进行新版本下载？',
+					content: '有新的版本发布，是否立即进行新版本下载？',
+					confirmText:'立即更新',
+					cancelText:'稍后进行',
+					success: function (res) {
+						if (res.confirm) {
+							uni.showToast({
+								icon:"none",
+								mask: true,
+								// title: '有新的版本发布，检测到您目前为Wifi连接，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
+								title: '有新的版本发布，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
+								duration: 5000,  
+							}); 
+							//设置 最新版本apk的下载链接
+							if(_this.upd_type == null || _this.upd_type == 'apk'){
 								var downloadApkUrl = commURL.BaseUri+"/apk/android.apk";
 								var dtask = plus.downloader.createDownload( downloadApkUrl, {}, function ( d:any, status ) {  
 										// 下载完成 
@@ -241,12 +236,40 @@ import { values } from 'xe-utils/methods';
 										}    
 									});  
 								dtask.start();
-							} else if (res.cancel) {
-								console.log('稍后更新');
+							}else if(_this.upd_type =='wgt'){
+								var downloadApkUrl = commURL.BaseUri+"apk/android.wgt";
+								uni.downloadFile({
+									url: downloadApkUrl,
+									success: (res) => {
+										if (res.statusCode === 200) {
+											let path:any = res.tempFilePath;
+											plus.nativeUI.showWaiting("安装更新文件...");
+											plus.runtime.install(path, {}, function() {
+												plus.nativeUI.closeWaiting();
+												plus.nativeUI.alert("应用资源更新完成！", function() {
+													plus.runtime.restart();
+												});
+											}, function(e) {
+												plus.nativeUI.closeWaiting();
+												plus.nativeUI.alert("安装更新文件失败[" + e.code + "]：" + e.message);
+												if (e.code == 10) {
+													// alert('请清除临时目录');
+												}
+											});
+										}else{
+											console.log("??"+res.statusCode)
+										}
+									},
+									fail: (res) => {
+										plus.nativeUI.alert("下载失败！");
+									}
+								});
 							}
+						} else if (res.cancel) {
+							console.log('稍后更新');
 						}
-					});
-				// }
+					}
+				});
 			}
 		}
 

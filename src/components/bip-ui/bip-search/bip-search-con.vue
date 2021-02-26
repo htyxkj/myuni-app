@@ -45,7 +45,6 @@
 				</view>
 			</uni-collapse-item>
 		</uni-collapse>
-		
 	</view>
 </template>
 <script lang="ts">
@@ -56,16 +55,15 @@ import uniCollapseItem from "@/components/uni-ui/uni-collapse-item/uni-collapse-
 import uniIcons from '@/components/uni-ui/uni-icons/uni-icons.vue';
 import bipComm from '../bip-comm/bip-comm.vue';
 import CDataSet from '@/classes/pub/CDataSet';
-import View from '../../../../../hello-uniapp-master/pages/component/view/view.vue';
 @Component({
-	components: {bipSelect,uniCollapse,uniCollapseItem,uniIcons,bipComm, View}
+	components: {bipSelect,uniCollapse,uniCollapseItem,uniIcons,bipComm}
 })
 export default class bipSearchCon extends Vue{
 	@Provide('noLable') noLable: boolean = true;
 
 	@Prop({type:Array,default:[]}) cels!:Array<any>;
 	@Prop({type:CDataSet}) dsm_cont!:CDataSet;
-	isShow:any = [false,false,false];
+	isShow:any = [false,false,false,false,false,false,false,false];
 
 	tjIndex:any=0;
 	tjAll:Array<any>=new Array<any>();//全部条件
