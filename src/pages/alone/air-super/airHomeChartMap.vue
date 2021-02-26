@@ -32,14 +32,16 @@
 		cHeight:any = uni.upx2px(500);//高度
 		chartId: string = Tools.guid();
 		pixelRatio:any =1;
-        mounted() {
-            this.initGeoJson();
+		mapData:any = {};
+        async mounted() {
+			await this.initData()
+            await this.initGeoJson();
 		}
 		//初始化地图数据
         async initGeoJson(){
 			let user = LoginModule.user
 			let cmcCode = user.deptInfo.cmcCode
-			cmcCode = cmcCode.substring(0,5)
+			cmcCode = cmcCode.substring(0,6)
 			let qe:QueryEntity = new QueryEntity('','');
 			qe.page.currPage = 1;
 			qe.page.pageSize = 1;
@@ -54,12 +56,20 @@
 				let vl = vv.data.data.data.values[0]
 				if(vl){
 					let features = JSON.parse(vl.features);
+					for(var i=0;i<features.features.length;i++){
+						features.features[i].name = features.features[i].properties.name
+						let data = this.mapData[features.features[i].properties.adcode];
+						let _v =['架次数:0','面积:0','总用药量:0','亩用药量:0']
+						if(data){
+							_v =['架次数:'+data.jcqty,'面积:'+data.sumarea,'总用药量:'+data.sumflow,'亩用药量:'+data.avgyl]
+						}
+						features.features[i].data = _v
+					}
 					this.initMap(features.features)
 				}
 			}
         }
         initMap(chartData:any){
-            chartData[14].name="as"
             let _self = this;
 			let option = {
 				$this:_self,
@@ -69,7 +79,8 @@
 				legend:{show:true},
 				dataLabel:true,
 				background:'#FFFFFF',
-                series: chartData, 
+				categories: ['维度1', '维度2', '维度3', '维度4', '维度5', '维度6'],
+				series: chartData, 
 				rotate:false,
 				animation: true,
 				enableScroll: true,//开启图表拖拽功能
@@ -86,6 +97,26 @@
 			};
             canvases[this.chartId] = new uCharts(option)
         }
+		//初始化统计数据
+		async initData(){
+			let qe:QueryEntity = new QueryEntity('','');
+			qe.page.currPage = 1;
+			qe.page.pageSize = 500;
+			qe.cont = "";
+			let oneCont = [];
+			let qCont = new QueryCont('iym','2020',12);
+			qCont.setContrast(0);
+			oneCont.push(qCont);
+			qe.cont = "~["+JSON.stringify(oneCont)+"]"
+			let vv:any = await tools.getBipInsAidInfo('BSORGYEARSUM',210,qe);
+			if(vv.data.id ==0){
+				let data = vv.data.data.data.values;
+				for(var i=0;i<data.length;i++){
+					this.mapData[data[i].area] = data[i]
+				}
+			}
+		}
+
         //图表拖动
 		touchLineA(e:any){
 			canvases[this.chartId].scrollStart(e);

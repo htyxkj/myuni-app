@@ -437,17 +437,19 @@
 		} 
 		//初始化菜单等基础数据，并查询数据
 		async initBasisData(menuid:any){
-			let menu:any = paramTools.findMenu(menuid) 
-			await this.initUriParams(menu);
-			if(this.uriParams){
-				let pcell = this.uriParams.pcell
-				let res:any = await tools.getCCellsParams(pcell)
-				let rtn: any = res.data;
-				if (rtn.id == 0) {
-					let kn: Array<Cells> = rtn.data.layCels;
-					this.dsm_cont = new CDataSet(kn[0]);
-					this.dsm = new CDataSet(kn[1]);
-					this.searchData();//查询数据
+			let menu:any = paramTools.findMenu(menuid)
+			if(menu){
+				await this.initUriParams(menu);
+				if(this.uriParams){
+					let pcell = this.uriParams.pcell
+					let res:any = await tools.getCCellsParams(pcell)
+					let rtn: any = res.data;
+					if (rtn.id == 0) {
+						let kn: Array<Cells> = rtn.data.layCels;
+						this.dsm_cont = new CDataSet(kn[0]);
+						this.dsm = new CDataSet(kn[1]);
+						this.searchData();//查询数据
+					}
 				}
 			}
 		}
