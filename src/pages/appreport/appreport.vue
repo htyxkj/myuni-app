@@ -548,6 +548,9 @@ export default class appReport extends Vue {
 		}else {
 			this.qe.cont = '';
 		}
+		if(this.uriParam.pbds.polnk){
+			this.qe.polnk = this.uriParam.pbds.polnk;
+		}
 		this.pdList = [];
 		this.refresh()
 	}
