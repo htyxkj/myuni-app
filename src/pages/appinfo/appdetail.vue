@@ -43,7 +43,6 @@ let tools = BIPUtil.ServApi;
 import URIParams from '@/classes/URIParams';
 import Cells from '@/classes/pub/coob/Cells';
 import CDataSet from '@/classes/pub/CDataSet';
-import CRecord from '@/classes/pub/CRecord';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
 import BipLayout from '@/classes/ui/BipLayout';
@@ -146,6 +145,9 @@ export default class appDetail extends Vue {
 							});
 							this.dsm.removeRecord(cr);
 							uni.showToast({title:'删除成功！'});
+							uni.navigateBack({
+								delta: 1
+							});
 						}else{
 							uni.showToast({title:rtn.message});
 						}
@@ -160,11 +162,12 @@ export default class appDetail extends Vue {
 	addNewCRecord(){
 		let c0 = this.dsm.currRecord;
 		if((c0.c_state&1)>0||(c0.c_state&2)>0){
-			uni.showToast({title:'请保存当前数据，然后在添加'});
+			uni.showToast({icon:"none",title:'请保存当前数据，然后在添加'});
 			return ;
 		}
 		let cr = DataUtil.createRecord(this.dsm,this.env);
 		this.dsm.addRecord(cr);
+		DataUtil.checkGS(this.dsm,this.env)
 	}
 	/**
 	 * 复制
@@ -172,11 +175,12 @@ export default class appDetail extends Vue {
 	copyCRecord(){
 		let c0 = this.dsm.currRecord;
 		if((c0.c_state&1)>0||(c0.c_state&2)>0){
-			uni.showToast({title:'请保存当前数据，然后在拷贝'});
+			uni.showToast({icon:"none",title:'请保存当前数据，然后在拷贝'});
 			return ;
+		}else{
+			let cr = DataUtil.copyRecord(this.dsm,this.env);
+			this.dsm.addRecord(cr);
 		}
-		let cr = DataUtil.copyRecord(this.dsm,this.env);
-		this.dsm.addRecord(cr);
 	}
 	/**
 	 * 保存
@@ -431,7 +435,9 @@ export default class appDetail extends Vue {
 	//处理二次初值
 	secondAssignment(cds:any){
 		if(cds){
-			let cr = DataUtil.createRecord(this.dsm,this.env);
+			let _dsm = Object.assign({},this.dsm);
+			let cr = DataUtil.createRecord(_dsm,this.env);
+			DataUtil.checkGS(_dsm,this.env)
 			let cels = cds.ccells.cels;
 			for(let i=0;i<cels.length;i++){
 				let cel = cels[i];

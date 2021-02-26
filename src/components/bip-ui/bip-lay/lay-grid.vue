@@ -69,6 +69,7 @@ export default class layGrid extends Vue {
 		}
 		let cr = DataUtil.createRecord(this.cds,this.env);
 		DataUtil.addRecord(cr,this.cds,this.env);
+		DataUtil.checkGS(this.cds,this.env)
 	}
 	
 	editRow(rid:number,obj_id:string){

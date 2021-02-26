@@ -169,11 +169,12 @@ export default class appDetailSp extends Vue {
 	addNewCRecord(){
 		let c0 = this.dsm.currRecord;
 		if((c0.c_state&1)>0||(c0.c_state&2)>0){
-			uni.showToast({title:'请保存当前数据，然后在添加'});
+			uni.showToast({icon:"none",title:'请保存当前数据，然后在添加'});
 			return ;
 		}
 		let cr = DataUtil.createRecord(this.dsm,this.env);
 		this.dsm.addRecord(cr);
+		DataUtil.checkGS(this.dsm,this.env)
 	}
 	/**
 	 * 复制

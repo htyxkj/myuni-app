@@ -222,6 +222,7 @@
             let tjData = this.sortiesCell.currRecord.data;
             let taskid = tjData.sid;//任务编码
             let cr = DataUtil.createRecord(this.delCell,this.env);
+            DataUtil.checkGS(this.delCell,this.env)
 		    this.delCell.addRecord(cr);
             this.delCell.currRecord.data.tkid = taskid;
             this.delCell.currRecord.c_state = 4
@@ -242,6 +243,7 @@
             for(var i=0;i<this.tableData.length;i++){
                 let oneJD = this.tableData[i];
                 let curr = DataUtil.createRecord(this.saveCell,this.env);
+                DataUtil.checkGS(this.saveCell,this.env)
                 curr.data.tkid = taskid;
                 curr.data.ssid = (i+1);
                 curr.data.bgtime = taskbt;

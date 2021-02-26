@@ -162,6 +162,7 @@ export default class appReport extends Vue {
 		this.dsm_cont = new CDataSet(this.cells[0]);
 		let curr = DataUtil.createRecord(this.dsm_cont,this.env);
 		this.dsm_cont.addRecord(curr);
+		DataUtil.checkGS(this.dsm_cont,this.env)
 		this.dsm = new CDataSet(this.cells[1]);
 		
 		this.qe.pcell = this.dsm.ccells.obj_id;

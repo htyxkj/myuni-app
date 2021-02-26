@@ -56,6 +56,7 @@
             this.env.initInfo(new URIParams(), [this.sortiesCell.ccells], new BipMenuBar(), this.sortiesCell, [this.sortiesCell]);
             this.jcCell = await Tools.getCell("FW0320");
             let cr = DataUtil.createRecord(this.sortiesCell,this.env);
+            DataUtil.checkGS(this.sortiesCell,this.env)
 		    this.sortiesCell.addRecord(cr);
         }
         //  1.获取任务对应架次信息

@@ -42,9 +42,6 @@ export namespace dataTool {
 			this._cds = cds;
 			this._env = env;
 			let modal = this.initModal(this._cds);
-			this._cds.currRecord = modal;
-			this.checkGS(this._cds,env);
-			modal = this._cds.currRecord;
 			return modal;
 		}
 
@@ -551,6 +548,13 @@ export namespace dataTool {
 					} else {
 						return true;
 					}
+				}else{
+					uni.showToast({
+						icon:"none",
+						mask: true,
+						title: '当前单据只有制单人可编辑，当前用户非制单人！',  
+						duration: 2500,  
+					}); 
 				}
 		    }
 		    return false;

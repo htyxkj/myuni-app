@@ -239,6 +239,7 @@
 				this.personalDsm = await this.initCell(this.personalCell);
 				this.personalDsm.removeRecord(this.personalDsm.currRecord);
 				let cr:any = DataUtil.createRecord(this.personalDsm,this.env);
+				DataUtil.checkGS(this.personalDsm,this.env)
 				this.personalDsm.addRecord(cr);
 				for(var i=0;i<this.personalDsm.ccells.cels.length;i++){
 					let cel:any = this.personalDsm.ccells.cels[i];
@@ -254,6 +255,7 @@
 				this.companyTypeIndex = 0;
 				this.enterpriseDsm.removeRecord(this.enterpriseDsm.currRecord);
 				let cr:any = DataUtil.createRecord(this.enterpriseDsm,this.env); 
+				DataUtil.checkGS(this.enterpriseDsm,this.env)
 				this.enterpriseDsm.addRecord(cr); 
 				for(var i=0;i<this.enterpriseDsm.ccells.cels.length;i++){
 					let cel:any = this.enterpriseDsm.ccells.cels[i];
@@ -285,6 +287,7 @@
 				this.personalfamilyDsm = await this.initCell(this.personalfamilyCell);
 				this.personalfamilyDsm.removeRecord(this.personalfamilyDsm.currRecord);
 				let cr:any = DataUtil.createRecord(this.personalfamilyDsm,this.env);
+				DataUtil.checkGS(this.personalfamilyDsm,this.env)
 				this.personalfamilyDsm.addRecord(cr);
 				this.env.initInfo(this.uriParam,[this.personalfamilyDsm.ccells] , this.mbs, this.personalfamilyDsm, this.ds_ext);
 				for(var i=0;i<this.personalfamilyDsm.ccells.cels.length;i++){
@@ -297,6 +300,7 @@
 				this.enterpriseDsm = await this.initCell(this.enterpriseCell);
 				this.enterpriseDsm.removeRecord(this.enterpriseDsm.currRecord);
 				let cr:any = DataUtil.createRecord(this.enterpriseDsm,this.env); 
+				DataUtil.checkGS(this.enterpriseDsm,this.env)
 				this.enterpriseDsm.addRecord(cr); 
 				for(var i=0;i<this.enterpriseDsm.ccells.cels.length;i++){
 					let cel:any = this.enterpriseDsm.ccells.cels[i];
@@ -363,6 +367,7 @@
 			dsm = await this.initCell(this.userCell);
 			dsm.removeRecord(dsm.currRecord);
 			let cr:CRecord = DataUtil.createRecord(dsm,this.env);
+			DataUtil.checkGS(dsm,this.env)
 			dsm.addRecord(cr);
 			dsm.currRecord.data.usrcode = usrcode;
 			dsm.currRecord.data.usrname = usrname;
