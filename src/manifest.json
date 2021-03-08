@@ -2,8 +2,8 @@
     "name" : "bipuni",
     "appid" : "__UNI__B396B57",
     "description" : "Demo项目",
-    "versionName" : "1.0.6",
-    "versionCode" : 106,
+    "versionName" : "1.0.8",
+    "versionCode" : 108,
     "transformPx" : false,
     "app-plus" : {
         "compatible" : {

@@ -1,8 +1,13 @@
 <template>
-	<view class="qiun-columns">
+	<view class="qiun-columns" style="background-color: white;">
 		<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
 			<view class="qiun-title-dot-light">{{data.name}}</view>
 		</view>
+		<u-field v-model="year" label="年份" placeholder="年份" icon='calendar'>
+			<view slot="right">
+				<u-button @click="btnClick" type="primary" size="mini" :ripple="true" ripple-bg-color="#909399">查询</u-button>
+			</view>
+		</u-field>
 		<view class="qiun-charts" >
 			<canvas v-if="chartId" :id="chartId" :canvasId="chartId" 
 			class="charts"
@@ -23,9 +28,10 @@
 	import QueryCont from '@/classes/search/QueryCont';
 	import {BIPUtil} from '@/classes/api/request';
 	import { LoginModule } from '@/store/module/login'; //导入vuex模块，自动注入
+	import mLoad from '@/components/mLoad.vue';
 	let tools = BIPUtil.ServApi;
     var canvases:any = {};
-    @Component({components:{}})
+    @Component({components:{mLoad}})
 	export default class airHomeChartMap extends Vue {
         @Prop({default:null}) data?:any;
         cWidth:any = uni.upx2px(750);//宽度
@@ -33,9 +39,19 @@
 		chartId: string = Tools.guid();
 		pixelRatio:any =1;
 		mapData:any = {};
+		year:any = new Date().getFullYear();
+		loadModal:boolean = false;
         async mounted() {
+			this.loadModal = true;
 			await this.initData()
             await this.initGeoJson();
+			this.loadModal = false;
+		}
+		async btnClick(){
+			this.loadModal = true;
+			await this.initData()
+            await this.initGeoJson();
+			this.loadModal = false;
 		}
 		//初始化地图数据
         async initGeoJson(){
@@ -79,7 +95,6 @@
 				legend:{show:true},
 				dataLabel:true,
 				background:'#FFFFFF',
-				categories: ['维度1', '维度2', '维度3', '维度4', '维度5', '维度6'],
 				series: chartData, 
 				rotate:false,
 				animation: true,
@@ -99,12 +114,13 @@
         }
 		//初始化统计数据
 		async initData(){
+			this.mapData = {};
 			let qe:QueryEntity = new QueryEntity('','');
 			qe.page.currPage = 1;
 			qe.page.pageSize = 500;
 			qe.cont = "";
 			let oneCont = [];
-			let qCont = new QueryCont('iym','2020',12);
+			let qCont = new QueryCont('iym',this.year,12);
 			qCont.setContrast(0);
 			oneCont.push(qCont);
 			qe.cont = "~["+JSON.stringify(oneCont)+"]"

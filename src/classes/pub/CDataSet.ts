@@ -330,7 +330,7 @@ export default class CDataSet {
 			} else {
 				return true;
 			}
-		}else{
+		}else if(Object.keys(this.currRecord.data).length>0){
 			uni.showToast({
 				icon:"none",
 				mask: true,

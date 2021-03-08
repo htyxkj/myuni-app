@@ -548,7 +548,7 @@ export namespace dataTool {
 					} else {
 						return true;
 					}
-				}else{
+				}else if(Object.keys(crd.data).length>0){
 					uni.showToast({
 						icon:"none",
 						mask: true,

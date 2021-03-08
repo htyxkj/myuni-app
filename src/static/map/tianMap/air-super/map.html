@@ -7,7 +7,6 @@
 		<link rel="stylesheet" href="./css/amaze/css/amazeui.min.css"/>
 		<link rel="stylesheet" href="./css/amaze/css/amazeui.datetimepicker.css"/>
 		<link href="./css/my_main.css" rel="stylesheet" type="text/css"/>
-
 		<script src="https://api.tianditu.gov.cn/api?v=4.0&tk=c1133c92592db1048c47d381be567f4a" type="text/javascript"></script>
 		<script src="../js/d3.js" charset="utf-8"></script>
 		<script src="../js/D3SvgOverlay.js" type="text/javascript"></script>
@@ -47,20 +46,26 @@
         </style>
     </head>
     <body>
-		<div id="top1" class="cu-custom fixed bg-blue">
+		<!-- <div id="top1" class="cu-custom fixed bg-blue">
 			<view id="top2" class="cu-bar bg-blue" >
 				<div id="top3" class="action back" onclick="back()">
 					返回 
 				</div>
 				<div id="top4" class="content action"> </div>
 			</div>
-		</div>
+		</div> -->
         <div id="airMapDiv"></div>
 		<!-- 实时轨迹 -->
 		<div id="real_time_track" style="display: none;">
 			<!-- 按钮功能模块 -->
 			<div>
 				<div class="track_show_btn">
+					<div class="track_show_btn1">
+						<div class="am-icon-btn am-icon-mail-reply am-secondary track_show_btn_icon" onclick="back()"></div>
+					</div>
+					<div class="track_show_btn1">
+						<a href="##" class="am-icon-btn am-icon-refresh am-secondary track_show_btn_icon" onclick="real_time_refresh()"></a>
+					</div>
 					<div class="track_show_btn1">
 						<a href="##" class="am-icon-btn am-icon-cog am-secondary track_show_btn_icon" onclick="real_time_setting()"></a>
 					</div>
@@ -127,6 +132,9 @@
 			<!-- 按钮功能模块 -->
 			<div>
 				<div class="track_show_btn">
+					<div class="track_show_btn1">
+						<div class="am-icon-btn am-icon-mail-reply am-secondary track_show_btn_icon" onclick="back()"></div>
+					</div>
 					<div id ="play_back_setting" style="display: none;">
 						<div class="track_show_btn1">
 							<a href="##" class="am-icon-btn am-icon-cog am-secondary track_show_btn_icon" onclick="play_back_setting()"></a>
@@ -397,7 +405,7 @@
 							<td>高度</td>
 							<td>压力</td>
 							<td>流量</td>
-							<td>累计流量</td>
+							<td>累计喷洒流量</td>
 						</tr>
 						<tr>
 							<td id="nowspeed"></td>
@@ -438,10 +446,15 @@
                 var map = new T.Map('airMapDiv', {
                     projection: 'EPSG:4326'
                 });
-                var lc = new T.LocalCity();
-                lc.location(function (e) {
-                    map.centerAndZoom(e.lnglat, 12);
-                });
+				map.centerAndZoom(new T.LngLat(116.40769, 39.89945), 12);
+				try {
+					var lc = new T.LocalCity();
+					lc.location(function (e) {
+						map.centerAndZoom(e.lnglat, 12);
+					});
+				} catch (error) {
+					map.centerAndZoom(new T.LngLat(116.40769, 39.89945), 12);
+				}
 				//创建缩放平移控件对象
 				let control = new T.Control.Zoom();
 				//添加缩放平移控件
@@ -463,10 +476,13 @@
                 }else if(pageType =='trackShow'){//航带航迹查询
 					initTrackShow(map);
                 }
+				map.checkResize();
             }
             //返回
             function back(){
-                uni.postMessage({data:'back'});
+				uni.navigateBack({
+					delta: 1
+				});
             }
         </script>
     </body>

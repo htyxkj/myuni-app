@@ -85,6 +85,7 @@ function oneOf(value: any, validList: Array<any>) {
 }
 import { Vue, Provide, Prop, Component, Watch } from 'vue-property-decorator';
 import moment from 'moment';
+import Cell from '@/classes/pub/coob/Cell';
 @Component({
 	components: {}
 })

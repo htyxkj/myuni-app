@@ -5,7 +5,7 @@
 		</template>
 		<input class="text-right" :placeholder="cell.labelString || title " type="text" v-model="mode" disabled="true"/>
 		<text class="cuIcon-calendar" @tap.stop="open()"></text>
-		<bip-picker-date :mode="pickerType"  @confirm="onConfirm" ref="calendar" ></bip-picker-date>
+		<bip-picker-date :mode="pickerType" @confirm="onConfirm" ref="calendar" ></bip-picker-date>
 	</view>
 </template>
 <script lang="ts">
@@ -55,6 +55,7 @@ export default class bipDate extends Vue {
 	
 	open(){
 		if(!this.disabled){
+			this.initRestrict()
 			let rr:any = this.$refs.calendar
 			rr.show();
 		}
@@ -99,6 +100,11 @@ export default class bipDate extends Vue {
 		if(rr !== this.mode){
 			this.mode = rr||''
 		}
+	}
+
+	initRestrict(){
+		let chkRule = this.cell.chkRule
+		console.log(chkRule)
 	}
 }
 </script>

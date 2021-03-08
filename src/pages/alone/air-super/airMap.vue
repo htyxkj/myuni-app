@@ -1,9 +1,9 @@
 <template>
     <view>
-        <cu-custom :bgColor="'bg-' + color" :isBack="true">
+        <!-- <cu-custom :bgColor="'bg-' + color" :isBack="true">
             <block slot="backText">返回</block>
             <block slot="content"><view class="header-title">{{ title }}</view></block>
-        </cu-custom>	
+        </cu-custom>	 -->
         <view v-if="src">
             <web-view :src="src" @message="view_message"></web-view>
         </view>
@@ -81,6 +81,7 @@
         }
 
         view_message(data:any){
+            console.log("返回");
             uni.navigateBack({
                 delta: 1
             });

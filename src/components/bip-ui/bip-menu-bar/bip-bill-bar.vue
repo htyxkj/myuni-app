@@ -2,7 +2,7 @@
 	<view class="cu-bar tabbar bg-white shadow foot my-b-menu">
 		<view v-if="(attr & 1) == 1 && addBtn" class="submit bg-blue margin-sm" @click="tabSelect(addBtn)" data-id="ADD" :data-btn="addBtn" ><text>添加</text></view>
 		<view v-if="(attr & 2) == 2 && saveBtn" class="submit bg-green margin-sm" @click="tabSelect(saveBtn)" data-id="SAVE" :data-btn="saveBtn" ><text>保存</text></view>
-		<template v-if="bottomData&&bmore">
+		<template v-if="bottomData&&bottomData.length>0&&bmore">
 			<view class="submit margin-sm" @tap="open"><text class="cuIcon-settingsfill text-blue lg"></text>更多操作</view>
 			<uni-popup :show="showP" type="bottom" :custom="true" @change="change">
 				<!-- <bip-share :arrdata="bottomData" @close="close" @itemClick="itemClick"></bip-share> -->

@@ -19,6 +19,9 @@ import comm from '@/static/js/comm.js';
 let commURL: any = comm;
 import { GlobalVariable } from '@/classes/tools/ICL';
 import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
+import { BIPUtil } from '@/classes/api/request';
+let tools = BIPUtil.ServApi;
+import { Tools } from '@/classes/tools/Tools';
 @Component({components:{mLoad}})
 export default class MAP extends Vue {
 	uri:any ="";//
@@ -61,6 +64,7 @@ export default class MAP extends Vue {
 			let wd:any = window;
 			wd.showOrHeiding = this.showOrHeiding;    // 方法赋值给window
 			wd.showImgById = this.showImgById;
+			wd.associateClick = this.associateClick;
 		// #endif
 	}
 	
@@ -102,6 +106,11 @@ export default class MAP extends Vue {
 							val = val ==null?"":val;
 							if(val != "" && this.cels[j].refValue){
 								val = await this.makeRef(val,this.cels[j]);
+							}
+							let slkbuid ='';
+							if((this.cels[j].attr & (0x80000) )>0){
+								slkbuid = data[this.cels[j+1].id];
+								val = '<a onClick="associateClick('+"'"+val+"'"+','+"'"+slkbuid+"'"+')">'+val+'</a>';
 							}
 							msg+= (this.cels[j].labelString + "："+val+"<br/>");
 						}
@@ -164,7 +173,8 @@ export default class MAP extends Vue {
 					marker.addEventListener("click", function (e:any) {
 						var lnglat = e.lnglat;
 						//创建信息窗口对象
-						var infoWin = new T.InfoWindow();
+						let opts ={closeOnClick:true}
+						var infoWin = new T.InfoWindow('',opts);
 						infoWin.setLngLat(lnglat);
 						//设置信息窗口要显示的内容
 						infoWin.setContent(_this.pointMsg[lnglat.kid]);
@@ -211,6 +221,84 @@ export default class MAP extends Vue {
 			elem.style.display='none'
 		}else{
 			elem.style.display='-webkit-box'
+		}
+	}
+	/**
+	 * 关联属性  单号点击
+	 */
+	async associateClick(sid:any,slkbuid:any){
+		let slkid = sid;
+		if (slkid && slkbuid) { 
+			//获取业务定义
+			let param = await tools.getBULinks(slkbuid);
+			// console.log(param);
+			if(param.data.id ==0){
+				let opera = param.data.data.opt;
+				if (opera&&!opera.pmenuid) {
+					uni.showToast({title:"业务" + slkbuid + "没有绑定菜单!"}); 
+					return false;
+				}
+				let me = Tools.findMenu(opera.pmenuid);
+				if (!me) {
+					uni.showToast({title: "没有" + opera.pmenuid + "菜单权限!" });
+					return false;
+				}else{
+
+					let command = me.command.split("&");
+					let pbuid = command[0].split("=");
+					let pmenuid = command[1].split("="); 
+					if(pbuid[0] == 'pmenu'){
+						let pmenu = pbuid[1];
+						let type = commURL.ItemType;
+						let url = "";
+						if(type =='credit'){
+							if(pmenu =='checkRecord'){//架次查询
+								pmenu = "checkRecord?1=1";
+							}
+							url = '/pages/alone/credit/'+pmenu;
+						}
+						let rr = ""+opera['pkfld']+"='"+slkid+"'"
+						let qcont:any =rr;
+						let uri = url+'&title='+opera.pname+'&qcont='+encodeURIComponent(qcont);
+						uni.navigateTo({
+							url: uri,
+							complete: () => {
+								uni.hideLoading();
+							}
+						});
+					}else{
+						await tools.getMenuParams(pbuid[1],pmenuid[1]).then((res:any)=>{
+							let data = res.data
+							if(data.id>=0){
+								let _uriParams = data.data.mparams
+								uni.setStorageSync(pbuid[1],JSON.stringify(_uriParams));
+								let rr = ""+opera['pkfld']+"='"+slkid+"'"
+								let qcont:any =rr;
+								if(_uriParams.beBill){
+									let uri = '/pages/appinfo/appdetail?color=blue&title='+opera.pname+"&pbuid="+pbuid[1]+'&qcont='+encodeURIComponent(qcont);
+									uni.navigateTo({
+										url: uri,
+										complete: () => {
+											uni.hideLoading();
+											// this.isjump = false;
+										}
+									});
+								}else{
+									// this.openList(rowId);
+								}
+							}else{
+								uni.showToast({
+									title:'没有权限!'
+								})
+							}
+						}).catch((err:any)=>{
+							uni.showToast({
+								title:'没有权限!'
+							})
+						})
+					}
+				}
+			}  
 		}
 	}
 	//图片切换

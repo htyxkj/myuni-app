@@ -125,6 +125,10 @@
             "path" : "pages/alone/credit/registered/registered",
             "style" : {}
         }
+		,{
+            "path" : "pages/alone/credit/checkRecord",
+            "style" : {}
+        }
 		/***********************************张矿微平台START*************************************/
         ,{
             "path" : "pages/alone/mine/index/index",

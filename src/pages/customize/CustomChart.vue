@@ -135,7 +135,6 @@
 					scrollAlign:'left',
 					scrollBackgroundColor:'#F7F7FF',
 					scrollColor:'#DEE7F7',
-					boundaryGap:'justify'
 				},
 				yAxis: {
 					gridType:'dash',

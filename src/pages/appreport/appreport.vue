@@ -82,10 +82,10 @@ import QueryEntity from '@/classes/search/QueryEntity';
 import { Tools } from '../../classes/tools/Tools';
 import { icl } from '../../classes/tools/CommICL';
 import loadRefresh from '@/components/load-refresh/load-refresh.vue';
-import {dataTool} from '@/classes/tools/DataTools';
 import bipTable from "@/components/bip-ui/bip-table/bip-table.vue";
 let _ = require('lodash');
-const DataUtil = dataTool.utils
+import comm from '@/static/js/comm.js';
+let commURL: any = comm;
 @Component({
 	components: { mLoad,bipSearchCon,bipListUnit2,bipGpsShow,loadRefresh,bipTable,bipBillBar,BipMenuBtnDlg}
 })
@@ -162,7 +162,6 @@ export default class appReport extends Vue {
 		let cell = this.dsm.ccells.cels[_cellIndex];
 		let cr0 = this.pdList[rowId];
 		if( (cell.attr & 1) >0 || (cell.attr & (0x80000)) >0 ) { // 0主键   0x80000关联
-			console.log(111,cr0);
 			let row = cr0.data;
 			let slkid = row[cell.id];
 			if ((cell.attr & 0x80000) > 0) {//关联
@@ -205,37 +204,56 @@ export default class appReport extends Vue {
 								let command = me.command.split("&");
 								let pbuid = command[0].split("=");
 								let pmenuid = command[1].split("="); 
-								// console.log(pbuid,pmenuid);
-								await tools.getMenuParams(pbuid[1],pmenuid[1]).then((res:any)=>{
-									let data = res.data
-									console.log(data);
-									if(data.id>=0){
-										let _uriParams = data.data.mparams
-										uni.setStorageSync(pbuid[1],JSON.stringify(_uriParams));
-										let rr = ""+opera['pkfld']+"='"+slkid+"'"
-										let qcont:any =rr;
-										if(_uriParams.beBill){
-											let uri = '/pages/appinfo/appdetail?color='+this.cr+'&title='+opera.pname+"&pbuid="+pbuid[1]+'&qcont='+encodeURIComponent(qcont);
-											uni.navigateTo({
-												url: uri,
-												complete: () => {
-													uni.hideLoading();
-													this.isjump = false;
-												}
-											});
-										}else{
-											this.openList(rowId);
+								if(pbuid[0] == 'pmenu'){
+									let pmenu = pbuid[1];
+									let type = commURL.ItemType;
+									let url = "";
+									if(type =='credit'){
+										if(pmenu =='checkRecord'){//架次查询
+											pmenu = "checkRecord?1=1";
 										}
-									}else{
-										uni.showToast({
-											title:'没有权限!'
-										})
+										url = '/pages/alone/credit/'+pmenu;
 									}
-								}).catch((err:any)=>{
-										uni.showToast({
-											title:'没有权限!'
-										})
-								})
+									let rr = ""+opera['pkfld']+"='"+slkid+"'"
+									let qcont:any =rr;
+									let uri = url+'&title='+opera.pname+'&qcont='+encodeURIComponent(qcont);
+									uni.navigateTo({
+										url: uri,
+										complete: () => {
+											uni.hideLoading();
+										}
+									});
+								}else{
+									await tools.getMenuParams(pbuid[1],pmenuid[1]).then((res:any)=>{
+										let data = res.data
+										if(data.id>=0){
+											let _uriParams = data.data.mparams
+											uni.setStorageSync(pbuid[1],JSON.stringify(_uriParams));
+											let rr = ""+opera['pkfld']+"='"+slkid+"'"
+											let qcont:any =rr;
+											if(_uriParams.beBill){
+												let uri = '/pages/appinfo/appdetail?color='+this.cr+'&title='+opera.pname+"&pbuid="+pbuid[1]+'&qcont='+encodeURIComponent(qcont);
+												uni.navigateTo({
+													url: uri,
+													complete: () => {
+														uni.hideLoading();
+														this.isjump = false;
+													}
+												});
+											}else{
+												this.openList(rowId);
+											}
+										}else{
+											uni.showToast({
+												title:'没有权限!'
+											})
+										}
+									}).catch((err:any)=>{
+											uni.showToast({
+												title:'没有权限!'
+											})
+									})
+								}
 							}
 						}  
 					}

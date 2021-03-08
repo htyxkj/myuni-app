@@ -41,7 +41,7 @@ var sumtimeflow = 0;//已喷洒时长 s
 var nowtime = "";//时间
 var sumarea = 0;//喷洒面积 亩
 
-
+var getRealWInt = null;
 var maxTime = null;//实时轨迹最新时间点
 var sleepTime = 5*60*1000;//捷思锐延迟时间
 var taskPointJSON = [];//任务点
@@ -71,10 +71,6 @@ function initRealTime(map){
     }
     this.http.post(option,initAllDev,true);
 	this.initWarn();
-	// this.weather_round = tmap_markCircle(opt.Datas[0],"#E7E7E7",5000,map,0.2)
-	// if(!this.isWatherRound){
-	// 	this.map.removeOverLay(this.weather_round);
-	// }
 }
 /**
  * 根据用户查询 可见设备
@@ -137,6 +133,10 @@ function initAllDev(msg,res){
 			let key = one.taskid+"_"+sbid+"_"+one.sbtype+"_"+offline//任务编码_设备编码_设备类型
 			tmap_marker(this.map,key,lngLat,icon,airPointClick,msg);
 			point.push(lngLat);
+			this.weather_round = tmap_markCircle(lngLat,"#E7E7E7",5000,map,0.2)
+			if(!this.isWatherRound){
+				this.map.removeOverLay(this.weather_round);
+			}
         }
 		this.map.setViewport(point);
     }
@@ -146,6 +146,11 @@ function initAllDev(msg,res){
  * 飞机点击回调事件
  */
 function airPointClick(data){
+	if(isWatherRound && weather_round){
+		map.addOverLay(weather_round)
+	}
+	maxTime = new Date().getTime()
+	window.clearInterval(getRealWInt)
 	let key = data.target.key;
 	clickAirKey = key;
 	let keyArr = key.split("_");
@@ -166,12 +171,14 @@ function airPointClick(data){
 	}
 	if(sbType=='0'){
 		maxTime = parseInt(((maxTime - sleepTime)/1000)+"");
-		// this.maxTime = 1566599591;
-	}else{
-		maxTime = maxTime -5000;
 	}
 	getPointList(sbid,true,sbType)
 	map.setZoom(17)//设置地图放大级次
+	//获取设备对应的天气情况
+	get_real_weather(sbid)
+	getRealWInt = setInterval(() => {
+		get_real_weather(sbid)
+	}, 15*60*1000);
 }
 /***
  * 获取实时数据
@@ -249,7 +256,7 @@ function drawPointLine(key,frist,trtype){
 		}, 1000);
 		return;
 	}
-	if(this.taskData.length<=2){
+	if(this.taskData.length<=1){
 		this.getPointList(key,false,trtype);
 	} 
 	let LngLat = new T.LngLat(this.taskData[0].longitude,this.taskData[0].latitude);
@@ -268,7 +275,9 @@ function drawPointLine(key,frist,trtype){
 		this.sprayLine2.push(newLine2)
 		this.map.addOverLay(newLine2);
 	}
-	this.passOneNode(LngLat,1,1);
+	if(LngLat.getLng() !=0 && LngLat.getLat() !=0){
+		this.passOneNode(LngLat,1,1);
+	}
 	if(this.taskData.length>0){
 		if(this.taskData.length>1){
 			this.loadPlane(this.taskData[0],this.taskData[1]);
@@ -361,6 +370,51 @@ function real_time_setting(){
 			this.close();
 		}
 	});
+}
+/**
+ * 获取天气信息
+ */
+function get_real_weather(sbId){
+	let data = Object.assign({},this.insaidParmas);
+	data.aid = 'GETWEATHER';
+	var qe = Object.assign({},this.queryEntity);
+	let oneCont =[];
+	let qCont = this.queryCont;
+	if(sbId && sbId.length>0){
+		qCont = Object.assign({},this.queryCont);
+		qCont.key = "sbid";
+		qCont.value = sbId;
+		qCont.type = 12;
+		oneCont.push(qCont);
+	} 
+	qe.cont = cont = "~[" + JSON.stringify(oneCont)+"]";
+	qe.page.pageSize = 1;
+	data.qe = JSON.stringify(qe);
+	let option = {
+	    url : this.servUrl+"/sysapi",
+	    method : "post",
+	    data : data
+	}
+	this.http.post(option,set_weather,false);
+}
+function set_weather(msg,res){
+	if(res.id ==0){
+		let dd = res.data.data.values[0];
+		if(dd){
+			document.getElementById("weather_temperature").innerHTML=dd.temperature;//温度
+			document.getElementById("weather_humidity").innerHTML=dd.humidity;//湿度
+			document.getElementById("weather_precipitation").innerHTML=dd.precipitation;//降水
+			document.getElementById("weather_windspeed").innerHTML=dd.windspeed;//风速
+		}
+	}
+}
+/**
+ * 实时页面刷新
+ */
+function real_time_refresh(){
+	window.clearInterval(getRealWInt)
+	this.map_clear();
+	this.initRealTime(this.map)
 }
 /******************************************************** 实时页面 ************************************************************/
 
@@ -1527,26 +1581,27 @@ function initPage(){
     CustomBar = CustomBar?CustomBar:80
     let StatusBar =  getQueryVariable("StatusBar");
     StatusBar = StatusBar?StatusBar:30
-    let topColor =  getQueryVariable("topColor");//标题栏颜色
-    topColor = topColor?topColor:'#0081ff'
-    var top1 = document.getElementById("top1");
-    top1.style.height = CustomBar+'px';
-    // top1.style["background-color"] = topColor;
-    var top2 = document.getElementById("top2");
-    top2.style.height = CustomBar+'px';
-    top2.style['padding-top'] = StatusBar+'px';
-    var top3 = document.getElementById("top3");
-    top3.style.top = StatusBar+'px';
-    var top4 = document.getElementById("top4");
-    top4.style.top = StatusBar+'px';
-    let cc =  getQueryVariable("cc");//标题栏高度
-    top3.style.height = cc+'px';
-    top3.style["line-height"] = cc+'px';
-    let title =  getQueryVariable("title");//页面标题
-    title = decodeURIComponent(title);
-    top4.innerHTML=title;
+    // let topColor =  getQueryVariable("topColor");//标题栏颜色
+    // topColor = topColor?topColor:'#0081ff'
+    // var top1 = document.getElementById("top1");
+    // top1.style.height = CustomBar+'px';
+    // // top1.style["background-color"] = topColor;
+    // var top2 = document.getElementById("top2");
+    // top2.style.height = CustomBar+'px';
+    // top2.style['padding-top'] = StatusBar+'px';
+    // var top3 = document.getElementById("top3");
+    // top3.style.top = StatusBar+'px';
+    // var top4 = document.getElementById("top4");
+    // top4.style.top = StatusBar+'px';
+    // let cc =  getQueryVariable("cc");//标题栏高度
+    // top3.style.height = cc+'px';
+    // top3.style["line-height"] = cc+'px';
+    // let title =  getQueryVariable("title");//页面标题
+    // title = decodeURIComponent(title);
+    // top4.innerHTML=title;
 	var airMapDiv = document.getElementById("airMapDiv");
-	airMapDiv.style.height = window.screen.availHeight-CustomBar+'px';
+	// airMapDiv.style.height = window.screen.availHeight-CustomBar+'px';
+	airMapDiv.style.height = window.screen.availHeight+'px';
 	pageType =  getQueryVariable("pageType");//页面类型
     servUrl =  getQueryVariable("servUrl");//服务端API接口
     userCode =  getQueryVariable("usrCode");//当前用户编码
