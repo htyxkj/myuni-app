@@ -260,34 +260,34 @@ function drawPointLine(key,frist,trtype){
 		this.getPointList(key,false,trtype);
 	} 
 	let LngLat = new T.LngLat(this.taskData[0].longitude,this.taskData[0].latitude);
-	if(this.sprayLine2.length>0){
-		let line2 = this.sprayLine2[this.sprayLine2.length-1];
-		let points2 = line2.getLngLats();
-		points2.push(LngLat);
-		line2.setLngLats(points2)
-	}else{
-		let opts2 = {color:this.noFlowColor,weight:3,opacity:1};
-		let points = [];
-		if(this.PreviousFlowPoint)
-			points.push(this.PreviousFlowPoint);
-		points.push(LngLat);
-		var newLine2 = new T.Polyline(points,opts2);
-		this.sprayLine2.push(newLine2)
-		this.map.addOverLay(newLine2);
-	}
-	if(LngLat.getLng() !=0 && LngLat.getLat() !=0){
-		this.passOneNode(LngLat,1,1);
-	}
-	if(this.taskData.length>0){
-		if(this.taskData.length>1){
-			this.loadPlane(this.taskData[0],this.taskData[1]);
-		} 
-		else{
-			this.loadPlane(this.taskData[0],this.taskData[0]);
+	if(LngLat.getLng() !=0 || LngLat.getLat() !=0){
+		if(this.sprayLine2.length>0){
+			let line2 = this.sprayLine2[this.sprayLine2.length-1];
+			let points2 = line2.getLngLats();
+			points2.push(LngLat);
+			line2.setLngLats(points2)
+		}else{
+			let opts2 = {color:this.noFlowColor,weight:3,opacity:1};
+			let points = [];
+			if(this.PreviousFlowPoint)
+				points.push(this.PreviousFlowPoint);
+			points.push(LngLat);
+			var newLine2 = new T.Polyline(points,opts2);
+			this.sprayLine2.push(newLine2)
+			this.map.addOverLay(newLine2);
 		}
-	}
-	if(this.taskPointJSON.length>30){
-		this.taskPointJSON = this.taskPointJSON.splice(1,1)
+		this.passOneNode(LngLat,1,1);
+		if(this.taskData.length>0){
+			if(this.taskData.length>1){
+				this.loadPlane(this.taskData[0],this.taskData[1]);
+			} 
+			else{
+				this.loadPlane(this.taskData[0],this.taskData[0]);
+			}
+		}
+		if(this.taskPointJSON.length>30){
+			this.taskPointJSON = this.taskPointJSON.splice(1,1)
+		}
 	}
 	this.taskData = this.taskData.slice(1);
 	let t2 = new Date().getTime();

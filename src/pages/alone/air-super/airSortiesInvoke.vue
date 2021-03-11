@@ -11,7 +11,7 @@
             <u-collapse>
                 <u-collapse-item title="　条件">
                     <template  v-for="(item,index) in sortiesCell.ccells.cels">
-                        <bip-comm v-if="(item.attr & 0x400) <=0" :obj_id="'WF0317TJ'" :cell="item" :key="index"></bip-comm>
+                        <bip-comm v-if="(item.attr & 1024) <=0" :obj_id="'WF0317TJ'" :cell="item" :key="index"></bip-comm>
                     </template>
                 </u-collapse-item>
             </u-collapse>
