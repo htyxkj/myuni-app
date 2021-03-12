@@ -109,10 +109,8 @@ export default class bipPickerDate extends Vue {
 
 	//确认选择
 	pickerConfirm(e: any) {
-		console.log('pickerConfirm', e);
 		switch (
 			this.mode
-			// case "date"
 		) {
 		}
 		this.$emit('confirm', {
@@ -124,9 +122,7 @@ export default class bipPickerDate extends Vue {
 	}
 	// 绑定的值发生改变
 	bindChange(val: any) {
-		// console.log('bindChange', val);
 		let arr: Array<any> = val.detail.value;
-		console.log(arr)
 		if (this.mode === 'date' || this.mode == 'datetime') {
 			let year = this.data.years[arr[0]] || this.data.years[this.data.years.length - 1];
 			let month = this.data.months[arr[1]] || this.data.months[this.data.months.length - 1];
@@ -147,7 +143,6 @@ export default class bipPickerDate extends Vue {
 						return y == year;
 					});
 					arr[0] = _idx
-					// console.log('123',_idx)
 					this.$set(this.data, 'years', years);
 				}
 			}
@@ -175,7 +170,6 @@ export default class bipPickerDate extends Vue {
 				this.checkArr = [year, month, day, hour, mint, second];
 			}
 			this.resultStr = rr;
-			console.log(rr, this.checkArr);
 		}else if(this.mode ==='ym'){
 			let year = this.data.years[arr[0]] || this.data.years[this.data.years.length - 1];
 			let month = this.data.months[arr[1]] || this.data.months[this.data.months.length - 1];
@@ -214,7 +208,6 @@ export default class bipPickerDate extends Vue {
 	initYMDData(){
 		let years = [];
 		let r0 = moment().year();
-		// console.log(r0);
 		years = this.makeYears(r0);
 		let mm = this.makeMonths();
 		let dd = this.makeDays();
@@ -426,7 +419,6 @@ export default class bipPickerDate extends Vue {
 			let y = rr.year();
 			let m = rr.month();
 			let day = rr.format('DD');
-			console.log(day, rr.format('DD'));
 			let idx = this.data.years.findIndex((item: any) => {
 				return item == y;
 			});
