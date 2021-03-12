@@ -85,7 +85,6 @@ function oneOf(value: any, validList: Array<any>) {
 }
 import { Vue, Provide, Prop, Component, Watch } from 'vue-property-decorator';
 import moment from 'moment';
-import Cell from '@/classes/pub/coob/Cell';
 @Component({
 	components: {}
 })
@@ -100,6 +99,7 @@ export default class bipPickerDate extends Vue {
 	mode!: string; //类型
 	@Prop({ type: String, default: '#f5a200' }) themeColor!: string; //确定按钮的颜色
 	@Prop({ type: String, default: '' }) mode1!: string; //初始值
+	@Prop() limitDate!:any;//时间限制
 	data: any = {}; //日期数据组成
 	checkArr: Array<any> = []; //选中的值
 	pickVal: Array<Number> = []; //选中的下标
@@ -109,7 +109,7 @@ export default class bipPickerDate extends Vue {
 
 	//确认选择
 	pickerConfirm(e: any) {
-		// console.log('pickerConfirm', e);
+		console.log('pickerConfirm', e);
 		switch (
 			this.mode
 			// case "date"
@@ -134,7 +134,10 @@ export default class bipPickerDate extends Vue {
 			let m0 = moment().year(year).month(parseInt(month) - 1).date(day);
 			let rr = m0.format('YYYY-MM-DD');
 			if(this.mode == 'datetime'){
-				rr = m0.hour(arr[3]).minute(arr[4]).second(arr[5]).format('YYYY-MM-DD HH:mm:ss');
+				let hour = this.data.hours[arr[3]] || this.data.hour[this.data.hours.length - 1];
+				let minute = this.data.minutes[arr[4]] || this.data.minute[this.data.minutes.length - 1];
+				let second = this.data.seconds[arr[5]] || this.data.days[this.data.seconds.length - 1];
+				rr = m0.hour(hour).minute(minute).second(second).format('YYYY-MM-DD HH:mm:ss');
 			}
 			let yindex = arr[0];
 			if(yindex != undefined){
@@ -182,9 +185,13 @@ export default class bipPickerDate extends Vue {
 		this.$nextTick(() => {
 			this.pickVal = arr;
 		});
+		this.init();
 	}
 
 	mounted() {
+		this.init();
+	}
+	init(){
 		switch(this.mode){
 			case 'date':
 				this.initYMDData();
@@ -201,9 +208,7 @@ export default class bipPickerDate extends Vue {
 				break;
 			default:
 				break;
-			
 		}
-		
 	}
 	
 	initYMDData(){
@@ -211,53 +216,185 @@ export default class bipPickerDate extends Vue {
 		let r0 = moment().year();
 		// console.log(r0);
 		years = this.makeYears(r0);
-		let mm = [];
-		for (let i = 1; i <= 12; i++) {
-			mm.push(this.formatNum(i));
-		}
-		let dd = [];
-		for (let i = 1; i <= 31; i++) {
-			dd.push(this.formatNum(i));
-		}
+		let mm = this.makeMonths();
+		let dd = this.makeDays();
 		this.data = { years: years, months: mm, days: dd };
 	}
 	initYMData (){
 		let years = [];
 		let r0 = moment().year();
-		// console.log(r0);
 		years = this.makeYears(r0);
-		let mm = [];
-		for (let i = 1; i <= 12; i++) {
-			mm.push(this.formatNum(i));
-		}
+		let mm = this.makeMonths();
 		let dd:any = [];
 		this.data = { years: years, months: mm, days: dd };
 	}
 	makeYears(start:number){
 		let years = [];
-		let y1 = start - 30;
-		y1 = y1<=1700?1700:y1;
-		for (let i = 0; i <=2*30 ; i++) {
-			years.push(y1 + i);
+		let arr:any = this.checkYMDHMS(1);
+		for (let i = arr[0]; i <=arr[1] ; i++) {
+			years.push(i);
 		}
 		return years;
 	}
-	
+	makeMonths(){
+		let mm = [];
+		let arr:any = this.checkYMDHMS(2);
+		let minM = arr[0];
+		let maxM = arr[1];
+		for (let i = minM; i <= maxM; i++) {
+			mm.push(this.formatNum(i));
+		}
+		return mm;
+	}
+	makeDays(){
+		let dd = [];
+		let arr:any = this.checkYMDHMS(3)
+		let minD = arr[0];
+		let maxD = arr[1];
+		for (let i = minD; i <= maxD; i++) {
+			dd.push(this.formatNum(i));
+		}
+		return dd;
+	}
+
 	initHms(){
 		let h = [];
-		for (let i = 0; i < 24; i++) {
+		let arr:any = this.checkYMDHMS(4);
+		let minH = arr[0];
+		let maxH = arr[1]
+		for (let i = minH; i < maxH; i++) {
 			h.push(this.formatNum(i));
 		}
 		let m = [];
-		for (let i = 0; i < 60; i++) {
+		arr = this.checkYMDHMS(5);
+		let minm = arr[0];
+		let maxm = arr[1] 
+		for (let i = minm; i < maxm; i++) {
 			m.push(this.formatNum(i));
 		}
-		let s = m
+		let s = [];
+		arr = this.checkYMDHMS(5);
+		let mins = arr[0];
+		let maxs = arr[1] 
+		for (let i = mins; i < maxs; i++) {
+			s.push(this.formatNum(i));
+		}
 		this.data.hours = h;
 		this.data.minutes = m;
 		this.data.seconds = s;
 	}
 	
+	/**
+	 * 判断当前时间是否与最大最小时间有交集
+	 */
+	checkYMDHMS(type:any){
+		let checkY = 0,checkM = 0,checkD = 0,checkH = 0,checkm = 0,checkS = 0
+		if(this.checkArr){
+			checkY = parseInt(this.checkArr[0])
+			if(isNaN(checkY)){
+				checkY = moment().year();
+			}
+			checkM = parseInt(this.checkArr[1])
+			if(isNaN(checkM)){
+				checkM = moment().month();
+			}
+			checkD = parseInt(this.checkArr[2])
+			if(isNaN(checkD)){
+				checkD = moment().date();
+			}
+			checkH = parseInt(this.checkArr[3])
+			if(isNaN(checkH)){
+				checkH = 0;
+			}
+			checkm = parseInt(this.checkArr[4])
+			if(isNaN(checkm)){
+				checkm = 0;
+			}
+			checkS = parseInt(this.checkArr[5])
+			if(isNaN(checkS)){
+				checkS = 0;
+			}
+		}
+		if(type == 1){ //年
+			let arr = [];
+			let start = moment().year();
+			let y1 = start - 30;
+			y1 = y1<=1700?1700:y1;
+			arr[0] = y1
+			arr[1] = y1 + 3*30;
+			if(this.limitDate.min && this.limitDate.min[0]){
+				arr[0] = this.limitDate.min [0];
+			}
+			if(this.limitDate.max && this.limitDate.max[0]){
+				arr[1] = this.limitDate.max[0];
+			}
+			return arr;
+		}else if(type ==2){//月
+			let mm = [];
+			let minM = 1;
+			let maxM = 12;
+			if(this.limitDate.min && checkY ==  this.limitDate.min[0]){
+				minM = this.limitDate.min[1]
+			}
+			if(this.limitDate.max && checkY ==  this.limitDate.max[0]){
+				maxM = this.limitDate.max[1]
+			}
+			mm.push(minM)
+			mm.push(maxM)
+			return mm;
+		}else if (type ==3){//日
+			let minD = 1;
+			let maxD = 31;
+			let liMin = this.limitDate.min
+			if(liMin && checkY ==  liMin[0] && checkM == liMin[1]){
+				minD = liMin[2]
+			}
+			let liMax = this.limitDate.max
+			maxD = moment(checkY+"-"+checkM, "YYYY-MM").daysInMonth();
+			if(liMax && checkY ==  liMax[0] && checkM == liMax[1]){
+				if(liMax[2] <=maxD)
+					maxD = liMax[2]
+			}
+			return [minD,maxD];
+		}else if (type == 4){//时
+			let minH = 0;
+			let maxH = 24;
+			let liMin = this.limitDate.min
+			if(liMin && checkY ==  liMin[0] && checkM == liMin[1] && checkD == liMin[2]){
+				minH = liMin[3]
+			}
+			let liMax = this.limitDate.max
+			if(liMax && checkY ==  liMax[0] && checkM == liMax[1]&& checkD == liMax[2]){
+				minH = liMax[3]
+			}
+			return [minH,maxH];
+		}else if(type ==5){
+			let minm = 0;
+			let maxm = 60;
+			let liMin = this.limitDate.min
+			if(liMin && checkY ==  liMin[0] && checkM == liMin[1] && checkD == liMin[2] && checkH == liMin[3]){
+				minm = liMin[4]
+			}
+			let liMax = this.limitDate.max
+			if(liMax && checkY ==  liMax[0] && checkM == liMax[1]&& checkD == liMax[2] && checkH == liMax[3]){
+				maxm = liMax[4]
+			}
+			return [minm,maxm];
+		}else if(type ==5){
+			let minS = 0;
+			let maxS = 60;
+			let liMin = this.limitDate.min
+			if(liMin && checkY ==  liMin[0] && checkM == liMin[1] && checkD == liMin[2] && checkH == liMin[3] && checkm == liMin[4]){
+				minS = liMin[5]
+			}
+			let liMax = this.limitDate.max
+			if(liMax && checkY ==  liMax[0] && checkM == liMax[1]&& checkD == liMax[2] && checkH == liMax[3] && checkm == liMax[4]){
+				maxS = liMax[5]
+			}
+			return [minS,maxS];
+		}
+	}
+
 	//点击区域之外的边框，自动隐藏
 	maskTap() {
 		this.showPicker = false;
@@ -319,6 +456,11 @@ export default class bipPickerDate extends Vue {
 				this.pickVal = [idx, m];
 			});
 		}
+	}
+	
+	@Watch("limitDate",{deep:true})
+	limitDateChange(){
+		this.init();
 	}
 }
 </script>

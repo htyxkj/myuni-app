@@ -5,7 +5,7 @@
 		</template>
 		<input class="text-right" :placeholder="cell.labelString || title " type="text" v-model="mode" disabled="true"/>
 		<text class="cuIcon-calendar" @tap.stop="open()"></text>
-		<bip-picker-date :mode="pickerType" @confirm="onConfirm" ref="calendar" ></bip-picker-date>
+		<bip-picker-date :mode="pickerType" @confirm="onConfirm" ref="calendar" :limitDate="limitDate" ></bip-picker-date>
 	</view>
 </template>
 <script lang="ts">
@@ -17,7 +17,9 @@ import CCliEnv from '@/classes/cenv/CCliEnv'
 import CDataSet from '@/classes/pub/CDataSet';
 import { dataTool } from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils;
-import BipInsAidNew from '@/classes/BipInsAidNew';
+import { baseUtils } from "@/classes/api/baseutils";
+let baseTool = baseUtils.tools;
+import moment from "moment"
 @Component({
 	components: {bipPickerDate }
 })
@@ -32,6 +34,7 @@ export default class bipDate extends Vue {
 	selectIndex:Array<number>=[0,0,0,0,0,0]
 	mode:string = ''
 	pickerType:any ='date'
+	limitDate:any={max:null,min:null}
 	created(){
 		this.cds = this.env.getDataSet(this.obj_id);
 		this.mode = this.record.data[this.cell.id]
@@ -104,7 +107,56 @@ export default class bipDate extends Vue {
 
 	initRestrict(){
 		let chkRule = this.cell.chkRule
-		console.log(chkRule)
+		if(chkRule){
+			let startTime;
+            let endTime;
+            let dArr = this.cell.chkRule.split("~");
+			startTime = dArr[0]
+            endTime = dArr[1];
+			
+            if(startTime && startTime!=""){
+                let dateAdd="";
+                if(startTime.indexOf("|") ==-1){
+                    startTime = startTime.substring(startTime.indexOf("[")+1,startTime.lastIndexOf("]"));                    
+                }else{
+                    let stt = startTime.substring(startTime.indexOf("[")+1,startTime.lastIndexOf("|"));
+                    dateAdd = startTime.substring(startTime.indexOf("|")+1,startTime.lastIndexOf("]"));
+                    startTime = stt;
+                }
+                startTime = this.cds.currRecord.data[startTime];
+                startTime = startTime.replace(new RegExp("\\-",'g'),"/"); 
+                if(dateAdd !=""){
+                    let add = dateAdd.split(";");
+                    add.unshift(startTime);
+                    startTime = baseTool.dateAdd(add);
+                }
+            }
+            if(endTime && endTime!=""){
+                let dateAdd ="";
+                if(endTime.indexOf("|") == -1){
+                    endTime = endTime.substring(endTime.indexOf("[")+1,endTime.lastIndexOf("]"));
+                }else{
+                    let stt = endTime.substring(endTime.indexOf("[")+1,endTime.lastIndexOf("|"));
+                    dateAdd = endTime.substring(endTime.indexOf("|")+1,endTime.lastIndexOf("]"));
+                    endTime = stt;
+                }
+                endTime = this.cds.currRecord.data[endTime];
+                endTime = endTime.replace(new RegExp("\\-",'g'),"/"); 
+                if(dateAdd !=""){
+                    let add = dateAdd.split(";");
+                    add.unshift(endTime);
+                    endTime = baseTool.dateAdd(add);
+                } 
+            }
+			if(startTime){
+				this.limitDate.min = moment(new Date(startTime)).toArray();
+				this.limitDate.min[1]++
+			}
+			if(endTime){
+				this.limitDate.max = moment(new Date(endTime)).toArray();
+				this.limitDate.max[1]++
+			}
+        }
 	}
 }
 </script>
