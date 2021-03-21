@@ -3,6 +3,8 @@ import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
 import Cells from '@/classes/pub/coob/Cells';
 import CDataSet from '@/classes/pub/CDataSet';
+import comm from '@/static/js/comm.js';
+let commURL: any = comm;
 export class Tools{
 	static S4() {
 		return (((1+Math.random())*0x10000)|0).toString(16).substring(1)+'';
@@ -79,6 +81,78 @@ export class Tools{
 			}
 			return null;
 		}
+	}
+
+	static async openMenu(param:any){
+		let cc = param.command;
+		let dd = cc.split("&");
+		let pbuid = ''
+		let pmenu ='';
+		dd.forEach((aa:any)=>{
+			let pbuids = aa.split('=')
+			if(pbuids[0] == 'pbuid'){
+				pbuid = pbuids[1]
+			}
+			if(pbuids[0] == 'pmenu'){
+				pmenu = pbuids[1]
+			}
+		})
+		let mid = param.menuId;
+		if(pbuid&&mid){
+			uni.showLoading({title:'页面跳转中...'});
+			await tools.getMenuParams(pbuid,mid).then((res:any)=>{
+				uni.hideLoading();
+				let data = res.data
+				if(data.id>=0){
+					let uriParams = data.data.mparams
+					uni.setStorageSync(pbuid,JSON.stringify(uriParams))
+					if(uriParams.beBill){
+						let uri = '/pages/appinfo/applist?color='+param.color+'&title='+param.menuName+"&pbuid="+pbuid;
+						this.pageJump(uri)
+					}else{
+						let uri = '/pages/appreport/appreport?color='+param.color+'&title='+param.menuName+"&pbuid="+pbuid;
+						this.pageJump(uri);
+					}
+				}else{
+					uni.showToast({
+						title:'没有权限!'
+					})
+				}
+			}).catch((err:any)=>{
+					uni.hideLoading();
+					uni.showToast({
+						title:'没有权限!'
+					})
+			})
+		}else if(pmenu){
+			let type = commURL.ItemType;
+			let url = "";
+			if(type =='air-super'){
+				if(pmenu == 'RealTimeTrack'){//实时轨迹
+					pmenu = "airMap?type=realTime";
+				}else if(pmenu =='PlayBack'){//轨迹回放
+					pmenu = "airMap?type=playBack";
+				}else if(pmenu == 'TrackShow'){//航带航迹查询
+					pmenu = "airMap?type=trackShow";
+				}else if(pmenu =='SortiesInvoke'){//架次统计
+					pmenu = "airSortiesInvoke?1=1";
+				}else if(pmenu =='SortiesQuery'){//架次查询
+					pmenu = "airSortiesQuery?1=1";
+				}
+				url = '/pages/alone/air-super/'+pmenu;
+			}
+			let uri = url+'&color='+param.color+'&title='+param.menuName;
+			this.pageJump(uri);
+		}
+		return null;
+	}
+	static pageJump(uri:string){
+		uni.showLoading({title:'跳转中...'})
+		uni.navigateTo({
+			url: uri,complete:()=>{
+				uni.hideLoading();
+			}
+		});
 	}
 
 	/**

@@ -20,9 +20,7 @@
 	let tools = BIPUtil.ServApi;
 	import mLoad from '@/components/mLoad.vue';
 	import QueryEntity from '@/classes/search/QueryEntity';
-	import QueryCont from '@/classes/search/QueryCont';
-	import { baseUtils } from '@/classes/api/baseutils';
-	let paramTools = baseUtils.tools;
+	import { Tools } from '@/classes/tools/Tools';
 	@Component({components:{BipTaskUnit,mLoad,loadRefresh}})
 	export default class UnTaskList extends Vue{
 		currPage: number = 1;
@@ -46,7 +44,6 @@
 			}else{
 				this.loadModal = false;
 			}
-			console.log(res);
 		}
 		
 		//查询服务端任务数据
@@ -108,11 +105,11 @@
 	
 		@Watch('total', {immediate: true, deep: true})
 		totalChange(newVal: number, oldVal: number){
-			this.emitTotal(newVal);
+			this.emitTotal(newVal,0);
 		}
 		
 		@Emit('totalM')
-		emitTotal(n: number){
+		emitTotal(n: number,t:number){
 		}
 		/**
 		 * 打开详情
@@ -150,7 +147,7 @@
 			if(res.data.id==0){
 				let opt:any = res.data.data.opt;
 				let mid = opt.pmenuid;
-				let m0 = paramTools.findMenu(mid);
+				let m0 = Tools.findMenu(mid);
 				if(m0){
 					let cmd = m0.command;
 					let dd = cmd.split("&");

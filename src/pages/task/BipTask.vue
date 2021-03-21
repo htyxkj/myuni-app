@@ -11,11 +11,14 @@
 				</view>
 			</view>
 			<view v-show="spList" class="content">
-				<template v-if="0==TabCur">
-					<un-task-list @totalM="totalChange" @toDetails="toDetails" ref="untasklist"></un-task-list>
+				<template v-show="0==TabCur">
+					<un-task-list @totalM="totalChange" @toDetails="toDetails" ref="untasklist" :style="{'display':0==TabCur?'':'none'}"></un-task-list>
 				</template>
-				<template v-else>
-					<task-list @totalM="totalChange" @toDetails="toDetails" ref="tasklist"></task-list>
+				<template v-show="1==TabCur">
+					<task-list @totalM="totalChange" @toDetails="toDetails" ref="tasklist" :style="{'display':1==TabCur?'':'none'}"></task-list>
+				</template>
+				<template v-show="2==TabCur">
+					<msg-list @totalM="totalChange" :style="{'display':2==TabCur?'':'none'}"></msg-list>
 				</template>
 			</view>
 		</template>
@@ -40,12 +43,12 @@
 
 	
 	import appdetailsp from '@/pages/appinfo/appdetailsp.vue';
-	import bipUnit from '@/components/bip-ui/bip-unit/bip-unit.vue';
 	import UnTaskList from '@/components/bip-ui/bip-task/UnTaskList.vue';
 	import TaskList from '@/components/bip-ui/bip-task/TaskList.vue';
+	import MsgList from '@/components/bip-ui/bip-task/MsgList.vue';
 	@Component({
 		components: {
-			TaskList,UnTaskList,appdetailsp
+			TaskList,UnTaskList,appdetailsp,MsgList
 		}
 	})
 	export default class BipTask extends Vue {
@@ -56,6 +59,7 @@
 		created(){
 			this.shTabs.push({name:"待审核",total:0});
 			this.shTabs.push({name:"已审核",total:0});
+			this.shTabs.push({name:"系统消息",total:0});
 			this.spList = true;
 		}
 		mounted() {
@@ -66,11 +70,9 @@
 			// this.queryTaskInfo();
 		}
 		
-		totalChange(total:number){
-			let cur = this.shTabs[this.TabCur];
-			// if(cur){
-				cur.total = total
-			// }
+		totalChange(total:number,type:any){
+			let cur = this.shTabs[type];
+			cur.total = total
 		}
 
 		/**

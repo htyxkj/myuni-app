@@ -320,7 +320,7 @@
 					tt = '菜单';
 					break;
 				case 2:
-					tt = '审核中心';
+					tt = '消息中心';
 					break;
 				case 3:
 					tt = '我';

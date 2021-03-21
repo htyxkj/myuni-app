@@ -1,12 +1,12 @@
 <template>
-	<view class="margin-bottom-sm">
+	<view>
 		<view class="cu-bar bg-white solid-bottom" @tap.stop="openlist">
 			<view class="action" v-if="pkList.length>0">
 				<text class="cuIcon-titles text-red"></text>
 				<text class="text-bold">{{pkList[0].labelString}}：{{record.data[pkList[0].id]||''}}</text>
 			</view>
 		</view>
-		<view class="flex p-xs bg-white mb-sm" v-for="(item,index) in celsRowList" :key="index" @tap.stop="openlist">
+		<view class="flex p-xs bg-white mb-sm" v-for="(item,index) in celsRowList" :key="index">
 			<view v-for="(cel,idx) in item" :key="idx" :style="'width:'+(100/item.length)+'%'">
 				<!-- <text >{{ cel.labelString }}：{{record.data[cel.id] ||''}}</text> -->
 				<bip-comm-show :obj_id="obj_id" :cell="cel" :rowId="rowId" :record="record"></bip-comm-show>
@@ -34,7 +34,7 @@ export default class bipListUnit2 extends Vue {
 		// console.log(this.record)
 	}
 	openlist(){
-		this.$emit('openitem',this.rowId);
+		this.$emit('openitem',this.pkList[0].id,this.rowId,this.record.data);
 	}
 
 

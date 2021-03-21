@@ -30,17 +30,19 @@
 					</view>
 					<template v-if="mbs && mbs.menuList.length>0">
 						<bip-bill-bar @tabSelect="execCmd" :attr="0" :bmore="true"></bip-bill-bar>
-						<bip-menu-btn-dlg ref="bip_dlg" @Recheck="Recheck"></bip-menu-btn-dlg>
 					</template>
 				</template>
 			</template>
 			<template v-else>
 				<template v-if="dsm&&dsm.ccells">
-					<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="280" :pageNo="currPage" :totalPageNo="totalPage"
+					<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="215" :pageNo="currPage" :totalPageNo="totalPage"
 						@loadMore="loadMore" @refresh="refresh">
 						<view slot="content-list">
-							<view v-for="(item,index) in pdList" :key="index">
-								<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="openList" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+							<view v-for="(item,index) in pdList" :key="index" class="margin-bottom-sm">
+								<bip-list-unit2 :record="item" :cels="dsm.ccells.cels" :rowId="index" @openitem="rowClick" :obj_id="dsm.ccells.obj_id"></bip-list-unit2>
+								<view class="menuBar" v-if="mbs.menuList.length>0">
+									<text v-for="(item,idx) in mbs.menuList" :key="idx" @click="tabSelect(index,item)" >{{ item.name }}</text>
+								</view>
 							</view>
 						</view>
 					</load-refresh>
@@ -56,6 +58,7 @@
 			<text v-if="!isMap" class="cuIcon-global text-green"></text>
 		</view>
 		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
+		<bip-menu-btn-dlg ref="bip_dlg" @Recheck="Recheck"></bip-menu-btn-dlg>
 	</view>
 </template>
 
@@ -85,6 +88,8 @@ import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 import bipTable from "@/components/bip-ui/bip-table/bip-table.vue";
 let _ = require('lodash');
 import comm from '@/static/js/comm.js';
+import { dataTool } from '@/classes/tools/DataTools';
+const DataUtil = dataTool.utils;
 let commURL: any = comm;
 @Component({
 	components: { mLoad,bipSearchCon,bipListUnit2,bipGpsShow,loadRefresh,bipTable,bipBillBar,BipMenuBtnDlg}
@@ -303,24 +308,40 @@ export default class appReport extends Vue {
 				await InsAidModule.fetchInsAid({ id: 300, aid: name });
 			} 
 			let dlg = this.aidmaps.get(aidKey);
-			// console.log(dlg)
             if(dlg && dlg.slink){ 
                 let dlgBtn = dlg.slink.split("&")
                 dlgBtn.forEach((item:any) => {
-                    let cc = item.substring(0,item.indexOf(";")); 
-                    let type = cc.substring(0,1);
-                    let bname = cc.substring(2,item.indexOf(","));  
-					let icon = cc.substring(item.indexOf(",")+1);
-                    let btn1 = new BipMenuBtn("DLG",bname)
-                    btn1.setDlgType(type)
-                    btn1.setDlgSname(name);
-                    btn1.setDlgCont(item.substring(item.indexOf(";")+1))
-					btn1.setIconFontIcon(icon);
-                    this.mbs.menuList.push(btn1)
+					if(item && item.length>0){
+						let cc = item.substring(0,item.indexOf(";")); 
+						let type = cc.substring(0,1);
+						let bname = cc.substring(2,item.indexOf(","));  
+						let icon = cc.substring(item.indexOf(",")+1);
+						let btn1 = new BipMenuBtn("DLG",bname)
+						btn1.setDlgType(type)
+						btn1.setDlgSname(name);
+						btn1.setDlgCont(item.substring(item.indexOf(";")+1))
+						btn1.setIconFontIcon(icon);
+						this.mbs.menuList.push(btn1)
+					}
                 });
             }
         }
 	} 
+	tabSelect(index:any,btn: any) {
+		this.dsm.currRecord = this.pdList[index]
+		let cmd = btn.cmd;
+		if(cmd == 'DLG'){
+            if(!this.dsm.currRecord || !this.dsm.currRecord.data)
+                return;
+            let cc = JSON.stringify(this.dsm.currRecord.data);
+            if(cc.length>2){
+                setTimeout(() => {
+                    let dia: any = this.$refs.bip_dlg;
+                    dia.open(btn,this.cr); 
+                }, 100);
+            }
+        }
+	}
 	get aidmaps(){
 		return InsAidModule.aidInfos;
 	}
@@ -409,7 +430,7 @@ export default class appReport extends Vue {
 						let rtn = res.data;
 						if (rtn.id == 0) {
 							this.initUIData(rtn.data.layCels);
-							this.queryCont({});
+							this.queryCont(this.dsm_cont.currRecord.data);
 						}else{
 							uni.showToast({title:'没有获取到对象定义'+this.uriParam})
 						}
@@ -443,7 +464,8 @@ export default class appReport extends Vue {
 		this.env.initInfo(this.uriParam, this.cells, this.mbs, this.dsm, this.ds_ext);
 		this.env.ds_cont = this.dsm_cont
 		this.lay = new BipLayout(this.uriParam.playout, this.cells);
-		this.$forceUpdate()
+		this.dsm_cont.currRecord = DataUtil.createRecord(this.dsm_cont,this.env);
+		this.$forceUpdate()		
 	} 
 	
 	// 下拉刷新数据列表
@@ -588,8 +610,14 @@ export default class appReport extends Vue {
 		right: 0px;
 		z-index: 9999;
 	}
-	
 	.table {
-			text-align: center;
-		}
+		text-align: center;
+	}
+	.menuBar{
+		text-align: center;
+		background-color: white;
+		height: 40px;
+		line-height: 40px;
+		color: #2d64ff;
+	}
 </style>

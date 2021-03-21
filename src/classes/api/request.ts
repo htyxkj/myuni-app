@@ -185,6 +185,23 @@ export namespace BIPUtil {
 		}
 
 		/**
+		 * @description 获取任务 或 消息
+		 * @param tskim 方法编码，
+		 * @param iid 消息编号，
+		 * @param state 消息状态，
+		 * @param buno 任务编码，
+		 * @param buid 任务业务，
+		 * @param tousr 用户，
+		 * @param page 页数，
+		 * @param size 条数，
+		 * @param keyword 消息关键字
+		 */
+		getTaskMsgData(tskim:any,iid:any,state:any,buno:any,buid:any,tousr:any,page:any,size:any,keyword:any){ 
+			let param = tools.getTaskMsgParams(tskim,iid,state,buno,buid,tousr,page,size,keyword);
+			return this.getFromServer(param)
+		}
+
+		/**
 		 * @description 调用js http post 请求
 		 */
 		getFromServer(params: any) {

@@ -149,12 +149,12 @@ export default class bipMenuBtnDlg extends Vue {
 			}
             //打开的菜单
 			let me = Tools.findMenu(cont0);
-			me.color = 'blue';
             if (!me) {
 				let msg:any = this.$refs['msg'];
 				msg.error({background: true,content:"没有" + cont0 + "菜单权限!" })
                 return false;
             }else{
+				me.color = 'blue';
                 this.openMenu(me,jsontj,jsoncont);
             }
 		}

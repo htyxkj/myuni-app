@@ -13,7 +13,7 @@
 			</uni-th>
 		</uni-tr>
 		<template v-if="tableData">
-			<uni-tr v-for="(row,_rowId) in tableData" :key="_rowId" :style="checkRowId==_rowId?'background-color: #c3dbff;':''">
+			<uni-tr v-for="(row,_rowId) in tableData" :key="_rowId" :style="{'background-color':getBackColor(_rowId)}">
 				<uni-td align="center" v-for="(itm,index1) in showCells" :key="index1" :width="itm.width">
 					<bip-show-table :cell="itm" :record="row" :rowId="_rowId" :obj_id="ccells.obj_id"  @cellClick="rowClick"></bip-show-table>
 				</uni-td>
@@ -85,6 +85,33 @@
 		
 		toggleSort() {
 			this.sortType = this.sortType == 'asc' ? 'desc' : 'asc'
+		}
+		/**
+		 * 获取行背景色 `5
+		 */
+		getBackColor(rowId:any){
+			let row = this.tableData [rowId]
+			if(rowId == this.checkRowId){
+				return " #c3dbff"
+			}
+			let sctrls = this.ccells.sctrl;
+			if(sctrls){
+				let cc = sctrls.split(";");
+           		for(var i=0;i<cc.length;i++){
+                	let oneSc = cc[i];
+					if(oneSc.startsWith("`5")){
+						let zd = oneSc.substring(2,oneSc.indexOf("/"))
+						let vl =  sctrls.split("/")[1].split(",");
+						let rowVl = row.data[zd];
+						for(var j=0;j<vl.length;j++){
+							let oneV = vl[j].split(":");
+							if(rowVl == oneV[0]){
+								return oneV[1];
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 </script>

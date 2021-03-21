@@ -22,25 +22,27 @@
 	color: #007AFF;
 }
 .weather_module{
-    left: 50px;
+    bottom:25px;
+    left: 55px;
+    height: 75px;
     position: fixed;
     z-index: 450;
-    width: 200px;
-    margin-top:10px ;
-    border: 1px solid #b6b6b6;
-    background-color: rgba(209, 209, 209, 0.68);
+    width: 45%;
+    background-color: rgb(255, 255, 255);
     font-size: 13px;
 }
 .f_cockpit{
+    top:0px;
     position: fixed;
     z-index: 440;
-    margin-top:10px ;
-    border: 1px solid #b6b6b6;
-    background-color: rgba(209, 209, 209, 0.68);
+    background-color: rgb(255, 255, 255);
     font-size: 13px;
     width: 100%;
 }
 
+td{
+    border: 0px !important;       
+}
 
 /************************************************************顶部***********************************************************/
 .cu-custom{

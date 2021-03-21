@@ -133,15 +133,13 @@
     </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Provide, Prop, Watch, Emit } from "vue-property-decorator"
+import { Component, Vue} from "vue-property-decorator"
 // import BipInputAutograph from '../editorn/BipInputAutograph.vue'
 import CeaPars from "@/classes/cenv/CeaPars";
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
-import User from '@/classes/User';
 import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 import CDataSet from '../../classes/pub/CDataSet';
-import { values } from 'xe-utils/methods';
 import bipSelect from '@/components/bip-ui/bip-select/bip-select.vue'
 @Component({
     components:{bipSelect}

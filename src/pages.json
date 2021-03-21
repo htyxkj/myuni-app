@@ -7,7 +7,7 @@
 			"path": "pages/index/index",
 			"style": {
 				// "disableScroll": true,
-				"navigationBarTitleText": "业务工单"
+				"navigationBarTitleText": "中国融通农业生产经营计划管理系统"
 			}
 		}, {
 			"path": "pages/login/login",
@@ -106,185 +106,166 @@
             "path" : "pages/editunit/editunit",
             "style" : {}
         }
-        ,{
-            "path" : "pages/gps/gps",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/dlg/dlg",
-            "style" : {}
-        }
-		/***********************************灵活用工平台START*************************************/
-        ,{
-            "path" : "pages/alone/flexible/registered/registered",//灵活用工平台
-            "style" : {}
-        }
-		/***********************************灵活用工平台END*************************************/
-		
-        ,{
-            "path" : "pages/alone/credit/registered/registered",
-            "style" : {}
-        }
-		,{
-            "path" : "pages/alone/credit/checkRecord",
-            "style" : {}
-        }
-		/***********************************张矿微平台START*************************************/
-        ,{
-            "path" : "pages/alone/mine/index/index",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/details/details",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/details/comment",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/learning/learningList",
-            "style" : {}
-		}
-        ,{
-            "path" : "pages/alone/mine/askAnswer/askAnswerList",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/askAnswer/askAnswerAdd",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/askAnswer/myAskAnswerList",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/my/my",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/scoreRank/scoreRank",
-            "style" : {}
-		}
-        ,{
-            "path" : "pages/alone/mine/scoreRank/scoreDetail",
-            "style" : {}
-		}
-        ,{
-            "path" : "pages/alone/mine/details/allComment",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/details/reply",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/askAnswer/askAnswerDetails",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/my/favoritesOrHistoryList",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/exam/dayAnswer",
-            "style" : {}
-        }
-        ,{
-            "path" : "pages/alone/mine/exam/doExam",
-            "style" : {}
-		},
-		/***********************************张矿微平台*************************************/
-		
-		/***********************************飞防管控*************************************/
-		{
-			"path": "pages/alone/air-super/airMap"
-		},
-		{
-			"path": "pages/alone/air-super/airSortiesInvoke"
-		},
-		{
-			"path": "pages/alone/air-super/airSortiesQuery"
-		}
+
 	],
+	"preloadRule": {
+		"pages/index/index": {
+			"network": "all",
+			"packages": ["pages/alone/air-super/pages/","pages/alone/mine/","pages/alone/credit/"]
+		},
+		"pages/login/login": {
+			"network": "all",
+			"packages": ["pages/alone/flexible/"]
+		},
+		"pages/appinfo/appinfo":{
+			"network": "all",
+			"packages": ["pages/gps/","pages/dlg/"]
+		},
+		"pages/appinfo/appdetail":{
+			"network": "all",
+			"packages": ["pages/gps/","pages/dlg/"]
+		},
+		"pages/appinfo/appdetailsp":{
+			"network": "all",
+			"packages": ["pages/gps/","pages/dlg/"]
+		},
+		"pages/appinfo/applist":{
+			"network": "all",
+			"packages": ["pages/gps/","pages/dlg/"]
+		},
+		"pages/appreport/appreport":{
+			"network": "all",
+			"packages": ["pages/gps/","pages/dlg/"]
+		},
+		"pages/appreport/appreportdetail":{
+			"network": "all",
+			"packages": ["pages/gps/","pages/dlg/"]
+		}
+	},
 	"subPackages": [
 		{	
-		"root": "",
+		"root": "pages/alone/air-super/pages/",
 		"pages": [
-			{
-				"path" : "pages/gps/gps",
-				"style" : {}
-			},
-			{
-				"path" : "pages/alone/mine/index/index",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/details/details",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/details/comment",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/learning/learningList",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/askAnswer/askAnswerList",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/askAnswer/askAnswerAdd",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/askAnswer/myAskAnswerList",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/my/my",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/scoreRank/scoreRank",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/scoreRank/scoreDetail",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/details/allComment",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/details/reply",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/askAnswer/askAnswerDetails",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/my/favoritesOrHistoryList",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/exam/dayAnswer",
-				"style" : {}
-			}
-			,{
-				"path" : "pages/alone/mine/exam/doExam",
-				"style" : {}
-			}
+				{
+					"path": "airMap"
+				},
+				{
+					"path": "airSortiesInvoke"
+				},
+				{
+					"path": "airSortiesQuery"
+				}
             ]
+		},
+		{	
+		"root": "pages/alone/mine/",
+		"pages": [
+				/***********************************张矿微平台START*************************************/
+				{
+					"path" : "index/index",
+					"style" : {}
+				}
+				,{
+					"path" : "details/details",
+					"style" : {}
+				}
+				,{
+					"path" : "details/comment",
+					"style" : {}
+				}
+				,{
+					"path" : "learning/learningList",
+					"style" : {}
+				}
+				,{
+					"path" : "askAnswer/askAnswerList",
+					"style" : {}
+				}
+				,{
+					"path" : "askAnswer/askAnswerAdd",
+					"style" : {}
+				}
+				,{
+					"path" : "askAnswer/myAskAnswerList",
+					"style" : {}
+				}
+				,{
+					"path" : "my/my",
+					"style" : {}
+				}
+				,{
+					"path" : "scoreRank/scoreRank",
+					"style" : {}
+				}
+				,{
+					"path" : "scoreRank/scoreDetail",
+					"style" : {}
+				}
+				,{
+					"path" : "details/allComment",
+					"style" : {}
+				}
+				,{
+					"path" : "details/reply",
+					"style" : {}
+				}
+				,{
+					"path" : "askAnswer/askAnswerDetails",
+					"style" : {}
+				}
+				,{
+					"path" : "my/favoritesOrHistoryList",
+					"style" : {}
+				}
+				,{
+					"path" : "exam/dayAnswer",
+					"style" : {}
+				}
+				,{
+					"path" : "exam/doExam",
+					"style" : {}
+				}
+			]
+		},
+		{
+		"root":"pages/gps/",
+		"pages":[
+			{
+				"path" : "gps"
+			}
+		]
+		},
+		{
+		"root":"pages/dlg/",
+		"pages":[
+			{
+				"path" : "dlg"
+			}
+		]
+		},
+		{
+		"root":"pages/alone/flexible/",
+		"pages":[
+			{
+				"path" : "registered/registered"
+			}
+		]
+		},
+		{
+			"root":"pages/alone/credit/",
+			"pages":[
+				{
+					"path" : "registered/registered"
+				}
+				,{
+					"path" : "checkRecord"
+				}
+			]
 		}
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "业务工单",
+		"navigationBarTitleText": "中国融通农业生产经营计划管理系统",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8",
 		"navigationStyle": "custom"

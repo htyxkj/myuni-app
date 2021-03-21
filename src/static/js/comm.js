@@ -25,9 +25,14 @@
 // export const BaseDBID = "01";
 
 // 征信管理平台  工单管控
-export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-credit/";
+// export const BaseDBID = "01";
+// export const ItemType = "credit";
+
+//融通项目管理
+export const BaseUri =  "https://greatdou.com/itemCtrl/";
 export const BaseDBID = "01";
-export const ItemType = "credit";
+export const ItemType = "itemCtrl";
 
 
 // 人力资源管理系统
@@ -40,13 +45,18 @@ export const ItemType = "credit";
 // export const BaseDBID = "01";
 // export const ItemType = "air-super";
 
+// 周庄子
+// export const BaseUri =  "http://8.129.40.31:8081/bip-zzz/";
+// export const BaseDBID = "01";
+// export const ItemType = "bip-zzz";
+
 //力创模具
 // export const BaseUri =  "https://test.juminfuwu.cn/bip-production/";
 // export const BaseDBID = "01";
 // export const ItemType = "production";
 
 // 自立熊自由职业服务平台
-// export const BaseUri =  "https://www.bip-soft.com/bip-flexible/";
+// export const BaseUri =  "https://greatdou.com/bip-flexible/";
 // export const BaseDBID = "01";
 // export const ItemType = "flexible";
 
@@ -58,7 +68,7 @@ export const ItemType = "credit";
 
 // 张矿微平台
 // export const BaseUri =  "http://127.0.0.1:801/bip-mine";
-// export const BaseUri =  "http://47.104.211.216:8089/bip-mine/";
+// export const BaseUri =  "https://test.juminfuwu.cn/bip-mine/";
 // export const BaseDBID = "01";
 // export const ItemType = "mine";
 
@@ -68,6 +78,6 @@ export const ItemType = "credit";
 // export const ItemType = "air-super";
 
 
-export const version = 127;
+export const version = 135;
 export const SMSURL = "https://www.bip-soft.com/ssms/";
 export default {BaseUri, BaseDBID,SMSURL,ItemType,version}

@@ -24,9 +24,7 @@
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
-	import { baseUtils } from '@/classes/api/baseutils';
-	let paramTools = baseUtils.tools;
-	@Component({components:{bipCommShowTask}})
+	import { Tools } from '@/classes/tools/Tools';
 	export default class BipTaskUnit extends Vue{
 		@Prop() record!:any;
 		@Prop() cells!:any;
@@ -40,7 +38,7 @@
 				if(res.data.id==0){
 					let opt:any = res.data.data.opt;
 					let mid = opt.pmenuid;
-					let m0 = paramTools.findMenu(mid);
+					let m0 = Tools.findMenu(mid);
 					console.log(mid,m0);
 					if(m0){
 						let cmd = m0.command;
@@ -93,7 +91,7 @@
 			if(res.data.id==0){
 				let opt:any = res.data.data.opt;
 				let mid = opt.pmenuid;
-				let m0 = paramTools.findMenu(mid);
+				let m0 = Tools.findMenu(mid);
 				if(m0){
 					let cmd = m0.command;
 					let dd = cmd.split("&");

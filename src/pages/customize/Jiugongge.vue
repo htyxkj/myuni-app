@@ -30,8 +30,7 @@
 	let tools = BIPUtil.ServApi;
 	import mMenu from '@/components/mMenu.vue'
 	import URIParams from '@/classes/URIParams'
-	import { baseUtils } from '@/classes/api/baseutils'; 
-	let paramTools = baseUtils.tools;
+	import { Tools } from '@/classes/tools/Tools';
 	@Component({
 		components:{}
 	})
@@ -66,7 +65,7 @@
 			this.groupMenus = [];
 			for(let i=0;i<this.menuIDS.length;i++){
 				let menuid = this.menuIDS[i];
-				let menu:any = paramTools.findMenu(menuid)
+				let menu:any = Tools.findMenu(menuid)
 				if(menu){
 					this.groupMenus.push(menu);
 				}
@@ -77,55 +76,7 @@
 			let cr = this.cuIconList[index%10];
 			let param:any = Object.assign(item);
 			param.color = cr;
-			let cc = param.command;
-			let dd = cc.split("&");
-			let pbuid = ''
-			dd.forEach((aa:any)=>{
-				// console.log(aa)
-				let pbuids = aa.split('=')
-				if(pbuids[0] == 'pbuid'){
-					pbuid = pbuids[1]
-				}
-			})
-			let mid = param.menuId;
-			if(pbuid&&mid){
-				uni.showLoading({title:'页面跳转中...'});
-				await tools.getMenuParams(pbuid,mid).then((res:any)=>{
-					uni.hideLoading();
-					let data = res.data
-					// console.log(data);
-					if(data.id>=0){
-						this.uriParams = data.data.mparams
-						uni.setStorageSync(pbuid,JSON.stringify(this.uriParams))
-						if(this.uriParams.beBill){
-							let item = encodeURIComponent(JSON.stringify(this.uriParams))
-							let uri = '/pages/appinfo/applist?color='+param.color+'&title='+param.menuName+"&pbuid="+pbuid;
-							this.pageJump(uri)
-						}else{
-							let item = encodeURIComponent(JSON.stringify(this.uriParams))
-							let uri = '/pages/appreport/appreport?color='+param.color+'&title='+param.menuName+"&pbuid="+pbuid;
-							this.pageJump(uri);
-						}
-					}else{
-						uni.showToast({
-							title:'没有权限!'
-						})
-					}
-				}).catch((err:any)=>{
-						uni.hideLoading();
-						uni.showToast({
-							title:'没有权限!'
-						})
-				})
-			}
-		}
-		pageJump(uri:string){
-			uni.showLoading({title:'跳转中...'})
-			uni.navigateTo({
-			    url: uri,complete:()=>{
-					uni.hideLoading();
-				}
-			});
+			Tools.openMenu(param);
 		}
 	}
 </script> 

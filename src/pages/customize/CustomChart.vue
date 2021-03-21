@@ -24,15 +24,13 @@
 	const ICL = icl; 
 	import { baseUtils } from '@/classes/api/baseutils'; 
 	let paramTools = baseUtils.tools;
-	import {
-		Tools
-	} from '../../classes/tools/Tools';
 	import Menu from '@/classes/Menu';
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import URIParams from '@/classes/URIParams'
 	import uCharts from '@/lib/u-chars/u-charts.js';
 	import Cells from '@/classes/pub/coob/Cells';
 	import CDataSet from '@/classes/pub/CDataSet';
+	import { Tools } from '@/classes/tools/Tools';
 
 	var canvases:any = {};
 	@Component({
@@ -436,7 +434,7 @@
 		} 
 		//初始化菜单等基础数据，并查询数据
 		async initBasisData(menuid:any){
-			let menu:any = paramTools.findMenu(menuid)
+			let menu:any = Tools.findMenu(menuid)
 			if(menu){
 				await this.initUriParams(menu);
 				if(this.uriParams){
@@ -517,7 +515,7 @@
 				let aidKey= ICL.AID_KEY+editName;
 				let key = aidKey+"_"+code;
 				let rr = this.aidValues.get(key);
-				let cells = [];
+				let cells = null;
 				if(this.inProcess.get(aidKey)){
 					let rnt:any = this.aidmaps.get(aidKey);
 					if(rnt){

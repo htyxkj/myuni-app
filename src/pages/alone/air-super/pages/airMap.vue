@@ -1,9 +1,5 @@
 <template>
     <view>
-        <!-- <cu-custom :bgColor="'bg-' + color" :isBack="true">
-            <block slot="backText">返回</block>
-            <block slot="content"><view class="header-title">{{ title }}</view></block>
-        </cu-custom>	 -->
         <view v-if="src">
             <web-view :src="src" @message="view_message"></web-view>
         </view>
@@ -17,6 +13,7 @@
     let commURL: any = comm;
     @Component({components:{}})
 	export default class airMap extends Vue {
+        @Prop({default:null}) option?:any;
         src:any = null;
         pageType:any = null;//页面类型  实时轨迹
         color:any = "blue";//头部颜色
@@ -26,6 +23,11 @@
         onLoad(options:any) {
             this.StatusBar = Vue.prototype.StatusBar;
             this.CustomBar = Vue.prototype.CustomBar;
+            if(options){
+                this.initUrl(options)
+            }
+        }
+        initUrl(options:any){
             this.pageType = options.type;
             this.color = options.color;
             this.title = options.title;
@@ -53,7 +55,6 @@
             _src += "&vs="+new Date().getTime();      //数据库连接标识
             // _src += "&servUrl=";
             this.src = _src;
-            
         }
         //获取登陆状态
         get loginState(){
@@ -79,7 +80,11 @@
 			}
 			return v;
         }
-
+        mounted(){
+            if(this.option){
+                this.initUrl(this.option)
+            }
+        }
         view_message(data:any){
             console.log("返回");
             uni.navigateBack({

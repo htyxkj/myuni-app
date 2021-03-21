@@ -1,5 +1,6 @@
 document.write("<script language=javascript src='../js/map_tools.js'><\/script>");//地图工具类
 document.write("<script language=javascript src='../../js/GPSUtil.js'><\/script>");//地图工具类
+var tk="c1133c92592db1048c47d381be567f4a"
 var servUrl = "";//服务端接口
 var userCode = "";//当前用户
 var snKey = "";//用户snkey
@@ -31,6 +32,7 @@ var isWatherRound = false;//是否显示天气圆圈
 var nowspeed = 0;//当前速度
 var nowheight = 0;//海拔高度
 var nowpressure = 0;//当前压力
+var jscsbid = '';//设备编码
 var nowflow = 0;//当前流量
 var sumflow = 0;//累计流量
 var windSpeed = 0;//当前风速
@@ -49,6 +51,10 @@ var clickAirKey = "";//实时点击飞机的点
 var rotate = null;//旋转角度
 var plane = null;//飞机对象
 var _timer2 = null;//计时器 无数据时查询数据
+
+var tlidValues = [];//全部设备信息
+var tlidMarker = [];//全部设备信息标注点
+
 /******************************************************** 实时页面 ************************************************************/
 //初始化实时页面
 function initRealTime(map){
@@ -82,65 +88,77 @@ function initAllDev(msg,res){
     }
     if(res.id ==0){
         let data = res.data.data;
+		tlidValues = data;
+		tlidMarker = [];
 		let point =[];
         for(var i=0;i<data.length;i++){
             let one = data[i];
-			if(one.sbtype ==0){
-				let lnglat = bd09_To_gps84(one.latitude,one.longitude);
-				one.latitude = lnglat[0];
-				one.longitude = lnglat[1]
-			}
-			let longitude = one.longitude;//经度
-			let latitude = one.latitude;//纬度
-			if(longitude == 0 || latitude ==0){
-				continue;
-			}
-			let offline = one.offline;//是否离线 0：否；1：是
-			let time = one.time;//时间
-			let sbid = one.sbid;//设备编码
-			// let speed = one.speed;//速度
-			// let height = one.height;//高度
-			// let direction = one.direction;//方向
-			// let flow = one.flow;//瞬时流量
-			// let sumfolw = one.sumfolw;//总流量
-			// let pressure = one.pressure;//压力
-			// let temperature = one.temperature;//温度
-			// let humidity = one.humidity;//湿度
-			// let windspeed = one.windspeed;//风速
-			// let pressure2 = one.pressure2;//压力2
-			let lngLat = new T.LngLat(longitude,latitude);//点
-			let imgUrl = './img/plane.png';
-			if(offline == 1){
-				imgUrl = './img/offlinePlane.png';
-			}
-			var icon = new T.Icon({
-				iconUrl: imgUrl,
-				iconSize: new T.Point(40, 40),
-				iconAnchor: new T.Point(20, 20)
-			});
-			let msg = "<div>任务编码："+one.taskid+"<br/>任务名称："+one.taskname+"<br/>定位信息:"+longitude+","+ latitude+"<br/>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间："+time;
-			msg += "<br/>设备编码："+sbid;
-			// msg += "<br/>速&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度："+speed;
-			// msg += "<br/>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度："+height;
-			// msg += "<br/>瞬时流量："+flow;
-			// msg += "<br/>总流量：&nbsp;&nbsp;"+sumfolw;
-			if(offline == 1){//离线
-				msg += "<br/>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span style='color:red;'>离线</span>";
-			}else{//在线
-				msg += "<br/>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span style='color:green;'>在线</span>";
-			}
-			msg +="</div>";
-			let key = one.taskid+"_"+sbid+"_"+one.sbtype+"_"+offline//任务编码_设备编码_设备类型
-			tmap_marker(this.map,key,lngLat,icon,airPointClick,msg);
-			point.push(lngLat);
-			this.weather_round = tmap_markCircle(lngLat,"#E7E7E7",5000,map,0.2)
-			if(!this.isWatherRound){
-				this.map.removeOverLay(this.weather_round);
-			}
+			let lngLat = this.drawingPoing(one);
+			point.push(lngLat)
         }
 		this.map.setViewport(point);
     }
 	$("#my-modal-loading").modal("close");
+}
+function drawingPoing(one){
+	if(one.sbtype ==0){
+		let lnglat = bd09_To_gps84(one.latitude,one.longitude);
+		one.latitude = lnglat[0];
+		one.longitude = lnglat[1]
+	}
+	let longitude = one.longitude;//经度
+	let latitude = one.latitude;//纬度
+	if(longitude == 0 || latitude ==0){
+		return;
+	}
+	let offline = one.offline;//是否离线 0：否；1：是
+	let time = one.speedtime;//时间
+	if(!time){
+		time = one.time;
+	}
+	let sbid = one.sbid;//设备编码
+	// let speed = one.speed;//速度
+	// let height = one.height;//高度
+	// let direction = one.direction;//方向
+	// let flow = one.flow;//瞬时流量
+	// let sumfolw = one.sumfolw;//总流量
+	// let pressure = one.pressure;//压力
+	// let temperature = one.temperature;//温度
+	// let humidity = one.humidity;//湿度
+	// let windspeed = one.windspeed;//风速
+	// let pressure2 = one.pressure2;//压力2
+	one.taskid = !one.taskid?"":one.taskid;
+	one.taskname = !one.taskname?"":one.taskname;
+	let lngLat = new T.LngLat(longitude,latitude);//点
+	let imgUrl = './img/plane.png';
+	if(offline == 1){
+		imgUrl = './img/offlinePlane.png';
+	}
+	var icon = new T.Icon({
+		iconUrl: imgUrl,
+		iconSize: new T.Point(40, 40),
+		iconAnchor: new T.Point(20, 20)
+	});
+	let msg = "<div>任务编码："+one.taskid+"<br/>任务名称："+one.taskname+"<br/>定位信息:"+longitude+","+ latitude+"<br/>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间："+time;
+	msg += "<br/>设备编码："+sbid;
+	// msg += "<br/>速&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度："+speed;
+	// msg += "<br/>高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度："+height;
+	// msg += "<br/>瞬时流量："+flow;
+	// msg += "<br/>总流量：&nbsp;&nbsp;"+sumfolw;
+	if(offline == 1){//离线
+		msg += "<br/>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span style='color:red;'>离线</span>";
+	}else{//在线
+		msg += "<br/>状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：<span style='color:green;'>在线</span>";
+	}
+	msg +="</div>";
+	let key = one.taskid+"_"+sbid+"_"+one.sbtype+"_"+offline//任务编码_设备编码_设备类型
+	let mk = tmap_marker(this.map,key,lngLat,icon,airPointClick,msg);
+	tlidMarker.push(mk)
+	this.weather_round = tmap_markCircle(lngLat,"#E7E7E7",5000,map,0.2)
+	if(!this.isWatherRound){
+		this.map.removeOverLay(this.weather_round);
+	}
+	return lngLat;
 }
 /**
  * 飞机点击回调事件
@@ -342,6 +360,7 @@ function real_time_setting(){
 		relatedTarget: this,
 		closeOnConfirm: false,
 		closeOnCancel: false,
+		width:345,
 		onConfirm: function(options) {
 			var watherRound = $("input[name='realTimeIsWatherRound']:checked").val();//是否显示天气范围
 			if(watherRound == 1 && weather_round){
@@ -367,9 +386,82 @@ function real_time_setting(){
 			}else{
 				cockpit.style.display= 'none';
 			}
+			//图层
+			let allLay = map.getLayers();
+			if(allLay){
+				for(var i=0;i<allLay.length;i++){
+					map.removeLayer(allLay[i])
+				}
+			}
+			var layerT = $("input[name='realTimeLayer']:checked").val();//是否显示天气模块
+			if(layerT == 1){
+				LayersSwitch(map,1);
+			}else{
+				LayersSwitch(map,0);
+			}
 			this.close();
 		}
 	});
+}
+/**
+ * 打开设备地名选择框
+ */
+function real_time_inquire(){
+	$('#real_time_inquire').modal({
+		relatedTarget: this,
+		closeOnConfirm: false,
+		closeOnCancel: false,
+		width:345,
+		onConfirm: function(options) {
+			var sbid = $('input[name="sbid"]').val();
+			var sbname = $('input[name="sbname"]').val();
+			if(!sbname){
+				sbid = null;
+			}
+			var mapAddress = $('input[name="mapAddress"]').val();
+			if(mapAddress){
+				var config = {
+					pageCapacity: 1,	//每页显示的数量
+					onSearchComplete: localSearchResult	//接收数据的回调函数
+				};
+				//创建搜索对象
+				let localsearch = new T.LocalSearch(map, config);
+				localsearch.search(mapAddress);
+			}
+			for(var i=0;i<tlidMarker.length;i++){
+				map.removeOverLay(tlidMarker[i])
+			}
+			if(sbid){
+				for(var i=0;i<tlidValues.length;i++){
+					let onet = tlidValues[i]
+					if(onet.sbid == sbid)
+						drawingPoing(onet);
+				}
+			}else{
+				for(var i=0;i<tlidValues.length;i++){
+					let onet = tlidValues[i]
+					drawingPoing(onet);
+				}
+			}
+			this.close();
+		}
+	});
+}
+//地名检索 接收返回结果
+function localSearchResult(result) {
+	//根据返回类型解析搜索结果
+	switch (parseInt(result.getResultType())) {
+		case 1:
+			let pois = result.getPois();
+			if(pois && pois.length>0){
+				let lonlat = pois[0].lonlat;
+				let lng = lonlat.split(" ")[0]
+				let lat = lonlat.split(" ")[1]
+				let p = new T.LngLat(lng, lat)
+				map.panTo(p)
+			}
+		break;
+	}
 }
 /**
  * 获取天气信息
@@ -515,6 +607,8 @@ function passOneNode(LngLat,index,length){
 			humidity = data.humidity;//湿度
 		if(data.pressure)
 			nowpressure = (data.pressure).toFixed(1); //压力
+		if(data.sbid)
+			jscsbid = data.sbid;
 		if(data.temperature)
 			nowtemperature = (data.temperature).toFixed(1);//温度
 		nowflow = ( data.flow).toFixed(2);;
@@ -622,6 +716,7 @@ function play_back_setting(){
 		relatedTarget: this,
 		closeOnConfirm: false,
 		closeOnCancel: false,
+		width: 345,
 		onConfirm: function(options) {
 			let fastForward = document.getElementById("fastForward").value;
 			if(!isNaN(fastForward)){
@@ -656,6 +751,19 @@ function play_back_setting(){
 				cockpit.style.display= '';
 			}else{
 				cockpit.style.display= 'none';
+			}
+			//图层
+			let allLay = map.getLayers();
+			if(allLay){
+				for(var i=0;i<allLay.length;i++){
+					map.removeLayer(allLay[i])
+				}
+			}
+			var layerT = $("input[name='Layer']:checked").val();//是否显示天气模块
+			if(layerT == 1){
+				LayersSwitch(map,1);
+			}else{
+				LayersSwitch(map,0);
 			}
 			this.close();
 		}
@@ -713,11 +821,35 @@ function initTrackShow(_map){
 	cc.style.display= '';
 	cc = document.getElementById("track_show");
 	cc.style.display= '';
-	cc = document.getElementById("show_track_punctuation");
+	cc = document.getElementById("show_track_setting");
 	cc.style.display= '';
 }
+//显示设置弹出框
+function show_track_setting(){
+	$('#track_show_set_confirm').modal({
+		relatedTarget: this,
+		closeOnConfirm: false,
+		closeOnCancel: false,
+		width:345,
+		onConfirm: function(options) {
+			//图层
+			let allLay = map.getLayers();
+			if(allLay){
+				for(var i=0;i<allLay.length;i++){
+					map.removeLayer(allLay[i])
+				}
+			}
+			var layerT = $("input[name='showTrackLayer']:checked").val();//是否显示天气模块
+			if(layerT == 1){
+				LayersSwitch(map,1);
+			}else{
+				LayersSwitch(map,0);
+			}
+			this.close();
+		}
+	});
+}
 //显示查询条件框
-
 function track_show_play_back(){
 	$('#startTime').datetimepicker({language:  'zh-CN'});
 	$('#endTime').datetimepicker({language:  'zh-CN'});
@@ -725,6 +857,7 @@ function track_show_play_back(){
 		relatedTarget: this,
 		closeOnConfirm: false,
 		closeOnCancel: false,
+		width:345,
 		onConfirm: function(options) {
 			map_clear();
 			// 判断条件是否填写全
@@ -734,7 +867,11 @@ function track_show_play_back(){
 			var showHX=document.getElementById("showHX");//显示航线
 			var trT= document.getElementById("trackType");//绘制类型
 			var taskid = document.getElementById("taskid").value;//任务
-			var sbid = document.getElementById("sbid").value//设备编码
+			var sbid = $('input[name="sbid"]').val();
+			var sbname = $('input[name="sbname"]').val();
+			if(!sbname){
+				sbid = null;
+			}
 			var startTime = $("#startTime").data("datetimepicker").getDate();//开始时间
 			if(!startTime){
 				alert_msg="开始时间不能为空";
@@ -761,22 +898,24 @@ function track_show_play_back(){
 			 $("#my-modal-loading").modal("open");
 			this.close();
 			setTimeout(() => {
-				// initTaskById(taskid)
-				let takeoffID = task.takeoff;//起降点
-				initLandingPoint(takeoffID)
-				if(jq == 1){
-					//oaid 作业区编码
-					initOpera(task.oaid);//架区
-					initOperaBr(task.oaid);//避让区
-				}
-				if(zyq == 1){
-					initOpera(task.hoaid);//作业区
-				}
-				if(hx == 1){//航线
-					initOperaRoute(task.oaid);
+				initTaskById(taskid);
+				if(task){
+					let takeoffID = task.takeoff;//起降点
+					initLandingPoint(takeoffID)
+					if(jq == 1){
+						//oaid 作业区编码
+						initOpera(task.oaid);//架区
+						initOperaBr(task.oaid);//避让区
+					}
+					if(zyq == 1){
+						initOpera(task.hoaid);//作业区
+					}
+					if(hx == 1){//航线
+						initOperaRoute(task.oaid);
+					}
 				}
 				setTimeout(() => {
-					getAllTaska(task.sid,sbid,startTime,endTime);	
+					getAllTaska(taskid,sbid,startTime,endTime);	
 					$("#my-modal-loading").modal("close");
 				}, 3000);
 			}, 500);
@@ -808,7 +947,7 @@ function getAllTaska(tkId,sbId,stTiem,edTiem){
 	}
 	if(sbId && sbId.length>0){
 		qCont = Object.assign({},this.queryCont);
-		qCont.key = "bsid";
+		qCont.key = "sbid";
 		qCont.value = sbId;
 		qCont.type = 12;
 		oneCont.push(qCont);
@@ -1334,6 +1473,8 @@ function map_clear(){
  * 设置驾驶舱数据
  */
 function setJobRecord(){
+	// var sbid = document.getElementById("sbid").value//设备编码
+	document.getElementById("jscsbid").innerHTML = this.jscsbid;
 	document.getElementById("sumarea").innerHTML = this.sumarea.toFixed(3)+"/亩";//喷洒面积
 	document.getElementById("nowtime").innerHTML = this.nowtime;//当前时间
 	document.getElementById("nowspeed").innerHTML = this.nowspeed + "km/h";//当前速度
@@ -1386,8 +1527,12 @@ function showRefList(){
 				$('#startTime').datetimepicker('update', refData.bgtime);
 				$('#endTime').datetimepicker('update', refData.edtime);
 			}else if(refType =='SBID'){
-				document.getElementById("sbid").value = refData.id;//任务
-				document.getElementById("sbname").value = refData.name;//任务
+				let sbid = document.getElementsByClassName("sbid");
+				let sbname = document.getElementsByClassName("sbname");
+				for(var i=0;i<sbid.length;i++){
+					sbid[i].value = refData.id;//任务
+					sbname[i].value = refData.name;//任务
+				}
 			}
 			this.close();
 		},
@@ -1417,14 +1562,14 @@ function getRefDataByPage(currPage){
 	if(this.refType == 'TASK'){
 		data.aid = this.taskRefName;
 	 	if(reftj && reftj.length>0){
-			qCont = this.queryCont;
+			qCont = Object.assign({},this.queryCont);
 			qCont.key = "sid";
 			qCont.value = reftj;
 			qCont.type = 12;
 			qCont.contrast=3;
 			qCont.link=0
 			oneCont.push(qCont);
-			qCont = this.queryCont;
+			qCont = Object.assign({},this.queryCont);
 			qCont.key = "taskname";
 			qCont.value = reftj;
 			qCont.type = 12;
@@ -1435,14 +1580,14 @@ function getRefDataByPage(currPage){
 	}else if(this.refType =='SBID'){
 		data.aid = this.sbidRefName;
 		if(reftj && reftj.length>0){
-			qCont = this.queryCont;
+			qCont = Object.assign({},this.queryCont);
 			qCont.key = "id";
 			qCont.value = reftj;
 			qCont.type = 12;
 			qCont.contrast=3;
 			qCont.link=0
 			oneCont.push(qCont);
-			qCont = this.queryCont;
+			qCont = Object.assign({},this.queryCont);
 			qCont.key = "name";
 			qCont.value = reftj;
 			qCont.type = 12;
@@ -1498,6 +1643,33 @@ function nextRef(){
 function refClick(data){
 	data = decodeURIComponent(data);
 	this.refData = JSON.parse(data);;
+}
+
+/**
+ * 
+ * @param {*} map  地图对象
+ * @param {*} type 地图类型，0：卫星图；1：矢量图；
+ */
+function LayersSwitch(map,type){
+	if(type ==1){
+		var imageURL = 'http://t0.tianditu.gov.cn/vec_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=vec&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk='+tk;
+		//创建自定义图层对象
+		var img_lay = new T.TileLayer(imageURL, {minZoom: 1, maxZoom: 18,zIndex:10});
+		map.addLayer(img_lay)
+		var ciaURL = 'http://t0.tianditu.gov.cn/cva_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cva&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk='+tk;
+		//创建自定义图层对象
+		let cia_lay = new T.TileLayer(ciaURL, {minZoom: 1, maxZoom: 18,zIndex:11});
+		map.addLayer(cia_lay)
+	}else if(type ==0){
+		var imageURL = 'http://t0.tianditu.gov.cn/img_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=img&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk='+tk;
+		//创建自定义图层对象
+		var img_lay = new T.TileLayer(imageURL, {minZoom: 1, maxZoom: 18,zIndex:10});
+		map.addLayer(img_lay)
+		var ciaURL = 'http://t0.tianditu.gov.cn/cia_c/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=cia&STYLE=default&TILEMATRIXSET=c&FORMAT=tiles&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}&tk='+tk;
+		//创建自定义图层对象
+		let cia_lay = new T.TileLayer(ciaURL, {minZoom: 1, maxZoom: 18,zIndex:11});
+		map.addLayer(cia_lay)
+	}
 }
 //http 请求封装
 var http = {};
@@ -1608,12 +1780,12 @@ function initPage(){
     snKey =  getQueryVariable("snKey");//当前用户snkey
 	dbid = getQueryVariable("dbid");//数据库连接标识
 	var air_task_list = document.getElementById("air_ref_list");
-    air_task_list.style.height = "calc(100% -"+ CustomBar+'px)';
-	air_task_list.style['margin-top'] = CustomBar+'px';
-	var weather_module = document.getElementById("weather_module");//设置天气模块距离顶部位置
-	weather_module.style.top = (CustomBar)+'px';
-	var f_cockpit = document.getElementById("f_cockpit");//设置天气模块距离顶部位置
-	f_cockpit.style.top = (parseInt(CustomBar)+85)+'px';
+    air_task_list.style.height = "calc(100% -"+ 0+'px)';
+	// air_task_list.style['margin-top'] = CustomBar+'px';
+	// var weather_module = document.getElementById("weather_module");//设置天气模块距离顶部位置
+	// weather_module.style.top = (CustomBar)+'px';
+	// var f_cockpit = document.getElementById("f_cockpit");//设置天气模块距离顶部位置
+	// f_cockpit.style.top = (parseInt(CustomBar)+85)+'px';
 
 	this.insaidParmas.dbid = dbid;
 	this.insaidParmas.usercode = userCode;
@@ -1671,4 +1843,42 @@ function CSS_TRANSFORM() {
 		}
 	}
 	return props[0];
+}
+//div视野拖拽
+function moveDivs(_id) {
+    var _block = document.getElementById(_id);
+    var _init_left, _init_top, _div_top, _div_left, _box_width, _box_heiht;
+    var _win_height = $(window).height();
+    var _win_width = $(window).width();
+
+    _block.addEventListener('touchstart', function(e) {
+        _init_left = parseInt(e.touches[0].clientX);
+        _init_top = parseInt(e.touches[0].clientY);
+        _div_top = $("#" + _id).offset().top - $(window).scrollTop();
+        _div_left = $("#" + _id).offset().left;
+        _box_width = $("#" + _id).width();
+        _box_heiht = $("#" + _id).height();
+    });
+
+    _block.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        var _left = parseInt(e.touches[0].clientX);
+        var _top = parseInt(e.touches[0].clientY);
+
+        var _need_left = _div_left + (_left - _init_left);
+        var _need_top = _div_top + (_top - _init_top);
+
+        //检测_block是否还存在可视区域 设置为不可拖拽出可视区域
+        // var _max_left = _win_width - _box_width;
+        // var _max_top = _win_height - _box_heiht;
+        // if (_need_left < 0) _need_left = 0;
+        // if (_need_left > _max_left) _need_left = _max_left;
+        // if (_need_top < 0) _need_top = 0;
+        // if (_need_top > _max_top) _need_top = _max_top;
+
+        $('#' + _id).css({
+            'top': _need_top + 'px',
+            'left': _need_left + 'px',
+        })
+    });
 }

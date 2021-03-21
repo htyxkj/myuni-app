@@ -5,22 +5,28 @@
 			<view  slot="content-list">
 				<view class="padding-bottom-xs" v-for="(item,index) in layout" :key="index" >
 					<template v-if="item.comid == '001' || item.comid == '005'">
-						<Jiugongge :layoutdata="item"></Jiugongge>
+						<jiugongge :layoutdata="item"></jiugongge>
 					</template>
 					<template v-if="item.comid == '002'">
-						<Carousel :layoutdata="item"></Carousel>
+						<carousel :layoutdata="item"></carousel>
 					</template>
 					<template v-if="item.comid == '003'">
-						<Tabs :layoutdata="item"></Tabs>
+						<tabs :layoutdata="item"></tabs>
 					</template>
 					<template v-if="item.comid == '006'">
-						<CustomChart :layoutdata="item"></CustomChart>
+						<customChart :layoutdata="item"></customChart>
 					</template>
 					<template v-if="item.comid == '007'">
-						<MyTop :layoutdata="item"></MyTop>
+						<myTop :layoutdata="item"></myTop>
 					</template>
 					<template v-if="item.comid == '009'">
 						<codeModule :layoutdata="item"></codeModule>
+					</template>
+					<template v-if="item.comid == '010'">
+						<bipCard :layoutdata="item"></bipCard>
+					</template>
+					<template v-if="item.comid == '011'">
+						<bipList :layoutdata="item"></bipList>
 					</template>
 				</view>
 			</view>
@@ -37,15 +43,17 @@
 	let tools = BIPUtil.ServApi;
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import QueryCont from '@/classes/search/QueryCont';
-	import Jiugongge from './Jiugongge.vue';
-	import Tabs from './Tabs.vue';
-	import Carousel from './Carousel.vue';
-	import CustomChart from './CustomChart.vue';
-	import MyTop from './MyTop.vue';
+	import jiugongge from './Jiugongge.vue';
+	import tabs from './Tabs.vue';
+	import carousel from './Carousel.vue';
+	import customChart from './CustomChart.vue';
+	import myTop from './MyTop.vue';
 	import codeModule from './CodeModule.vue';
+	import bipCard from './BipCard.vue';
+	import bipList from './BipList.vue';
 	import loadRefresh from '@/components/load-refresh/load-refresh.vue';
 	@Component({
-		components:{Jiugongge,Carousel,Tabs,CustomChart,MyTop,loadRefresh,codeModule}
+		components:{jiugongge,carousel,tabs,customChart,myTop,loadRefresh,codeModule,bipCard,bipList}
 	})
 	export default class customize extends Vue {
 		@Prop({default:null}) menu?:any;

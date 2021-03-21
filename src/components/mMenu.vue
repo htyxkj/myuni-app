@@ -9,7 +9,7 @@
 			<template v-for="(item,index) in m.childMenu">
 				<view v-if="item.menuattr<4" class="cu-item" :key="index" @tap.stop="openMenu(item,index)">
 					<view>
-						<view class='cu-avatar xs radius bg-white' :style="[{backgroundImage:'url('+BaseUri+item.menuIcon+')'}]">
+						<view class='cu-avatar xs radius bg-white' :style="[{backgroundImage:'url('+BaseUri+item.menuIcon+')',width:'60px',height:'60px'}]">
 							<view class="cu-tag badge" v-if="badge!=0">
 								<block v-if="badge!=1">{{badge>99?'99+':badge}}</block>
 							</view>

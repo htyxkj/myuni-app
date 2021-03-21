@@ -22,8 +22,7 @@
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import QueryCont from '@/classes/search/QueryCont';
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
-	import { baseUtils } from '@/classes/api/baseutils';
-	let paramTools = baseUtils.tools;
+	import { Tools } from '@/classes/tools/Tools';
 	@Component({components:{BipTaskUnit,mLoad,loadRefresh}})
 	export default class TaskList extends Vue{
 		currPage: number = 1;
@@ -109,7 +108,7 @@
 	
 		@Watch('total', {immediate: true, deep: true})
 		totalChange(newVal: number, oldVal: number){
-			this.emitTotal(newVal);
+			this.emitTotal(newVal,1);
 		}
 		/**
 		 * 打开详情
@@ -147,7 +146,7 @@
 			if(res.data.id==0){
 				let opt:any = res.data.data.opt;
 				let mid = opt.pmenuid;
-				let m0 = paramTools.findMenu(mid);
+				let m0 = Tools.findMenu(mid);
 				if(m0){
 					let cmd = m0.command;
 					let dd = cmd.split("&");
@@ -191,7 +190,7 @@
 			msg.error({background: true,content:err})
 		}
 		@Emit('totalM')
-		emitTotal(n: number){
+		emitTotal(n: number,t:number){
 		}
 	}
 </script>
