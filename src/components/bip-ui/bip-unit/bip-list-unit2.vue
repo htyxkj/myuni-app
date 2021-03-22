@@ -9,7 +9,9 @@
 		<view class="flex p-xs bg-white mb-sm" v-for="(item,index) in celsRowList" :key="index">
 			<view v-for="(cel,idx) in item" :key="idx" :style="'width:'+(100/item.length)+'%'">
 				<!-- <text >{{ cel.labelString }}：{{record.data[cel.id] ||''}}</text> -->
-				<bip-comm-show :obj_id="obj_id" :cell="cel" :rowId="rowId" :record="record"></bip-comm-show>
+				<view @tap.stop="openlist1(index,idx)">
+					<bip-comm-show :obj_id="obj_id" :cell="cel" :rowId="rowId" :record="record"></bip-comm-show>
+				</view>
 			</view>
 		</view>
 	</view>
@@ -36,7 +38,9 @@ export default class bipListUnit2 extends Vue {
 	openlist(){
 		this.$emit('openitem',this.pkList[0].id,this.rowId,this.record.data);
 	}
-
+	openlist1(index:any,idx:any){
+		this.$emit('openitem',this.celsRowList[index][idx].id,this.rowId,this.record.data);
+	}
 
 	get svList(){
 		return this.cels.filter((item:any)=>{

@@ -160,7 +160,7 @@ export default class appReport extends Vue {
 	}
 	
 	async rowClick(cellId:any,rowId:number,data:any){
-		this.dsm.currRecord = data
+		this.dsm.currRecord.data = data
 		let _cellIndex = _.findIndex(this.dsm.ccells.cels,(itm:any)=>{
 			return itm.id == cellId;
 		})
@@ -182,11 +182,10 @@ export default class appReport extends Vue {
 				let slkbuid = ''
 				if(slkbuidCell)
 					slkbuid = row[slkbuidCell.id];
-				let data = null;//获取常量定义的 BL_菜单参数_字段ID 进行菜单打开
 				let name = "BL_"+this.pbuid+"_"+cell.id;
 				let qe = new QueryEntity('','');
 				let vv:any = await tools.getBipInsAidInfo(name,300,qe);
-				// console.log(vv)
+				console.log(vv)
 				if(vv.data.id==-1){
 					//没有定义BL_xxx
 					// console.log(slkid,slkbuid);
@@ -214,7 +213,7 @@ export default class appReport extends Vue {
 									let type = commURL.ItemType;
 									let url = "";
 									if(type =='credit'){
-										if(pmenu =='checkRecord'){//架次查询
+										if(pmenu =='checkRecord'){
 											pmenu = "checkRecord?1=1";
 										}
 										url = '/pages/alone/credit/'+pmenu;
@@ -263,7 +262,46 @@ export default class appReport extends Vue {
 						}  
 					}
 				}else{
-					//有定义XXX
+					//BL字段点击
+					let data = vv.data.data.data;//获取常量定义的 BL_菜单参数_字段ID 进行菜单打开
+					let slink = data.slink;
+					if(slink){
+						slink = slink.split("&");
+						let menuid = slink[0]
+						let me = Tools.findMenu(menuid);
+						if (!me) {
+							uni.showToast({
+								title:"没有" + menuid + "菜单权限!" 
+							})
+							return false;
+						}else{
+							let jsontj:any={};
+							for(var i=1;i<slink.length;i++){
+								let oneTJ = slink[i].split("=")
+								let key = oneTJ[0];
+								let vl = oneTJ[1]
+								if(vl.indexOf("*") !=-1 ){
+									let cds = this.env.getDataSet(vl.split("*")[0]);
+									vl = cds.currRecord.data[vl.split("*")[1]]
+								}else{
+									vl = this.dsm.currRecord.data[vl]
+								}
+								jsontj[key] = vl;
+							}
+
+							let command = me.command.split("&");
+							let pbuid = command[0].split("=");
+							let qcont = "";
+							let uri = '/pages/appinfo/appdetail?color='+this.cr+'&title='+me.menuName+"&pbuid="+pbuid[1]+'&qcont='+encodeURIComponent(qcont);
+							uni.navigateTo({
+								url: uri,
+								complete: () => {
+									uni.hideLoading();
+									this.isjump = false;
+								}
+							});
+						}
+					}
 				}
 			}
 		}

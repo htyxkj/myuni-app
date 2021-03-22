@@ -31,9 +31,8 @@
 	import { dataTool } from '@/classes/tools/DataTools';
 	const DataUtil = dataTool.utils;
 	import CCliEnv from '@/classes/cenv/CCliEnv';
-import View from '../../../../hello-uniapp-master/pages/component/view/view.vue';
 	@Component({
-		components:{View}
+		components:{}
 	})
 	export default class BipCard extends Vue {
 		@Prop({default:null}) layoutdata?:any;

@@ -68,8 +68,8 @@
 				if(vv.data.id ==0){
 					let vl = vv.data.data.data.values[0]
 					if(vl){
-						let title1 = eval('('+this.d1.title+')');
-						let title2 = eval('('+this.d1.title2+')');
+						let title1 = JSON.parse(JSON.stringify(this.d1.title));
+						let title2 = JSON.parse(JSON.stringify(this.d1.title2));
 						let num =1;
 						for(var i=0;i<title1.length;i++){
 							let id = insaid.cells.cels[insaid.showColsIndex[i]].id;
@@ -98,7 +98,7 @@
 		//打开菜单
 		gotoMenu(index:any){
 			if(this.d1.url){
-				let url = eval('('+this.d1.url+')');
+				let url = JSON.parse(JSON.stringify(this.d1.titurlle2));
 				let item = Tools.findMenu(url[index]);
 				let cuIconList = [{
 					cuIcon: 'cardboardfill',
