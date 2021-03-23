@@ -5,33 +5,35 @@
 			<block slot="content"><view class="header-title">登录页面</view></block>
 		</cu-custom> -->
 		<!-- 主体表单 -->
-		<form>
-			<view class="header">
-				<image :src="'../../static/'+_comm.ItemType+'.png'" mode="aspectFit"></image>
-			</view>
-			<view class="cu-form-group margin-top input">
-				<view class="title">账 号</view>
-				<input placeholder="请输入账号/手机号" name="input" v-model="user.userCode" />
-			</view>
-			<view class="cu-form-group input">
-				<view class="title">密 码</view>
-				<input placeholder="请输入密码" type="password" v-model="user.password" />
-			</view>
-			<view class="padding">
-				<view class="grid text-center col-5">
-					<view></view>
-					<view></view>
-					<view></view>
-					<view></view>
-					<view v-if="_comm.ItemType =='flexible'" class="registered" @tap="registered('flexible')">注册</view><!-- 灵活用工注册 -->
-					<view v-if="_comm.ItemType =='credit'" class="registered" @tap="registered('credit')">注册</view><!-- 征信管理注册 -->
-					<view v-if="_comm.ItemType == 'mine'" class="registered" @tap="touristLogin">游客登陆</view> <!-- 张矿微平台 -->
+		<template v-if="showLoginpage">
+			<form>
+				<view class="header">
+					<image v-if="_comm.ItemType" :src="'../../static/'+_comm.ItemType+'.png'" mode="aspectFit"></image>
 				</view>
-			</view>
-			<view class="padding flex flex-direction">
-				<button form-type="submit" :disabled="canLogin" class="cu-btn margin-tb-sm loginbtn lg shadow " @tap="loginSys(null)">登录</button>
-			</view>
-		</form>
+				<view class="cu-form-group margin-top input">
+					<view class="title">账 号</view>
+					<input placeholder="请输入账号/手机号" name="input" v-model="user.userCode" />
+				</view>
+				<view class="cu-form-group input">
+					<view class="title">密 码</view>
+					<input placeholder="请输入密码" type="password" v-model="user.password" />
+				</view>
+				<view class="padding">
+					<view class="grid text-center col-5">
+						<view></view>
+						<view></view>
+						<view></view>
+						<view></view>
+						<view v-if="_comm.ItemType =='flexible'" class="registered" @tap="registered('flexible')">注册</view><!-- 灵活用工注册 -->
+						<view v-if="_comm.ItemType =='credit'" class="registered" @tap="registered('credit')">注册</view><!-- 征信管理注册 -->
+						<view v-if="_comm.ItemType == 'mine'" class="registered" @tap="touristLogin">游客登陆</view> <!-- 张矿微平台 -->
+					</view>
+				</view>
+				<view class="padding flex flex-direction">
+					<button form-type="submit" :disabled="canLogin" class="cu-btn margin-tb-sm loginbtn lg shadow " @tap="loginSys(null)">登录</button>
+				</view>
+			</form>
+		</template>
 		<!-- <view class="flex justify-center privacy_protocol" >
 			<view class="padding-sm">服务协议</view>
 			<view class="padding-sm">隐私政策</view>
@@ -74,10 +76,32 @@
 		user: User = new User('', '', '')
 		// user: User = new User('', '', '')
 		_comm:any = null;
+		showLoginpage:boolean = false;
 		onLoad() {
-			uni.clearStorage();
+			this.showLoginpage = false;
+			this.loadModal = true
 			this._comm = commURL;
 			this.$forceUpdate();
+			let isLogin = uni.getStorageSync('isLogin');
+			if(isLogin){
+				LoginModule.setState(true)
+				let _user = uni.getStorageSync('user');
+				if(_user){
+					let user = JSON.parse(_user)
+					LoginModule.setUser(user)
+				}
+				let _ms = uni.getStorageSync('menus');
+				if(_ms){
+					let ms = JSON.parse(_ms)
+					LoginModule.setMenus(ms)
+				}
+				let snkey = uni.getStorageSync('snkey')
+				LoginModule.setSnKey(snkey)
+				this.isLoginOk();
+			}else{
+				this.showLoginpage = true;
+			}
+			this.loadModal = false;
 		}
 		/**
 		 * 登录系统
@@ -118,19 +142,7 @@
 						LoginModule.setState(true)
 						LoginModule.setMenus(ms);
 						LoginModule.setSnKey(data.data.snkey)
-						if(commURL.ItemType == 'mine'){	
-							setTimeout(() => {
-								uni.redirectTo({
-									'url': '/pages/alone/mine/index/index'
-								}) 							
-							}, 300);
-						}else{
-							setTimeout(()=>{
-								uni.redirectTo({
-									'url': '/pages/index/index'
-								})
-							},200);
-						}
+						this.isLoginOk()
 					} else {
 						uni.showToast({
 							title: data.message,
@@ -174,6 +186,24 @@
 				uni.navigateTo({
 					url:'/pages/alone/credit/registered/registered',
 				});
+			}
+		}
+		/**
+		 * 登陆成功后页面跳转
+		 */
+		isLoginOk(){
+			if(commURL.ItemType == 'mine'){	
+				setTimeout(() => {
+					uni.redirectTo({
+						'url': '/pages/alone/mine/index/index'
+					}) 							
+				}, 300);
+			}else{
+				setTimeout(()=>{
+					uni.redirectTo({
+						'url': '/pages/index/index'
+					})
+				},200);
 			}
 		}
 		notLogin() {

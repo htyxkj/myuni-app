@@ -18,7 +18,7 @@
 			<view class="submit bg-gray margin-sm" @click="saveData(0)"><text>取消</text></view>
 			<view class="submit margin-sm" :class="'bg-'+color" @click="saveData(1)"><text>保存</text></view>
 		</view>
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'操作进行中...'"></mLoad>
+		<mLoad v-if="loading" :msg="'操作进行中...'"></mLoad>
 		<message ref="msg"></message>
 	</view>
 </template>
@@ -37,7 +37,7 @@ import CCliEnv from '@/classes/cenv/CCliEnv';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
 import QueryEntity from '@/classes/search/QueryEntity';
 import { dataTool } from '@/classes/tools/DataTools';
-import { Tools } from '../../classes/tools/Tools';
+import { Tools } from '@/classes/tools/Tools';
 const DataUtil = dataTool.utils;
 @Component({components:{mLoad,bipComm}})
 export default class DLG extends Vue {

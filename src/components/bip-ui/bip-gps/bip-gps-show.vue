@@ -1,7 +1,7 @@
 <template>
 	<view class="myBody">
 		<div :id="tMapDiv" class="TMap"></div>
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'定位中...'"></mLoad>
+		<mLoad v-if="loading" :msg="'定位中...'"></mLoad>
 		<message ref="msg"></message>
 	</view>
 </template>
@@ -12,7 +12,7 @@ import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自�
 import mLoad from '@/components/mLoad.vue';//加载页面
 import Cell from '@/classes/pub/coob/Cell';
 import BipInsAidNew from '@/classes/BipInsAidNew';
-import {T} from "@/pages/gps/js/TMap"
+import {T} from "@/pages/public/gps/js/TMap"
 import {icl} from '@/classes/tools/CommICL';
 const ICL = icl; 
 import comm from '@/static/js/comm.js';

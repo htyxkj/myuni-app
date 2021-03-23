@@ -95,7 +95,7 @@ export default class bipSelect extends Vue {
 			uni.showLoading({
 				title:'跳转中...'
 			})
-			uni.navigateTo({url:'/pages/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.editName+"&methordname="+this.methordName+"&cellAttr="+this.cell.attr,complete: () => {
+			uni.navigateTo({url:'/pages/public/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.editName+"&methordname="+this.methordName+"&cellAttr="+this.cell.attr,complete: () => {
 				uni.hideLoading();
 			}});
 		}else{

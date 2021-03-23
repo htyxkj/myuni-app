@@ -106,7 +106,7 @@ export default class bipMenuBtnDlg extends Vue {
             let key = btn.dlgCont.split(";")[1];
 			let vl = this.env.dsm.currRecord.data[key]
 			uni.navigateTo({
-				url: '/pages/dlg/dlg?cellId=' + cellId + '&color=' + color + '&title=' + this.Title +'&key='+key+'&vl='+vl,
+				url: '/pages/public/dlg/dlg?cellId=' + cellId + '&color=' + color + '&title=' + this.Title +'&key='+key+'&vl='+vl,
 			});
 		}else if(btn.dlgType == 'C'){
 			let cont = btn.dlgCont.split(";");

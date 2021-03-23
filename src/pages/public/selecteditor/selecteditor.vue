@@ -33,7 +33,7 @@
 			<view class="submit bg-red margin-sm" @click="celCancel"><text>取消</text></view>
 			<view class="submit bg-blue margin-sm" @click="celOk"><text>确定</text></view>
 		</view>
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
+		<mLoad v-if="loading" :msg="'加载中...'"></mLoad>
 	</view>
 </template>
 

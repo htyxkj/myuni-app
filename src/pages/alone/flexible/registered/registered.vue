@@ -6,7 +6,7 @@
 		</cu-custom>
 		<template v-if="regType ==0">
 			<view class="header margin-top">
-				<image src="../../../../static/gs.png" mode="aspectFit"></image>
+				<image src="../../../../static/flexible.png" mode="aspectFit"></image>
 			</view>
 			
 			<view class="bg-white mycard margin padding" @tap="gotoReg(1)">
@@ -152,7 +152,7 @@
 		<template v-if="regType ==1 || regType ==2">
 			<bip-protocol @plChange="plChange" :showTY="1"></bip-protocol>
 		</template>
-		<mLoad :png="'/static/gs.png'" :msg="'注册中...'" v-if="loadModal"></mLoad>
+		<mLoad :msg="'注册中...'" v-if="loadModal"></mLoad>
 	</view>
 </template>
 

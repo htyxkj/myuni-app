@@ -31,11 +31,10 @@
 <script lang="ts">
     import {Vue,Component} from 'vue-property-decorator';
 	import home from './home.vue';
-	import menuPage from '../menu/menuPage.vue';
-	import message from '../message/message.vue';
-	import BipTask from '../task/BipTask.vue';
-	import my from '../my/my.vue';
-	import customize from '../customize/customize.vue';
+	import menuPage from '@/components/bip-comp/menu/menuPage.vue';
+	import BipTask from '@/components/bip-comp/task/BipTask.vue';
+	import my from '@/components/bip-comp/my/my.vue';
+	import customize from '@/components/bip-comp/customize/Index.vue';
 	import mIndexBar from '../../components/mIndexBar.vue'
 	import {
 		LoginModule
@@ -51,7 +50,7 @@
 	import {BIPUtil} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
 	@Component({
-		components:{home,my,message,menuPage,mIndexBar,customize,BipTask,bipProtocol}
+		components:{home,my,menuPage,mIndexBar,customize,BipTask,bipProtocol}
 	})
 	export default class Index extends Vue{
 		title:string = '首页'

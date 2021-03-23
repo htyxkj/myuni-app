@@ -82,9 +82,7 @@
 			let cr = this.cuIconList[index%10].color;
 			let vm:any = Object.assign(item);
 			vm.color = cr;
-			// this.$emit('openM',{cmd:item.command,menuName:item.menuName,color:cr})
 			this.$emit('openM',vm)
-			// uni.navigateTo({url:'/pages/comm/comm?'+item.command+'&menuName='+item.menuName+'&color='+cr})
 		}
 	}
 </script>

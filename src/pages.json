@@ -1,151 +1,66 @@
 {
 	"easycom": {
-			"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+		"^u-(.*)": "@/uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [ //pages数组中第一项表示应用启动页
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "Login"
+			}
 		},
-	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
 			"path": "pages/index/index",
 			"style": {
 				// "disableScroll": true,
 				"navigationBarTitleText": "中国融通农业生产经营计划管理系统"
 			}
-		}, {
-			"path": "pages/login/login",
-			"style": {
-				"navigationBarTitleText": "Login"
-			}
-		}, 
+		},
 		{
-			"path": "pages/my/my",
-			"style": {
-				"navigationBarTitleText": "My"
-			}
-		}, 
-		{
-			"path": "pages/menu/menuPage",
-			"style": {
-				"navigationBarTitleText": "Menu"
-			}
-		}, {
-			"path": "pages/message/message",
-			"style": {}
-		}, {
-			"path": "pages/comm/comm",
-			"style": {
-				"disableScroll": true, // 禁止滚动, 解决scroll-view在Android小程序卡顿的问题
-				"app-plus": {
-					"bounce": "none" // 取消iOS回弹,避免和下拉刷新冲突 (小程序无法取消, 点此查看H5端的取消方法... )
-				}
-			}
-		}, {
 			"path": "pages/layout/layout",
 			"style": {}
-		}, {
-			"path": "pages/mspage/mspage",
-			"style": {}
-		}, {
-			"path": "pages/appinfo/appinfo",
-			"style": {
-				"disableScroll": false,
-				"app-plus": {
-					"bounce": "none"
-				}
-			}
-		}, {
-			"path": "pages/appinfo/appdetail",
-			"style": {
-				"disableScroll": false,
-				"app-plus": {
-					"bounce": "none"
-				}
-			}
-		}, {
-			"path": "pages/appinfo/appdetailsp",
-			"style": {
-				"disableScroll": false,
-				"app-plus": {
-					"bounce": "none"
-				}
-			}
 		}
-		, {
-			"path": "pages/appinfo/applist",
-			"style": {
-				"disableScroll": true,
-				"app-plus": {
-					"bounce": "none" ,
-					"scrollIndicator": "none"
-				}
-			}
-		}, {
-			"path": "pages/appreport/appreport",
-			"style": {
-				// "disableScroll": true,
-				"app-plus": {
-					"bounce": "none"
-				}
-			}
-		}, {
-			"path": "pages/appreport/appreportdetail",
-			"style": {
-				"disableScroll": true,
-				"app-plus": {
-					"bounce": "none"
-				}
-			}
-		}, {
-			"path": "pages/selecteditor/selecteditor",
-			"style": {
-				"disableScroll": true,
-				"app-plus": {
-					"bounce": "none"
-				}
-			}
-		}
-	    ,{
-            "path" : "pages/editunit/editunit",
-            "style" : {}
-        }
-
 	],
 	"preloadRule": {
 		"pages/index/index": {
 			"network": "all",
-			"packages": ["pages/alone/air-super/pages/","pages/alone/mine/","pages/alone/credit/"]
+			"packages": [
+				"pages/alone/air-super/pages/",
+				"pages/alone/mine/",
+				"pages/alone/credit/"
+			]
 		},
 		"pages/login/login": {
 			"network": "all",
-			"packages": ["pages/alone/flexible/"]
-		},
-		"pages/appinfo/appinfo":{
-			"network": "all",
-			"packages": ["pages/gps/","pages/dlg/"]
-		},
-		"pages/appinfo/appdetail":{
-			"network": "all",
-			"packages": ["pages/gps/","pages/dlg/"]
-		},
-		"pages/appinfo/appdetailsp":{
-			"network": "all",
-			"packages": ["pages/gps/","pages/dlg/"]
-		},
-		"pages/appinfo/applist":{
-			"network": "all",
-			"packages": ["pages/gps/","pages/dlg/"]
-		},
-		"pages/appreport/appreport":{
-			"network": "all",
-			"packages": ["pages/gps/","pages/dlg/"]
-		},
-		"pages/appreport/appreportdetail":{
-			"network": "all",
-			"packages": ["pages/gps/","pages/dlg/"]
+			"packages": [
+				"pages/appinfo",
+				"pages/appreport/",
+				"pages/public/",
+				"pages/alone/flexible/"
+			]
 		}
 	},
 	"subPackages": [
-		{	
-		"root": "pages/alone/air-super/pages/",
-		"pages": [
+		{
+			"root": "pages/public/",
+			"pages": [
+				{
+					"path": "gps/gps"
+				},
+				{
+					"path": "dlg/dlg"
+				},
+				{
+					"path": "editunit/editunit"
+				},
+				{
+					"path": "selecteditor/selecteditor"
+				}
+			]
+		},
+		{
+			"root": "pages/alone/air-super/pages/",
+			"pages": [
 				{
 					"path": "airMap"
 				},
@@ -155,110 +70,119 @@
 				{
 					"path": "airSortiesQuery"
 				}
-            ]
+			]
 		},
-		{	
-		"root": "pages/alone/mine/",
-		"pages": [
+		{
+			"root": "pages/alone/mine/",
+			"pages": [
 				/***********************************张矿微平台START*************************************/
 				{
-					"path" : "index/index",
-					"style" : {}
-				}
-				,{
-					"path" : "details/details",
-					"style" : {}
-				}
-				,{
-					"path" : "details/comment",
-					"style" : {}
-				}
-				,{
-					"path" : "learning/learningList",
-					"style" : {}
-				}
-				,{
-					"path" : "askAnswer/askAnswerList",
-					"style" : {}
-				}
-				,{
-					"path" : "askAnswer/askAnswerAdd",
-					"style" : {}
-				}
-				,{
-					"path" : "askAnswer/myAskAnswerList",
-					"style" : {}
-				}
-				,{
-					"path" : "my/my",
-					"style" : {}
-				}
-				,{
-					"path" : "scoreRank/scoreRank",
-					"style" : {}
-				}
-				,{
-					"path" : "scoreRank/scoreDetail",
-					"style" : {}
-				}
-				,{
-					"path" : "details/allComment",
-					"style" : {}
-				}
-				,{
-					"path" : "details/reply",
-					"style" : {}
-				}
-				,{
-					"path" : "askAnswer/askAnswerDetails",
-					"style" : {}
-				}
-				,{
-					"path" : "my/favoritesOrHistoryList",
-					"style" : {}
-				}
-				,{
-					"path" : "exam/dayAnswer",
-					"style" : {}
-				}
-				,{
-					"path" : "exam/doExam",
-					"style" : {}
+					"path": "index/index",
+					"style": {}
+				},
+				{
+					"path": "details/details",
+					"style": {}
+				},
+				{
+					"path": "details/comment",
+					"style": {}
+				},
+				{
+					"path": "learning/learningList",
+					"style": {}
+				},
+				{
+					"path": "askAnswer/askAnswerList",
+					"style": {}
+				},
+				{
+					"path": "askAnswer/askAnswerAdd",
+					"style": {}
+				},
+				{
+					"path": "askAnswer/myAskAnswerList",
+					"style": {}
+				},
+				{
+					"path": "my/my",
+					"style": {}
+				},
+				{
+					"path": "scoreRank/scoreRank",
+					"style": {}
+				},
+				{
+					"path": "scoreRank/scoreDetail",
+					"style": {}
+				},
+				{
+					"path": "details/allComment",
+					"style": {}
+				},
+				{
+					"path": "details/reply",
+					"style": {}
+				},
+				{
+					"path": "askAnswer/askAnswerDetails",
+					"style": {}
+				},
+				{
+					"path": "my/favoritesOrHistoryList",
+					"style": {}
+				},
+				{
+					"path": "exam/dayAnswer",
+					"style": {}
+				},
+				{
+					"path": "exam/doExam",
+					"style": {}
 				}
 			]
 		},
 		{
-		"root":"pages/gps/",
-		"pages":[
-			{
-				"path" : "gps"
-			}
-		]
+			"root": "pages/alone/flexible/",
+			"pages": [
+				{
+					"path": "registered/registered"
+				}
+			]
 		},
 		{
-		"root":"pages/dlg/",
-		"pages":[
-			{
-				"path" : "dlg"
-			}
-		]
+			"root": "pages/alone/credit/",
+			"pages": [
+				{
+					"path": "registered/registered"
+				},
+				{
+					"path": "checkRecord"
+				}
+			]
 		},
 		{
-		"root":"pages/alone/flexible/",
-		"pages":[
-			{
-				"path" : "registered/registered"
-			}
-		]
+			"root": "pages/appreport/",
+			"pages": [
+				{
+					"path": "appreport"
+				},
+				{
+					"path": "appreportdetail"
+				}
+			]
 		},
 		{
-			"root":"pages/alone/credit/",
+			"root":"pages/appinfo",
 			"pages":[
 				{
-					"path" : "registered/registered"
-				}
-				,{
-					"path" : "checkRecord"
+					"path":"applist"
+				},
+				{
+					"path":"appdetail"
+				},
+				{
+					"path":"appinfo"
 				}
 			]
 		}
@@ -273,11 +197,13 @@
 	"usingComponts": true,
 	"condition": { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)
-		"list": [{
+		"list": [
+			{
 				"name": "登录页面", //模式名称
 				"path": "pages/login/login", //启动页面
 				"query": "" //启动参数
-			}, {
+			},
+			{
 				"name": "通用页面",
 				"path": "pages/comm/comm"
 			},
@@ -290,10 +216,6 @@
 				"path": "pages/layout/layout"
 			},
 			{
-				"name": "MSPage",
-				"path": "pages/mspage/mspage"
-			},
-			{
 				"name": "单据界面",
 				"path": "pages/appinfo/appinfo"
 			},
@@ -303,15 +225,14 @@
 			},
 			{
 				"name": "辅助",
-				"path": "pages/selecteditor/selecteditor",
+				"path": "pages/public/selecteditor/selecteditor",
 				"query": "editName=CDIC"
 			},
 			{
-				"name":"灵活用工注册页面",
-				"path":"pages/alone/flexible/registered/registered",
-				"query":""
+				"name": "灵活用工注册页面",
+				"path": "pages/alone/flexible/registered/registered",
+				"query": ""
 			}
-
 		]
 	}
 }

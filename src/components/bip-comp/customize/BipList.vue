@@ -1,13 +1,13 @@
 <template>
 	<view v-if="d1" style="background-color: #ffffff;">
-		<u-card class="bipListsMyList" padding="0">
+		<u-card padding="0" margin="0">
 			<view slot="head">
 				<view class="title">{{d1.title}}</view>
 			</view>
 			<view slot="body">
 				<view class="body">
 					<u-cell-group v-for="(item,index) in listData" :key="index">
-						<u-cell-item border-bottom :title="item.menuName" :label="item.message" @click="openMenu(item)" class="listItem" :title-style="{'font-size': '16px','color': '#000'}">
+						<u-cell-item border-bottom :title="item.menuName" :label="item.message" @click="openMenu(item)" class="Bip_List_listItem" :title-style="{'font-size': '16px','color': '#000'}">
 							<view slot="icon">
 								<image :src="BaseUri+item.menuIcon" class="menuImg" mode="aspectFit"></image>
 							</view>
@@ -34,7 +34,7 @@
 	@Component({
 		components:{}
 	})
-	export default class BipCard extends Vue {
+	export default class BipList extends Vue {
 		@Prop({default:null}) layoutdata?:any;
 		uriParams: URIParams = new URIParams();
 		d1:any = null;
@@ -176,12 +176,6 @@
 	height: 48px;
     margin-top: 10px;
 }
-.bipListsMyList{
-	margin: 10px !important;
-}
-.listItem{
-	padding: 6px 0px !important;
-}
 .title{
 	font-size: 30rpx;
 	color:rgb(114, 114, 114);
@@ -190,5 +184,19 @@
 }
 .body{
 	padding: 4px 8px;
+}
+</style>
+<style lang="scss">
+.Bip_List_listItem{
+	padding: 6px 0px !important;
+	.u-cell{
+		padding: 0px !important;
+	}
+	div{
+		padding: 0px !important;
+	}
+	view{
+		padding: 0px !important;
+	}
 }
 </style>

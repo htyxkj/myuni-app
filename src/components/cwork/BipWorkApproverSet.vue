@@ -153,7 +153,7 @@ export default class BipWorkApproverSet extends Vue{
         uni.showLoading({
             title:'跳转中...'
         })
-        uni.navigateTo({url:'/pages/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.userEditAid+"&methordname="+methordName,complete: () => {
+        uni.navigateTo({url:'/pages/public/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.userEditAid+"&methordname="+methordName,complete: () => {
             uni.hideLoading();
         }});
     }

@@ -2,7 +2,7 @@
 	<view class="mine-info">
 		<view class=" bg-white header">
 			<view>
-				<image v-if="mycomm" class="cu-avatar xl round my-margin-top bg-white"  :src="'../../static/'+mycomm.ItemType+'.png'" mode="aspectFit"></image>
+				<image v-if="mycomm" class="cu-avatar xl round my-margin-top bg-white"  :src="'../../../static/'+mycomm.ItemType+'.png'" mode="aspectFit"></image>
 			</view>
 			<view class="my-info my-margin-top">
 				<view style="font-weight: 600;">{{AttrTitle}}</view>
@@ -141,7 +141,7 @@
 					if (res.confirm) {
 						// uni.navigateTo({'url':'/pages/login/login'})
 						//关闭所有页面，打开到应用内的某个页面。
-						uni.clearStorage()
+						uni.clearStorage();
 						uni.reLaunch({'url':'/pages/login/login'})
 					}
 				}
@@ -270,9 +270,9 @@
 <style>
 	.mine-info .header{
 		text-align: center;
-		background-image: url('../../static/my/bg.jpg');
-		/* vertical-align:middle; */
-		/* background-color: #EBEEF5; */
+		background-image: url('../../../static/my/bg.jpg');
+		background-repeat: no-repeat;
+		background-size: 100% 100%;
 	}
 	.my-info{
 		color: white;

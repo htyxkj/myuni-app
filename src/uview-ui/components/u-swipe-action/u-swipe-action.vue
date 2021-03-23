@@ -199,6 +199,7 @@ export default {
 		touchstart() {},
 		getActionRect() {
 			this.$uGetRect('.u-swipe-action').then(res => {
+				console.log(res)
 				this.movableAreaWidth = res.width;
 				// 等视图更新完后，再显示右边的可滑动按钮，防止这些按钮会"闪一下"
 				this.$nextTick(() => {

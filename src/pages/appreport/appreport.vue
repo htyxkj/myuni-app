@@ -57,7 +57,7 @@
 			<text v-if="isMap" class="cuIcon-wenzi text-green"></text>
 			<text v-if="!isMap" class="cuIcon-global text-green"></text>
 		</view>
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
+		<mLoad v-if="loading" :msg="'加载中...'"></mLoad>
 		<bip-menu-btn-dlg ref="bip_dlg" @Recheck="Recheck"></bip-menu-btn-dlg>
 	</view>
 </template>
@@ -288,18 +288,28 @@ export default class appReport extends Vue {
 								}
 								jsontj[key] = vl;
 							}
-
+							jsontj = JSON.stringify(jsontj)
 							let command = me.command.split("&");
 							let pbuid = command[0].split("=");
-							let qcont = "";
-							let uri = '/pages/appinfo/appdetail?color='+this.cr+'&title='+me.menuName+"&pbuid="+pbuid[1]+'&qcont='+encodeURIComponent(qcont);
-							uni.navigateTo({
-								url: uri,
-								complete: () => {
-									uni.hideLoading();
-									this.isjump = false;
-								}
-							});
+							let pmenuid = command[1].split("=");
+							let res = await tools.getMenuParams(pbuid[1],pmenuid[1]);
+							let data = res.data
+							if(data.id>=0){
+								let _uriParams = data.data.mparams
+								uni.setStorageSync(pbuid[1],JSON.stringify(_uriParams));
+								let uri = '/pages/appreport/appreport?color='+this.cr+'&title='+me.menuName+"&source=BL&pbuid="+pbuid[1]+'&qcont='+encodeURIComponent(jsontj);
+								uni.navigateTo({
+									url: uri,
+									complete: () => {
+										uni.hideLoading();
+										this.isjump = false;
+									}
+								});
+							}else{
+								uni.showToast({
+									title:"没有" + pbuid[1] + "菜单参数!" 
+								})
+							}
 						}
 					}
 				}
@@ -468,6 +478,11 @@ export default class appReport extends Vue {
 						let rtn = res.data;
 						if (rtn.id == 0) {
 							this.initUIData(rtn.data.layCels);
+							if(option.source && option.source=='BL'){
+								let qcont = decodeURIComponent(option.qcont);
+								qcont = JSON.parse(qcont);
+								Object.assign(this.dsm_cont.currRecord.data,qcont);
+							}
 							this.queryCont(this.dsm_cont.currRecord.data);
 						}else{
 							uni.showToast({title:'没有获取到对象定义'+this.uriParam})

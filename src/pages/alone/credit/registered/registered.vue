@@ -42,7 +42,7 @@
 		<view>
 			<button style="width: 70%;margin-left: 15%;" class="cu-btn block bg-white margin-tb-sm lg" @tap="resetForm">重置信息</button>
 		</view>
-		<mLoad :png="'/static/gs.png'" :msg="'注册中...'" v-if="loadModal"></mLoad>
+		<mLoad :msg="'注册中...'" v-if="loadModal"></mLoad>
 	</view>
 </template>
 

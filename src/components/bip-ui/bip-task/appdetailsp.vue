@@ -17,7 +17,7 @@
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
 			<bip-work-process ref="workProcess"></bip-work-process>
 		</template>
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
+		<mLoad v-if="loading" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
 			<!-- <bip-menu-bar @tabSelect="execCmd"></bip-menu-bar> -->
 			<bip-bill-bar @tabSelect="execCmd" :attr="2" :bmore="true"></bip-bill-bar>
@@ -39,11 +39,8 @@
 
 <script lang="ts">
 import { Vue, Provide, Prop, Component,Watch } from 'vue-property-decorator';
-// import { UriPModule } from '@/store/module/uripm'; //导入vuex模块，自动注入
 import mLoad from '@/components/mLoad.vue';
-// import bipInput from '@/components/bip-ui/bip-input/bip-input.vue'
 import bipLay from '@/components/bip-ui/bip-lay/bip-lay.vue';
-// import uniCard from '@/components/uni-ui/uni-card/uni-card.vue'
 import bipMenuBar from '@/components/bip-ui/bip-menu-bar/bip-menu-bar.vue';
 import bipBillBar from '@/components/bip-ui/bip-menu-bar/bip-bill-bar.vue';
 import BipWork from  '@/components/cwork/BipWork.vue';
@@ -55,12 +52,11 @@ let tools = BIPUtil.ServApi;
 import URIParams from '@/classes/URIParams';
 import Cells from '@/classes/pub/coob/Cells';
 import CDataSet from '@/classes/pub/CDataSet';
-import CRecord from '@/classes/pub/CRecord';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
 import BipLayout from '@/classes/ui/BipLayout';
-import { Tools } from '../../classes/tools/Tools';
-import { icl } from '../../classes/tools/CommICL';
+import { Tools } from '@/classes/tools/Tools';
+import { icl } from '@/classes/tools/CommICL';
 import QueryEntity from '@/classes/search/QueryEntity';
 import { dataTool } from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils;

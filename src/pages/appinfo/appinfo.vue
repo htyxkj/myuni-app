@@ -11,7 +11,7 @@
 			<view class="padding-xs margin-xs"></view>
 			<bip-work ref="work" @checkOK="checkOK"></bip-work>
 		</view>
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
+		<mLoad v-if="loading" :msg="'加载中...'"></mLoad>
 		<template v-if="mbs.initOK">
 			<!-- <bip-menu-bar @tabSelect="execCmd"></bip-menu-bar> -->
 			<bip-bill-bar @tabSelect="execCmd" :attr="3" :bmore="true"></bip-bill-bar>

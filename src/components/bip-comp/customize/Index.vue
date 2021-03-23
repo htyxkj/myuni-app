@@ -3,7 +3,7 @@
 		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" 
 			:heightReduce="210" :pageNo="1" :totalPageNo="1" @refresh="refresh" :isShowGoToTop="false">
 			<view  slot="content-list">
-				<view class="padding-bottom-xs" v-for="(item,index) in layout" :key="index" >
+				<view v-for="(item,index) in layout" :key="index" class="margin-bottom-xs bg-white">
 					<template v-if="item.comid == '001' || item.comid == '005'">
 						<jiugongge :layoutdata="item"></jiugongge>
 					</template>
@@ -42,7 +42,6 @@
 	import { BIPUtil } from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
 	import QueryEntity from '@/classes/search/QueryEntity';
-	import QueryCont from '@/classes/search/QueryCont';
 	import jiugongge from './Jiugongge.vue';
 	import tabs from './Tabs.vue';
 	import carousel from './Carousel.vue';
@@ -55,7 +54,7 @@
 	@Component({
 		components:{jiugongge,carousel,tabs,customChart,myTop,loadRefresh,codeModule,bipCard,bipList}
 	})
-	export default class customize extends Vue {
+	export default class Customize extends Vue {
 		@Prop({default:null}) menu?:any;
 		layout:any=[];
 		async mounted() {

@@ -227,7 +227,7 @@
 		gwName:any = '';//岗位名称
 		editName:any ='MULGW';//岗位辅助
 		url:any="";//要裁剪的头像地址
-		path:any="../../../../static/gs.png";//头像地址
+		path:any="../../../../static/mine.png";//头像地址
 
 
 		usrSORGEdit:any = "MYSORG";
@@ -370,7 +370,7 @@
 			uni.showLoading({
 				title:'跳转中...'
 			})
-			uni.navigateTo({url:'/pages/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.usrSORGEdit+"&methordname="+methordName,complete: () => {
+			uni.navigateTo({url:'/pages/public/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.usrSORGEdit+"&methordname="+methordName,complete: () => {
 				uni.hideLoading();
 			}});
 		}
@@ -387,7 +387,7 @@
 			uni.showLoading({
 				title:'跳转中...'
 			})
-			uni.navigateTo({url:'/pages/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.usrSCMEdit+"&methordname="+methordName,complete: () => {
+			uni.navigateTo({url:'/pages/public/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.usrSCMEdit+"&methordname="+methordName,complete: () => {
 				uni.hideLoading();
 			}});
 		}

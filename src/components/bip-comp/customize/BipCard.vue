@@ -1,6 +1,6 @@
 <template>
-	<view style="background-color: #ffffff;">
-		<u-card class="bipCardMyCard" padding="5">
+	<view style="background-color: #ffffff;" class="bipCardMyCard">
+		<u-card padding="5">
 			<view slot="body" v-if="countData">
 				<u-row justify="flex-end" class="top1">
 					<u-col span="3">
@@ -68,8 +68,8 @@
 				if(vv.data.id ==0){
 					let vl = vv.data.data.data.values[0]
 					if(vl){
-						let title1 = JSON.parse(JSON.stringify(this.d1.title));
-						let title2 = JSON.parse(JSON.stringify(this.d1.title2));
+						let title1 =this.d1.title;
+						let title2 = this.d1.title2;
 						let num =1;
 						for(var i=0;i<title1.length;i++){
 							let id = insaid.cells.cels[insaid.showColsIndex[i]].id;
@@ -98,55 +98,64 @@
 		//打开菜单
 		gotoMenu(index:any){
 			if(this.d1.url){
-				let url = JSON.parse(JSON.stringify(this.d1.titurlle2));
+				let url = this.d1.url;
 				let item = Tools.findMenu(url[index]);
-				let cuIconList = [{
-					cuIcon: 'cardboardfill',
-					color: 'blue',
-				}, {
-					cuIcon: 'recordfill',
-					color: 'orange',
-				}, {
-					cuIcon: 'picfill',
-					color: 'yellow',
-				}, {
-					cuIcon: 'noticefill',
-					color: 'olive',
-				}, {
-					cuIcon: 'upstagefill',
-					color: 'cyan',
-				}, {
-					cuIcon: 'clothesfill',
-					color: 'blue',
-				}, {
-					cuIcon: 'discoverfill',
-					color: 'purple',
-				}, {
-					cuIcon: 'questionfill',
-					color: 'mauve',
-				}, {
-					cuIcon: 'commandfill',
-					color: 'purple',
-				}, {
-					cuIcon: 'brandfill',
-					color: 'mauve',
-				}]
-				index = parseFloat((Math.random()*10).toFixed(0));
-				let cr = cuIconList[index%10].color;
-				let vm:any = Object.assign(item);
-				vm.color = cr;
-				Tools.openMenu(vm)
+				if(item){
+					let cuIconList = [{
+						cuIcon: 'cardboardfill',
+						color: 'blue',
+					}, {
+						cuIcon: 'recordfill',
+						color: 'orange',
+					}, {
+						cuIcon: 'picfill',
+						color: 'yellow',
+					}, {
+						cuIcon: 'noticefill',
+						color: 'olive',
+					}, {
+						cuIcon: 'upstagefill',
+						color: 'cyan',
+					}, {
+						cuIcon: 'clothesfill',
+						color: 'blue',
+					}, {
+						cuIcon: 'discoverfill',
+						color: 'purple',
+					}, {
+						cuIcon: 'questionfill',
+						color: 'mauve',
+					}, {
+						cuIcon: 'commandfill',
+						color: 'purple',
+					}, {
+						cuIcon: 'brandfill',
+						color: 'mauve',
+					}]
+					index = parseFloat((Math.random()*10).toFixed(0));
+					let cr = cuIconList[index%10].color;
+					let vm:any = Object.assign(item);
+					vm.color = cr;
+					Tools.openMenu(vm)
+				}
 			}
 		}
 	}
 </script> 
 <style lang="scss">
 .bipCardMyCard{
-	background-image:url('../../static/BIP/card_back.png');
+	background-image:url('../../../static/BIP/card_back.png');
 	border-radius: 10px !important;
 	background-repeat: no-repeat;
 	background-size: 100% 100%;
-    margin: 10px !important;
+    margin: 0px 10px !important;
+	height: 376rpx;
+	.u-card{
+		background-color: initial !important;
+	}
+	view{
+		background-color: initial !important;
+	}
 }
 </style>
 <style scoped>

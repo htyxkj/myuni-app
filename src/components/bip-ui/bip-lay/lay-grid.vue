@@ -80,7 +80,7 @@ export default class layGrid extends Vue {
 		this.cds.currRecord = this.cds.getRecord(rid);
 		EnvModule.setEnvInf(this.env);
 		EnvModule.setLay(this.laycell);
-		uni.navigateTo({url:'/pages/editunit/editunit?id='+obj_id+'&rid='+rid});
+		uni.navigateTo({url:'/pages/public/editunit/editunit?id='+obj_id+'&rid='+rid});
 	}
 	
 	delRow(rid:number,obj_id:string){

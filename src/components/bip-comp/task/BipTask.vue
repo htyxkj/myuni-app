@@ -12,13 +12,13 @@
 			</view>
 			<view v-show="spList" class="content">
 				<template v-show="0==TabCur">
-					<un-task-list @totalM="totalChange" @toDetails="toDetails" ref="untasklist" :style="{'display':0==TabCur?'':'none'}"></un-task-list>
+					<un-task-list @totalM="totalChange" :check="0==TabCur" @toDetails="toDetails" ref="untasklist" :style="{'display':0==TabCur?'':'none'}"></un-task-list>
 				</template>
 				<template v-show="1==TabCur">
-					<task-list @totalM="totalChange" @toDetails="toDetails" ref="tasklist" :style="{'display':1==TabCur?'':'none'}"></task-list>
+					<task-list @totalM="totalChange" :check="1==TabCur" @toDetails="toDetails" ref="tasklist" :style="{'display':1==TabCur?'':'none'}"></task-list>
 				</template>
 				<template v-show="2==TabCur">
-					<msg-list @totalM="totalChange" :style="{'display':2==TabCur?'':'none'}"></msg-list>
+					<msg-list @totalM="totalChange" :check="2==TabCur" :style="{'display':2==TabCur?'':'none'}"></msg-list>
 				</template>
 			</view>
 		</template>
@@ -42,7 +42,7 @@
 	} from 'vue-property-decorator';
 
 	
-	import appdetailsp from '@/pages/appinfo/appdetailsp.vue';
+	import appdetailsp from '@/components/bip-ui/bip-task/appdetailsp.vue';
 	import UnTaskList from '@/components/bip-ui/bip-task/UnTaskList.vue';
 	import TaskList from '@/components/bip-ui/bip-task/TaskList.vue';
 	import MsgList from '@/components/bip-ui/bip-task/MsgList.vue';

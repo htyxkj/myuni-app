@@ -16,7 +16,7 @@
 			</view>
 		</load-refresh>
 
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
+		<mLoad v-if="loading" :msg="'加载中...'"></mLoad>
 		<bip-bill-bar @tabSelect="execCmd" :attr="1"></bip-bill-bar>
 	</view>
 </template>

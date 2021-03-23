@@ -28,7 +28,7 @@
 					<view>
 						<view class="flex padding-top" v-for="(item,index) in comment_list" :key="index">
 							<view class="radius" style="flex-basis:10%">
-								<image class="cu-avatar xxl round bg-white"  :src="!item.user_iocq?'../../../../static/gs.png':imgUrl+item.user_iocq" mode="aspectFit"></image>                      
+								<image class="cu-avatar xxl round bg-white"  :src="!item.user_iocq?'../../../../static/mine.png':imgUrl+item.user_iocq" mode="aspectFit"></image>                      
 							</view>
 							<view class="radius" style="flex-basis:90%">
 								<view class="flex justify-between">

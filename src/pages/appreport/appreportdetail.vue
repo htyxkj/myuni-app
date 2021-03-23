@@ -16,7 +16,7 @@
 		<template v-if="mbs.initOK">
 			<bip-bill-bar @tabSelect="execCmd" :attr="0" :bmore="true"></bip-bill-bar>
 		</template>
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'加载中...'"></mLoad>
+		<mLoad v-if="loading" :msg="'加载中...'"></mLoad>
 		<bip-menu-btn-dlg ref="bip_dlg" @Recheck="Recheck"></bip-menu-btn-dlg>
 	</view>
 </template>

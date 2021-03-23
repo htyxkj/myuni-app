@@ -1,8 +1,8 @@
 <template>
 	<view class="mine-info">
-		<view class=" bg-white header" style="backgroundImage:url('../../static/my/bg.jpg')" >
+		<view class=" bg-white header" style="backgroundImage:url('../../../static/my/bg.jpg')" >
 			<view>
-				<view class="cu-avatar xl round my-margin-top bg-white" style="background-image:url(../../static/gs.png);"></view>
+				<image v-if="mycomm" class="cu-avatar xl round my-margin-top bg-white"  :src="'../../../static/'+mycomm.ItemType+'.png'" mode="aspectFit"></image>
 			</view>
 			<view class="my-info my-margin-top">
 				<view style="font-weight: 600;">{{AttrTitle}}</view>
@@ -26,10 +26,10 @@
 	import {Vue,Prop,Component} from 'vue-property-decorator';
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
-	import {BIPUtil} from '@/classes/api/request';
-	let tools = BIPUtil.ServApi;
 	import {icl} from '@/classes/tools/CommICL';
 	const ICL = icl; 
+	import comm from '@/static/js/comm.js';
+	let commURL: any = comm;
 	@Component({
 		components:{}
 	})
@@ -37,8 +37,9 @@
 		@Prop({default:null}) layoutdata?:any;
 		gwName:any = '';//岗位名称
 		editName:any ='MULGW';//岗位辅助
-
+		mycomm:any = null;
 		async mounted() {
+			this.mycomm = commURL;
 			this.getGWName(this.user.gwCode);
 		}
 		get user(){

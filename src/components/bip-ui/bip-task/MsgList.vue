@@ -1,27 +1,24 @@
 <template>
 <view>
-	<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="330" :pageNo="currPage" :totalPageNo="totalPage"
+	<load-refresh v-if="check" ref="loadRefresh" :isRefresh="true" style="width：100%" :backgroundCover="'#F3F5F5'" :heightReduce="330" :pageNo="currPage" :totalPageNo="totalPage"
 	@loadMore="loadMore" @refresh="refresh">
 		<view slot="content-list">
-			<view>
-				<u-swipe-action v-for="(item,index) in list" :key="item.iid" :index="index" :options="options" @click="btnClick" @content-click="itemClick">
-					<view class="item u-border-bottom message">
-						<view class="title-wrap">
-							<u-row gutter="16">
-								<u-col span="12">
-									<text class="title u-line-1">{{ item.title }}</text>
-								</u-col>
-								<u-col span="12">
-									<text class="content u-line-1">{{ item.content }}</text>
-								</u-col>
-							</u-row>
-							
-						</view>
+			<u-swipe-action v-for="(item,index) in list" class="my-msg-swipe" :key="item.iid" :index="index" :options="options" @click="btnClick" @content-click="itemClick">
+				<view class="item u-border-bottom message" style="width:100%">
+					<view class="title-wrap">
+						<u-row gutter="16">
+							<u-col span="12">
+								<text class="title u-line-1">{{ item.title }}</text>
+							</u-col>
+							<u-col span="12">
+								<text class="content u-line-1">{{ item.content }}</text>
+							</u-col>
+						</u-row>
 					</view>
-				</u-swipe-action>
-			</view>
+				</view>
+			</u-swipe-action>
 		</view>
-		<mLoad :png="'/static/gs.png'" :msg="'加载中...'" v-if="loadModal"></mLoad>
+		<mLoad :msg="'加载中...'" v-if="loadModal"></mLoad>
 		<message ref="msg"></message>
 	</load-refresh>
 	<u-popup mode="center" v-model="showDlg" closeable>
@@ -58,6 +55,7 @@
 		showDlg:boolean = false;
 		showRow:any = null;
 		showIndex:any = -1;
+		@Prop() check!:boolean
 		options:any = [
 			{
 				text: '已读',
@@ -80,7 +78,9 @@
 				if(this.currPage==1){
 					this.list = [];
 				}
-				this.list = this.list.concat(page.celData); //追加新数据
+				if(page.celData){
+					this.list = this.list.concat(page.celData); //追加新数据
+				}
 				this.total = page.totalItem 
 			}
 		}

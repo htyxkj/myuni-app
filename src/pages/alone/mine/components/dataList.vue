@@ -434,13 +434,6 @@
 
 		imageLoad(src:any) {
 			return src;
-			// var ImgObj:any = new Image();
-			// ImgObj.src = src;
-			// if (ImgObj && (ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0))) {
-			// 	return	src;
-			// } else {
-			// 	return "../../../../static/gs.png"; //暂时默认头像
-			// }
 		}
 		audioTime(src:any){
 			// let audioContext:any = uni.createInnerAudioContext();

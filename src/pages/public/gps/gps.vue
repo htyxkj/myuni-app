@@ -18,7 +18,7 @@
 			<button class="cu-btn block line-green lg" :disabled="disabled" @tap="refreshH5Gps"> <text class="cuIcon-locationfill"></text> 重新定位</button>
 			<button class="cu-btn block bg-blue margin-tb-sm lg" :disabled="disabled" @tap="select"> <text class="cuIcon-roundcheck"></text> 确定</button>
 		</view>
-		<mLoad v-if="loading" :png="'/static/gs.png'" :msg="'定位中...'"></mLoad>
+		<mLoad v-if="loading" :msg="'定位中...'"></mLoad>
 		<message ref="msg"></message>
 	</view>
 </template>

@@ -4,7 +4,7 @@
 		<view slot="content-list">
 		<bip-task-unit v-for="(item,index) in list" :key="index" :rowId="index" :record="item" :cells="cell" @toDetails="toDetails"></bip-task-unit>
 		</view>
-		<mLoad :png="'/static/gs.png'" :msg="'加载中...'" v-if="loadModal"></mLoad>
+		<mLoad :msg="'加载中...'" v-if="loadModal"></mLoad>
 		<message ref="msg"></message>
 	</load-refresh>
 </template>

@@ -55,7 +55,7 @@ export default class bipGps extends Vue{
 		})
 		let ds = this.disabled;
 		let refValue = this.cell.refValue;
-		let url = "/pages/gps/gps?methordName="+methordName+"&ds="+ds+"&gps="+this.root_mode+"&refValue="+refValue;
+		let url = "/pages/public/gps/gps?methordName="+methordName+"&ds="+ds+"&gps="+this.root_mode+"&refValue="+refValue;
 		uni.navigateTo({url:url,complete: () => {
 			uni.hideLoading();
 		}}); 
