@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="cu-form-group solid-bottom">
+		<view class="cu-form-group solid-bottom" ref="pl">
 			<template v-if="cell">
 				<view v-if="!noLable" class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
 				<input :placeholder="cell.labelString" type="text" v-model="showMode" @tap.stop="open()" disabled="true"/>
@@ -124,16 +124,16 @@ export default class bipList extends Vue{
 
 
 	open(){
-		// console.log('open')
-		// console.log(this.cell)
 		if(!this.disabled){
 			this.isShow = true;
+			uni.$emit('bipListOpenClose',{op:true,bl:true});
 		}
 		
 	}
 
 	cancel(){
 		this.isShow = false;
+		uni.$emit('bipListOpenClose',{op:false,bl:true});
 	}
 
 	selectChange(e:any){

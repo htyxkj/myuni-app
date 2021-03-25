@@ -31,7 +31,7 @@
 								<bip-select :style="index>=(tjAll.length-3)?'bottom:0':''" :arr="cels" :show="isShow[index]" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="'labelString'" :isStr="false"></bip-select>
 							</template>
 						</view>
-						<view class="flex justify-center">
+						<view class="flex justify-center btn-addone" :style="cont_style">
 							<button class="cu-btn lines-blue round sm shadow margin padding" @click="addTj">
 								添加一个
 							</button>
@@ -65,8 +65,11 @@ export default class bipSearchCon extends Vue{
 	tjAll:Array<any>=new Array<any>();//全部条件
 	oneTj:any = {name:"",cellId:"",value:"",cels:null};
 
+	cont_style:string = '';
 	mounted(){
 		this.initOneTj();
+		uni.$off('bipListOpenClose');
+		uni.$on('bipListOpenClose',this.listOpenClose)
 	}
 	initOneTj(){
 		this.tjAll=new Array<any>();
@@ -84,6 +87,19 @@ export default class bipSearchCon extends Vue{
 		}
 		this.$set( this.isShow, tjIndex, !this.isShow[tjIndex])
 	}
+	
+	listOpenClose({op,bl}:any){
+		// console.log(cl);
+		if(op){
+			if(bl)
+				this.cont_style='height:156px';
+			else
+				this.cont_style='height:200px';
+		}else{
+			this.cont_style='';
+		}
+	}
+	
 	selectChange(e:any){
 		if(e !== undefined){
 			this.tjAll[this.tjIndex].cellId = e.id;

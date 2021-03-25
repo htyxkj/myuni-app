@@ -63,6 +63,7 @@ export default class bipDate extends Vue {
 			this.initRestrict()
 			let rr:any = this.$refs.calendar
 			rr.show();
+			uni.$emit('bipListOpenClose',{op:true});
 		}
 	}
 	
@@ -71,6 +72,7 @@ export default class bipDate extends Vue {
 		this.mode = e.result
 		this.selectIndex = e.defaultVal
 		this.$nextTick(()=>{
+			uni.$emit('bipListOpenClose',{op:false});
 			if(this.mode != this.record.data[this.cell.id]){
 				this.cds.cellChange(this.mode,this.cell.id);
 				DataUtil.checkGS(this.cds,this.env,this.cell)
