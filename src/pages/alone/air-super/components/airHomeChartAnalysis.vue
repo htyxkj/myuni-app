@@ -4,10 +4,10 @@
 		<view>
 		<u-row gutter="6">
 			<u-col span="12">
-				<u-field v-model="year.label" label="年份" placeholder="年份" icon='calendar' @click="showYear = true"></u-field>
+				<u-field v-model="year.label" label="年份" disabled placeholder="年份" icon='calendar' @click="showYear = true"></u-field>
 			</u-col>
 			<u-col span="12">
-				<u-field v-model="season.label" label="季节" placeholder="季节" icon='calendar' @click="showSeason = true">
+				<u-field v-model="season.label" label="季节" disabled placeholder="季节" icon='calendar' @click="showSeason = true">
 					<view slot="right">
 						<u-button @click="selData" type="primary" size="mini" :ripple="true" ripple-bg-color="#909399">查询</u-button>
 					</view>
@@ -73,7 +73,6 @@
 		page: any = { pageSize: 2000, currPage: 1, total: 0 };
 		pixelRatio:any =1;
 		seasonArray: Array<any> = [
-			{ value: "-1", label: "全年" },
 			{ value: "0", label: "春季" },
 			{ value: "1", label: "夏季" },
 			{ value: "2", label: "秋季" },

@@ -3,7 +3,7 @@
 		<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
 			<view class="qiun-title-dot-light">{{data.name}}</view>
 		</view>
-		<u-field v-model="year.value" label="年份" placeholder="年份" icon='calendar' @click="showYear = true">
+		<u-field v-model="year.value" label="年份" disabled placeholder="年份" icon='calendar' @click="showYear = true">
 			<view slot="right">
 				<u-button @click="btnClick" type="primary" size="mini" :ripple="true" ripple-bg-color="#909399">查询</u-button>
 			</view>

@@ -412,6 +412,7 @@ export default class bipPickerDate extends Vue {
 			checkArr: this.checkArr,
 			defaultVal: this.pickVal
 		});
+		uni.$emit('bipListOpenClose',{op:false});
 		this.showPicker = false;
 	}
 

@@ -30,7 +30,7 @@
 // export const ItemType = "credit";
 
 //融通项目管理
-export const BaseUri =  "https://greatdou.com/itemCtrl/";
+export const BaseUri =  "https://greatdou.com/itemCtrl";
 export const BaseDBID = "01";
 export const ItemType = "itemCtrl";
 
@@ -78,6 +78,6 @@ export const ItemType = "itemCtrl";
 // export const ItemType = "itemCtrl";
 
 export const ioutsys = 2;//项目类型， 移动端，小程序，APP
-export const version = 136;
+export const version = 137;
 export const SMSURL = "https://www.bip-soft.com/ssms/";
 export default {BaseUri, BaseDBID,SMSURL,ItemType,version,ioutsys}

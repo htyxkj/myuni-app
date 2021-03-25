@@ -638,5 +638,11 @@ export default class BipWork extends Vue{
         position: fixed;
         top: 160upx;
         right: 80upx;
+        width: 300upx;
+        height: 300upx;
+        image{
+            max-width: 100%;
+            max-height: 100%;
+        }
     }
 </style>

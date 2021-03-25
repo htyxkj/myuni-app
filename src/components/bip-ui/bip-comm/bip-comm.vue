@@ -24,7 +24,7 @@
 			</template>
 		</template>
 		<template v-else>
-			<template v-if="cell.type >=2 && cell.type<9">
+			<template v-if="(cell.type >=2 && cell.type<9) && !cell.editType">
 				<bip-number :label="cell.labelString" :cell="cell" :obj_id="obj_id" :noLable="noLable"></bip-number>
 			</template>
 			<template v-else-if="cell.editType==1">
