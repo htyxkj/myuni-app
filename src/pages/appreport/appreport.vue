@@ -120,7 +120,7 @@ export default class appReport extends Vue {
 
 	currPage: number = 1;
 	totalPage: number = 0;
-	pageSize:number = 10;
+	pageSize:number = 15;
 
 	isMap:boolean = false;//是否是地图展示页面
 	i_isMap:boolean = false;//是否是地图展示页面
@@ -633,7 +633,13 @@ export default class appReport extends Vue {
 			ptran = ptran.split("&")
 			for(var i=0 ; i< ptran.length;i++){
 				let cc = ptran[i].split("=");
-				vl[cc[0]] = cc[1];
+				if(!vl.hasOwnProperty(cc[0])){
+					vl[cc[0]] = cc[1];
+				}else{
+					if(!vl[cc[0]]){
+						vl[cc[0]] = cc[1];
+					}
+				}
 			}
 		}
 		if(Object.keys(vl).length>0){
@@ -650,7 +656,7 @@ export default class appReport extends Vue {
 	//右下角 地图  列表切换
 	isMapConv(){
 		this.isMap = !this.isMap;
-		this.pageSize = 10;
+		this.pageSize = 15;
 		this.refresh()
 	}
 }

@@ -59,7 +59,7 @@
 				await tools.getMenuParams(pbuid,mid).then((res:any)=>{
 					uni.hideLoading();
 					let data = res.data
-					// console.log(data);
+					console.log(data);
 					if(data.id>=0){
 						this.uriParams = data.data.mparams
 						uni.setStorageSync(pbuid,JSON.stringify(this.uriParams))

@@ -24,7 +24,7 @@ const DataUtil = dataTool.utils;
 @Component({})
 export default class bipSelect extends Vue {
 	@Inject('env') env!:CCliEnv;
-	@Inject('noLable') noLable!:boolean;
+	@Prop({ type: Boolean }) noLable!: boolean;
 	@Prop({ type: Object }) cell!: Cell;
 	@Prop({ type: Object }) bipInsAid!:BipInsAidNew;
 	@Prop({type:String}) obj_id!:string;

@@ -25,7 +25,7 @@ import CDataSet from '@/classes/pub/CDataSet';
 })
 export default class bipRefsFz extends Vue{
 	@Inject('env') env!:CCliEnv;
-	@Inject('noLable') noLable!:boolean;
+	@Prop({ type: Boolean }) noLable!: boolean;
 	@Prop({ type: Object }) cell!: Cell;
 	@Prop({type:String}) obj_id!:string;
 	@Prop({type:Boolean,default:false}) label!:boolean;

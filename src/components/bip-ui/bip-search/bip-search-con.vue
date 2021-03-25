@@ -1,6 +1,6 @@
 <template>
-	<view>
-		<uni-collapse accordion="true">
+	<view class="bip-search-con">
+		<uni-collapse accordion="true" class="bip-search-con-uni-collapse">
 			<uni-collapse-item :customize="true">
 				<view slot="title"  style="width:100%">
 					<view class="cu-bar search bg-white flex" v-if="tjAll.length>0">
@@ -8,14 +8,14 @@
 							<text>{{tjAll[0].name}}</text>
 							<text class="cuIcon-triangledownfill"></text>
 						</view>
-						<view class="search-form radius">
-							<bip-comm :obj_id="dsm_cont.ccells.obj_id" :cell="tjAll[0].cels"></bip-comm>
+						<view class="search-form radius" v-if="dsm_cont">
+							<bip-comm class="bip-comm" :obj_id="dsm_cont.ccells.obj_id" :cell="tjAll[0].cels" :noLable="true"></bip-comm>
 						</view>
 					</view>
 					<bip-select :arr="cels" :show="isShow[0]" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="'labelString'" :isStr="false"></bip-select>
 				</view>
 				<view slot="content">
-					<view style="min-height:500rpx">
+					<view>
 						<view v-for="(item,index) in tjAll" :key="index" style="width:100%">
 							<template v-if="index>0 && item">
 								<view class="cu-bar search bg-white flex">
@@ -23,16 +23,15 @@
 										<text>{{item.name}}</text>
 										<text class="cuIcon-triangledownfill"></text>
 									</view>
-									<view class="search-form radius">
-										<bip-comm :obj_id="dsm_cont.ccells.obj_id" :cell="item.cels"></bip-comm>
+									<view class="search-form radius" v-if="dsm_cont">
+										<bip-comm class="bip-comm" :obj_id="dsm_cont.ccells.obj_id" :cell="item.cels" :noLable="true"></bip-comm>
 									</view>
 									<uni-icons style="margin-right: 5px;" color="#bbb" size="20" type="close" @click="delTj(index)"/>
 								</view>
 								<bip-select :style="index>=(tjAll.length-3)?'bottom:0':''" :arr="cels" :show="isShow[index]" @cancel="cancel" @selectChange="selectChange" @select="selectOK" :showKey="'labelString'" :isStr="false"></bip-select>
 							</template>
 						</view>
-						<view class="margin-xs padding-xs"></view>
-						<view class="flex justify-center padding-bottom">
+						<view class="flex justify-center">
 							<button class="cu-btn lines-blue round sm shadow margin padding" @click="addTj">
 								添加一个
 							</button>
@@ -40,7 +39,6 @@
 								查询
 							</button>
 						</view>
-						<view class="margin-xs padding-xs"></view>
 					</view>
 				</view>
 			</uni-collapse-item>
@@ -59,10 +57,8 @@ import CDataSet from '@/classes/pub/CDataSet';
 	components: {bipSelect,uniCollapse,uniCollapseItem,uniIcons,bipComm}
 })
 export default class bipSearchCon extends Vue{
-	@Provide('noLable') noLable: boolean = true;
-
 	@Prop({type:Array,default:[]}) cels!:Array<any>;
-	@Prop({type:CDataSet}) dsm_cont!:CDataSet;
+	@Prop() dsm_cont!:any;
 	isShow:any = [false,false,false,false,false,false,false,false];
 
 	tjIndex:any=0;
@@ -151,8 +147,19 @@ export default class bipSearchCon extends Vue{
 }
 </script>
 
-<style>
+<style lang="scss" scoped >
 	.bip-modal{
 		max-height:800upx;
+	}
+	.bip-comm{
+		width: 100%;
+	}
+	.bip-search-con-uni-collapse{
+		position: absolute;
+		z-index: 1100;
+		width: 100%;
+	}
+	.bip-search-con{
+		height: 100rpx;
 	}
 </style>

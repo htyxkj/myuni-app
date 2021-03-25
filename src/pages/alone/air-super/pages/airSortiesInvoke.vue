@@ -84,7 +84,6 @@
         saveCell:CDataSet = new CDataSet("");//保存对象
         delCell:CDataSet = new CDataSet("");//删除对象
         @Provide('env') env: CCliEnv = new CCliEnv();
-        @Provide('noLable') noLable: boolean = false;
         loadModal:boolean = false;
         tableData:any = [];
         checkAll:boolean = false;

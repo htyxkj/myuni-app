@@ -205,6 +205,7 @@ export namespace BIPUtil {
 		 * @description 调用js http post 请求
 		 */
 		getFromServer(params: any) {
+			params["ioutsys"] = commURL.ioutsys;
 			return http.post('/sysapi', params, { header: { 'content-type': 'application/x-www-form-urlencoded' } });
 		}
 		getFromRegistered(param:any){

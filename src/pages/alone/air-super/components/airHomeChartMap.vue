@@ -3,11 +3,12 @@
 		<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
 			<view class="qiun-title-dot-light">{{data.name}}</view>
 		</view>
-		<u-field v-model="year" label="年份" placeholder="年份" icon='calendar'>
+		<u-field v-model="year.value" label="年份" placeholder="年份" icon='calendar' @click="showYear = true">
 			<view slot="right">
 				<u-button @click="btnClick" type="primary" size="mini" :ripple="true" ripple-bg-color="#909399">查询</u-button>
 			</view>
 		</u-field>
+		<u-select v-model="showYear" :list="yearArray" @confirm="yearConfirm"></u-select>
 		<view class="qiun-charts" >
 			<canvas v-if="chartId" :id="chartId" :canvasId="chartId" 
 			class="charts"
@@ -39,10 +40,20 @@
 		chartId: string = Tools.guid();
 		pixelRatio:any =1;
 		mapData:any = {};
-		year:any = new Date().getFullYear();
+		yearArray:Array<any> = [];
+		showSeason:any = false;
+		year:any = {};
+		showYear:boolean = false;
 		loadModal:boolean = false;
         async mounted() {
 			this.loadModal = true;
+			let year = new Date().getFullYear();
+			this.yearArray = [];
+			for(var i=0;i<5;i++){
+				let yy = {value:year-i,label:year-i}
+				this.yearArray.push(yy);
+			}
+			this.year = this.yearArray[0]
 			await this.initData()
             await this.initGeoJson();
 			this.loadModal = false;
@@ -120,7 +131,7 @@
 			qe.page.pageSize = 500;
 			qe.cont = "";
 			let oneCont = [];
-			let qCont = new QueryCont('iym',this.year,12);
+			let qCont = new QueryCont('iym',this.year.value,12);
 			qCont.setContrast(0);
 			oneCont.push(qCont);
 			qe.cont = "~["+JSON.stringify(oneCont)+"]"
@@ -151,6 +162,10 @@
 					return item.name + ':' + item.data 
 				}
 			});
+		}
+
+		yearConfirm(res:any){
+			this.year = res[0]
 		}
 	}
 </script>

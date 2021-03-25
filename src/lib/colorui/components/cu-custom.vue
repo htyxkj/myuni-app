@@ -32,9 +32,9 @@
 				var StatusBar= this.StatusBar;
 				var CustomBar= this.CustomBar;
 				var bgImage = this.bgImage;
-				var style = `height:${CustomBar}px;padding-top:${StatusBar}px;`;
+				var style = `height:${CustomBar}px;padding-top:${StatusBar}px;z-index:99999`;
 				if (this.bgImage) {
-					style = `${style}background-image:url(${bgImage});`;
+					style = `${style}background-image:url(${bgImage});z-index:99999`;
 				}
 				return style
 			}

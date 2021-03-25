@@ -1,10 +1,12 @@
 <template>
-	<view class="cu-form-group solid-bottom">
-		<template v-if="cell && !noLable">
-			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
-		</template>
-		<input class="text-right" :placeholder="cell.labelString || title " type="text" v-model="mode" disabled="true"/>
-		<text class="cuIcon-calendar" @tap.stop="open()"></text>
+	<view>
+		<view class="cu-form-group solid-bottom">
+			<template v-if="cell && !noLable">
+				<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString || title }}</view>
+			</template>
+			<input class="text-right" :placeholder="cell.labelString || title " type="text" v-model="mode" disabled="true"/>
+			<text class="cuIcon-calendar" @tap.stop="open()"></text>
+		</view>
 		<bip-picker-date :mode="pickerType" @confirm="onConfirm" ref="calendar" :limitDate="limitDate" ></bip-picker-date>
 	</view>
 </template>
@@ -25,7 +27,7 @@ import moment from "moment"
 })
 export default class bipDate extends Vue {
 	@Inject('env') env!:CCliEnv;
-	@Inject('noLable') noLable!:boolean;
+	@Prop({ type: Boolean }) noLable!: boolean;
 	@Prop({ default: '', type: String }) title!: string;
 	@Prop({ type: Object }) cell!: Cell;
 	@Prop({type:String}) obj_id!:string;

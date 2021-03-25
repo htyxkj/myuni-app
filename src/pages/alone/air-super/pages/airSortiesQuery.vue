@@ -45,7 +45,6 @@
         sortiesCell: CDataSet = new CDataSet(""); //飞防任务对象(查询条件)
         jcCell:CDataSet = new CDataSet("");//架次对象
         @Provide('env') env: CCliEnv = new CCliEnv();
-        @Provide('noLable') noLable: boolean = false;
         loadModal:boolean = false;
         tableData:any = [];
         checkAll:boolean = false;

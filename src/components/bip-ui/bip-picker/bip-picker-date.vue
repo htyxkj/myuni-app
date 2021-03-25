@@ -1,5 +1,6 @@
 <template>
-	<view class="w-picker">
+<view>
+	<view class="w-picker my-w-picker" v-show="showPicker">
 		<view class="mask" :class="{ show: showPicker }" @tap="maskTap" @touchmove.stop.prevent catchtouchmove="true"></view>
 		<view class="w-picker-cnt" :class="{ show: showPicker }">
 			<!-- 【确定】【取消】按钮区域 -->
@@ -71,6 +72,7 @@
 			</view>
 		</view>
 	</view>
+</view>
 </template>
 <script lang="ts">
 const modeList = ['half', 'date', 'datetime', 'ym', 'time', 'limit', 'limitHour', 'range', 'linkage']; //过滤无效mode; 以后做过滤使用
@@ -458,4 +460,12 @@ export default class bipPickerDate extends Vue {
 </script>
 <style lang="scss">
 @import './picker.scss';
+.my-w-picker{
+	position: fixed;
+    z-index: 1000;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
 </style>

@@ -156,15 +156,10 @@ export default class BipScriptProc {
       sgs = sgs.substring(x0 + 1);
       x0 = sgs.indexOf(".");
     }
-    // 是方法
-    // if(bf){
-
-    // }
     console.log(sgs, "调用方法");
   }
 
   invokefun(scf: string, fps: Array<any>) {
-    console.log("invokefun", scf);
     let x0 = scf.length;
     if (x0 === 1 && scf.charAt(0) === "M") {
       return this.invokemem(fps);
@@ -184,9 +179,17 @@ export default class BipScriptProc {
     }
     x0 = scf.lastIndexOf(".");
     if (x0 < 0) {
-      let fn = eval("this.f_" + scf);
-      if (fn) return this.doCallBackFn(fn, [fps]);
-      else {
+      if(scf == 'ifelse'){
+        return this.f_ifelse.apply(this,[fps]);
+      }else if(scf == "substr"){
+        return this.f_substr.apply(this,[fps]);
+      }else if(scf == "dateadd"){
+        return this.f_dateadd.apply(this,[fps]);
+      }else if(scf == "datesub"){
+        return this.f_datesub.apply(this,[fps]);
+      }else if(scf == "sql"){
+        return this.f_sql.apply(this,[fps]);
+      }else{
         console.log("没有这个方法:" + scf);
         return null;
       }

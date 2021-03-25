@@ -1,6 +1,6 @@
 <template>
 	<view style="background-color: #ffffff;" class="bipCardMyCard">
-		<u-card padding="5">
+		<u-card padding="5" margin="5">
 			<view slot="body" v-if="countData">
 				<u-row justify="flex-end" class="top1">
 					<u-col span="3">

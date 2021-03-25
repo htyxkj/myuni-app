@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view style="position:relative">
 		<view class="cu-bar bg-white solid-bottom" @tap.stop="openlist">
 			<view class="action" v-if="pkList.length>0">
 				<text class="cuIcon-titles text-red"></text>
@@ -14,32 +14,57 @@
 				</view>
 			</view>
 		</view>
+		<template v-if="watermar_field && watermar_img[record.data[watermar_field]]">
+			<u-image class="watermar_img" width="300rpx" height="300rpx" :src="watermar_img[record.data[watermar_field]]"></u-image>
+		</template>
 	</view>
 </template>
 <script lang="ts">
 import { Vue, Prop, Component, Inject,Watch } from 'vue-property-decorator';
 import CCliEnv from '@/classes/cenv/CCliEnv'
-import CDataSet from '@/classes/pub/CDataSet';
 import bipCommShow from '../bip-comm/bip-comm-show.vue';
-import CRecord from '@/classes/pub/CRecord';
+import comm from '@/static/js/comm.js';
+let commURL: any = comm;
 @Component({
 	components: {bipCommShow}
 })
 export default class bipListUnit2 extends Vue {
+	@Inject('env') env!:CCliEnv;
 	@Prop({type:String}) obj_id!:string;
 	@Prop({type:Array,default:[]}) cels!:Array<any>;
 	@Prop({type:Number,default:0}) rowId!:number;
 	@Prop() record!:any;
 	@Prop({type:Boolean,default:true}) showList!:boolean;
 	
+	watermar_field:any = null;//水印字段
+	watermar_img:any = {};//水印图片
+
 	mounted(){
-		// console.log(this.record)
+		this.initWatermark();
 	}
 	openlist(){
 		this.$emit('openitem',this.pkList[0].id,this.rowId,this.record.data);
 	}
 	openlist1(index:any,idx:any){
 		this.$emit('openitem',this.celsRowList[index][idx].id,this.rowId,this.record.data);
+	}
+
+	initWatermark(){
+		if(this.env && this.env.uriParams){
+			let pbds = this.env.uriParams.pbds;
+			let watermark = pbds.watermark;
+			if(watermark){
+				let ww = watermark.split(";")
+				this.watermar_field = ww[0];
+				let imgs = ww[1].split(",");
+				for(var i=0;i<imgs.length;i++){
+					let img = imgs[i].split("=")
+					let key = img[0];
+					let url = commURL.BaseUri + img[1];
+					this.watermar_img[key] = url;
+				}
+			}
+		}
 	}
 
 	get svList(){
@@ -111,3 +136,10 @@ export default class bipListUnit2 extends Vue {
 	}
 }
 </script>
+<style scoped>
+.watermar_img{
+	position: absolute;
+    top: 30px;
+    right: 0px;
+}
+</style>

@@ -27,13 +27,12 @@ let bstools = baseUtils.tools;
 import { dataTool } from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils;
 import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
-import View from '../../../../../hello-uniapp-master/pages/component/view/view.vue';
 @Component({
 	components: {bipSelect}
 })
 export default class bipList extends Vue{
 	@Inject('env') env!:CCliEnv;
-	@Inject('noLable') noLable!:boolean;
+	@Prop({ type: Boolean }) noLable!: boolean;
 	@Prop({ type: Object }) cell!: Cell;
 	bipInsAid:BipInsAidNew = new BipInsAidNew("");
 	@Prop({type:String}) obj_id!:string;

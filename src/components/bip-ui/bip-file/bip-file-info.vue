@@ -78,6 +78,9 @@ export default class bipFileInfo extends Vue {
 			}else if(this.cell.refValue =='{1}'){
 				sourceType.push('camera');
 			}
+		}else{
+			sourceType.push('album');
+			sourceType.push('camera');
 		}
 		uni.chooseImage({
 			count: this.count, //默认9

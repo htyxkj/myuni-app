@@ -1,8 +1,8 @@
 <template>
-	<view>
-		<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" 
+	<view style="margin-top:8px">
+		<!-- <load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" 
 			:heightReduce="210" :pageNo="1" :totalPageNo="1" @refresh="refresh" :isShowGoToTop="false">
-			<view  slot="content-list">
+			<view  slot="content-list"> -->
 				<view v-for="(item,index) in layout" :key="index" class="margin-bottom-xs bg-white">
 					<template v-if="item.comid == '001' || item.comid == '005'">
 						<jiugongge :layoutdata="item"></jiugongge>
@@ -29,8 +29,10 @@
 						<bipList :layoutdata="item"></bipList>
 					</template>
 				</view>
-			</view>
-		</load-refresh>
+			<!-- </view>
+		</load-refresh> -->
+		
+		<view class="padding margin"></view>
 	</view>
 </template>
 <script lang="ts">

@@ -45,7 +45,6 @@
      */
 	export default class checkRecord extends Vue {
         @Provide('env') env: CCliEnv = new CCliEnv();
-        @Provide('noLable') noLable:boolean = false;
         @Provide('mbs') mbs: BipMenuBar = new BipMenuBar();
         uriParam: URIParams = new URIParams();
         title:any = "";

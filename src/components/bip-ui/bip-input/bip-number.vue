@@ -1,9 +1,10 @@
 <template>
 	<view class="cu-form-group solid-bottom text-green">
 		<template v-if="cell">
-			<view class="title" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
+			<view class="title" v-if="!noLable" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
 			<input class="text-right" :placeholder="cell.labelString" type="number" v-model="mode" @blur="dataChange" :disabled="disabled" />
 		</template>
+		<message ref="msg"></message>
 	</view>
 </template>
 
@@ -16,8 +17,9 @@
 	import { dataTool } from '@/classes/tools/DataTools';
 	const DataUtil = dataTool.utils;
 	@Component({})
-	export default class bipInput extends Vue{
+	export default class bipNumberInput extends Vue{
 		@Inject('env') env!:CCliEnv;
+		@Prop({ type: Boolean }) noLable!: boolean;
 		@Prop({default:'digit',type:String}) type!:string
 		@Prop({default:false,type:Boolean}) clearable!:boolean
 		@Prop({type:Object}) cell!:Cell;
@@ -25,11 +27,13 @@
 		cds:CDataSet = new CDataSet(null)
 		at0:boolean = true
 		mode:string = ''
+		mode1:string = ''
 		open(){
 			this.at0 = !this.at0
 		}
 		clear(){
 			this.mode = ''
+			this.mode1 = ''
 		}
 		
 		mounted(){
@@ -48,6 +52,56 @@
 			this.$nextTick(()=>{
 				if(this.mode != this.record.data[this.cell.id]){
 					this.mode = this.formatNumber(this.mode);
+					let val = parseFloat(this.mode);
+					if (isNaN(val)) {
+						val = 0;
+					}
+					if (this.cell.chkRule) {
+						let rr = this.cell.chkRule;
+						let rules = rr.split(";");
+						for (let k = 0; k < rules.length; k++) {
+							if (rr.indexOf("~") > 0) {
+								let vr: Array<any> = rr.split("~");
+								if (vr[0] != "") {
+									let min:number = parseFloat(vr[0]);
+									if (isNaN(min)) {
+										min = 0;
+									}
+									if (val < min) {
+										let errInfo: string = "不可以小于最小值【" + min + "】";
+										let msg:any = this.$refs['msg'];
+            							msg.error({background: true,content:errInfo})
+										this.mode = this.mode1;
+										return;
+									}
+								}
+								if (vr[1] != "") {
+									let max = parseFloat(vr[1]);
+									if (isNaN(max)) {
+										max = 0;
+									}
+									if (val > max) {
+										let errInfo: string = "不可以超过最大值【" + max + "】";
+										let msg:any = this.$refs['msg'];
+            							msg.error({background: true,content:errInfo})
+										this.mode = this.mode1;
+										return;
+									}
+								}
+							} else {
+								if ("D" == rr && this.mode) {
+									if (!this.isNumber(this.mode)) {
+										let errInfo: string = "请输入数字...";
+										let msg:any = this.$refs['msg'];
+            							msg.error({background: true,content:errInfo})
+										this.mode = this.mode1;
+										return;
+									}
+								}
+							}
+						}
+					}
+					this.mode1 = this.mode;
 					this.cds.cellChange(this.mode,this.cell.id);
 					DataUtil.checkGS(this.cds,this.env,this.cell);
 				}
@@ -111,8 +165,14 @@
 			})
 			
 		}
-		
-		
+		/**
+		 * 判断值是否是 数字
+		*/
+		isNumber(value: any): boolean {
+			let reg = new RegExp("^-?[0-9]+.?[0-9]*$");
+			let rr = reg.test(value);
+			return rr;
+		}
 		
 	}
 </script>

@@ -166,7 +166,7 @@
 	.container {
 		left: 0;
 		right: 0;
-		top: calc(var(--status-bar-height) + 24px);
+		top: calc(var(--status-bar-height) + 44px);
 		min-width: 10rpx;
 		max-width: 550rpx;
 		position: fixed;

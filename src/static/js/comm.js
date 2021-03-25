@@ -74,10 +74,10 @@ export const ItemType = "itemCtrl";
 
 
 // export const BaseUri =  "http://127.0.0.1:9999/jd";
-// export const BaseDBID = "122";
-// export const ItemType = "air-super";
+// export const BaseDBID = "158";
+// export const ItemType = "itemCtrl";
 
-
-export const version = 135;
+export const ioutsys = 2;//项目类型， 移动端，小程序，APP
+export const version = 136;
 export const SMSURL = "https://www.bip-soft.com/ssms/";
-export default {BaseUri, BaseDBID,SMSURL,ItemType,version}
+export default {BaseUri, BaseDBID,SMSURL,ItemType,version,ioutsys}

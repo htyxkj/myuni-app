@@ -1,14 +1,15 @@
 <template>
 	<view>
 		<air-home-chart-map v-if="moduleName=='air-home-chart-map'" :data="d1"></air-home-chart-map>
-		<air-map v-else-if="moduleName=='air-home-map'" :data="d1" :option="option" class="air-map"></air-map><!-- 作废 -->
+		<air-home-chart-analysis v-else-if="moduleName=='air-home-chart-analysis'" :data="d1"></air-home-chart-analysis>
 	</view>
 </template>
 <script lang="ts">
 	import {Vue,Prop,Component} from 'vue-property-decorator';
 	import AirHomeChartMap from '@/pages/alone/air-super/components/airHomeChartMap.vue';
+	import AirHomeChartAnalysis from '@/pages/alone/air-super/components/airHomeChartAnalysis.vue';
 	@Component({
-		components:{AirHomeChartMap}
+		components:{AirHomeChartMap,AirHomeChartAnalysis}
 	})
 	export default class CodeModule extends Vue {
 		@Prop({default:null}) layoutdata?:any;

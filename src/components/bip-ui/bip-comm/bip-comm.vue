@@ -1,46 +1,46 @@
 <template>
 	<view style="width:100%">
 		<template v-if="cell.type==91||cell.type==93">
-			<bip-date :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-date>
+			<bip-date :label="cell.labelString" :cell="cell" :obj_id="obj_id" :noLable="noLable"></bip-date>
 		</template>
 		<template v-else-if="cell.assist">
 			<template v-if="cell.editType==6">
-				<bip-image :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-image>
+				<bip-image :label="cell.labelString" :cell="cell" :obj_id="obj_id" :noLable="noLable"></bip-image>
 			</template>
 			<template v-else-if="bipInsAid.bType === 'CSelectEditor' || bipInsAid.bType === 'CGroupEditor'">
-				<bip-select :label="cell.labelString" :cell="cell" :bipInsAid="bipInsAid" :obj_id="obj_id"></bip-select>
+				<bip-select :label="cell.labelString" :cell="cell" :bipInsAid="bipInsAid" :obj_id="obj_id" :noLable="noLable"></bip-select>
 			</template>
 			<template v-else-if="bipInsAid.bType === 'CDateEditor' || bipInsAid.bType === 'CYMEditor'">
-				<bip-date :label="cell.labelString" :cell="cell" :obj_id="obj_id" :bType="bipInsAid.bType"></bip-date>
+				<bip-date :label="cell.labelString" :cell="cell" :obj_id="obj_id" :bType="bipInsAid.bType" :noLable="noLable"></bip-date>
 			</template>
 			<template v-else-if="bipInsAid.bType === 'CUpDownEditor'">
-				<bip-file :label="cell.labelString !='' " :cell="cell" :obj_id="obj_id"></bip-file>
+				<bip-file :label="cell.labelString !='' " :cell="cell" :obj_id="obj_id" :noLable="noLable"></bip-file>
 			</template>
 			<template v-else-if="bipInsAid.bType === 'CTreePopEditor'">
-				<bip-tree-editor :label="cell.labelString" :cell="cell" :bipInsAid="bipInsAid" :obj_id="obj_id"></bip-tree-editor>
+				<bip-tree-editor :label="cell.labelString" :cell="cell" :bipInsAid="bipInsAid" :obj_id="obj_id" :noLable="noLable"></bip-tree-editor>
 			</template>
 			<template v-else>
 				<view>{{cell.labelString}}--{{bipInsAid.bType}}</view>
 			</template>
 		</template>
 		<template v-else>
-			<template v-if="cell.type==3">
-				<bip-number :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-number>
+			<template v-if="cell.type >=2 && cell.type<9">
+				<bip-number :label="cell.labelString" :cell="cell" :obj_id="obj_id" :noLable="noLable"></bip-number>
 			</template>
 			<template v-else-if="cell.editType==1">
-				<bip-list :label="cell.labelString" :cell="cell" :obj_id="obj_id" ></bip-list>
+				<bip-list :label="cell.labelString" :cell="cell" :obj_id="obj_id"  :noLable="noLable"></bip-list>
 			</template>
 			<template v-else-if="cell.editType==12"><!-- 地图 -->
-				<bip-gps :label="cell.labelString" :cell="cell" :obj_id="obj_id" ></bip-gps>
+				<bip-gps :label="cell.labelString" :cell="cell" :obj_id="obj_id"  :noLable="noLable"></bip-gps>
 			</template>
 			<template v-else-if="cell.editType==10"><!-- 富文本 -->
-				<bip-edit :label="cell.labelString" :cell="cell" :obj_id="obj_id" ></bip-edit>
+				<bip-edit :label="cell.labelString" :cell="cell" :obj_id="obj_id"  :noLable="noLable"></bip-edit>
 			</template>
 			<template v-else-if="cell.refValue">
-				<bip-ref :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-ref>
+				<bip-ref :label="cell.labelString" :cell="cell" :obj_id="obj_id" :noLable="noLable"></bip-ref>
 			</template>
 			<template v-else>
-				<bip-input :label="cell.labelString" :cell="cell" :obj_id="obj_id"></bip-input>
+				<bip-input :label="cell.labelString" :cell="cell" :obj_id="obj_id" :noLable="noLable"></bip-input>
 			</template>
 		</template>
 	</view>
@@ -49,7 +49,6 @@
 <script lang="ts">
 import { Vue, Provide, Prop, Component ,Inject,Watch} from 'vue-property-decorator';
 import { Tools } from '@/classes/tools/Tools';
-import BipLayCells from '@/classes/ui/BipLayCells';
 import Cell from '@/classes/pub/coob/Cell';
 import CCliEnv from '@/classes/cenv/CCliEnv'
 // import { BIPUtil } from '@/classes/api/request';
@@ -76,6 +75,7 @@ import bipEdit from '../bip-edit/bip-edit.vue';
 export default class bipComm extends Vue{
 	@Inject('env') env!:CCliEnv;
 	@Prop({type:String}) obj_id!:string;
+	@Prop({type:Boolean,default:false}) noLable!:boolean;
 	@Prop() cell!:Cell
 	id:string = Tools.guid()
 	bipInsAid:BipInsAidNew = new BipInsAidNew('')

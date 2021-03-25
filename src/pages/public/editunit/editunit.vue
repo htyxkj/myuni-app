@@ -32,7 +32,6 @@
 		@Provide('env') env:CCliEnv = new CCliEnv();
 		cds: CDataSet = new CDataSet(null);
 		@Provide('mbs') mbs: BipMenuBar = new BipMenuBar();
-		@Provide('noLable') noLable: boolean = false;
 		initOK:boolean = false;
 		onLoad(option: any) {
 			setTimeout(() => {

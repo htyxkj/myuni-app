@@ -34,7 +34,7 @@
 	@Component({})
 	export default class bipInput extends Vue{
 		@Inject('env') env!:CCliEnv;
-		@Inject('noLable') noLable!:boolean;
+		@Prop({ type: Boolean }) noLable!: boolean;
 		@Prop({default:'text',type:String}) type!:string
 		@Prop({default:false,type:Boolean}) clearable!:boolean
 		@Prop({type:Object}) cell!:Cell;
