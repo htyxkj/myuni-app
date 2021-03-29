@@ -43,7 +43,6 @@ import Cell from '@/classes/pub/coob/Cell';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import CDataSet from '@/classes/pub/CDataSet';
 import comm from '@/static/js/comm.js';
-import { fn } from 'moment';
 let commURL: any = comm;
 import { dataTool } from '@/classes/tools/DataTools';
 const DataUtil = dataTool.utils;

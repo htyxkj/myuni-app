@@ -1,21 +1,23 @@
 <template>
 	<view class="cu-bar tabbar bg-white shadow foot my-b-menu">
-		<view v-if="(attr & 1) == 1 && addBtn" class="submit bg-blue margin-sm" @click="tabSelect(addBtn)" data-id="ADD" :data-btn="addBtn" ><text>添加</text></view>
-		<view v-if="(attr & 2) == 2 && saveBtn" class="submit bg-green margin-sm" @click="tabSelect(saveBtn)" data-id="SAVE" :data-btn="saveBtn" ><text>保存</text></view>
-		<template v-if="bottomData&&bottomData.length>0&&bmore">
+		<template v-for="(item,index) in bottomData">
+			<view v-if="index<=1" :key="index" class="submit margin-sm" :class="[index==0?'bg-blue':'bg-green']" @click="tabSelect(item)"  :data-id="item.cmd" :data-btn="item">
+				<text>{{ item.name }}</text>
+			</view>
+		</template>
+		<!-- <view v-if="(attr & 1) == 1 && addBtn" class="submit bg-blue margin-sm" @click="tabSelect(addBtn)" data-id="ADD" :data-btn="addBtn" ><text>添加</text></view>
+		<view v-if="(attr & 2) == 2 && saveBtn" class="submit bg-green margin-sm" @click="tabSelect(saveBtn)" data-id="SAVE" :data-btn="saveBtn" ><text>保存</text></view> -->
+		<template v-if="bottomData&&bottomData.length>2&&bmore">
 			<view class="submit margin-sm" @tap="open"><text class="cuIcon-settingsfill text-blue lg"></text>更多操作</view>
 			<uni-popup :show="showP" type="bottom" :custom="true" @change="change">
-				<!-- <bip-share :arrdata="bottomData" @close="close" @itemClick="itemClick"></bip-share> -->
 				<view class=" bg-white myradius">
 					<view class="padding mytitle">更多操作</view>
 					<view class="cu-list grid col-4">
 						<template v-for="(item,index) in bottomData">
-							<template v-if="item.cmd !== 'ADD' && item.cmd !== 'SAVE'">
-								<view class="cu-item" :key="index" @click="tabSelect(item)"  :data-id="item.cmd" :data-btn="item" :class="[item.cmd=='DEL'?'text-red':'',item.cmd=='COPY'?'text-green':'',item.cmd=='SUBMIT'?'text-blue':'',item.cmd=='CHECK'?'text-purple':'',item.cmd=='CHECKPROCESS'?'text-mauve':getTextClor()]">
-									<view :class="['cuIcon-' + item.icon]"></view>
-									<text class="text-lg">{{ item.name }}</text>
-								</view>
-							</template>
+							<view v-if="index>1" class="cu-item" :key="index" @click="tabSelect(item)"  :data-id="item.cmd" :data-btn="item" :class="[item.cmd=='DEL'?'text-red':'',item.cmd=='COPY'?'text-green':'',item.cmd=='SUBMIT'?'text-blue':'',item.cmd=='CHECK'?'text-purple':'',item.cmd=='CHECKPROCESS'?'text-mauve':getTextClor()]">
+								<view :class="['cuIcon-' + item.icon]"></view>
+								<text class="text-lg">{{ item.name }}</text>
+							</view>
 						</template>
 					</view>
 				</view>
@@ -46,33 +48,14 @@ export default class bipBillBar extends Vue {
 	showP: boolean = false;
 	bottomData: Array<any> = [];
 
-	addBtn:any = null;//添加按钮
-	saveBtn:any = null;//保存按钮
-
 	mounted() {
-		this.bottomData = [];
-		this.mbs.menuList.forEach((item: any) => {
-			if(item.cmd == 'ADD'){
-				this.addBtn = item;
-			}
-			if(item.cmd == 'SAVE'){
-				this.saveBtn = item;
-			}
-			this.bottomData.push(item);
-		});
+		this.bottomData = this.mbs.menuList;
 		this.tabcur = this.tbI;
 	}
 	tabSelect(e: any) {
 		this.$emit('tabSelect', e);
 		this.close();
 	}
-
-	itemClick(index: number) {
-		console.log(index);
-	}
-
-	openMenu(item: any, index: number) {}
-
 	open() {
 		this.showP = true;
 	}
@@ -87,19 +70,9 @@ export default class bipBillBar extends Vue {
 		let num = Math.ceil(Math.random()*color.length);
 		return color[num];
 	}
-
 	@Watch('mbs', { deep: true })
 	mbsChange() {
-		this.bottomData = [];
-		this.mbs.menuList.forEach((item: any) => {
-			if(item.cmd == 'ADD'){
-				this.addBtn = item;
-			}
-			if(item.cmd == 'SAVE'){
-				this.saveBtn = item;
-			}
-			this.bottomData.push(item);
-		});
+		this.bottomData = this.mbs.menuList;
 	}
 }
 </script>

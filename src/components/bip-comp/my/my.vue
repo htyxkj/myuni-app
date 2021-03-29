@@ -1,8 +1,11 @@
 <template>
 	<view class="mine-info">
 		<view class=" bg-white header">
-			<view>
-				<image v-if="mycomm" class="cu-avatar xl round my-margin-top bg-white"  :src="'../../../static/'+mycomm.ItemType+'.png'" mode="aspectFit"></image>
+			<view v-if="mycomm">
+				<view v-if="type=='MP-WEIXIN'"  class="cu-avatar xl round my-margin-top " style="overflow:hidden">
+					<open-data type="userAvatarUrl" :default-avatar="'../../static/'+mycomm.ItemType+'.png'" style="margin-top:10px"></open-data>
+				</view>
+				<image v-else class="cu-avatar xl round my-margin-top bg-white"  :src="'../../static/'+mycomm.ItemType+'.png'" mode="aspectFit"></image>
 			</view>
 			<view class="my-info my-margin-top">
 				<view style="font-weight: 600;">{{AttrTitle}}</view>
@@ -33,11 +36,11 @@
 				<text class="cuIcon-titles text-blue "></text>退出系统
 			</view>
 		</view>
-		<!-- <view class="cu-bar bg-white solid-bottom margin-top">
+		<view class="cu-bar bg-white solid-bottom" v-if="type =='APP'" @tap="checkUp">
 			<view class="action">
-				<text class="cuIcon-titles text-progress "></text>关于我们
+				<text class="cuIcon-titles text-progress "></text>更新至最新版
 			</view>
-		</view> -->
+		</view>
 		<!-- <button class="bg-blue margin-tb-sm lg" >退出登录</button> -->
 		<!--修改密码-->
 		<view class="cu-modal" style="z-index: 100;" :class="mdPass?'show':''">
@@ -105,6 +108,7 @@
 	} from '@/store/module/login'; //导入vuex模块，自动注入
 	import comm from '@/static/js/comm.js';
 	let commURL: any = comm;
+	import { Tools } from '@/classes/tools/Tools';
 	@Component({
 		components:{}
 	})
@@ -121,12 +125,20 @@
 		editName:any ='MULGW';//岗位辅助
 
 		mycomm:any = null;
+
+		type:any = "H5";
 		onLoad() {
 			this.mycomm = commURL;
 		}
 		async mounted() {
 			await this.getGWName(this.user.gwCode);
 			this.mycomm = commURL;
+			//#ifdef APP-PLUS
+				this.type = "APP"
+			//#endif
+			//#ifdef MP-WEIXIN
+				this.type = "MP-WEIXIN"
+			//#endif
 		}
 		get user(){
 			return LoginModule.user
@@ -141,7 +153,7 @@
 					if (res.confirm) {
 						// uni.navigateTo({'url':'/pages/login/login'})
 						//关闭所有页面，打开到应用内的某个页面。
-						uni.clearStorage();
+						uni.clearStorageSync();
 						uni.reLaunch({'url':'/pages/login/login'})
 					}
 				}
@@ -173,7 +185,21 @@
 				})
 			}
 		}
-		
+		/**
+		 * 检查更新
+		 */
+		checkUp(){
+			//#ifdef APP-PLUS
+			uni.getSystemInfo({
+				success:(res) => {
+					//检测当前平台，如果是安卓则启动安卓更新  
+					if(res.platform=="android"){
+						Tools.AndroidCheckUpdate(true);  
+					}  
+				}  
+			})
+			//#endif
+		}
 		open(index:number){
 			console.log('open',index);
 			switch(index){

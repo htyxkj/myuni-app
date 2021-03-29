@@ -37,7 +37,6 @@
 
 <script lang="ts">
 import { Vue, Provide, Prop,Watch, Component } from 'vue-property-decorator';
-// import { UriPModule } from '@/store/module/uripm'; //导入vuex模块，自动注入
 import mLoad from '@/components/mLoad.vue';
 import bipSearchCon from '@/components/bip-ui/bip-search/bip-search-con.vue'
 import bipListUnit2 from '@/components/bip-ui/bip-unit/bip-list-unit2.vue';

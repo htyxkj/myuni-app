@@ -7,7 +7,7 @@
 			<template v-if="cell.editType==6">
 				<bip-image :label="cell.labelString" :cell="cell" :obj_id="obj_id" :noLable="noLable"></bip-image>
 			</template>
-			<template v-else-if="bipInsAid.bType === 'CSelectEditor' || bipInsAid.bType === 'CGroupEditor'">
+			<template v-else-if="bipInsAid.bType === 'CSelectEditor' || bipInsAid.bType === 'CGroupEditor' || bipInsAid.bType === 'CDynaEditor'">
 				<bip-select :label="cell.labelString" :cell="cell" :bipInsAid="bipInsAid" :obj_id="obj_id" :noLable="noLable"></bip-select>
 			</template>
 			<template v-else-if="bipInsAid.bType === 'CDateEditor' || bipInsAid.bType === 'CYMEditor'">

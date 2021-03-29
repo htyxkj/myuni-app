@@ -72,7 +72,6 @@
 		//查询服务端任务数据
 		async queryTaskInfo() {
 			let cc = await tools.getTaskMsgData(212,null,null,null,null,null,this.currPage,this.pageSize,this.keyword);
-			console.log(cc);
 			if(cc.data.id ==0){
 				let page = cc.data.data.page;
 				if(this.currPage==1){

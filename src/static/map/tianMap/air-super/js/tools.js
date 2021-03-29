@@ -31,7 +31,8 @@ var isWatherRound = false;//是否显示天气圆圈
 
 var nowspeed = 0;//当前速度
 var nowheight = 0;//海拔高度
-var nowpressure = 0;//当前压力
+var nowpressure1 = 0;//当前压力1
+var nowpressure2 = 0;//当前压力2
 var jscsbid = '';//设备编码
 var nowflow = 0;//当前流量
 var sumflow = 0;//累计流量
@@ -600,13 +601,15 @@ function passOneNode(LngLat,index,length){
 	percent = (index+dragPoints)/taskData.length *100;
 	if(data){
 		nowtime = data.speedtime;
-		nowspeed = (data.speed).toFixed(3);
+		nowspeed = (data.speed).toFixed(2);
 		if(data.windspeed)
 			windSpeed = data.windspeed;//风速
 		if(data.humidity)
 			humidity = data.humidity;//湿度
 		if(data.pressure)
-			nowpressure = (data.pressure).toFixed(1); //压力
+			nowpressure1 = (data.pressure).toFixed(1); //压力1
+		if(data.pressure)
+			nowpressure2 = (data.pressure2).toFixed(1); //压力2
 		if(data.sbid)
 			jscsbid = data.sbid;
 		if(data.temperature)
@@ -1479,7 +1482,8 @@ function setJobRecord(){
 	document.getElementById("nowtime").innerHTML = this.nowtime;//当前时间
 	document.getElementById("nowspeed").innerHTML = this.nowspeed + "km/h";//当前速度
 	document.getElementById("nowheight").innerHTML = this.nowheight  + "m";//海拔高度
-	document.getElementById("nowpressure").innerHTML = this.nowpressure +"kpa" ;//当前压力
+	document.getElementById("nowpressure1").innerHTML = this.nowpressure1 +"kpa" ;//当前压力1
+	document.getElementById("nowpressure2").innerHTML = this.nowpressure2 +"kpa" ;//当前压力2
 	document.getElementById("nowflow").innerHTML = this.nowflow +"m³/h";//当前流量
 	document.getElementById("sumflow").innerHTML = this.sumflow +"m³";//累计流量
 	document.getElementById("windSpeed").innerHTML = this.windSpeed +"m/s";//当前风速

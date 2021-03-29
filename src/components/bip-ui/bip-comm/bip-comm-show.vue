@@ -19,18 +19,9 @@
 </template>
 
 <script lang="ts">
-import { Vue, Provide, Prop, Component ,Inject,Watch} from 'vue-property-decorator';
+import { Vue, Provide, Prop, Component } from 'vue-property-decorator';
 import { Tools } from '@/classes/tools/Tools';
-import BipLayCells from '@/classes/ui/BipLayCells';
 import Cell from '@/classes/pub/coob/Cell';
-import CCliEnv from '@/classes/cenv/CCliEnv'
-// import { BIPUtil } from '@/classes/api/request';
-// let tools = BIPUtil.ServApi;
-import {icl} from '@/classes/tools/CommICL';
-const ICL = icl; 
-import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
-import BipInsAidNew from '@/classes/BipInsAidNew';
-
 import bipShowComm from '../bip-show/bip-show-comm.vue';
 import bipShowNumber from '../bip-show/bip-show-number.vue';
 import bipShowDate from '../bip-show/bip-show-date.vue';

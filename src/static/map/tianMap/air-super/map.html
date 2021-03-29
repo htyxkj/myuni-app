@@ -43,6 +43,9 @@
 			.tdt-map-pane canvas {
 				z-index: 300 !important;
 			}
+			td{
+				padding: .3rem;
+			}
         </style>
     </head>
     <body>
@@ -489,21 +492,22 @@
 						<tr>
 							<td>速度</td>
 							<td>高度</td>
-							<td>压力</td>
-							<td>流量</td>
-							<td>累计喷洒流量</td>
+							<td>压力1</td>
+							<td>压力2</td>
+							<td colspan="2">累计喷洒流量</td>
 						</tr>
 						<tr>
 							<td id="nowspeed"></td>
 							<td id="nowheight"></td>
-							<td id="nowpressure"></td>
-							<td id="nowflow"></td>
-							<td id="sumflow"></td>
+							<td id="nowpressure1"></td>
+							<td id="nowpressure2"></td>
+							<td colspan="2" id="sumflow"></td>
 						</tr>
 						<tr>
 							<td>风速</td>
 							<td>温度</td>
 							<td>湿度</td>
+							<td>流量</td>
 							<td>飞行时长</td>
 							<td>喷洒时长</td>
 						</tr>
@@ -511,6 +515,7 @@
 							<td id="windSpeed"></td>
 							<td id="nowtemperature"></td>
 							<td id="humidity"></td>
+							<td id="nowflow"></td>
 							<td id="sumtime"></td>
 							<td id="sumtimeflow"></td>
 						</tr>

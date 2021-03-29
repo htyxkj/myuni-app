@@ -46,7 +46,6 @@
 			}else{
 				this.loadModal = false;
 			}
-			console.log(res);
 		}
 		
 		//查询服务端任务数据

@@ -101,7 +101,6 @@
 		refresh(){
 
 		}
-
 		@Watch('menu')
 		async menuChange() {
 			this.layout = [];

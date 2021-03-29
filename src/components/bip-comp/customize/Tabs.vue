@@ -14,14 +14,11 @@
 	</view>
 </template>
 <script lang="ts">
-	import comm from '@/static/js/comm.js';
-	let commURL: any = comm;
 	import {Vue,Prop,Component} from 'vue-property-decorator';
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import Menu from '@/classes/Menu';
 	import {BIPUtil} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
-	import mMenu from '@/components/mMenu.vue'
 	import URIParams from '@/classes/URIParams'
 	import applist from './form/applist.vue';
 	import appreport from './form/appreport.vue';

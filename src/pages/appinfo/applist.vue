@@ -88,7 +88,7 @@ export default class appList extends Vue {
 		return [];
 	}
 
-	openList(rid: number) {
+	openList(id:any,rid: number,rdata:any) {
 		if (!this.isjump) {
 			this.isjump = true;
 			uni.showLoading({

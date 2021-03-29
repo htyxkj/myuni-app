@@ -36,7 +36,10 @@
 				"pages/appinfo",
 				"pages/appreport/",
 				"pages/public/",
-				"pages/alone/flexible/"
+				"pages/alone/flexible/",
+				"pages/alone/air-super/pages/",
+				"pages/alone/mine/",
+				"pages/alone/credit/"
 			]
 		}
 	},

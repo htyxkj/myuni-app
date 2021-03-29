@@ -34,7 +34,6 @@ import CRecord from '@/classes/pub/CRecord';
 import BipInsAidNew from '@/classes/BipInsAidNew';
 import CCliEnv from '@/classes/cenv/CCliEnv'
 import CDataSet from '@/classes/pub/CDataSet';
-// import bipTree from './bip-tree.vue';
 import QueryEntity from '@/classes/search/QueryEntity';
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;

@@ -35,20 +35,15 @@
 	import BipTask from '@/components/bip-comp/task/BipTask.vue';
 	import my from '@/components/bip-comp/my/my.vue';
 	import customize from '@/components/bip-comp/customize/Index.vue';
-	import mIndexBar from '../../components/mIndexBar.vue'
+	import mIndexBar from '@/components/mIndexBar.vue'
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
-	import {
-		Tools
-	} from '../../classes/tools/Tools';
+	import { Tools } from '@/classes/tools/Tools';
 	import comm from '@/static/js/comm.js';
 	let commURL: any = comm;
 	import {singIn} from '@/pages/index/singIn/singIn'
 	import bipProtocol from '@/components/bip-ui/bip-protocol/bip-protocol.vue';
-	import QueryEntity from '@/classes/search/QueryEntity';
-	import {BIPUtil} from '@/classes/api/request';
-	let tools = BIPUtil.ServApi;
 	@Component({
 		components:{home,my,menuPage,mIndexBar,customize,BipTask,bipProtocol}
 	})
@@ -67,9 +62,6 @@
 		showpp:boolean = false;//显示隐私政策 服务协议
 
 		options:any = null;
-
-		server_version:any=null;//版本号
-		upd_type:any=null;//更新类型
 		
 		onLoad(options:any) {
 			//#ifdef APP-PLUS
@@ -113,165 +105,13 @@
 					success:(res) => {
 						//检测当前平台，如果是安卓则启动安卓更新  
 						if(res.platform=="android"){
-							console.log(res.platform)
-							this.AndroidCheckUpdate();  
+							Tools.AndroidCheckUpdate();  
 						}  
 					}  
 				})
 			}
 			//#endif
 		}
-		/**
-		 * 安卓应用的检测更新实现
-		 */
-		async AndroidCheckUpdate(){ 
-			let reminderInterval = 3600
-			let qe:QueryEntity = new QueryEntity('','');
-			let vv:any = await tools.getBipInsAidInfo('UNIAPPVERSION',300,qe);
-			if( vv && vv.data.id ==0){
-				let val = vv.data.data.data.values;
-				for(var i=0;i<val.length;i++){
-					if(val[i].code == "version"){
-						this.server_version  = val[i].name
-					}else if(val[i].code == "reminderInterval"){
-						reminderInterval  = parseInt(val[i].name)
-					}else if(val[i].code == "type"){
-						this.upd_type = val[i].name
-					}
-				}
-			}
-			if(this.server_version == commURL.version){
-				return;
-			}
-			let _this = this;
-
-			let currTimeStamp = new Date().getTime()/1000
-			// 判断缓存时间
-			uni.getStorage({
-				key: 'tip_version_update_time',
-				success: function (res) {
-					var lastTimeStamp = res.data;
-					//定义提醒的时间间隔，避免烦人的一直提示，一个小时：3600；一天：86400
-					if((currTimeStamp - lastTimeStamp) < reminderInterval){
-						//避免多次提醒，不要更新
-					}else{
-						//重新设置时间戳
-						_this.setStorageForAppVersion(currTimeStamp);
-						//进行版本型号的比对 以及下载更新请求
-						_this.checkVersionToLoadUpdate();
-					}
-				},
-				fail:function(res){
-					_this.setStorageForAppVersion(currTimeStamp);
-				}
-			});
-		}
-		/**
-		 * //设置应用版本号对应的缓存信息
-		 * @param {Object} currTimeStamp 当前获取的时间戳
-		 */
-		setStorageForAppVersion(currTimeStamp:any){
-			uni.setStorage({
-				key: 'tip_version_update_time',
-				data: currTimeStamp,
-				success: function () {
-					console.log('setStorage-success');
-				}
-			});
-		}
-		/**
-		 * 进行版本型号的比对 以及下载更新请求
-		 * @param {Object} server_version 服务器最新 应用版本号
-		 * @param {Object} curr_version 当前应用版本号
-		 */
-		checkVersionToLoadUpdate(){
-			let server_version = this.server_version;
-			let _this = this;
-			let curr_version = commURL.version;
-			if(server_version > curr_version){
-				uni.showModal({
-					title: "版本更新",
-					// content: '有新的版本发布，检测到您当前为Wifi连接，是否立即进行新版本下载？',
-					content: '有新的版本发布，是否立即进行新版本下载？',
-					confirmText:'立即更新',
-					cancelText:'稍后进行',
-					success: function (res) {
-						if (res.confirm) {
-							uni.showToast({
-								icon:"none",
-								mask: true,
-								// title: '有新的版本发布，检测到您目前为Wifi连接，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
-								title: '有新的版本发布，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
-								duration: 5000,  
-							}); 
-							//设置 最新版本apk的下载链接
-							if(_this.upd_type == null || _this.upd_type == 'apk'){
-								var downloadApkUrl = commURL.BaseUri+"/apk/android.apk";
-								var dtask = plus.downloader.createDownload( downloadApkUrl, {}, function ( d:any, status ) {  
-										// 下载完成 
-										if ( status == 200 ) {   
-											uni.showToast({
-												icon:"none",
-												mask: true,
-												// title: '有新的版本发布，检测到您目前为Wifi连接，程序已启动自动更新。新版本下载完成后将自动弹出安装程序',  
-												title: '安装程序下载完成，安装中...',  
-												duration: 3000,  
-											}); 
-											let dir: any = plus.io.convertLocalFileSystemURL(d.filename);
-											plus.runtime.install(dir,{force:true},function(error){ 
-												// uni.showToast({  
-												// 	title: '安装失败', 
-												// 	icon:"none",
-												// 	mask: true,
-												// 	duration: 5000  
-												// });  
-											})
-										} else {  
-											uni.showToast({  
-												title: '更新失败',
-												icon:"none",
-												duration: 1500  
-											});  
-										}    
-									});  
-								dtask.start();
-							}else if(_this.upd_type =='wgt'){
-								var downloadApkUrl = commURL.BaseUri+"apk/android.wgt";
-								uni.downloadFile({
-									url: downloadApkUrl,
-									success: (res) => {
-										if (res.statusCode === 200) {
-											let path:any = res.tempFilePath;
-											plus.nativeUI.showWaiting("安装更新文件...");
-											plus.runtime.install(path, {}, function() {
-												plus.nativeUI.closeWaiting();
-												plus.nativeUI.alert("应用资源更新完成！", function() {
-													plus.runtime.restart();
-												});
-											}, function(e) {
-												plus.nativeUI.closeWaiting();
-												plus.nativeUI.alert("安装更新文件失败[" + e.code + "]：" + e.message);
-												if (e.code == 10) {
-													// alert('请清除临时目录');
-												}
-											});
-										}else{
-											console.log("??"+res.statusCode)
-										}
-									},
-									fail: (res) => {
-										plus.nativeUI.alert("下载失败！");
-									}
-								});
-							}
-						} else if (res.cancel) {
-							console.log('稍后更新');
-						}
-					}
-				});
-			}
-		}
-
 
 		//登录成功
 		loginOk(){

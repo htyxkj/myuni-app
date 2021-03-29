@@ -26,9 +26,6 @@
 	import {Vue,Prop,Component} from 'vue-property-decorator';
 	import {LoginModule} from '@/store/module/login'; //导入vuex模块，自动注入
 	import Menu from '@/classes/Menu';
-	import {BIPUtil} from '@/classes/api/request';
-	let tools = BIPUtil.ServApi;
-	import mMenu from '@/components/mMenu.vue'
 	import URIParams from '@/classes/URIParams'
 	import { Tools } from '@/classes/tools/Tools';
 	@Component({

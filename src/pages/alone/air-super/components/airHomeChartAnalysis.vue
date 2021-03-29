@@ -1,57 +1,75 @@
 <template>
-<view>
-	<view class="qiun-columns" style="background-color: white;">
-		<view>
-		<u-row gutter="6">
-			<u-col span="12">
-				<u-field v-model="year.label" label="年份" disabled placeholder="年份" icon='calendar' @click="showYear = true"></u-field>
-			</u-col>
-			<u-col span="12">
-				<u-field v-model="season.label" label="季节" disabled placeholder="季节" icon='calendar' @click="showSeason = true">
-					<view slot="right">
-						<u-button @click="selData" type="primary" size="mini" :ripple="true" ripple-bg-color="#909399">查询</u-button>
-					</view>
-				</u-field>
-			</u-col>
-		</u-row>
-		<u-select v-model="showSeason" :list="seasonArray" @confirm="seasonConfirm"></u-select>
-		<u-select v-model="showYear" :list="yearArray" @confirm="yearConfirm"></u-select>
-		</view>
-		<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
-			<view class="qiun-title-dot-light">计划防治完成比例</view>
-		</view>
-		<canvas v-if="chartId1" :id="chartId1" :canvasId="chartId1" 
-			class="charts" :style="{'width':cWidth*pixelRatio+'px','height':cHeight*pixelRatio+'px', 
-			'transform': 'scale('+(1/pixelRatio)+')','margin-left':-cWidth*(pixelRatio-1)/2+'px',
-			'margin-top':-cHeight*(pixelRatio-1)/2+'px'}"
-			@touchstart="touchLine1" @touchmove="moveLine1" @touchend="touchEndLine1">
-		</canvas>
-	</view>
-	
-	<view class="qiun-columns" style="background-color: white;">
-		<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
-			<view class="qiun-title-dot-light">实际完成架次对比</view>
-		</view>
-		<canvas v-if="chartId2" :id="chartId2" :canvasId="chartId2" 
-			class="charts" :style="{'width':cWidth*pixelRatio+'px','height':cHeight*pixelRatio+'px', 
-			'transform': 'scale('+(1/pixelRatio)+')','margin-left':-cWidth*(pixelRatio-1)/2+'px',
-			'margin-top':-cHeight*(pixelRatio-1)/2+'px'}"
-			@touchstart="touchLine2" @touchmove="moveLine2" @touchend="touchEndLine2">
-		</canvas>
-	</view>
+	<view>
+		<view class="qiun-columns" style="background-color: white;">
+			<u-grid :col="3">
+				<u-grid-item>
+					<view class="top-number">{{ skfcy }}</view>
+					<view class="grid-text">本年总架次</view>
+				</u-grid-item>
+				<u-grid-item>
+					<view class="top-number">{{ fkfcy }}</view>
+					<view class="grid-text">本年总用药量</view>
+				</u-grid-item>
+				<u-grid-item>
+					<view class="top-number">{{ yefcy }}</view>
+					<view class="grid-text">本年总喷洒面积</view>
+				</u-grid-item>
+			</u-grid>
+			<view class="seg-line"></view>
+			<view>
+				<u-row gutter="6">
+					<u-col span="12">
+						<u-field v-model="year.label" label="年份" disabled placeholder="年份" icon='calendar' @click="showYear = true"></u-field>
+					</u-col>
+					<u-col span="12">
+						<u-field v-model="season.label" label="季节" disabled placeholder="季节" icon='calendar' @click="showSeason = true">
+							<view slot="right">
+								<u-button @click="selData" type="primary" size="mini" :ripple="true" ripple-bg-color="#909399">查询</u-button>
+							</view>
+						</u-field>
+					</u-col>
+				</u-row>
+				<u-select v-model="showSeason" :list="seasonArray" @confirm="seasonConfirm"></u-select>
+				<u-select v-model="showYear" :list="yearArray" @confirm="yearConfirm"></u-select>
+			</view>
+			<view class="seg-line"></view>
+			<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
+				<view class="qiun-title-dot-light">计划防治完成比例</view>
+			</view>
+			<canvas v-if="chartId1" :id="chartId1" :canvasId="chartId1" 
+				class="charts" :style="{'width':cWidth*pixelRatio+'px','height':cHeight*pixelRatio+'px', 
+				'transform': 'scale('+(1/pixelRatio)+')','margin-left':-cWidth*(pixelRatio-1)/2+'px',
+				'margin-top':-cHeight*(pixelRatio-1)/2+'px'}"
+				@touchstart="touchLine1" @touchmove="moveLine1" @touchend="touchEndLine1">
+			</canvas>
+			<view class="seg-line"></view>
 
-	<view class="qiun-columns" style="background-color: white;">
-		<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
-			<view class="qiun-title-dot-light">年平均用药量对比</view>
+			
+			<view class="qiun-columns" style="background-color: white;">
+				<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
+					<view class="qiun-title-dot-light">实际完成架次对比</view>
+				</view>
+				<canvas v-if="chartId2" :id="chartId2" :canvasId="chartId2" 
+					class="charts" :style="{'width':cWidth*pixelRatio+'px','height':cHeight*pixelRatio+'px', 
+					'transform': 'scale('+(1/pixelRatio)+')','margin-left':-cWidth*(pixelRatio-1)/2+'px',
+					'margin-top':-cHeight*(pixelRatio-1)/2+'px'}"
+					@touchstart="touchLine2" @touchmove="moveLine2" @touchend="touchEndLine2">
+				</canvas>
+			</view>
+			<view class="seg-line"></view>
+			<view class="qiun-columns" style="background-color: white;">
+				<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
+					<view class="qiun-title-dot-light">年平均用药量对比</view>
+				</view>
+				<canvas v-if="chartId3" :id="chartId3" :canvasId="chartId3" 
+					class="charts" :style="{'width':cWidth*pixelRatio+'px','height':cHeight*pixelRatio+'px', 
+					'transform': 'scale('+(1/pixelRatio)+')','margin-left':-cWidth*(pixelRatio-1)/2+'px',
+					'margin-top':-cHeight*(pixelRatio-1)/2+'px'}"
+					@touchstart="touchLine3" @touchmove="moveLine3" @touchend="touchEndLine3">
+				</canvas>
+			</view>
 		</view>
-		<canvas v-if="chartId3" :id="chartId3" :canvasId="chartId3" 
-			class="charts" :style="{'width':cWidth*pixelRatio+'px','height':cHeight*pixelRatio+'px', 
-			'transform': 'scale('+(1/pixelRatio)+')','margin-left':-cWidth*(pixelRatio-1)/2+'px',
-			'margin-top':-cHeight*(pixelRatio-1)/2+'px'}"
-			@touchstart="touchLine3" @touchmove="moveLine3" @touchend="touchEndLine3">
-		</canvas>
 	</view>
-</view>
 </template>
 
 <script lang="ts">
@@ -88,6 +106,10 @@
 		loadModal:boolean = false;
 		qe: QueryEntity = new QueryEntity("", "");
 		chartOption:any={};
+
+		skfcy:any = 0;
+		fkfcy:any = 0;
+		yefcy:any = 0;
         async mounted() {
 			this.loadModal = true;
 			let year = new Date().getFullYear();
@@ -223,16 +245,15 @@
 			let cc = await tools.getBipInsAidInfo("BIYEARSUM", 210, qe);
 			if (cc.data.id === 0 ) {
 				let res = cc.data.data.data.values;
-				console.log(res)
-				// if(res.length>0){
-				// 	this.skfcy = res[0].jcqty;
-				// 	this.fkfcy = res[0].sumflow;
-				// 	this.yefcy = res[0].sumarea;
-				// }else{
-				// 	this.skfcy = 0;
-				// 	this.fkfcy = 0;
-				// 	this.yefcy = 0;
-				// }
+				if(res.length>0){
+					this.skfcy = res[0].jcqty;
+					this.fkfcy = res[0].sumflow;
+					this.yefcy = res[0].sumarea;
+				}else{
+					this.skfcy = 0;
+					this.fkfcy = 0;
+					this.yefcy = 0;
+				}
 			}
 		}
 		initCharOption(){
@@ -383,6 +404,13 @@
 	}
 </script>
 <style scoped>
+	.top-number{
+		font-size: 42px;
+	}
+	.seg-line{
+		height: 3px;
+    	background-color: #f2f2f2;
+	}
 	.page {
 		height: 100Vh;
 		width: 100vw;

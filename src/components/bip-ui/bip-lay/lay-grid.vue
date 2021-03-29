@@ -32,10 +32,8 @@
 import { Vue, Provide, Prop, Component, Inject } from 'vue-property-decorator';
 import { Tools } from '@/classes/tools/Tools';
 import BipLayCells from '@/classes/ui/BipLayCells';
-import Cell from '@/classes/pub/coob/Cell';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import CDataSet from '@/classes/pub/CDataSet';
-// import bipInput from '../bip-input/bip-input.vue';
 import bipBillUnit from '../bip-unit/bip-bill-unit.vue';
 import { EnvModule } from '@/store/module/envmode'; //导入vuex模块，自动注入
 

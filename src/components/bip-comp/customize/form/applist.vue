@@ -28,16 +28,11 @@ let tools = BIPUtil.ServApi;
 import URIParams from '@/classes/URIParams';
 import Cells from '@/classes/pub/coob/Cells';
 import CDataSet from '@/classes/pub/CDataSet';
-import CRecord from '@/classes/pub/CRecord';
 import CCliEnv from '@/classes/cenv/CCliEnv';
 import BipMenuBar from '@/classes/pub/BipMenuBar';
 import BipLayout from '@/classes/ui/BipLayout';
 import QueryEntity from '@/classes/search/QueryEntity';
 import { Tools } from '@/classes/tools/Tools';
-import { icl } from '@/classes/tools/CommICL';
-
-import { dataTool } from '@/classes/tools/DataTools';
-const DataUtil = dataTool.utils;
 @Component({
 	components: { mLoad, bipLay, bipSearchCon, uniFab, bipListUnit, bipListUnit2, bipBillBar }
 })

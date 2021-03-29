@@ -12,9 +12,6 @@
 <script lang="ts">
 	import {Vue, Component,Prop,Watch,Inject} from 'vue-property-decorator';
 	import Cell from '@/classes/pub/coob/Cell';
-	import CDataSet from '@/classes/pub/CDataSet';
-	import CRecord from '@/classes/pub/CRecord';
-	import CCliEnv from '@/classes/cenv/CCliEnv'
 	@Component({})
 	export default class bipShowComm extends Vue{
 		@Prop({type:Object}) cell!:Cell;

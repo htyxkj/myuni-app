@@ -26,16 +26,6 @@ export default class BipMenuBar{
                 btn.setIconFontIcon('safe');
                 this.menuList.push(btn)
             }
-            if(!this.search){
-                let btn = new BipMenuBtn(CommICL.B_CMD_COPY,"复制")
-                btn.setIconFontIcon('copy');
-                this.menuList.push(btn)
-            }
-            if((menuAttr&CommICL.B_IDEL)>0){
-                let btn = new BipMenuBtn(CommICL.B_CMD_DEL,"删除")
-                btn.setIconFontIcon('delete');
-                this.menuList.push(btn)
-            }
             if((menuAttr&CommICL.B_IWORKEA)>0){
                 let btn = new BipMenuBtn(CommICL.B_CMD_SUBMIT,"提交/审核")
                 btn.setIconFontIcon('pullup');
@@ -51,6 +41,16 @@ export default class BipMenuBar{
             //     this.setNavButton(menuAttr)
             // }
             
+            if(!this.search){
+                let btn = new BipMenuBtn(CommICL.B_CMD_COPY,"复制")
+                btn.setIconFontIcon('copy');
+                this.menuList.push(btn)
+            }
+            if((menuAttr&CommICL.B_IDEL)>0){
+                let btn = new BipMenuBtn(CommICL.B_CMD_DEL,"删除")
+                btn.setIconFontIcon('delete');
+                this.menuList.push(btn)
+            }
         }
     }
 

@@ -30,9 +30,9 @@
 // export const ItemType = "credit";
 
 //融通项目管理
-export const BaseUri =  "https://greatdou.com/itemCtrl";
-export const BaseDBID = "01";
-export const ItemType = "itemCtrl";
+// export const BaseUri =  "https://greatdou.com/itemCtrl/";
+// export const BaseDBID = "01";
+// export const ItemType = "itemCtrl";
 
 
 // 人力资源管理系统
@@ -41,9 +41,9 @@ export const ItemType = "itemCtrl";
 // export const ItemType = null;
 
 // 飞防管控
-// export const BaseUri =  "http://211.144.37.205/air-super/";
-// export const BaseDBID = "01";
-// export const ItemType = "air-super";
+export const BaseUri =  "http://211.144.37.205/air-super/";
+export const BaseDBID = "01";
+export const ItemType = "air-super";
 
 // 周庄子
 // export const BaseUri =  "http://8.129.40.31:8081/bip-zzz/";
@@ -72,12 +72,16 @@ export const ItemType = "itemCtrl";
 // export const BaseDBID = "01";
 // export const ItemType = "mine";
 
+// BIP2
+// export const BaseUri =  "http://115.28.191.203:89/BIP2/";
+// export const BaseDBID = "01";
+// export const ItemType = "BIP2";
 
 // export const BaseUri =  "http://127.0.0.1:9999/jd";
 // export const BaseDBID = "158";
 // export const ItemType = "itemCtrl";
 
 export const ioutsys = 2;//项目类型， 移动端，小程序，APP
-export const version = 137;
+export const version = 147;
 export const SMSURL = "https://www.bip-soft.com/ssms/";
 export default {BaseUri, BaseDBID,SMSURL,ItemType,version,ioutsys}

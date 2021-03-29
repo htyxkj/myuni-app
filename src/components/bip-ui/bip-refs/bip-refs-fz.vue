@@ -12,8 +12,6 @@
 import { Vue, Component, Prop, Watch,Inject } from 'vue-property-decorator';
 import Cell from '@/classes/pub/coob/Cell';
 import CRecord from '@/classes/pub/CRecord';
-import { BIPUtil } from '@/classes/api/request';
-let tools = BIPUtil.ServApi;
 import {icl} from '@/classes/tools/CommICL';
 const ICL = icl; 
 import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入

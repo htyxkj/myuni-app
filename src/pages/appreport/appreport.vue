@@ -142,7 +142,9 @@ export default class appReport extends Vue {
 		}
 		return [];
 	}
-	
+	// onShow(){
+	// 	this.queryCont(this.dsm_cont.currRecord.data);
+	// }
 	showText(val:any){
 		let _refs:any = this.$refs;
 		if(val){

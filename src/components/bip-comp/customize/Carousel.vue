@@ -42,7 +42,6 @@
 	import Menu from '@/classes/Menu';
 	import {BIPUtil} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
-	import mMenu from '@/components/mMenu.vue'
 	import URIParams from '@/classes/URIParams'
 	@Component({
 		components:{}
