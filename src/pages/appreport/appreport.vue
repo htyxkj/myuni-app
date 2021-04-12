@@ -142,9 +142,6 @@ export default class appReport extends Vue {
 		}
 		return [];
 	}
-	// onShow(){
-	// 	this.queryCont(this.dsm_cont.currRecord.data);
-	// }
 	showText(val:any){
 		let _refs:any = this.$refs;
 		if(val){
@@ -485,7 +482,7 @@ export default class appReport extends Vue {
 								qcont = JSON.parse(qcont);
 								Object.assign(this.dsm_cont.currRecord.data,qcont);
 							}
-							this.queryCont(this.dsm_cont.currRecord.data);
+							this.queryCont(this.dsm_cont.currRecord.data,true);
 						}else{
 							uni.showToast({title:'没有获取到对象定义'+this.uriParam})
 						}
@@ -628,7 +625,7 @@ export default class appReport extends Vue {
 		})
 	}
 
-	queryCont(vl:any) {
+	queryCont(vl:any,isFirst:boolean = false) {
 		this.loading = true;
 		if(this.uriParam.pbds.ptran){
 			let ptran = this.uriParam.pbds.ptran;
@@ -638,7 +635,7 @@ export default class appReport extends Vue {
 				if(!vl.hasOwnProperty(cc[0])){
 					vl[cc[0]] = cc[1];
 				}else{
-					if(!vl[cc[0]]){
+					if(!vl[cc[0]] || isFirst){
 						vl[cc[0]] = cc[1];
 					}
 				}
