@@ -173,7 +173,7 @@ export default class MAP extends Vue {
 					marker.addEventListener("click", function (e:any) {
 						var lnglat = e.lnglat;
 						//创建信息窗口对象
-						let opts ={closeOnClick:true}
+						let opts ={closeOnClick:true,minWidth:200,autoPan:true,maxHeight:500}
 						var infoWin = new T.InfoWindow('',opts);
 						infoWin.setLngLat(lnglat);
 						//设置信息窗口要显示的内容
