@@ -2,7 +2,7 @@
 	<view class="cu-form-group solid-bottom text-green">
 		<template v-if="cell">
 			<view class="title" v-if="!noLable" :class="[cell.isReq?'text-red':'']">{{cell.labelString}}</view>
-			<input class="text-right" :placeholder="cell.labelString" type="number" v-model="mode" @blur="dataChange" :disabled="disabled" />
+			<input class="text-right" :placeholder="cell.labelString" type="digit" v-model="mode" @blur="dataChange" :disabled="disabled" />
 		</template>
 		<message ref="msg"></message>
 	</view>
