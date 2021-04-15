@@ -52,6 +52,8 @@ var clickAirKey = "";//实时点击飞机的点
 var rotate = null;//旋转角度
 var plane = null;//飞机对象
 var _timer2 = null;//计时器 无数据时查询数据
+var isRealTimeShow=false;//是否是实时展示单个飞机
+let realTimeShowKey = '';//当前展示的飞机key
 
 var tlidValues = [];//全部设备信息
 var tlidMarker = [];//全部设备信息标注点
@@ -92,10 +94,20 @@ function initAllDev(msg,res){
 		tlidValues = data;
 		tlidMarker = [];
 		let point =[];
+		var sbid = $('input[name="sbid"]').val();
+		var sbname = $('input[name="sbname"]').val();
         for(var i=0;i<data.length;i++){
             let one = data[i];
-			let lngLat = this.drawingPoing(one);
-			point.push(lngLat)
+			if(sbid && sbname){
+				if(sbid == one.sbid){
+					let lngLat = this.drawingPoing(one);
+					point.push(lngLat)
+					break;
+				}
+			}else{
+				let lngLat = this.drawingPoing(one);
+				point.push(lngLat)
+			}
         }
 		this.map.setViewport(point);
     }
@@ -132,13 +144,15 @@ function drawingPoing(one){
 	one.taskname = !one.taskname?"":one.taskname;
 	let lngLat = new T.LngLat(longitude,latitude);//点
 	let imgUrl = './img/plane.png';
+	let zIndexOffset = 9
 	if(offline == 1){
 		imgUrl = './img/offlinePlane.png';
+		zIndexOffset = 7
 	}
 	var icon = new T.Icon({
 		iconUrl: imgUrl,
 		iconSize: new T.Point(40, 40),
-		iconAnchor: new T.Point(20, 20)
+		iconAnchor: new T.Point(20, 20),
 	});
 	let msg = "<div>任务编码："+one.taskid+"<br/>任务名称："+one.taskname+"<br/>定位信息:"+longitude+","+ latitude+"<br/>时&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;间："+time;
 	msg += "<br/>设备编码："+sbid;
@@ -153,7 +167,7 @@ function drawingPoing(one){
 	}
 	msg +="</div>";
 	let key = one.taskid+"_"+sbid+"_"+one.sbtype+"_"+offline//任务编码_设备编码_设备类型
-	let mk = tmap_marker(this.map,key,lngLat,icon,airPointClick,msg);
+	let mk = tmap_marker(this.map,key,lngLat,icon,airPointClick,msg,zIndexOffset);
 	tlidMarker.push(mk)
 	this.weather_round = tmap_markCircle(lngLat,"#E7E7E7",5000,map,0.2)
 	if(!this.isWatherRound){
@@ -171,6 +185,7 @@ function airPointClick(data){
 	maxTime = new Date().getTime()
 	window.clearInterval(getRealWInt)
 	let key = data.target.key;
+	realTimeShowKey = key;
 	clickAirKey = key;
 	let keyArr = key.split("_");
 	let taskId = keyArr[0];
@@ -231,6 +246,7 @@ function getPointList(key,frist,trtype){
 		
 		if(frist){
 			$("#my-modal-loading").modal("close");
+			this.isRealTimeShow = true;
 			drawPointLine(key,frist,trtype)
 		}
 	}catch(err){
@@ -268,6 +284,9 @@ function setRealData(msg,res){
 */
 function drawPointLine(key,frist,trtype){
 	let t1 = new Date().getTime();
+	if(this.isRealTimeShow == false){
+		return;
+	}
 	if(this.taskData.length==0){
 		this._timer2 = window.setTimeout(() => {
 			this.getPointList(key,false,trtype);
@@ -435,8 +454,10 @@ function real_time_inquire(){
 			if(sbid){
 				for(var i=0;i<tlidValues.length;i++){
 					let onet = tlidValues[i]
-					if(onet.sbid == sbid)
-						drawingPoing(onet);
+					if(onet.sbid == sbid){
+						let lngLat = drawingPoing(onet);
+						map.panTo(lngLat);
+					}
 				}
 			}else{
 				for(var i=0;i<tlidValues.length;i++){
@@ -507,8 +528,32 @@ function set_weather(msg,res){
 function real_time_refresh(){
 	window.clearInterval(getRealWInt)
 	this.map_clear();
-	this.initRealTime(this.map)
+	if(this.isRealTimeShow == true){
+		$("#my-modal-loading").modal("open");
+		this.isRealTimeShow = false;
+		setTimeout(() => {
+			let data = {target:{key:realTimeShowKey}}
+			this.airPointClick(data);
+		}, 1000);
+	}else{
+		this.initRealTime(this.map)
+	}
 }
+/**
+ * 实时页面返回
+ */
+function real_time_back(){
+	if(this.isRealTimeShow == true){
+		this.isRealTimeShow = false;
+		this.map_clear()
+		this.initRealTime(this.map)
+	}else{
+		uni.navigateBack({
+			delta: 1
+		});
+	}
+}
+ 
 /******************************************************** 实时页面 ************************************************************/
 
 
@@ -1465,7 +1510,8 @@ function map_clear(){
 	this.sprayLine1=[];
 	this.sprayLine2=[];
 	this.isShowPoint = false;
-	this.map.clearOverLays()
+	this.map.clearOverLays();
+	this.plane = null;
 	if(this._timer2){
 		window.clearTimeout(this._timer2);
 		delete this._timer2;
@@ -1634,9 +1680,11 @@ function initRefData(msg,res){
 			ref_data_list.appendChild(ele)
 		}
 		let page = res.data.data.page;
+		var nextPage = document.getElementById("nextPage");
 		if((page.currPage * page.pageSize) >page.total){
-			var nextPage = document.getElementById("nextPage");
 			nextPage.style.display = 'none';
+		}else{
+			nextPage.style.display = '';
 		}
 	}
 }

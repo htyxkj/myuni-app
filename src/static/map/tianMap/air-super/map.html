@@ -44,7 +44,7 @@
 				z-index: 300 !important;
 			}
 			td{
-				padding: .3rem;
+				padding: .3rem !important;
 			}
         </style>
     </head>
@@ -56,7 +56,7 @@
 			<div>
 				<div class="track_show_btn">
 					<div class="track_show_btn1">
-						<div class="am-icon-btn am-icon-mail-reply am-secondary track_show_btn_icon" onclick="back()"></div>
+						<div class="am-icon-btn am-icon-mail-reply am-secondary track_show_btn_icon" onclick="real_time_back()"></div>
 					</div>
 					<div class="track_show_btn1">
 						<a href="##" class="am-icon-btn am-icon-refresh am-secondary track_show_btn_icon" onclick="real_time_refresh()"></a>
@@ -90,7 +90,7 @@
 						</div>
 						<div class="am-g am-margin-top">
 							<div class="am-u-sm-4 am-u-md-2 am-text-right">
-								显示天气(范围):
+								天气范围:
 							</div>
 							<div class="am-u-sm-8 am-u-md-4">
 								<div class="am-radio">
@@ -368,7 +368,7 @@
 						</div>
 						<div class="am-g am-margin-top">
 							<div class="am-u-sm-4 am-u-md-2 am-text-right">
-								显示天气(范围):
+								天气范围:
 							</div>
 							<div class="am-u-sm-8 am-u-md-4">
 								<div class="am-radio">
@@ -487,7 +487,7 @@
 						<tr>
 							<td colspan="3" id="nowtime"></td>
 							<td colspan="1" id="sumarea"></td>
-							<td colspan="1" id="jscsbid"></td>
+							<td colspan="2" id="jscsbid"></td>
 						</tr>
 						<tr>
 							<td>速度</td>

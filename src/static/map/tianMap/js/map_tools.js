@@ -6,9 +6,10 @@
  * @param {Object} icon		 图标
  * @param {Object} callback  点击回调事件
  * @param {Object} msg		 文字提示
+ * @param {Object} zIndexOffset		 标注图层
  */
-function tmap_marker(tMap,key,lnglat,icon,callback,msg){
-	var marker = new T.Marker(lnglat, {icon: icon});
+function tmap_marker(tMap,key,lnglat,icon,callback,msg,zIndexOffset){
+	var marker = new T.Marker(lnglat, {icon: icon,zIndexOffset:zIndexOffset});
 	marker.key = key;
 	if(callback){
 		marker.addEventListener("click",callback)
