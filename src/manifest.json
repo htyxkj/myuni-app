@@ -2,8 +2,8 @@
     "name" : "bipuni",
     "appid" : "__UNI__B396B57",
     "description" : "Demo项目",
-    "versionName" : "1.29",
-    "versionCode" : 129,
+    "versionName" : "1.35",
+    "versionCode" : 135,
     "transformPx" : false,
     "app-plus" : {
         "compatible" : {
@@ -98,10 +98,10 @@
             "https" : false
         },
         "router" : {
-            "base" : "/itemCtrl/webMobile/",
+            "base" : "/bip-inspection/webMobile/",
             "mode" : "history"
         },
-        "title" : "中国融通农业生产经营计划管理系统",
-        "domain" : "https://greatdou.com/itemCtrl/"
+        "title" : "巡视工单",
+        "domain" : "https://test.juminfuwu.cn/bip-inspection/"
     }
 }

@@ -63,6 +63,7 @@
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
+	import {singIn} from '@/pages/index/singIn/singIn'	
 	@Component({
 		components: {
 			mLoad
@@ -77,7 +78,7 @@
 		// user: User = new User('', '', '')
 		_comm:any = null;
 		showLoginpage:boolean = false;
-		onLoad() {
+		onLoad(options:any) {
 			this.showLoginpage = false;
 			this.loadModal = true
 			this._comm = commURL;
@@ -99,6 +100,9 @@
 				LoginModule.setSnKey(snkey)
 				this.isLoginOk();
 			}else{
+				if(!this.loginState || options.corpId){
+					singIn.ServApi.init(options,this.isLoginOk,this.loginFailure);
+				}
 				this.showLoginpage = true;
 			}
 			this.loadModal = false;
@@ -208,6 +212,10 @@
 		}
 		notLogin() {
 			console.log('不能登录系统')
+		}
+		//登录失败
+		loginFailure(){
+			uni.reLaunch({'url':'/pages/login/login'})
 		}
 
 		get loginState() {
