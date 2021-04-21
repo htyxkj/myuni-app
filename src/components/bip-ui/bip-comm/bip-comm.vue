@@ -84,6 +84,9 @@ export default class bipComm extends Vue{
 	bassist:boolean = false;
 	mode:any = ''
 	created(){
+		this.init();
+	}
+	init(){
 		if(this.cell.assist){
 			this.bassist = true;
 			this.editName = this.cell.editName;
@@ -100,9 +103,8 @@ export default class bipComm extends Vue{
 					InsAidModule.fetchInsAid({ id: 200, aid: this.editName });
 				}
 			})			
-		}	
+		}
 	}
-
 	
 	get aidmaps(){
 		return InsAidModule.aidInfos;
@@ -123,8 +125,11 @@ export default class bipComm extends Vue{
 				
 			}
 		})
-		
-	}	
+	}
+	@Watch('cell')
+	cellChange(){
+		this.init();
+	}
 }
 </script>
 

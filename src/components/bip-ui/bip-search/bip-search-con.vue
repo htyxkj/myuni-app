@@ -81,6 +81,7 @@ export default class bipSearchCon extends Vue{
 		}
 	}
 	openList(tjIndex:any){
+		this.listOpenClose({op:true})
 		this.tjIndex = tjIndex;
 		if(this.isShow.length<tjIndex){
 			this.isShow.push(false)
@@ -109,6 +110,7 @@ export default class bipSearchCon extends Vue{
 		this.hideModal();
 	}
 	hideModal(){
+		this.listOpenClose({op:false})
 		this.$set( this.isShow, this.tjIndex, false)
 	}
 	cancel(){
