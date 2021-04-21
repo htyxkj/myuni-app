@@ -215,7 +215,7 @@
 		}
 		//登录失败
 		loginFailure(){
-			uni.reLaunch({'url':'/pages/login/login'})
+			// uni.reLaunch({'url':'/pages/login/login'})
 		}
 
 		get loginState() {

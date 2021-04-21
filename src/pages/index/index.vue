@@ -6,7 +6,7 @@
 			</cu-custom>
 			<template v-if="loginState">
 				<template v-if="tabcur==-1">
-					<customize :menu="menubarr"></customize>
+					<customize :menu="menubarr" :onShow="tabcur==-1" :isShow="isShow"></customize>
 				</template>
 				<template v-else-if="tabcur==0">
 					<home ></home>
@@ -52,6 +52,7 @@
 		tabcur:number = 0
 		tabcurColor:string = 'text-green'
 		vueId: string = Tools.guid()
+		isShow:boolean = false;
 		
 		menubarr:any=null
 
@@ -111,6 +112,10 @@
 				})
 			}
 			//#endif
+			this.isShow = true;
+		}
+		async onHide(){
+			this.isShow = false;
 		}
 
 		//登录成功
