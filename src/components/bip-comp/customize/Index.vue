@@ -5,28 +5,28 @@
 			<view  slot="content-list"> -->
 				<view v-for="(item,index) in layout" :key="index" class="margin-bottom-xs bg-white">
 					<template v-if="item.comid == '001' || item.comid == '005'">
-						<jiugongge :layoutdata="item"></jiugongge>
+						<jiugongge :layoutdata="item" :isShow="isShow"></jiugongge>
 					</template>
 					<template v-if="item.comid == '002'">
-						<carousel :layoutdata="item"></carousel>
+						<carousel :layoutdata="item" :isShow="isShow"></carousel>
 					</template>
 					<template v-if="item.comid == '003'">
-						<tabs :layoutdata="item"></tabs>
+						<tabs :layoutdata="item" :isShow="isShow"></tabs>
 					</template>
 					<template v-if="item.comid == '006'">
-						<customChart :layoutdata="item"></customChart>
+						<customChart :layoutdata="item" :isShow="isShow"></customChart>
 					</template>
 					<template v-if="item.comid == '007'">
-						<myTop :layoutdata="item"></myTop>
+						<myTop :layoutdata="item" :isShow="isShow"></myTop>
 					</template>
 					<template v-if="item.comid == '009'">
-						<codeModule :layoutdata="item"></codeModule>
+						<codeModule :layoutdata="item" :isShow="isShow"></codeModule>
 					</template>
 					<template v-if="item.comid == '010'">
-						<bipCard :layoutdata="item"></bipCard>
+						<bipCard :layoutdata="item" :isShow="isShow"></bipCard>
 					</template>
 					<template v-if="item.comid == '011'">
-						<bipList :layoutdata="item"></bipList>
+						<bipList :layoutdata="item" :isShow="isShow"></bipList>
 					</template>
 				</view>
 			<!-- </view>
@@ -58,8 +58,9 @@
 	})
 	export default class Customize extends Vue {
 		@Prop({default:null}) menu?:any;
+		@Prop({default:null}) isShow?:any;
 		layout:any=[];
-		async mounted() {
+		async created() {
 			let user = LoginModule.user;
 			let gwCode:any = [];
 			if(user.gwCode){

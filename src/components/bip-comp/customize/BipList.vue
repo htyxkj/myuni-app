@@ -19,7 +19,7 @@
 	</view>
 </template>
 <script lang="ts">
-	import {Vue,Prop,Component} from 'vue-property-decorator';
+	import {Vue,Prop,Component, Watch} from 'vue-property-decorator';
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import {BIPUtil} from '@/classes/api/request';
 	import CDataSet from '@/classes/pub/CDataSet';
@@ -36,11 +36,16 @@
 	})
 	export default class BipList extends Vue {
 		@Prop({default:null}) layoutdata?:any;
+		@Prop({default:null}) isShow?:any;
 		uriParams: URIParams = new URIParams();
 		d1:any = null;
 		listData:any=[];
 		BaseUri:any ="";
 		mounted() {
+			this.init()
+		}
+		init(){
+			this.listData=[];
 			this.BaseUri = commURL.BaseUri;
 			let cc =this.BaseUri.charAt(this.BaseUri.length-1)
 			if(cc != "/"){
@@ -168,6 +173,11 @@
 			vm.color = cr;
 			Tools.openMenu(vm)
 		}
+
+		// @Watch('isShow')
+		// pageShowChange(){
+		// 	this.init()
+		// }
 	}
 </script> 
 <style lang="scss" scoped>
