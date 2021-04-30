@@ -159,7 +159,7 @@ export default class appReport extends Vue {
 	}
 	
 	async rowClick(cellId:any,rowId:number,data:any){
-		this.dsm.currRecord.data = data
+		this.dsm.currRecord = data
 		let _cellIndex = _.findIndex(this.dsm.ccells.cels,(itm:any)=>{
 			return itm.id == cellId;
 		})
