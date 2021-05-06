@@ -3,8 +3,8 @@
 		<template v-if="cell && !noLable">
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString }}</view>
 		</template>
-		<input :placeholder="cell.labelString" type="text" v-model="mode" disabled="true" @tap.stop="open()"/>
-		<text :class="['cuIcon-searchlist', 'text-progress','text-bold']" @tap.stop="open()"></text>
+		<input :placeholder="cell.labelString" type="text" v-model="mode" :disabled="cell.editType != 15" @tap.stop="open(false)"/>
+		<text :class="['cuIcon-searchlist', 'text-progress','text-bold']" @tap.stop="open(true)"></text>
 		<message ref="msg"></message>
 	</view>
 </template>
@@ -68,7 +68,12 @@ export default class bipSelect extends Vue {
 			this.initMulColInfo();
 		}
 	}
-	open() {
+	open(isIconClick:boolean) {
+		if(!isIconClick){
+			if(this.cell.editType == 15){
+				return;
+			}
+		}
 		let groupV = "";
         if(this.bipInsAid){
             if (!((this.cell.attr & 0x40) > 0)) {
