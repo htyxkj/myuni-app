@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="qiun-columns" style="background-color: white;">
-			<u-grid :col="3">
+			<u-grid :col="2">
 				<u-grid-item>
 					<view class="top-number">{{ skfcy }}</view>
 					<view class="grid-text">本年总架次</view>
@@ -10,6 +10,8 @@
 					<view class="top-number">{{ fkfcy }}</view>
 					<view class="grid-text">本年总用药量</view>
 				</u-grid-item>
+			</u-grid>
+			<u-grid :col="1">
 				<u-grid-item>
 					<view class="top-number">{{ yefcy }}</view>
 					<view class="grid-text">本年总喷洒面积</view>
@@ -254,6 +256,8 @@
 					this.fkfcy = 0;
 					this.yefcy = 0;
 				}
+				this.fkfcy = this.fkfcy.toFixed(2);
+				this.yefcy = this.yefcy.toFixed(0);
 			}
 		}
 		initCharOption(){
