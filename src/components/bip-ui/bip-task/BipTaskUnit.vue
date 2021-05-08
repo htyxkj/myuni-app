@@ -15,16 +15,13 @@
 </template>
 
 <script lang="ts">
-    import { Vue, Provide, Prop, Component,Watch } from 'vue-property-decorator';
+    import { Vue, Prop ,Component } from 'vue-property-decorator';
 	import bipCommShowTask from '../bip-comm/bip-comm-show-task.vue';
-	import {
-		BIPUtil
-	} from '@/classes/api/request';
+	import { BIPUtil } from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
-	import {
-		LoginModule
-	} from '@/store/module/login'; //导入vuex模块，自动注入
+	import { LoginModule } from '@/store/module/login'; //导入vuex模块，自动注入
 	import { Tools } from '@/classes/tools/Tools';
+	@Component({components:{bipCommShowTask}})
 	export default class BipTaskUnit extends Vue{
 		@Prop() record!:any;
 		@Prop() cells!:any;

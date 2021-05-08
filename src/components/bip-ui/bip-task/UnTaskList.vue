@@ -2,7 +2,7 @@
 	<load-refresh ref="loadRefresh" :isRefresh="true" :backgroundCover="'#F3F5F5'" :heightReduce="300" :pageNo="currPage" :totalPageNo="totalPage"
 		@loadMore="loadMore" @refresh="refresh">
 		<view slot="content-list">
-		<bip-task-unit v-for="(item,index) in list" :key="index" :rowId="index" :record="item" :cells="cell" @toDetails="toDetails"></bip-task-unit>
+			<bip-task-unit v-for="(item,index) in list" :key="index" :rowId="index" :record="item" :cells="cell" @toDetails="toDetails"></bip-task-unit>
 		</view>
 		<mLoad :msg="'加载中...'" v-if="loadModal"></mLoad>
 		<message ref="msg"></message>
@@ -11,12 +11,9 @@
 
 <script lang="ts">
     import { Vue, Provide, Prop, Component,Watch,Emit } from 'vue-property-decorator';
-	// import bipUnit from '@/components/bip-ui/bip-unit/bip-unit.vue';
 	import BipTaskUnit from './BipTaskUnit.vue'
 	import loadRefresh from '@/components/load-refresh/load-refresh.vue';
-	import {
-		BIPUtil
-	} from '@/classes/api/request';
+	import {BIPUtil} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
 	import mLoad from '@/components/mLoad.vue';
 	import QueryEntity from '@/classes/search/QueryEntity';
@@ -48,13 +45,9 @@
 		
 		//查询服务端任务数据
 		async queryTaskInfo() {
-			let dataStr = JSON.stringify({
-				tousr: 'admin'
-			});
-			let qe: QueryEntity = new QueryEntity("SYRW", "SYRW", dataStr);
+			let qe: QueryEntity = new QueryEntity("SYRW", "SYRW");
 			qe.page.currPage = this.currPage;
 			await tools.query(qe).then((res: any) => {
-				// console.log(res)
 				let rtn = res.data;
 				// console.log(rtn);
 				if(rtn.id == 0){
