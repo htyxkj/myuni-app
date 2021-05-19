@@ -40,6 +40,8 @@
 
 <style>
     /*每个页面公共css */
-	@import url("./lib/colorui/main.css");
-	@import url("./lib/colorui/icon.css");
+	/* #ifndef APP-PLUS-NVUE */
+		@import url("./lib/colorui/main.css");
+		@import url("./lib/colorui/icon.css");
+	/* #endif */
 </style>
