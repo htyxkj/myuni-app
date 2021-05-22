@@ -99,6 +99,7 @@
 			qe.tcell = this.dsm_cont.ccells.obj_id
 			qe.cont = JSON.stringify(this.stat.rech);
 			param = paramTools.getBipStatisticsParams(JSON.stringify(qe),groupfilds,groupdatafilds);
+			param.chartTypeValue = this.stat.chartTypeValue;
 			let chartData:any = await tools.getFromServer(param); 
 			if(chartData.data.id == 0){
 				this.tableData = chartData.data.data.tjpages.celData
