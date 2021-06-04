@@ -218,7 +218,7 @@
 							var videoReg = /\.(mp4|flv|m3u8|rtmp|hls|rtsp)$/;
 							let isVideo:boolean = videoReg.test(name);
 							if(isVideo){
-								let _url = commURL.BaseUri+'/mydoc/db_01/'+fjroot+"/"+name
+								let _url = commURL.FielPath+'/mydoc/db_01/'+fjroot+"/"+name
 								j1.video.push(_url);
 							}
 							

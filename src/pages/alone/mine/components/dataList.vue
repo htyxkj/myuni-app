@@ -316,7 +316,7 @@
 						for(var j=0;j<nameArr.length;j++){
 							let name =nameArr[j].toLowerCase();
 							// let url = this.uri+'?snkey='+this.snkey+'&fjroot='+fjroot+'&updid=36&fjname='+nameArr[j];
-							let url = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+nameArr[j];
+							let url = commURL.FielPath+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+nameArr[j];
 							var imgReg = /\.(png|jpg|gif|jpeg|webp|tiff|psd)$/; //图片名为汉字的也可以匹配到
 							let isImg:boolean = imgReg.test(name); //返回true ,false
 							if(isImg){
@@ -325,8 +325,8 @@
 							var videoReg = /\.(mp4|flv|m3u8|rtmp|hls|rtsp)$/;
 							let isVideo:boolean = videoReg.test(name);
 							if(isVideo){
-								let audioUrl = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+name
-								let _url = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+name+'_tb.png'
+								let audioUrl = commURL.FielPath+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+name
+								let _url = commURL.FielPath+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+name+'_tb.png'
 								// _url = this.imageLoad(_url)
 								this.audioTime(audioUrl)
 								j1.video.push(_url);
@@ -418,7 +418,7 @@
 					for(var j=0;j<nameArr.length;j++){
 						let vl:any = {url:'',sid:sw.article_id,title:sw.title};
 						// let url = this.uri+'?snkey='+this.snkey+'&fjroot='+sw.fj_root+'&updid=36&fjname='+nameArr[j];
-						let url = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+sw.fj_root+"/"+nameArr[j];
+						let url = commURL.FielPath+'/mydoc/db_'+commURL.BaseDBID+'/'+sw.fj_root+"/"+nameArr[j];
 						vl.url = url;
 						this.swiperList.push(vl);
 						this.swiperIndex.push("-")

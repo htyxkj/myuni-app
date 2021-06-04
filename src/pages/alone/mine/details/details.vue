@@ -227,7 +227,7 @@
 							let isVideo:boolean = videoReg.test(name);
 							if(isVideo){
 								name = encodeURIComponent(name)
-								let _url = commURL.BaseUri+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+name
+								let _url = commURL.FielPath+'/mydoc/db_'+commURL.BaseDBID+'/'+fjroot+"/"+name
 								j1.video.push(_url);
 							}
 						}
