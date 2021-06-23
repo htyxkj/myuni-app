@@ -81,7 +81,6 @@
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import QueryCont from '@/classes/search/QueryCont';
 	import {BIPUtil} from '@/classes/api/request';
-	import { LoginModule } from '@/store/module/login'; //导入vuex模块，自动注入
 	import mLoad from '@/components/mLoad.vue';
 	let tools = BIPUtil.ServApi;
     var canvases:any = {};

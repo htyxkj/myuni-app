@@ -2,8 +2,8 @@
     "name" : "bipuni",
     "appid" : "__UNI__B396B57",
     "description" : "Demo项目",
-    "versionName" : "1.35",
-    "versionCode" : 135,
+    "versionName" : "1.42",
+    "versionCode" : 142,
     "transformPx" : false,
     "app-plus" : {
         "compatible" : {
@@ -11,7 +11,8 @@
         },
         /* 5+App特有相关 */
         "modules" : {
-            "VideoPlayer" : {}
+            "VideoPlayer" : {},
+            "Geolocation" : {}
         },
         /* 模块配置 */
         "distribute" : {
@@ -25,30 +26,32 @@
                     "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>",
-                    "<uses-permission android:name=\"android.permission.CALL_PHONE\"/>",
                     "<uses-permission android:name=\"android.permission.CAMERA\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.CHANGE_WIFI_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.FLASHLIGHT\"/>",
-                    "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\"/>",
-                    "<uses-permission android:name=\"android.permission.INSTALL_PACKAGES\"/>",
                     "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\"/>",
-                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
-                    "<uses-permission android:name=\"android.permission.READ_CONTACTS\"/>",
-                    "<uses-permission android:name=\"android.permission.READ_LOGS\"/>",
                     "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.RECORD_AUDIO\"/>",
                     "<uses-permission android:name=\"android.permission.REQUEST_INSTALL_PACKAGES\"/>",
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
-                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_CONTACTS\"/>",
-                    "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
+                    "<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>"
                 ]
             },
-            "ios" : {},
+            "ios" : {
+                "idfa" : true
+            },
             /* ios打包配置 */
             "sdkConfigs" : {
-                "oauth" : {}
+                "oauth" : {},
+                "geolocation" : {
+                    "baidu" : {
+                        "__platform__" : [ "android" ],
+                        "appkey_ios" : "",
+                        "appkey_android" : "Mdmfi3UGDUUTRpIf1BWBNTFz1jhn1qzz"
+                    }
+                },
+                "maps" : {}
             },
             "splashscreen" : {
                 "androidStyle" : "default",
@@ -98,10 +101,17 @@
             "https" : false
         },
         "router" : {
-            "base" : "/bip-inspection/webMobile/",
+            "base" : "/bip-mine/webMobile/",
             "mode" : "history"
         },
-        "title" : "巡视工单",
-        "domain" : "https://test.juminfuwu.cn/bip-inspection/"
+        "title" : "幸福张矿",
+        "domain" : "http://60.8.138.154:801/bip-mine/",
+        "sdkConfigs" : {
+            "maps" : {
+                "qqmap" : {
+                    "key" : "JA3BZ-WWLRK-4UQJG-ADDJB-5CDJH-X6B7G"
+                }
+            }
+        }
     }
 }

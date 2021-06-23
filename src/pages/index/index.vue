@@ -74,6 +74,18 @@
 			//#endif
 			this.options = options
 			this._onLoad();
+			//#ifdef APP-PLUS
+			if(this.loginState){
+				uni.getSystemInfo({
+					success:(res) => {
+						//检测当前平台，如果是安卓则启动安卓更新  
+						if(res.platform=="android"){
+							Tools.AndroidCheckUpdate();  
+						}  
+					}  
+				})
+			}
+			//#endif
 		}
 		_onLoad(){
 			this.showpp=false;
@@ -100,18 +112,6 @@
 		 * 页面显示
 		 */
 		async onShow(){
-			//#ifdef APP-PLUS
-			if(this.loginState){
-				uni.getSystemInfo({
-					success:(res) => {
-						//检测当前平台，如果是安卓则启动安卓更新  
-						if(res.platform=="android"){
-							Tools.AndroidCheckUpdate();  
-						}  
-					}  
-				})
-			}
-			//#endif
 			this.isShow = true;
 		}
 		async onHide(){

@@ -52,6 +52,7 @@
     "@dcloudio/uni-quickapp-native": "^2.0.0-30520210106003",
     "@dcloudio/uni-quickapp-webview": "^2.0.0-30520210106003",
     "@dcloudio/uni-stat": "^2.0.0-30520210106003",
+    "caniuse-lite": "^1.0.30001237",
     "core-js": "^3.8.3",
     "dingtalk-jsapi": "^2.13.20",
     "flyio": "^0.6.2",

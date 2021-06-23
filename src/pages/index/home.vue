@@ -89,7 +89,6 @@
 		Provide,
 		Component
 	} from 'vue-property-decorator';
-	import uCharts from '@/lib/u-chars/u-charts.js';
 	import uniCard from "@/components/uni-ui/uni-card/uni-card.vue";
 	import uniFab from "@/components/uni-ui/uni-fab/uni-fab.vue";
 	import bipInput from '@/components/bip-ui/bip-input/bip-input.vue'

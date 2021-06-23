@@ -3,7 +3,7 @@
 		<view class="qiun-bg-white qiun-title-bar qiun-common-mt" >
 			<view class="qiun-title-dot-light">{{title}}</view>
 		</view>
-		<view class="qiun-charts" >
+		<view class="qiun-charts">
 			<canvas v-if="chartId" :id="chartId" :canvasId="chartId" 
 			class="charts"
 			:style="{'width':cWidth*pixelRatio+'px','height':cHeight*pixelRatio+'px', 
@@ -27,11 +27,10 @@
 	import Menu from '@/classes/Menu';
 	import QueryEntity from '@/classes/search/QueryEntity';
 	import URIParams from '@/classes/URIParams'
-	import uCharts from '@/lib/u-chars/u-charts.js';
 	import Cells from '@/classes/pub/coob/Cells';
 	import CDataSet from '@/classes/pub/CDataSet';
 	import { Tools } from '@/classes/tools/Tools';
-
+    import uCharts from '@/lib/u-chars/u-charts.js';
 	var canvases:any = {};
 	@Component({
 		components:{}
@@ -53,6 +52,7 @@
 		dsm:CDataSet = new CDataSet(null);//数据对象
 		tjcell:any = null;//tjcell
 		pixelRatio:any =1;
+		option:any = null;//图表对象
 		async mounted() {
 			this.$nextTick(()=>{ 
 				this.restoreICON ="path://M49.07,31.35l-3.36-5.82a.31.31,0,0,0-.21-.16.33.33,0,0,0-.4.09L40.78,30.6a.35.35,0,0,0,0,.49.36.36,0,0,0,.49,0L45,26.64A20,20,0,0,1,8.67,37.57a.35.35,0,0,0-.49-.08A.34.34,0,0,0,8.1,38,20.73,20.73,0,0,0,45.7,26.89l2.77,4.8a.35.35,0,0,0,.48.13A.34.34,0,0,0,49.07,31.35ZM.67,19.36,4,25.18a.34.34,0,0,0,.21.16.34.34,0,0,0,.41-.09L9,20.11a.34.34,0,0,0,0-.49.36.36,0,0,0-.49,0l-3.7,4.41A20,20,0,0,1,41.08,13.14a.34.34,0,0,0,.56-.4A20.73,20.73,0,0,0,4,23.82L1.27,19a.34.34,0,0,0-.47-.13A.34.34,0,0,0,.67,19.36Z";
@@ -111,9 +111,8 @@
 		}
 
 		async initChartData(chartData:any){
-			let _self = this;
 			let option = {
-				$this:_self,
+				context:uni.createCanvasContext(this.chartId),
 				canvasId: this.chartId,
 				type: 'line',
 				fontSize:11,
@@ -152,10 +151,19 @@
 					area:{
 						type:'straight',//可选值：curve曲线，straight直线
 					},
+					mix:{
+						column:{
+							type:'group',//group分组柱状图，stack为堆叠柱状图，meter为温度计式图
+						}
+					},
 					column:{
 						type:'group',//group分组柱状图，stack为堆叠柱状图，meter为温度计式图
+						seriesGap:2,
 					},
 					pie: {
+						labelWidth:15
+					},
+					ring:{
 						labelWidth:15
 					},
 					rose: {
@@ -291,8 +299,10 @@
 				option.rotate = true;
 			} 
 			if(type == 4 || type ==5){
+				option.extra.mix.column.type='stack';
 				option.extra.column.type='stack'
 			}
+			option.extra.mix.column.width = 35 //柱状图 每柱 宽度 px
 			option.extra.column.width = 35 //柱状图 每柱 宽度 px
 			let chartD = chartData.data.data.tjpages.celData; 
 		 	var categories:any = [];
@@ -615,12 +625,21 @@
 		}
 		//图表拖动
 		touchLineA(e:any){
+			if(!canvases[this.chartId]){
+				return;
+			}
 			canvases[this.chartId].scrollStart(e);
 		}
 		moveLineA(e:any) {
+			if(!canvases[this.chartId]){
+				return;
+			}
 			canvases[this.chartId].scroll(e);
 		}
 		touchEndLineA(e:any) {
+			if(!canvases[this.chartId]){
+				return;
+			}
 			canvases[this.chartId].scrollEnd(e);
 			//下面是toolTip事件，如果滚动后不需要显示，可不填写
 			canvases[this.chartId].showToolTip(e, {
