@@ -10,6 +10,7 @@ export default class User{
     attr:number = 5
 	gwCode:string=""
 	deptInfo:Dept = new Dept()
+    mulscm:Array<any> = [];
     constructor(userId:string,userName:string,pwd:string){
         this.userCode = userId;
         this.userName = userName;

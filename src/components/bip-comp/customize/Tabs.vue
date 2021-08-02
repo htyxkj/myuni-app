@@ -7,7 +7,7 @@
 				</view>
 			</view>
 		</scroll-view>
-		<view v-if="tabs.length>0" style="">
+		<view v-if="tabs.length>0 && showTabs" style="">
 			<applist v-if="formType ==0 " :pbuid="pbuid" :myStyle="myStyle" :title="title"></applist>
 			<appreport v-if="formType ==1 " :pbuid="pbuid" :myStyle="myStyle" :title="title"></appreport>
 		</view>
@@ -35,6 +35,7 @@
 		formType:any =-1;
 		myStyle:any = null;//样式
 		title:any = "";//菜单标题
+		showTabs:any = true;
 		async mounted() {
 			let menus = LoginModule.menus;
 			let d1 = JSON.parse(this.layoutdata.content)
@@ -70,13 +71,15 @@
 			}
 		} 
 		//tabs选中
-		tabSelect(e:any) {
+		async tabSelect(e:any) {
+			this.showTabs = false;
 			this.TabCur = e.currentTarget.dataset.id;
 			this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60 
 			let item = this.tabs[this.TabCur].menu;
 			this.myStyle = this.tabs[this.TabCur].myStyle;
 			if(item)
-			this.initMenu(item);
+				await this.initMenu(item);
+			this.showTabs = true;
 		}
 
 		async initMenu(item:any){

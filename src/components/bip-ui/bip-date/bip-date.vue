@@ -111,10 +111,10 @@ export default class bipDate extends Vue {
 
 	initRestrict(){
 		let chkRule = this.cell.chkRule
-		if(chkRule){
+		if(chkRule &&　chkRule.indexOf("~") >-1){
 			let startTime;
             let endTime;
-            let dArr = this.cell.chkRule.split("~");
+            let dArr = chkRule.split("~");
 			startTime = dArr[0]
             endTime = dArr[1];
 			

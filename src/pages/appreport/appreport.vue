@@ -5,7 +5,6 @@
 			<block slot="content"><view class="header-title">{{ title }}</view></block>
 		</cu-custom>
 		<bip-search-con :cels="showCells" :dsm_cont="dsm_cont" @query="queryCont"></bip-search-con>
-<!-- 		<u-toast ref="uToast" /> -->
 		<template v-if="!isMap">
 			<template v-if="isTable">
 				<template v-if="dsm.ccells">
@@ -317,9 +316,8 @@ export default class appReport extends Vue {
 		//this.openList(rowId);
 	}
 	//底部按钮条 按钮点击
-	execCmd(btn: any) {
+	async execCmd(btn: any) {
 		let cmd = btn.cmd;
-		console.log(cmd);
 		if(cmd == 'DLG'){
             if(!this.dsm.currRecord || !this.dsm.currRecord.data)
                 return;
@@ -330,7 +328,49 @@ export default class appReport extends Vue {
                     dia.open(btn,this.cr); 
                 }, 100);
             }
-        }
+        }else if(cmd =='ADD'){
+			if(this.isjump)
+				return;
+			uni.showLoading({
+				title: '跳转中...'
+			});
+			this.isjump = true;
+			if(this.uriParam){
+				let pclass = this.uriParam.plistener;
+				let MID_ = this.uriParam.pbds["MID_"]
+				if(pclass.indexOf("zxks.cli.SelectAddMenu") !=-1 && MID_){
+					let menu = Tools.findMenu(MID_);
+					if(menu){
+						let command = menu.command;
+						let p = command.split("&");
+						let pbuid = p[0].split("=")
+						let pmenuid = p[1].split("=")
+						let res = await tools.getMenuParams(pbuid[1],pmenuid[1]);
+						let data = res.data
+						if(data.id>=0){
+							let _uriParams = data.data.mparams
+							uni.setStorageSync(pbuid[1],JSON.stringify(_uriParams));
+							let uri = '/pages/appinfo/appinfo?color='+this.cr+'&title='+menu.menuName+"&pbuid="+pbuid[1];
+							uni.navigateTo({
+								url: uri,
+								complete: () => {
+									uni.hideLoading();
+									this.isjump = false;
+								}
+							});
+						}else{
+							uni.showToast({
+								title:"没有" + pbuid[1] + "菜单参数!" 
+							})
+						}
+					}else{
+						uni.showToast({
+							title:"没有" + MID_ + "菜单权限!"
+						})
+					}
+				}
+			}
+		}
 	}
 	/**
      * DLG 弹出框后重新查询

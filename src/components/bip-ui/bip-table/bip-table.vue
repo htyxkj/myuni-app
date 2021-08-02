@@ -34,6 +34,7 @@
 	export default class bipTable extends Vue{
 		@Prop({type:[Object,Boolean]}) ccells!:any;
 		@Prop({type:[Array,Boolean]}) tableData!:any;
+		@Prop() checkValueId!:any;
 		sortType:String = '';
 		nowSortKey:String = '';
 		ODATTR:number = 4194304;
@@ -91,7 +92,7 @@
 		 */
 		getBackColor(rowId:any){
 			let row = this.tableData [rowId]
-			if(rowId == this.checkRowId){
+			if(rowId == this.checkRowId || rowId == this.checkValueId){
 				return " #c3dbff"
 			}
 			let sctrls = this.ccells.sctrl;
