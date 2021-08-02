@@ -1,0 +1,19 @@
+{
+    "name": "bip-RfidModule",
+    "id": "bip-RfidModule",
+    "version": "1.0.0",
+    "description": "bip-RfidModule",
+    "_dp_type":"nativeplugin",
+    "_dp_nativeplugin":{
+        "android": {
+			"integrateType": "aar",
+            "plugins": [
+                {
+				  "type": "module",
+				  "name": "bip-RfidModule",
+				  "class": "com.example.bipfplugin_rfid.RfidModule"
+				}
+            ]
+        } 
+    }
+}

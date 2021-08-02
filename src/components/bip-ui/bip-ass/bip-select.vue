@@ -20,6 +20,7 @@ import BipInsAidNew from '@/classes/BipInsAidNew';
 import CCliEnv from '@/classes/cenv/CCliEnv'
 import CDataSet from '@/classes/pub/CDataSet';
 import { dataTool } from '@/classes/tools/DataTools';
+import { Tools } from '@/classes/tools/Tools';
 const DataUtil = dataTool.utils;
 @Component({})
 export default class bipSelect extends Vue {
@@ -67,8 +68,11 @@ export default class bipSelect extends Vue {
 		if(this.mulcols){
 			this.initMulColInfo();
 		}
+		//#ifdef APP-PLUS
+			this.initKeydown();
+		//#endif
 	}
-	open(isIconClick:boolean) {
+	open(isIconClick:boolean,tj:any = null) {
 		if(!isIconClick){
 			if(this.cell.editType == 15){
 				return;
@@ -100,7 +104,7 @@ export default class bipSelect extends Vue {
 			uni.showLoading({
 				title:'跳转中...'
 			})
-			uni.navigateTo({url:'/pages/public/selecteditor/selecteditor?groupV='+groupV+'&editName='+this.editName+"&methordname="+this.methordName+"&cellAttr="+this.cell.attr,complete: () => {
+			uni.navigateTo({url:'/pages/public/selecteditor/selecteditor?rfid_tj='+tj+'&groupV='+groupV+'&editName='+this.editName+"&methordname="+this.methordName+"&cellAttr="+this.cell.attr,complete: () => {
 				uni.hideLoading();
 			}});
 		}else{
@@ -160,6 +164,9 @@ export default class bipSelect extends Vue {
 				DataUtil.checkGS(this.cds,this.env,this.cell)
 			})
 		}
+		//#ifdef APP-PLUS
+			this.initKeydown();
+		//#endif
 	}
 	
 	makeSv(){
@@ -273,6 +280,48 @@ export default class bipSelect extends Vue {
 	showErr(err:string){
 		let msg:any = this.$refs['msg'];
 		msg.error({background: true,content:err})
+	}
+
+	/**
+	 * 初始化按钮监控
+	 */
+	initKeydown(){
+		Tools.removeKeydown(null);
+		if(this.editName.startsWith("RFID_")){
+			// Tools.oPowerUpOrDown(true);
+			// Tools.initKeydown(139,this.readRfid);
+		}
+	}
+	async readRfid(){
+		//先判断当前字段是否有值
+		let vl = this.cds.currRecord.data[this.cell.id];
+		if(vl){
+			return;
+		}
+		//如果当前字段没有值判断当前字段是否是 第一个没有值的RFID字段
+		let canRead = false;
+		for(var i=0;i<this.cds.ccells.cels.length;i++){
+			let cel = this.cds.ccells.cels[i];
+			vl = this.cds.currRecord.data[cel.id];
+			if(cel.editName.startsWith("RFID_") && !vl){
+				if(cel.id == this.cell.id){
+					canRead = true;
+				}
+				break;
+			}
+		}
+		if(canRead){
+			const test:any = uni.requireNativePlugin("bip-RfidModule")
+			await test.startRead({},(e:any)=>{
+				if(e.id ==0){
+					if(e.value){
+						let values = e.value.toString();
+						Tools.removeKeydown(null);
+						this.open(true,values)
+					}
+				}
+			})
+		}
 	}
 }
 </script>

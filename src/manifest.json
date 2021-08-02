@@ -51,7 +51,8 @@
                         "appkey_android" : "Mdmfi3UGDUUTRpIf1BWBNTFz1jhn1qzz"
                     }
                 },
-                "maps" : {}
+                "maps" : {},
+                "ad" : {}
             },
             "splashscreen" : {
                 "androidStyle" : "default",
@@ -67,6 +68,22 @@
         "splashscreen" : {
             "waiting" : true,
             "alwaysShowBeforeRender" : true
+        },
+        "nativePlugins" : {
+            "bip-RfidModule" : {
+                "__plugin_info__" : {
+                    "name" : "bip-RfidModule",
+                    "description" : "bip-RfidModule",
+                    "platforms" : "Android",
+                    "url" : "",
+                    "android_package_name" : "",
+                    "ios_bundle_id" : "",
+                    "isCloud" : false,
+                    "bought" : -1,
+                    "pid" : "",
+                    "parameters" : {}
+                }
+            }
         }
     },
     "quickapp" : {},
@@ -101,11 +118,11 @@
             "https" : false
         },
         "router" : {
-            "base" : "/bip-mine/webMobile/",
+            "base" : "/bip-inspection/webMobile/",
             "mode" : "history"
         },
-        "title" : "幸福张矿",
-        "domain" : "http://60.8.138.154:801/bip-mine/",
+        "title" : "巡视工单",
+        "domain" : "https://test.juminfuwu.cn/bip-inspection/",
         "sdkConfigs" : {
             "maps" : {
                 "qqmap" : {

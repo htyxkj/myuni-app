@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<cu-custom bgColor="bg-blue" :isBack="true">
+		<cu-custom bgColor="bg-blue" :isBack="true" cusBack @back="exitPage">
 			<!-- <block slot="backText">返回单据</block> -->
 			<block slot="content">
 				<view class="header-title">{{ bipInsAid.title }}</view>
@@ -29,9 +29,14 @@
 		 	<bip-selector-unit v-for="(item,index) in pdList" :key='index' :item="item" :index="index" @select="select" :isMultiple="isMultiple"></bip-selector-unit>
 		 </view>
 		</load-refresh>
-		<view class="cu-bar tabbar bg-white shadow foot my-b-menu" v-if="isMultiple">
-			<view class="submit bg-red margin-sm" @click="celCancel"><text>取消</text></view>
-			<view class="submit bg-blue margin-sm" @click="celOk"><text>确定</text></view>
+		<view class="cu-bar tabbar bg-white shadow foot my-b-menu" v-if="isMultiple || isRfid">
+			<template v-if="isMultiple">
+				<view class="submit bg-red margin-sm" @click="exitPage"><text>取消</text></view>
+				<view class="submit bg-blue margin-sm" @click="celOk"><text>确定</text></view>
+			</template>
+			<template>
+				<view class="submit bg-blue margin-sm" @click="readRfid"><text>读取标签信息</text></view>
+			</template>
 		</view>
 		<mLoad v-if="loading" :msg="'加载中...'"></mLoad>
 	</view>
@@ -40,6 +45,7 @@
 <script lang="ts">
 import { BIPUtil } from '@/classes/api/request';
 let tools = BIPUtil.ServApi;
+import { Tools } from '@/classes/tools/Tools';
 import { icl } from '@/classes/tools/CommICL';
 const ICL = icl;
 import { InsAidModule } from '@/store/module/insaid'; //导入vuex模块，自动注入
@@ -72,11 +78,24 @@ export default class selecteditor extends Vue {
 	pageSize:number = 15;
 	groupV:any = '';
 	cellAttr:any =0;
-	isMultiple:boolean = false;
+	isMultiple:boolean = false;//多选
+	isRfid:boolean = false;//是否是RFID选项
 	checkAll:any =[];
+	initRfidTj:any = null;
 	async onLoad(option: any) {
+		this.initRfidTj = option.rfid_tj
+		if(this.initRfidTj == 'null'){
+			this.initRfidTj = null;
+		}
 		this.groupV = option.groupV;
 		this.editName = option.editName;
+		//#ifdef APP-PLUS
+			if(this.editName.startsWith("RFID_")){
+				this.isRfid = true;
+				Tools.oPowerUpOrDown(true);
+				Tools.initKeydown(139,this.readRfid);
+			}
+		//#endif
 		this.methordName = option.methordname||''
 		this.aidKey = ICL.AID_KEY + this.editName;
 		this.cellAttr = option.cellAttr;
@@ -131,22 +150,19 @@ export default class selecteditor extends Vue {
 			uni.$emit(this.methordName,this.checkAll)
 		}
 		if(!this.isMultiple){
-			uni.navigateBack({delta:1});
+			this.exitPage();
 		}
 	}
 	celOk(){
 		uni.$emit(this.methordName,this.checkAll)
-		uni.navigateBack({delta:1});
+		this.exitPage();
 	}
 	clear(){
 		let item = {};
 		if(this.methordName){
 			uni.$emit(this.methordName,item)
 		}
-		uni.navigateBack({delta:1});
-	}
-	celCancel(){
-		uni.navigateBack({delta:1});
+		this.exitPage();
 	}
 	loadMore() {
 		// console.log('loadMore')
@@ -162,6 +178,7 @@ export default class selecteditor extends Vue {
 	// 下拉刷新数据列表
 	refresh() {
 		// console.log('refresh')
+		this.initRfidTj = null;
 		this.currPage = 1;
 		this.getListDataFromNet(this.currPage,this.pageSize)
 	}
@@ -179,7 +196,6 @@ export default class selecteditor extends Vue {
 	}
 
 	selectOK(e:any){
-		console.log(e)
 		this.index = e.id;
 		this.isShow = false;
 	}
@@ -187,19 +203,32 @@ export default class selecteditor extends Vue {
 	cancel(){
 		this.isShow = false;
 	}
-	
+	/**
+	 * 查询数据
+	 */
 	getListDataFromNet(pageNum: number, pageSize: number) {
 		this.qe.page.pageSize = pageSize;
 		this.qe.page.currPage = pageNum;
 		if(this.groupV != null && this.groupV != ""){
 			this.qe.groupV = this.groupV;
 		}
-		if(this.searchMode){
+		if(this.searchMode || this.initRfidTj){
 			let ii = this.bipInsAid.showColsIndex[this.index];
 			let cell :any = this.bipInsAid.cells.cels[ii];
-			let qcont:QueryCont = new QueryCont(cell.id,this.searchMode,cell.type);//查询条件
-			qcont.setContrast(cell.type =='12'?3:0)
-			this.qe.cont = '~[['+JSON.stringify(qcont)+']]';
+			let cont:any = [];
+			if(this.searchMode){
+				let qcont:QueryCont = new QueryCont(cell.id,this.searchMode,cell.type);//查询条件
+				qcont.setContrast(cell.type =='12'?3:0)
+				qcont.setLink(1)
+				cont.push(qcont)
+			}
+			if(this.initRfidTj){
+				cell = this.bipInsAid.cells.cels[0]
+				let qcont:QueryCont  = new QueryCont(cell.id,this.initRfidTj,cell.type);//查询条件
+				qcont.setContrast(5)
+				cont.push(qcont)
+			}
+			this.qe.cont = '~['+JSON.stringify(cont)+']';
 		}else{
 			this.qe.cont = ''
 		}
@@ -218,7 +247,9 @@ export default class selecteditor extends Vue {
 				}
 				this.pdList = this.pdList.concat(listData); //追加新数据
 				let lrf: any = this.$refs.loadRefresh;
-				lrf.loadOver();
+				if(lrf){
+					lrf.loadOver();
+				}
 			}
 			this.loading = false;
 		}).catch((e:any)=>{
@@ -226,7 +257,43 @@ export default class selecteditor extends Vue {
 			this.loading = false;
 		})
 	}
-	
+	/**
+	 * 退出当前页面
+	 */
+	exitPage(){
+		//#ifdef APP-PLUS
+			Tools.removeKeydown(this.back);
+		//#endif
+		//#ifndef APP-PLUS
+			this.back();
+		//#endif
+	}
+	back():any{
+		uni.navigateBack({delta:1})
+		return true;
+	}
+	/**
+	 * RFID 标签读取数据
+	 */
+	async readRfid(){
+		this.loading = true;
+		Tools.oPowerUpOrDown(true);
+		setTimeout(()=>{
+			Tools.rfidReadCard({},(e:any)=>{
+				if(e.id ==0){
+					if(e.value){
+						let values = e.value.toString();
+						this.initRfidTj = values;
+						this.getListDataFromNet(1,10);
+					}else{
+						this.initRfidTj = null;
+					}
+				}
+				this.loading = false;
+			})
+			this.loading = false;
+		},300)
+	}
 }
 </script>
 

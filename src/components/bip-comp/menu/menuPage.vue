@@ -37,14 +37,11 @@
 		}
 		
 		async openMenu(param:any){
-			// console.log(param)
-			// console.log(param.command)
 			let cc = param.command;
 			let dd = cc.split("&");
 			let pbuid = ''
 			let pmenu ='';
 			dd.forEach((aa:any)=>{
-				// console.log(aa)
 				let pbuids = aa.split('=')
 				if(pbuids[0] == 'pbuid'){
 					pbuid = pbuids[1]
@@ -98,6 +95,8 @@
 						pmenu = "airSortiesQuery?1=1";
 					}
 					url = '/pages/alone/air-super/pages/'+pmenu;
+				}else if(type == 'Breeding'){
+					url = '/pages/alone/breeding/pages/'+pmenu+'?1=1';
 				}
 				let uri = url+'&color='+param.color+'&title='+param.menuName;
 				this.pageJump(uri);

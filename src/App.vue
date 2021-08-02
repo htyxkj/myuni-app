@@ -1,5 +1,7 @@
 <script lang="ts">
-    import Vue from 'vue';
+    import Vue from 'vue';	
+	import comm from '@/static/js/comm.js';
+	let commURL: any = comm;
     export default Vue.extend({
         mpType: 'app',
         onLaunch() {
@@ -34,6 +36,18 @@
         },
         onHide() {
             console.log('App Hide')
+			//#ifdef APP-PLUS
+			if(commURL.ItemType == 'Breeding'){
+				/**
+				 * 芯联手持设备  发送系统广播进行下电操作
+				 */
+				var Intent:any = plus.android.importClass("android.content.Intent");  
+				var intent:any = new Intent("android.intent.action.SETTINGS_BJ");   
+				var main:any = plus.android.runtimeMainActivity();  
+				intent.putExtra("enable", false);  
+				main.sendBroadcast(intent);
+			}
+			//#endif
         }
     });
 </script>
