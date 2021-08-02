@@ -31,6 +31,18 @@ export namespace baseUtils {
 		  });
 		}
 		/**
+		 * @description 切换公司
+		 * @returns 返回是一个object{apiId:'xxx',dbid:'xx'}
+		 */
+		switchCMC(cmcCode:any) {
+			return Object.assign({
+				apiId: GlobalVariable.APIID_SWITCHCMC,
+				dbid: commURL.BaseDBID,
+				usercode: JSON.parse(uni.getStorageSync('user')).userCode,
+				cmcCode:cmcCode
+			});
+		}
+		/**
 		 * @description 获取注册系统参数
 		 * @returns 返回是一个object{typeid:2,dbid:'xx'}
 		 */

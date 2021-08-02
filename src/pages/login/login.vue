@@ -60,9 +60,7 @@
 		BIPUtil
 	} from '@/classes/api/request';
 	let tools = BIPUtil.ServApi;
-	import {
-		LoginModule
-	} from '@/store/module/login'; //导入vuex模块，自动注入
+	import { LoginModule } from '@/store/module/login'; //导入vuex模块，自动注入
 	import {singIn} from '@/pages/index/singIn/singIn'	
 	@Component({
 		components: {
@@ -141,6 +139,7 @@
 						this.user.attr = _u.attr
 						this.user.deptInfo = _u.deptInfo
 						this.user.gwCode = _u.gwCode
+						this.user.mulscm = _u.mulscm;
 						let ms:Array<Menu> = data.data.menulist;
 						LoginModule.setUser(user)
 						LoginModule.setState(true)

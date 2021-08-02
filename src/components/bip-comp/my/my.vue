@@ -31,6 +31,14 @@
 				<text class="cuIcon-right"></text>
 			</view>
 		</view>
+ 		<view class="cu-bar bg-white solid-bottom" v-if="user.mulscm && user.mulscm.length > 1" @tap="upScm=true">
+			<view class="action">
+				<text class="cuIcon-titles text-red "></text>公司切换
+			</view>
+			<view class="align-end" style="margin-right: 10upx;">
+				<text class="cuIcon-right"></text>
+			</view>
+		</view>
 		<view class="cu-bar bg-white solid-bottom"  @tap="exitSys">
 			<view class="action">
 				<text class="cuIcon-titles text-blue "></text>退出系统
@@ -93,6 +101,30 @@
 				</view>
 			</view>
 		</view>
+		<!-- 公司切换 -->
+		<view class="cu-modal" style="z-index: 100;" :class="upScm?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-red justify-end">
+					<view class="content">公司切换</view>
+				</view>
+				<view class="padding-xl">
+					<view class="cu-bar bg-white solid-bottom" v-for="(item,index) in user.mulscm" :key="index" @tap="switchCMC(item)">
+						<view class="action">
+							<text class="cuIcon-titles text-red "></text>{{item.cmcName}}
+						</view>
+						<view class="align-end" style="margin-right: 10upx;">
+							<text class="cuIcon-right"></text>
+						</view>
+					</view>
+				</view>
+				<view class="cu-bar bg-white justify-end">
+					<view class="action">
+						<button class="cu-btn line-red text-red" @tap="upScm = false">取消</button>
+					</view>
+				</view>
+			</view>
+		</view>
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
@@ -103,6 +135,7 @@
 	let tools = BIPUtil.ServApi;
 	import {icl} from '@/classes/tools/CommICL';
 	const ICL = icl; 
+	import Menu from '@/classes/Menu';
 	import {
 		LoginModule
 	} from '@/store/module/login'; //导入vuex模块，自动注入
@@ -113,7 +146,8 @@
 		components:{}
 	})
 	export default class My extends Vue{
-		mdPass:boolean = false
+		mdPass:boolean = false//修改密码弹出框
+		upScm:boolean = false//切换公司弹出框
 		canExec:boolean = false
 		oldPwd:string = ''
 		pwd:string = ''
@@ -143,6 +177,9 @@
 		get user(){
 			return LoginModule.user
 		}
+		/**
+		 * 退出系统
+		 */
 		exitSys(){
 			uni.showModal({
 				title: '系统提示',
@@ -200,6 +237,40 @@
 			})
 			//#endif
 		}
+		/**
+		 * 切换公司
+		 */
+		async switchCMC(item:any){
+			let cmcCode = item.cmcCode;
+			let ret = await tools.switchCMC(cmcCode);
+			let ref:any = this.$refs.uToast;
+			if(ret.data.id ==0){
+				let user = ret.data.data.user;
+				let snkey = ret.data.data.snkey;
+				if(!snkey){
+					snkey = uni.getStorageSync('snkey');
+				}
+				sessionStorage.clear(); 
+				let ms:Array<Menu> = ret.data.data.menulist;
+				LoginModule.setUser(user)
+				LoginModule.setState(true)
+				LoginModule.setMenus(ms);
+				LoginModule.setSnKey(snkey)
+				this.upScm = false;
+				ref.show({
+					title: ret.data.message,
+					type: 'success',
+					position: "top"
+				})
+			}else{
+				ref.show({
+					title: ret.data.message,
+					type: 'error',
+					position: "top"
+				})
+			}
+		}
+
 		open(index:number){
 			console.log('open',index);
 			switch(index){

@@ -34,6 +34,14 @@ export namespace BIPUtil {
 			return this.getFromServer(param);
 		}
 		/**
+		 * @description 切换公司
+		 */
+		switchCMC(cmcCode:any){
+			let param = tools.switchCMC(cmcCode);
+			param.snkey =  uni.getStorageSync('snkey');
+			return this.getFromServer(param);
+		}
+		/**
 		 * 注册方法
 		 * @param param 注册信息
 		 */

@@ -5,6 +5,7 @@ export const GlobalVariable = Object.assign({},{
     API_ID: "apiId",
     API_ID_LOGIN: "login",
     APIID_OUTLOGIN: "outlogin",
+    APIID_SWITCHCMC: "upcmc",
     APIID_LOGOUT:"logout",
     APIID_UPPWD:"uppwd",
     APIID_MPARAMS:"mparam",
