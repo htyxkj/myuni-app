@@ -6,6 +6,7 @@ import CDataSet from '@/classes/pub/CDataSet';
 import comm from '@/static/js/comm.js';
 let commURL: any = comm;
 import QueryEntity from '@/classes/search/QueryEntity';
+const bipRfid:any = uni.requireNativePlugin("bip-RfidModule")
 export class Tools{
 	static server_version:any=null;//版本号
 	static upd_type:any=null;//更新类型
@@ -143,6 +144,8 @@ export class Tools{
 					pmenu = "airSortiesQuery?1=1";
 				}
 				url = '/pages/alone/air-super/'+pmenu;
+			}else if(type == 'Breeding'){
+				url = '/pages/alone/breeding/pages/'+pmenu+'?1=1';
 			}
 			let uri = url+'&color='+param.color+'&title='+param.menuName;
 			this.pageJump(uri);
@@ -331,6 +334,50 @@ export class Tools{
 					}
 				}
 			});
+		}
+	}
+
+
+	/**
+	 * 芯联设备  发送系统广播进行上/下电操作  enable：true 上   false 下
+	 */
+	 static oPowerUpOrDown(enable:boolean){
+		var Intent:any = plus.android.importClass("android.content.Intent");  
+		var intent:any = new Intent("android.intent.action.SETTINGS_BJ");   
+		var main:any = plus.android.runtimeMainActivity();  
+		intent.putExtra("enable", enable);  
+		main.sendBroadcast(intent);
+	}
+	/**
+	 * 读取标签数据
+	 */
+	static async rfidReadCard(param:any,back:any){
+		await bipRfid.startRead(param,back)
+	}
+	/**
+	 * 向标签写数据
+	 */
+	static async rfidWriteCard(param:any,back:any){
+		await bipRfid.writeCard(param,back)
+	}
+	/**
+	 * 设备  手柄按键监听事件
+	 */
+	static initKeydown(keyNum:any,back:any){
+		plus.key.addEventListener('keydown', event => {
+			if(event.keyCode == keyNum){//手持机手柄按键
+				back();
+			}
+		});
+	}
+	/**
+	 * 设备  手柄按键移除监听事件
+	 */
+	static removeKeydown(back:any){
+		if(back){
+			plus.key.removeEventListener('keydown',back())	
+		}else{
+			plus.key.removeEventListener('keydown',event => {})	
 		}
 	}
 }
