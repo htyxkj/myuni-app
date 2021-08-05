@@ -98,15 +98,17 @@ function initAllDev(msg,res){
 		var sbname = $('input[name="sbname"]').val();
         for(var i=0;i<data.length;i++){
             let one = data[i];
-			if(sbid && sbname){
-				if(sbid == one.sbid){
+			if(one.longitude && one.latitude){
+				if(sbid && sbname){
+					if(sbid == one.sbid){
+						let lngLat = this.drawingPoing(one);
+						point.push(lngLat)
+						break;
+					}
+				}else{
 					let lngLat = this.drawingPoing(one);
 					point.push(lngLat)
-					break;
 				}
-			}else{
-				let lngLat = this.drawingPoing(one);
-				point.push(lngLat)
 			}
         }
 		this.map.setViewport(point);
