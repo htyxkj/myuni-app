@@ -100,6 +100,7 @@
             let _self = this;
 			let option = {
 				$this:_self,
+				context:uni.createCanvasContext(this.chartId),
 				canvasId: this.chartId,
 				type: 'map',
 				fontSize:11,

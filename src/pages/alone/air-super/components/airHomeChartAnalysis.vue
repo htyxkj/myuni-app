@@ -160,6 +160,7 @@
 				}
 				let option = Object.assign({},this.chartOption);
 				option.canvasId = this.chartId1;
+				option.context=uni.createCanvasContext(this.chartId1);
 				option.type='column';
 				option.categories = labeldata
 				option.series =  [{
@@ -201,6 +202,7 @@
 				}
 				let option = Object.assign({},this.chartOption);
 				option.canvasId = this.chartId2;
+				option.context=uni.createCanvasContext(this.chartId2);
 				option.type='column';
 				option.extra = {
 					column: {
@@ -226,6 +228,7 @@
 				}
 				let option = Object.assign({},this.chartOption);
 				option.canvasId = this.chartId3;
+				option.context=uni.createCanvasContext(this.chartId3);
 				option.type='column';
 				option.extra = {
 					column: {
@@ -263,6 +266,7 @@
             let _self = this;
 			this.chartOption={
 				$this:_self,
+				context:null,
 				canvasId: "",
 				type: 'line',
 				fontSize:11,
