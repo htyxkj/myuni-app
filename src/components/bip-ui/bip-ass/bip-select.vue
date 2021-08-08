@@ -4,7 +4,7 @@
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString }}</view>
 		</template>
 		<input :placeholder="cell.labelString" type="text" v-model="mode" :disabled="cell.editType != 15" @tap.stop="open(false)"/>
-		<text :class="['cuIcon-searchlist', 'text-progress','text-bold']" @tap.stop="open(true)"></text>
+		<text :class="['cuIcon-searchlist', 'text-progress','text-bold']" @tap.stop="open(true)" v-show="!isDisable"></text>
 		<message ref="msg"></message>
 	</view>
 </template>
@@ -43,7 +43,9 @@ export default class bipSelect extends Vue {
     othCols: Array<string> = [];//字段名称
     othColsIndex: Array<number> = [];//对应数据下标
 	
+	isDisable:boolean = false;
 	async created() {
+		this.isDisable = (this.cell.attr & 0x40)>0
         this.mulcols = (this.cell.attr & 0x100000) > 0;//判断是否是多列
 		this.cds = this.env.getDataSet(this.obj_id);
 		this.index = this.cds.index;
@@ -158,6 +160,9 @@ export default class bipSelect extends Vue {
 							DataUtil.checkGS(this.cds,this.env,cel)
 						}
 					});
+					if((this.cell.attr & 0x40000)>=0){
+						this.refInsAid.showV = v0;
+					}
 				// }
 				this.makeSv();
 				this.cds.cellChange(this.modekey,this.cell.id);

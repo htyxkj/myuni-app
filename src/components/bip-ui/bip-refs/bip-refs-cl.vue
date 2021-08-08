@@ -4,7 +4,7 @@
 			<view class="title" :class="[cell.isReq?'text-red':'']">{{ cell.labelString }}</view>
 		</template>
 			<input type="text" v-model="modes" disabled="true"/>
-		<text class="text-progress text-bold cuIcon-tag"></text>
+		<text class="text-progress text-bold cuIcon-tag" v-show="!isDisable"></text>
 	</view>
 </template>
 <script lang="ts">
@@ -29,7 +29,9 @@ export default class bipRefsCl extends Vue{
 	mode:string = '0';
 	showValue:string = '';
 	cds:CDataSet = new CDataSet(null)
+	isDisable:boolean = false;
 	created(){
+		this.isDisable = (this.cell.attr & 0x40)>0
 		this.$nextTick(()=>{
 			this.cds = this.env.getDataSet(this.obj_id);
 			this.mode = this.record.data[this.cell.id];
