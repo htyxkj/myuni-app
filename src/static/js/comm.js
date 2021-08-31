@@ -107,7 +107,6 @@ export const ItemType = "Breeding";
 
 
 export const ioutsys = 2;//项目类型， 移动端，小程序，APP
-export const version = 157;
 export const SMSURL = "https://www.bip-soft.com/ssms/";
 export const FielPath = "http://47.104.211.216:8089/bip-mine/";
 export default {BaseUri, BaseDBID,SMSURL,ItemType,version,ioutsys,FielPath}
