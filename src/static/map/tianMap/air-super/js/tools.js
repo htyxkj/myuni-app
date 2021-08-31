@@ -58,6 +58,9 @@ let realTimeShowKey = '';//当前展示的飞机key
 var tlidValues = [];//全部设备信息
 var tlidMarker = [];//全部设备信息标注点
 
+var offlineEqui =0;//是否显示离线设备0：否；1：是
+var operpram = {maxflow:100,minflow:0};//作业指标
+
 /******************************************************** 实时页面 ************************************************************/
 //初始化实时页面
 function initRealTime(map){
@@ -102,12 +105,16 @@ function initAllDev(msg,res){
 				if(sbid && sbname){
 					if(sbid == one.sbid){
 						let lngLat = this.drawingPoing(one);
-						point.push(lngLat)
+						if(lngLat){
+							point.push(lngLat)
+						}
 						break;
 					}
 				}else{
 					let lngLat = this.drawingPoing(one);
-					point.push(lngLat)
+					if(lngLat){
+						point.push(lngLat)
+					}
 				}
 			}
         }
@@ -127,6 +134,12 @@ function drawingPoing(one){
 		return;
 	}
 	let offline = one.offline;//是否离线 0：否；1：是
+	if(this.offlineEqui == 0){//不显示离线设备
+		//判断设备是否离线，离线返回null
+		if(offline == 1){
+			return null;
+		}
+	}
 	let time = one.speedtime;//时间
 	if(!time){
 		time = one.time;
@@ -199,6 +212,7 @@ function airPointClick(data){
 	if(taskId && taskId.length>1){
 		initTaskById(taskId);
 		let takeoffID = task.takeoff;//起降点
+		initOperpram(task.omid)
 		initLandingPoint(takeoffID)
 		initOpera(task.oaid);//架区
 		initOperaBr(task.oaid);//避让区
@@ -313,7 +327,7 @@ function drawPointLine(key,frist,trtype){
 				points.push(this.PreviousFlowPoint);
 			points.push(LngLat);
 			var newLine2 = new T.Polyline(points,opts2);
-			this.sprayLine2.push(newLine2)
+			this.sprayLine2.push(newLine2);
 			this.map.addOverLay(newLine2);
 		}
 		this.passOneNode(LngLat,1,1);
@@ -421,6 +435,11 @@ function real_time_setting(){
 			}else{
 				LayersSwitch(map,0);
 			}
+			let offline = $("input[name='offlineEqui']:checked").val();//是否显示离线设备
+			if(offlineEqui != offline){//需要显示离线设备
+				offlineEqui = offline;
+				real_time_refresh();
+			}
 			this.close();
 		}
 	});
@@ -458,7 +477,9 @@ function real_time_inquire(){
 					let onet = tlidValues[i]
 					if(onet.sbid == sbid){
 						let lngLat = drawingPoing(onet);
-						map.panTo(lngLat);
+						if(lngLat){
+							map.panTo(lngLat);
+						}
 					}
 				}
 			}else{
@@ -676,7 +697,8 @@ function passOneNode(LngLat,index,length){
 			}
 		}
 		sumflow = ((parseFloat(sumflow+'') + parseFloat((parseFloat(nowflow+'')/60/60)+'')).toFixed(3))+'';
-		if(flow>0.6){//有流量去划线
+		// if(flow>0.6){//有流量去划线
+		if(flow> operpram.minflow && flow< operpram.maxflow){
 			// 有流量的点喷洒时长+1s
 			sumtimeflow = sumtimeflow + 1;
 			mileage = mileage+data.speed /3600
@@ -950,6 +972,7 @@ function track_show_play_back(){
 			setTimeout(() => {
 				initTaskById(taskid);
 				if(task){
+					initOperpram(task.omid)
 					let takeoffID = task.takeoff;//起降点
 					initLandingPoint(takeoffID)
 					if(jq == 1){
@@ -1076,7 +1099,8 @@ function drawTrackLine(msg,res){
 			"瞬时流量："+flow+"m³/h<br />"+`累计流量：${data.sumfolw}m³ <br />速度：${data.speed}km/h <br />高度：${data.height}/m`
 			this.pointMsg[key]= msg;
 
-			if(flow>0){//有流量去划线
+			// if(flow>0){//有流量去划线			
+			if(flow> operpram.minflow && flow< operpram.maxflow){
 				if(this.sprayBreak){//中断过需要从起一条线
 					let points = [];
 					if(this.sprayLine2.length>0){
@@ -1935,4 +1959,27 @@ function moveDivs(_id) {
             'left': _need_left + 'px',
         })
     });
+}
+/**
+ * 获取作业指标 信息
+ * @param {Object} sid 任务编码
+ */ 
+function initOperpram(sid){
+	let data = Object.assign({},this.insaidParmas);
+	data.aid = "OMID"
+	var qe = Object.assign({},this.queryEntity);
+	qe.cont = " id = '"+sid+"'"
+	qe.page.pageSize = 1;
+	data.qe = JSON.stringify(qe);
+	let option = {
+	    url : this.servUrl+"/sysapi",
+	    method : "post",
+	    data : data
+	}
+	this.http.post(option,setOperpram,false);
+}
+function setOperpram(msg,res){
+	if(res.id ==0){
+		this.operpram = res.data.data.values[0];
+	}
 }
