@@ -147,7 +147,7 @@ export default class CDataSet {
 		this.currRecord = cr;
 		this.scriptProc.data = this.currRecord;
 		this.index = this.cdata.size()-1;
-		if(cr.subs){
+		if(cr.subs && cr.subs.length>0){
 			cr.subs.forEach((cdata:CData)=>{
 				let id = cdata.obj_id;
 				let index = this.ds_sub.findIndex((dsub:CDataSet)=>{
@@ -160,8 +160,13 @@ export default class CDataSet {
 					})
 				}
 			})
+		}else{
+			if(this.ds_sub){
+				for(var i=0;i<this.ds_sub.length;i++){
+					this.ds_sub[i].cdata.data=[]
+				}
+			}
 		}
-		
 	}
 	
 	getRecord(index:number){
