@@ -1,6 +1,6 @@
 <template>
 	<view class="bip-search-con">
-		<uni-collapse accordion="true" class="bip-search-con-uni-collapse">
+		<uni-collapse ref="bipSearchCollapse" accordion="true" class="bip-search-con-uni-collapse">
 			<uni-collapse-item :customize="true">
 				<view slot="title"  style="width:100%">
 					<view class="cu-bar search bg-white flex" v-if="tjAll.length>0">
@@ -90,12 +90,11 @@ export default class bipSearchCon extends Vue{
 	}
 	
 	listOpenClose({op,bl}:any){
-		// console.log(cl);
 		if(op){
 			if(bl)
-				this.cont_style='height:156px';
+				this.cont_style='height:250px';
 			else
-				this.cont_style='height:200px';
+				this.cont_style='height:250px';
 		}else{
 			this.cont_style='';
 		}

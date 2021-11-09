@@ -7,7 +7,7 @@
 			</view>
 			<scroll-view scroll-y class="cu-list bg-white">
 				<view class="cu-item solid-bottom" v-for="(item,index) in arr" :key="index">
-					<view class="bip-bar padding text-left" @tap="selectChange(index)" :class="sindex==index?'text-blue':''">
+					<view class="bip-bar text-left" @tap="selectChange(index)" :class="sindex==index?'text-blue':''">
 						<template v-if="isStr">
 							<text class="cuIcon-titles bip-item">{{item}}</text>
 						</template>
@@ -20,7 +20,7 @@
 			</scroll-view>
 		</template>
 		<template v-else>
-			<view class="bip-bar padding text-center bg-white text-red" @tap="cancel">
+			<view class="bip-bar  text-center bg-white text-red  padding" @tap="cancel">
 				<text class="cuIcon-titles bip-item">没有数据</text>
 			</view>
 		</template>
@@ -121,6 +121,8 @@ export default class bipSelect extends Vue{
     -webkit-box-pack: justify;
     -webkit-justify-content: space-between;
     justify-content: space-between;
+	padding-top: 20rpx;
+	padding-bottom: 20rpx;
 }
 .bip-item{
 	width: 95%;
