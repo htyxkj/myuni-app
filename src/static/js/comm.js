@@ -30,9 +30,9 @@
 // export const ItemType = "credit";
 
 // 巡视工单
-// export const BaseUri =  "https://test.juminfuwu.cn/bip-inspection/";
-// export const BaseDBID = "01";
-// export const ItemType = "bip-inspection";
+export const BaseUri =  "https://test.juminfuwu.cn/bip-inspection/";
+export const BaseDBID = "01";
+export const ItemType = "bip-inspection";
 
 //融通项目管理
 // export const BaseUri =  "https://greatdou.com/itemCtrl/";
@@ -101,12 +101,18 @@
 // export const ItemType = "bip-zzz";
 
 // 猪管家
-export const BaseUri =  "http://121.5.109.97:8080/Breeding/";
-export const BaseDBID = "01";
-export const ItemType = "Breeding";
+// export const BaseUri =  "http://121.5.109.97:8080/Breeding/";
+// export const BaseDBID = "01";
+// export const ItemType = "Breeding";
+
+//养畜宝
+// export const BaseUri =  "http://121.5.109.97:8080/cattle_breed/";
+// export const BaseDBID = "01";
+// export const ItemType = "cattle_breed";
 
 
 export const ioutsys = 2;//项目类型， 移动端，小程序，APP
+export const version = 159;
 export const SMSURL = "https://www.bip-soft.com/ssms/";
 export const FielPath = "http://47.104.211.216:8089/bip-mine/";
 export default {BaseUri, BaseDBID,SMSURL,ItemType,version,ioutsys,FielPath}

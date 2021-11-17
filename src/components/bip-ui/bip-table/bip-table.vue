@@ -1,26 +1,28 @@
 <template>
-	<uni-table stripe emptyText="暂无更多数据">
-		<uni-tr>
-			<uni-th align="center" v-for="(itm,index) in showCells" :key="index" :width="itm.width">
-				<view class="z-table-col-text text-center" @click="sort(itm.id, index)" :style="{width:itm.width + 'px'}">
-					<view>{{itm.labelString}}</view>
-					<view v-if='(itm.attr&ODATTR)>0' class="sort">
-						<view class="up-arrow" :class="{ action: nowSortKey == itm.id && sortType == 'asc'}"></view>
-						<view class="down-arrow" :class="{ action: nowSortKey == itm.id && sortType == 'desc'}"></view>
+	<view class="table_height">
+		<uni-table stripe emptyText="暂无更多数据">
+			<uni-tr>
+				<uni-th align="center" v-for="(itm,index) in showCells" :key="index" :width="itm.width">
+					<view class="z-table-col-text text-center" @click="sort(itm.id, index)" :style="{width:itm.width + 'px'}">
+						<view>{{itm.labelString}}</view>
+						<view v-if='(itm.attr&ODATTR)>0' class="sort">
+							<view class="up-arrow" :class="{ action: nowSortKey == itm.id && sortType == 'asc'}"></view>
+							<view class="down-arrow" :class="{ action: nowSortKey == itm.id && sortType == 'desc'}"></view>
+						</view>
 					</view>
-				</view>
 
-			</uni-th>
-		</uni-tr>
-		<template v-if="tableData">
-			<uni-tr v-for="(row,_rowId) in tableData" :key="_rowId" :style="{'background-color':getBackColor(_rowId)}">
-				<uni-td align="center" v-for="(itm,index1) in showCells" :key="index1" :width="itm.width">
-					<bip-show-table :cell="itm" :record="row" :rowId="_rowId" :obj_id="ccells.obj_id"  @cellClick="rowClick"></bip-show-table>
-				</uni-td>
+				</uni-th>
 			</uni-tr>
-		</template>
-		
-	</uni-table>
+			<template v-if="tableData">
+				<uni-tr v-for="(row,_rowId) in tableData" :key="_rowId" :style="{'background-color':getBackColor(_rowId)}">
+					<uni-td align="center" v-for="(itm,index1) in showCells" :key="index1" :width="itm.width">
+						<bip-show-table :cell="itm" :record="row" :rowId="_rowId" :obj_id="ccells.obj_id"  @cellClick="rowClick"></bip-show-table>
+					</uni-td>
+				</uni-tr>
+			</template>
+			
+		</uni-table>
+	</view>
 </template>
 
 <script lang="ts">
@@ -198,6 +200,10 @@
 		&.text-right {
 			justify-content: flex-end;
 		}
+	}
+	.table_height{
+		height: calc(100vh - 400rpx);
+		overflow-x: auto;
 	}
 </style>
 

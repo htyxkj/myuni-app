@@ -220,6 +220,10 @@ export default class CDataSet {
 	}
 	
 	removeIndex(_i:number){
+		let dlVl = this.cdata.data[_i];
+		if(dlVl){
+			this.cdata.rmdata.push(dlVl);
+		}
 		this.cdata.data.splice(_i,1);
 		this.index -= 1;
 		this.currRecord = this.cdata.data[this.index]||new CRecord()

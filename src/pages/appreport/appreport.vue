@@ -9,8 +9,6 @@
 			<template v-if="isTable">
 				<template v-if="dsm.ccells">
 					<bip-table :ccells="dsm.ccells"  :tableData="pdList2" @rowClick="rowClick" @onSort="onSort"></bip-table>
-					<view class="padding-xs margin-xs"></view>
-					<view class="padding-xs margin"></view>
 					<view class="cu-bar foot bg-white" :style="mbs.menuList.length>0?'bottom:100rpx':''">
 						<u-row gutter="0" justify="between" style="width:100%;padding: 10rpx 0rpx 10rpx 0;">
 							<u-col span="3" text-align="center">

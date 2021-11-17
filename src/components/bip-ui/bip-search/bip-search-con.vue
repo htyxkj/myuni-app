@@ -107,6 +107,7 @@ export default class bipSearchCon extends Vue{
 			this.tjAll[this.tjIndex].cels = e;
 		}
 		this.hideModal();
+		this.$forceUpdate();
 	}
 	hideModal(){
 		this.listOpenClose({op:false})
