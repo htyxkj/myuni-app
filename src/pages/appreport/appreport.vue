@@ -8,7 +8,7 @@
 		<template v-if="!isMap">
 			<template v-if="isTable">
 				<template v-if="dsm.ccells">
-					<bip-table :ccells="dsm.ccells"  :tableData="pdList2" @rowClick="rowClick" @onSort="onSort"></bip-table>
+					<bip-table :class="mbs.menuList.length>0?'table_height4':'table_height3'" :ccells="dsm.ccells"  :tableData="pdList2" @rowClick="rowClick" @onSort="onSort"></bip-table>
 					<view class="cu-bar foot bg-white" :style="mbs.menuList.length>0?'bottom:100rpx':''">
 						<u-row gutter="0" justify="between" style="width:100%;padding: 10rpx 0rpx 10rpx 0;">
 							<u-col span="3" text-align="center">
@@ -715,5 +715,13 @@ export default class appReport extends Vue {
 		height: 40px;
 		line-height: 40px;
 		color: #2d64ff;
+	}
+	.table_height4{
+		height: calc(100vh - 400rpx);
+		overflow-x: auto;
+	}
+	.table_height3{
+		height: calc(100vh - 300rpx);
+		overflow-x: auto;
 	}
 </style>

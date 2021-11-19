@@ -45,8 +45,11 @@ export default class bipSelect extends Vue {
 	
 	isDisable:boolean = false;
 	async created() {
+		await this.init();
+	}
+	async init(){
 		this.isDisable = (this.cell.attr & 0x40)>0
-        this.mulcols = (this.cell.attr & 0x100000) > 0;//判断是否是多列
+		this.mulcols = (this.cell.attr & 0x100000) > 0;//判断是否是多列
 		this.cds = this.env.getDataSet(this.obj_id);
 		this.index = this.cds.index;
 		this.editName = this.bipInsAid.id;
@@ -160,7 +163,7 @@ export default class bipSelect extends Vue {
 							DataUtil.checkGS(this.cds,this.env,cel)
 						}
 					});
-					if((this.cell.attr & 0x40000)>=0){
+					if((this.cell.attr & 0x40000) > 0){
 						this.refInsAid.showV = v0;
 					}
 				// }
@@ -281,6 +284,10 @@ export default class bipSelect extends Vue {
 				}
 			}
 		})
+	}
+	@Watch('bipInsAid')
+	insAidChange(){
+		this.init()
 	}
 	showErr(err:string){
 		let msg:any = this.$refs['msg'];

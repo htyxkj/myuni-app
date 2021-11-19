@@ -1,5 +1,5 @@
 <template>
-	<view class="table_height">
+	<view>
 		<uni-table stripe emptyText="暂无更多数据">
 			<uni-tr>
 				<uni-th align="center" v-for="(itm,index) in showCells" :key="index" :width="itm.width">
@@ -200,10 +200,6 @@
 		&.text-right {
 			justify-content: flex-end;
 		}
-	}
-	.table_height{
-		height: calc(100vh - 400rpx);
-		overflow-x: auto;
 	}
 </style>
 
